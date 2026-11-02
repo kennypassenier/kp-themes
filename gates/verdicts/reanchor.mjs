@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { entriesAt } from './compare.mjs';
 import { ratioOf, readRegister, writeRegister } from './register.mjs';
-import { git, registerPath } from './paths.mjs';
+import { git } from './paths.mjs';
 import { hashAt } from './hash-at.mjs';
 import { compareCommand } from './record.mjs';
 /** @typedef {import('./types.mjs').Entry} Entry */
@@ -116,7 +116,7 @@ export async function reanchor(args) {
     const commit = option('--commit');
     if (!commit) throw new Error('reanchor needs --commit <hash>');
     const engine = option('--engine') ?? 'firefox';
-    const file = option('--register') ?? registerPath;
+    const file = option('--register');
     const register = readRegister(file);
     const full = git('rev-parse', `${commit}^{commit}`);
     const fromCompare = option('--keys-from-compare');

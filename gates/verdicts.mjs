@@ -3,13 +3,14 @@
 //
 //   node gates/verdicts.mjs record < prompt.txt
 //       Reads the "Verdict lines" block a copied catalogue prompt ends with
-//       and writes each verdict into catalogue/verdicts.json, with the commit
+//       and writes each verdict into the register (the review database,
+//       data/kp-themes.sqlite, through gates/db/), with the commit
 //       it was recorded on (HEAD) and today's date. Refuses a block that no
 //       review page shows, a theme that does not exist, and lines taken with
 //       another hash recipe.
 //
 //       An approved verdict recorded for a block clears its review note in
-//       that theme (catalogue/review-notes.json); a rejected one leaves it.
+//       that theme (the review notes, same database); a rejected one leaves it.
 //
 //   node gates/verdicts.mjs note <block> <theme> --rejected "<text>" --change "<text>" [--commit <hash>]
 //       Writes the review note a block shows in one theme until it is
@@ -77,6 +78,16 @@
 // a context with that deviceScaleFactor so `devicePixelRatio` agrees; one
 // browser per ratio.
 //
+//   node gates/verdicts.mjs round | decide | reopen | bundle | received --demo <folder> …
+//       Kenny's verdicts on a research demo, round by round, and its
+//       decision, in the review database (gates/verdicts/demo-round.mjs says
+//       every option). They replace editing research/<demo>/VERDICTS.json and
+//       decided.json by hand [db-1102].
+//
+// `--register <file>` on the one-off commands points them at a register kept
+// as a JSON file (the shape `node gates/review-db.mjs export` writes) instead
+// of the database.
+//
 // The register's gate is gates/check-verdicts.mjs.
 
 import { reanchor } from './verdicts/reanchor.mjs';
@@ -89,6 +100,7 @@ import { pixels } from './verdicts/pixels.mjs';
 import { settle } from './verdicts/settle.mjs';
 import { compare, compareAgainstBrowser } from './verdicts/compare.mjs';
 import { annotateRatio } from './verdicts/annotate.mjs';
+import { demoCommand } from './verdicts/demo-round.mjs';
 
 export { readRegister, sortedRegister, writeRegister, today, ratioOf, geckoRatio } from './verdicts/register.mjs';
 export { parseVerdictLines, applyVerdictLines } from './verdicts/verdict-lines.mjs';
@@ -117,6 +129,7 @@ async function main() {
     if (command === 'compare' && args.includes('--against-browser')) return compareAgainstBrowser(args);
     if (command === 'compare') return compare(args);
     if (command === 'annotate-ratio') return annotateRatio(args);
+    if (await demoCommand(command, args)) return;
     console.error(
         'usage: node gates/verdicts.mjs record < prompt.txt\n' +
             '       node gates/verdicts.mjs note <block> <theme> --rejected "<text>" --change "<text>" [--commit <hash>]\n' +
@@ -129,7 +142,12 @@ async function main() {
             '       node gates/verdicts.mjs compare --against-browser [--commit <hash> | --all] [--at-recorded] [--width 1920]\n' +
             '       node gates/verdicts.mjs annotate-ratio --from <readings.json> [--commit <hash>] [--engine firefox] [--register <file>]\n' +
             '       node gates/verdicts.mjs migrate --to <version> [--register <file>] [--readings <file> [--only <commit>]]\n' +
-            '       node gates/verdicts.mjs reanchor --commit <hash> [--keys-from-compare <file>] [--engine firefox] [--register <file>] [--force]',
+            '       node gates/verdicts.mjs reanchor --commit <hash> [--keys-from-compare <file>] [--engine firefox] [--register <file>] [--force]\n' +
+            '       node gates/verdicts.mjs round --demo <folder> [--round <name>] [--page <id>] [--all-judged] [--approved item:theme,…] [--not-approved "item:theme:note"]… [--comment "…"]\n' +
+            '       node gates/verdicts.mjs decide --demo <folder> --decided "…" [--by Kenny] [--note "…"] [--attributes "…"] [--picks <json>]\n' +
+            '       node gates/verdicts.mjs reopen --demo <folder> --pair "item:theme:reason"…\n' +
+            '       node gates/verdicts.mjs bundle --demo <folder> --into <folder>\n' +
+            '       node gates/verdicts.mjs received --demo <folder>',
     );
     process.exit(2);
 }

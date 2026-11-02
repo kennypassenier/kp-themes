@@ -1,12 +1,11 @@
-// The review-notes file (catalogue/review-notes.json): read, order, write, clear, put.
+// The review notes (data/kp-themes.sqlite, table `review_notes`, through gates/db/): read, order, write, clear, put.
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { notesPath } from './paths.mjs';
+import { loadNotes, reading, saveNotes, writing } from '../db/index.mjs';
 /** @typedef {import('./types.mjs').Notes} Notes */
 
-/** @returns {Notes} the review notes, or none when the file is not there */
-export function readNotes(path = notesPath) {
-    return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : {};
+/** @returns {Notes} the review notes */
+export function readNotes() {
+    return reading(loadNotes);
 }
 
 /**
@@ -30,8 +29,8 @@ export function sortedNotes(notes) {
 }
 
 /** @param {Notes} notes */
-export function writeNotes(notes, path = notesPath) {
-    writeFileSync(path, `${JSON.stringify(sortedNotes(notes), null, 4)}\n`);
+export function writeNotes(notes) {
+    writing((db) => saveNotes(db, sortedNotes(notes)));
 }
 
 /**

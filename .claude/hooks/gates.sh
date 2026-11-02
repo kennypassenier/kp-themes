@@ -63,6 +63,8 @@ gate gen-css node gates/generate-css.mjs --check || exit 1
 gate code-version node gates/generate-code-version.mjs --check || exit 1
 
 # the Agenda's index says what its demos, decisions, pixel checks and blocks say [agenda-fast-1019]
+# the review database's browser export (catalogue/review-*.json) matches data/kp-themes.sqlite [db-1102]
+gate review-data node gates/generate-review-data.mjs --check || exit 1
 gate agenda-index node gates/generate-agenda-index.mjs --check || exit 1
 
 # the Agenda's module graph and sheets, bundled: the page opens in a handful of requests [agenda-fast-1019]

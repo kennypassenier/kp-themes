@@ -12,12 +12,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { notesFaults } from './check-verdicts.mjs';
 import { clearApprovedNotes, putNote, recordPrompt, sortedNotes } from './verdicts.mjs';
+import { loadNotes, saveNotes, saveRegister, withDatabase } from './db/index.mjs';
 
 const HASH = 'a'.repeat(64);
 const context = {
@@ -36,16 +37,20 @@ const note = (extra = {}) => ({
 });
 
 /**
- * A register and a notes file in a temporary directory.
+ * A review database with an empty register and these notes, in a temporary directory.
  * @param {any} notes
  */
 function files(notes) {
     const dir = mkdtempSync(join(tmpdir(), 'kp-review-notes-'));
-    const registerFile = join(dir, 'verdicts.json');
-    const notesFile = join(dir, 'review-notes.json');
-    writeFileSync(registerFile, JSON.stringify({ hashVersion: 2, verdicts: {} }));
-    writeFileSync(notesFile, JSON.stringify(notes));
-    return { dir, registerFile, notesFile, read: () => JSON.parse(readFileSync(notesFile, 'utf8')) };
+    const dbPath = join(dir, 'review.sqlite');
+    withDatabase(
+        (db) => {
+            saveRegister(db, { hashVersion: 2, verdicts: {} });
+            saveNotes(db, notes);
+        },
+        { path: dbPath, write: true, create: true },
+    );
+    return { dir, dbPath, read: () => withDatabase(loadNotes, { path: dbPath }) };
 }
 
 const prompt = (/** @type {string[]} */ ...lines) =>
@@ -139,7 +144,7 @@ test('the note command refuses an unknown block or theme with exit code 1, and w
     const f = files({});
     const script = fileURLToPath(new URL('./verdicts.mjs', import.meta.url));
     const run = (/** @type {string[]} */ args) =>
-        spawnSync(process.execPath, [script, 'note', ...args], { encoding: 'utf8', env: { ...process.env, KP_REVIEW_NOTES: f.notesFile } });
+        spawnSync(process.execPath, [script, 'note', ...args], { encoding: 'utf8', env: { ...process.env, KP_THEMES_DB: f.dbPath } });
     try {
         const block = run(['button--gone', 'formal', '--rejected', 'x', '--change', 'y', '--commit', 'abc1234']);
         assert.equal(block.status, 1);

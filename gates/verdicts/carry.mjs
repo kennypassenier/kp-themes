@@ -1,7 +1,7 @@
 // The `carry` command: re-measure every entry on the working tree and keep its verdict.
 
 import { hashVersion, knownBlocks, REGISTER, unapprovedPairs } from '../check-verdicts.mjs';
-import { ROOT, git, registerPath } from './paths.mjs';
+import { ROOT, git } from './paths.mjs';
 import { ratioOf, readRegister, today, writeRegister } from './register.mjs';
 import { hashAt } from './hash-at.mjs';
 
@@ -28,7 +28,7 @@ export async function carry(args) {
     const started = performance.now();
     const option = (/** @type {string} */ name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
     const width = Number(option('--width') ?? 1920);
-    const file = option('--register') ?? registerPath;
+    const file = option('--register');
     const register = readRegister(file);
     const known = await knownBlocks();
     const { THEMES } = await import('../../js/theme-registry.js');

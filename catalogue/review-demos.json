@@ -1,0 +1,1703 @@
+{
+    "$comment": "Generated from the review database (data/kp-themes.sqlite) by node gates/generate-review-data.mjs; never edit it by hand, the gate refuses a commit that leaves it stale. Change the database with the tools in gates/verdicts.mjs and gates/review-db.mjs.",
+    "demos": {
+        "research/align-grid-1019/": {
+            "decided": { "decided": "2026-10-19 18:55, Kenny: every pair approved (research/align-grid-1019/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "aligngrid-0e13cf1b-0cf3-409d-b7f8-9cf941e134c0",
+                "from": "HEAD",
+                "commit": "64e6031fef33a059fed9205e2de8fb3d0b62e7db",
+                "made": "2026-10-19T15:22:25.486Z"
+            }
+        },
+        "research/all-themes-applied/": {
+            "previous": {
+                "round": "2026-10-13-r4",
+                "from": "HEAD",
+                "commit": "ef5d5196bd2b51a0e3be5b194822029900a1efb6",
+                "made": "2026-10-13T21:25:54.444Z"
+            }
+        },
+        "research/app-homelab-backups/": {
+            "decided": {
+                "decided": "2026-10-19 17:20, Kenny: 22 of 25 approved; repos, fw-guard and ho-checks not approved and rebuilt in the homelab dashboard itself, not here (research/app-homelab-backups/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/audhd-recepten/baddays/": {
+            "decided": {
+                "decided": "2026-10-19 02:38, Kenny: 5 of 5 approved, defaults kept (research/audhd-recepten/baddays/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/audhd-recepten/cook/": {
+            "decided": {
+                "decided": "2026-10-19 06:43, Kenny: 5 of 5 approved, defaults kept (research/audhd-recepten/cook/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/audhd-recepten/grid-fix/": {
+            "decided": { "decided": "2026-10-19 09:22, Kenny: every pair approved (research/audhd-recepten/grid-fix/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/audhd-recepten/recipe/": {
+            "decided": {
+                "decided": "2026-10-19 02:38, Kenny: 7 of 7 approved, defaults kept (research/audhd-recepten/recipe/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/audhd-recepten/timing/": {
+            "decided": {
+                "decided": "2026-10-19 02:38, Kenny: 4 of 4 approved; one default changed: the start disc is \"A 60-minute dial\" (research/audhd-recepten/timing/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/audhd-recepten/wheel/": {
+            "decided": {
+                "decided": "2026-10-19 02:38, Kenny: 4 of 4 approved; one default changed for every theme: \"All slices equal\" (research/audhd-recepten/wheel/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/blueprint-anchor/": {
+            "decided": {
+                "decided": "2026-10-07 21:19 Brussels, Kenny: 1 of 1 approved in the review dialog (research/blueprint-anchor/README.md): Blueprint's anchor element = The tracing pen",
+                "attributes": "data-ba2-anchor=\"<key>\" on the .ba2-scene, research/blueprint-anchor/options.css",
+                "picks": { "blueprint": { "anchor": "tracing" } }
+            }
+        },
+        "research/blueprint-character/": {
+            "decided": {
+                "decided": "2026-10-07 23:41 Brussels, Kenny: 16 of 16 approved in the review dialog (research/blueprint-character/README.md), updates 1 and 2",
+                "attributes": "data-bw-<question>=\"<key>\" on the .bw-scene, research/blueprint-character/options.css",
+                "picks": {
+                    "blueprint": {
+                        "curve": "feed",
+                        "arrival": "readout",
+                        "opening": "trace",
+                        "durations": "units",
+                        "colour": "pen",
+                        "surface": "axes",
+                        "tone": "pointed",
+                        "live": "read",
+                        "loading": "outline",
+                        "leave": "readout",
+                        "composites": "own",
+                        "hover": "read",
+                        "focus": "ring",
+                        "press": "below",
+                        "voice": "lettering",
+                        "motifs": "one"
+                    }
+                }
+            },
+            "update": {
+                "update": 2,
+                "picks": {
+                    "blueprint": {
+                        "curve": "feed",
+                        "colour": "pen",
+                        "surface": "axes",
+                        "tone": "pointed",
+                        "live": "read",
+                        "composites": "own",
+                        "hover": "read",
+                        "focus": "ring",
+                        "voice": "lettering"
+                    }
+                },
+                "questions": {
+                    "blueprint": {
+                        "arrival": {
+                            "comment": "I like 1 and 3 but I feel like they are not good enough. Maybe 1 is a bit too busy. Come up with ten more examples to judge",
+                            "reply": "Ten new options, all led by ONE visible pen that draws one part after another (a tile, a strip, a week, a list), never two at once: before, a week of days had six pens overlapping, which was the busy. Nothing is filled, washed or framed. 1 is your first way calmer (the pen traces the outline once per part, then inks it), 2 your third way calmer (witness lines), then eight new ways: 3 the pen rules the part's two scales tick by tick, 4 it sets the four corners, 5 one stroke along the top, 6 it letters the part line by line, 7 led in by a leader and a node, 8 the two centre lines, 9 read out on its scales (the anchor's diagonal with witness lines and pointers), 10 ticked in with a checker's tick."
+                        },
+                        "opening": {
+                            "comment": "I can't judge this yet, we need to see what the other steps do first",
+                            "reply": "Kept exactly as it was (the three options are unchanged). Opening derives from how a part arrives, loads and leaves, so judge it after those three are settled; it is asked again then."
+                        },
+                        "durations": {
+                            "comment": "needs input from previous steps first to judge",
+                            "reply": "Kept exactly as it was (the three options are unchanged). The durations follow from arrival, loading and leave, so judge them after those are settled."
+                        },
+                        "loading": {
+                            "comment": "I kind of like option 1, but it doesn't work well with components where there are multiple elements, it would be nice if it was always just one pen that traces everything, make a couple of variations on this",
+                            "reply": "Four variations, each shown on four components with several elements (a table, a card with several lines, a form, a strip of key figures): ONE pen traces the whole component in one continuous route, the pen up between elements, and when the route ends the readings are inked at once as the arrival of the content. 1 the outline first, then every place in reading order; 2 reading order, a row in one stroke with dotted leaders; 3 row after row one way and back, the pen up between places; 4 one unbroken meander, the pen never lifted."
+                        },
+                        "leave": {
+                            "comment": "not approved",
+                            "reply": "Four new leaves, none of the three you saw (hatched out, untraced, crossed out). Each is exactly the reverse of a way to arrive, frame for frame, so the one pen goes back through the sheet register from its last part to its first: 1 unlettered, the pen runs back under each line and the line is gone; 2 read back, the pen returns along its diagonal and each line goes as it passes; 3 bracketed then gone, the four corners set round the part; 4 unruled, the two scales taken away tick by tick."
+                        },
+                        "press": {
+                            "comment": "option 1 is best, but I don't like the lighter colour it gives the elements, make a couple of variations",
+                            "reply": "Four variations on the pen taking the dimension. In none of the first three does the pressed part change colour at all: 1 the dimension across the foot, ground unchanged; 2 the dimension below the part with extended witness lines and the size lettered; 3 both dimensions in one stroke, the width and then the height. 4 is the same as 1 with the ground a darker step (never lighter)."
+                        },
+                        "motifs": {
+                            "comment": "nothing is showing here, do it again",
+                            "reply": "Rebuilt, and visible now. The review dialog was shrinking this tall scene to about half size; the review kit now stops at three quarters and the stage scrolls (reload with Ctrl+Shift+R). On top of that the scene itself is new: every motif stands in a labelled part of its own on the package's real components (the pen caught mid-stroke, witness lines and pointers, the scales, a reading, a warning pointed out on its scale, millimetre paper, the compass, today and the pick, the fold line), and the three options are strongly different: every motif means one thing, only the line, on everything."
+                        }
+                    }
+                }
+            }
+        },
+        "research/brutalism-character/": {
+            "decided": {
+                "decided": "2026-10-07 23:44 Brussels, Kenny: all nineteen questions approved after three updates (research/brutalism-character/README.md); Loading = Hoisted as a lintel, The progress bar = Ruled and labelled, a lot slower (2x), Pointing at something = invert",
+                "attributes": "data-bc-<question>=\"<key>\" on the .bc-scene, research/brutalism-character/options.css",
+                "picks": {
+                    "brutalism": {
+                        "curve": "gravity",
+                        "direction": "diagonal",
+                        "opening": "footprint",
+                        "durations": "units",
+                        "colour": "roles",
+                        "corners": "square",
+                        "surface": "slab",
+                        "tone": "taped",
+                        "live": "slam",
+                        "loading": "hoist-lintel",
+                        "progress": "ruled-slowest",
+                        "spinner": "tip",
+                        "leave": "lift",
+                        "composites": "own",
+                        "hover": "invert",
+                        "focus": "ring",
+                        "press": "ground",
+                        "voice": "shout",
+                        "motifs": "one"
+                    }
+                }
+            },
+            "update": {
+                "update": 3,
+                "picks": {
+                    "brutalism": {
+                        "curve": "gravity",
+                        "direction": "diagonal",
+                        "opening": "footprint",
+                        "durations": "units",
+                        "colour": "roles",
+                        "corners": "square",
+                        "surface": "slab",
+                        "tone": "taped",
+                        "live": "slam",
+                        "spinner": "tip",
+                        "leave": "lift",
+                        "composites": "own",
+                        "focus": "ring",
+                        "press": "ground",
+                        "hover": "invert",
+                        "voice": "shout",
+                        "motifs": "one",
+                        "loading": "hoist-lintel"
+                    }
+                },
+                "questions": {
+                    "brutalism": {
+                        "progress": {
+                            "comment": "can, we make it a mix between 7 and 10, where we keep the looks of 7, but print the value in the yellow tip. And maybe make 3 variations on it, with slightly slower speeds",
+                            "reply": "Seven was Ruled and ten was Labelled. The first option is the mix: Ruled's track and fill with its ticks, and the yellow tip prints the value in ink at weight 800, counting up in the same ten hard steps as the share arrives (busy prints three dots). Three variations follow with only the speed changed, every one keeping its ten steps with each step longer: a little slower (1.25x, 1500 ms loop), slower (1.5x, 1800 ms) and a lot slower (2x, 2400 ms). The ten earlier bars are gone from the list."
+                        }
+                    }
+                }
+            }
+        },
+        "research/character-busy/": {
+            "decided": {
+                "decided": "2026-10-06 23:41 Brussels, Kenny: 22 of 22 approved (character-busy round 3)",
+                "attributes": "data-bo-<aspect>=\"<key>\" on the table wrapper [data-bo], research/character-busy/ (busy.css, busy-a..d.css, round2-a..d, round3-a/b)",
+                "picks": {
+                    "formal": { "shape": "1", "loading": "3", "arrival": "3", "failure": "3", "phone": "1" },
+                    "dark": { "shape": "1", "loading": "1", "arrival": "1", "failure": "2", "phone": "1" },
+                    "cyberpunk": { "shape": "r2-cy-shape-2", "loading": "1", "arrival": "1", "failure": "1", "phone": "1" },
+                    "synthwave": { "shape": "r2-sw-shape-1", "loading": "3", "arrival": "1", "failure": "1", "phone": "1" },
+                    "pastel": { "shape": "r2-pt-shape-1", "loading": "2", "arrival": "2", "failure": "3", "phone": "1" },
+                    "forest": { "shape": "r2-fo-shape-2", "loading": "1", "arrival": "2", "failure": "r3-fo-failure-1", "phone": "3" },
+                    "high-contrast": { "shape": "r2-hc-shape-2", "loading": "1", "arrival": "1", "failure": "1", "phone": "1" },
+                    "sepia": { "shape": "r2-se-shape-3", "loading": "3", "arrival": "2", "failure": "1", "phone": "1" },
+                    "blueprint": { "shape": "r2-bp-shape-3", "loading": "2", "arrival": "3", "failure": "1", "phone": "1" },
+                    "solstice": { "shape": "r2-so-shape-2", "loading": "3", "arrival": "3", "failure": "1", "phone": "1" },
+                    "brutalism": { "shape": "r2-br-shape-2", "loading": "2", "arrival": "2", "failure": "2", "phone": "1" },
+                    "deco": { "shape": "r2-dc-shape-1", "loading": "2", "arrival": "2", "failure": "1", "phone": "1" },
+                    "nostromo": { "shape": "r3-b-no-shape-1", "loading": "1", "arrival": "2", "failure": "1", "phone": "r3-b-no-phone-1" },
+                    "titanium": { "shape": "r3-b-ti-shape-2", "loading": "2", "arrival": "2", "failure": "1", "phone": "r3-b-ti-phone-1" }
+                }
+            }
+        },
+        "research/character-calendar/": {
+            "decided": {
+                "decided": "2026-10-06 21:03 Brussels, Kenny: 22 of 22 approved in full (character-calendar)",
+                "attributes": "data-cl-<aspect>=\"<key>\" on the preview wrapper [data-cl], research/character-calendar/ (calendar.css and round files)",
+                "picks": {
+                    "formal": { "shape": "1", "loading": "1", "arrival": "2", "tone": "1", "select": "1" },
+                    "dark": { "shape": "3", "loading": "1", "arrival": "3", "tone": "1", "select": "2" },
+                    "cyberpunk": { "shape": "3", "loading": "2", "arrival": "1", "tone": "2", "select": "2" },
+                    "synthwave": { "shape": "3", "loading": "3", "arrival": "1", "tone": "1", "select": "1" },
+                    "pastel": { "shape": "1", "loading": "1", "arrival": "3", "tone": "2", "select": "1" },
+                    "forest": { "shape": "3", "loading": "1", "arrival": "3", "tone": "2", "select": "3" },
+                    "high-contrast": { "shape": "3", "loading": "r2-hc-load-1", "arrival": "3", "tone": "1", "select": "2" },
+                    "sepia": { "shape": "3", "loading": "1", "arrival": "2", "tone": "1", "select": "1" },
+                    "blueprint": { "shape": "2", "loading": "2", "arrival": "1", "tone": "2", "select": "1" },
+                    "solstice": { "shape": "2", "loading": "2", "arrival": "2", "tone": "2", "select": "3" },
+                    "brutalism": { "shape": "1", "loading": "1", "arrival": "1", "tone": "1", "select": "3" },
+                    "deco": { "shape": "1", "loading": "1", "arrival": "2", "tone": "1", "select": "1" },
+                    "nostromo": { "shape": "1", "loading": "2", "arrival": "2", "tone": "1", "select": "1" },
+                    "titanium": { "shape": "1", "loading": "1", "arrival": "2", "tone": "1", "select": "1" }
+                }
+            }
+        },
+        "research/character-chart/": {
+            "decided": {
+                "decided": "2026-10-06 21:02 Brussels, Kenny: 22 of 22 approved in full (character-chart)",
+                "attributes": "data-cc-<aspect>=\"<key>\" on the preview wrapper [data-cc], research/character-chart/ (chart.css and round3/round4 files)",
+                "picks": {
+                    "formal": { "shape": "b", "loading": "stamp", "arrival": "draw", "update": "none", "events": "shape", "tip": "b" },
+                    "dark": { "shape": "a", "loading": "cutter", "arrival": "linear", "update": "none", "events": "target", "tip": "a" },
+                    "cyberpunk": {
+                        "shape": "r3-cy-ice",
+                        "loading": "r3-cy-ld-rain",
+                        "arrival": "r3-cy-ar-chrome",
+                        "update": "none",
+                        "events": "target",
+                        "tip": "a"
+                    },
+                    "synthwave": { "shape": "a", "loading": "feed", "arrival": "rise", "update": "none", "events": "ring", "tip": "a" },
+                    "pastel": {
+                        "shape": "r3-pa-bubblegum",
+                        "loading": "halftone",
+                        "arrival": "rise",
+                        "update": "none",
+                        "events": "r4-pa-ev-scallop",
+                        "tip": "a"
+                    },
+                    "forest": { "shape": "a", "loading": "r4-fo-map", "arrival": "rise", "update": "none", "events": "r3-fo-ev-trig", "tip": "a" },
+                    "high-contrast": { "shape": "hc1", "loading": "march", "arrival": "linear", "update": "none", "events": "bead", "tip": "hc1" },
+                    "sepia": { "shape": "b", "loading": "r4-se-load-fox", "arrival": "stamp", "update": "none", "events": "bead", "tip": "b" },
+                    "blueprint": {
+                        "shape": "a",
+                        "loading": "r4-bp-ld-5",
+                        "arrival": "linear",
+                        "update": "none",
+                        "events": "r3-bp-ev-weld",
+                        "tip": "a"
+                    },
+                    "solstice": { "shape": "so3", "loading": "embers", "arrival": "rise", "update": "swell", "events": "bead", "tip": "a" },
+                    "brutalism": {
+                        "shape": "br1",
+                        "loading": "r3c-bru-load-3",
+                        "arrival": "drop",
+                        "update": "none",
+                        "events": "bead",
+                        "tip": "r3c-bru-tip-1"
+                    },
+                    "deco": { "shape": "a", "loading": "fan", "arrival": "rise", "update": "none", "events": "r3c-deco-ev-1", "tip": "a" },
+                    "nostromo": {
+                        "shape": "a",
+                        "loading": "r3-no-load-1",
+                        "arrival": "r3-no-arr-3",
+                        "update": "none",
+                        "events": "target",
+                        "tip": "a"
+                    },
+                    "titanium": { "shape": "a", "loading": "cutter", "arrival": "draw", "update": "none", "events": "r3-ti-ev-2", "tip": "a" }
+                }
+            }
+        },
+        "research/character-columns/": {
+            "decided": {
+                "decided": "2026-10-06 11:50 Brussels, Kenny: 22 of 22 approved in full (character-columns round 2)",
+                "attributes": "data-cs-<aspect>=\"<n>\" on the strip wrapper [data-cs], research/character-columns/columns.css",
+                "picks": {
+                    "formal": { "shape": "3", "loading": "3", "arrival": "2", "tone": "3", "live": "3" },
+                    "dark": { "shape": "3", "loading": "1", "arrival": "1", "tone": "1", "live": "3" },
+                    "cyberpunk": { "shape": "2", "loading": "3", "arrival": "2", "tone": "1", "live": "3" },
+                    "synthwave": { "shape": "1", "loading": "2", "arrival": "2", "tone": "3", "live": "2" },
+                    "pastel": { "shape": "1", "loading": "2", "arrival": "2", "tone": "2", "live": "1" },
+                    "forest": { "shape": "3", "loading": "1", "arrival": "1", "tone": "2", "live": "1" },
+                    "high-contrast": { "shape": "2", "loading": "3", "arrival": "2", "tone": "1", "live": "1" },
+                    "sepia": { "shape": "3", "loading": "3", "arrival": "2", "tone": "3", "live": "2" },
+                    "blueprint": { "shape": "1", "loading": "2", "arrival": "3", "tone": "2", "live": "3" },
+                    "solstice": { "shape": "2", "loading": "2", "arrival": "1", "tone": "3", "live": "1" },
+                    "brutalism": { "shape": "1", "loading": "1", "arrival": "2", "tone": "2", "live": "2" },
+                    "deco": { "shape": "2", "loading": "1", "arrival": "3", "tone": "2", "live": "1" },
+                    "nostromo": { "shape": "1", "loading": "1", "arrival": "1", "tone": "3", "live": "2" },
+                    "titanium": { "shape": "2", "loading": "3", "arrival": "3", "tone": "1", "live": "3" }
+                }
+            }
+        },
+        "research/character-drawer/": {
+            "decided": {
+                "decided": "2026-10-06 21:54 Brussels, Kenny: 22 of 22 approved (character-drawer round 2)",
+                "attributes": "data-dt-<aspect>=\"<key>\" on the stage wrapper [data-dt], research/character-drawer/ (drawer.css, drawer-a..d.css, round2-a/b)",
+                "picks": {
+                    "formal": { "shape": "1", "openclose": "3", "highlight": "1", "card": "1", "next": "2" },
+                    "dark": { "shape": "1", "openclose": "1", "highlight": "1", "card": "2", "next": "2" },
+                    "cyberpunk": { "shape": "2", "openclose": "2", "highlight": "1", "card": "1", "next": "3" },
+                    "synthwave": { "shape": "2", "openclose": "2", "highlight": "1", "card": "1", "next": "2" },
+                    "pastel": { "shape": "3", "openclose": "2", "highlight": "3", "card": "3", "next": "2" },
+                    "forest": { "shape": "2", "openclose": "1", "highlight": "1", "card": "2", "next": "1" },
+                    "high-contrast": {
+                        "shape": "r2-hc-shape-2",
+                        "openclose": "r2-hc-openclose-1",
+                        "highlight": "r2-hc-highlight-3",
+                        "card": "1",
+                        "next": "2"
+                    },
+                    "sepia": { "shape": "3", "openclose": "1", "highlight": "1", "card": "2", "next": "3" },
+                    "blueprint": { "shape": "1", "openclose": "2", "highlight": "1", "card": "1", "next": "3" },
+                    "solstice": { "shape": "1", "openclose": "2", "highlight": "1", "card": "1", "next": "3" },
+                    "brutalism": {
+                        "shape": "r2-br-shape-2",
+                        "openclose": "r2-br-openclose-2",
+                        "highlight": "r2-br-highlight-1",
+                        "card": "1",
+                        "next": "3"
+                    },
+                    "deco": { "shape": "3", "openclose": "2", "highlight": "3", "card": "1", "next": "2" },
+                    "nostromo": { "shape": "2", "openclose": "2", "highlight": "2", "card": "1", "next": "3" },
+                    "titanium": { "shape": "3", "openclose": "1", "highlight": "1", "card": "1", "next": "2" }
+                }
+            }
+        },
+        "research/character-graph/": {
+            "decided": {
+                "decided": "2026-10-06 21:37 Brussels, Kenny: 22 of 22 approved (character-graph round 5; grotesk loading Out of register)",
+                "attributes": "data-cg-<aspect>=\"<key>\" on the graph wrapper, research/character-graph/ (graphs.css, ghost.css, round2-*, round3-*, round4-*)",
+                "picks": {
+                    "formal": { "shape": "3", "loading": "r3-fm-load-3", "arrival": "3", "focus": "3", "live": "2" },
+                    "dark": { "shape": "1", "loading": "r3-dk-load-3", "arrival": "2", "focus": "3", "live": "3" },
+                    "cyberpunk": { "shape": "3", "loading": "r3-b-cp-load-4", "arrival": "2", "focus": "3", "live": "3" },
+                    "synthwave": { "shape": "1", "loading": "r3-b-sw-load-4", "arrival": "2", "focus": "2", "live": "3" },
+                    "pastel": { "shape": "1", "loading": "r3-b-ps-load-4", "arrival": "2", "focus": "1", "live": "3" },
+                    "forest": { "shape": "3", "loading": "r3-fr-load-3", "arrival": "2", "focus": "3", "live": "2" },
+                    "high-contrast": { "shape": "3", "loading": "r4-hc-load-2", "arrival": "2", "focus": "2", "live": "2" },
+                    "sepia": { "shape": "2", "loading": "r3-se-load-1", "arrival": "2", "focus": "3", "live": "3" },
+                    "blueprint": { "shape": "2", "loading": "r3-bp-load-3", "arrival": "2", "focus": "2", "live": "2" },
+                    "solstice": { "shape": "1", "loading": "r3-d-sol-load-2", "arrival": "3", "focus": "2", "live": "2" },
+                    "brutalism": {
+                        "shape": "2",
+                        "loading": "r5-br-load-3",
+                        "arrival": "r4-c-bru-arr-2",
+                        "focus": "r4-c-bru-focus-2",
+                        "live": "r4-c-bru-live-3"
+                    },
+                    "deco": { "shape": "2", "loading": "r4-dec-load-3", "arrival": "2", "focus": "3", "live": "2" },
+                    "nostromo": { "shape": "1", "loading": "r3-no-load-2", "arrival": "3", "focus": "3", "live": "3" },
+                    "titanium": { "shape": "2", "loading": "r3-tn-load-3", "arrival": "1", "focus": "2", "live": "2" }
+                }
+            }
+        },
+        "research/character-header/": {
+            "decided": {
+                "decided": "2026-10-06 21:50 Brussels, Kenny: 22 of 22 approved (character-header round 1)",
+                "attributes": "data-ph-<aspect>=\"<n>\" on the header strip [data-ph], research/character-header/ (header css files)",
+                "picks": {
+                    "formal": { "shape": "1", "menu": "2", "interactive": "1" },
+                    "dark": { "shape": "1", "menu": "2", "interactive": "1" },
+                    "cyberpunk": { "shape": "3", "menu": "2", "interactive": "1" },
+                    "synthwave": { "shape": "3", "menu": "1", "interactive": "2" },
+                    "pastel": { "shape": "1", "menu": "1", "interactive": "2" },
+                    "forest": { "shape": "1", "menu": "3", "interactive": "3" },
+                    "high-contrast": { "shape": "3", "menu": "1", "interactive": "2" },
+                    "sepia": { "shape": "2", "menu": "1", "interactive": "1" },
+                    "blueprint": { "shape": "3", "menu": "1", "interactive": "3" },
+                    "solstice": { "shape": "3", "menu": "2", "interactive": "2" },
+                    "brutalism": { "shape": "1", "menu": "1", "interactive": "1" },
+                    "deco": { "shape": "1", "menu": "1", "interactive": "2" },
+                    "nostromo": { "shape": "1", "menu": "1", "interactive": "2" },
+                    "titanium": { "shape": "3", "menu": "1", "interactive": "2" }
+                }
+            }
+        },
+        "research/character-kpi/": {
+            "decided": {
+                "decided": "2026-10-06 21:17 Brussels, Kenny: 22 of 22 approved (character-kpi; titanium loading The anodising bath, form v39)",
+                "attributes": "data-kf-<aspect>=\"<key>\" on the strip wrapper [data-kf], research/character-kpi/ (kpi.css, kpi-a..d.css, round2-a..d)",
+                "picks": {
+                    "formal": { "shape": "2", "loading": "3", "tone": "3", "interactive": "2", "live": "3" },
+                    "dark": { "shape": "3", "loading": "1", "tone": "3", "interactive": "1", "live": "3" },
+                    "cyberpunk": { "shape": "3", "loading": "3", "tone": "2", "interactive": "1", "live": "3" },
+                    "synthwave": { "shape": "3", "loading": "1", "tone": "1", "interactive": "2", "live": "3" },
+                    "pastel": { "shape": "3", "loading": "3", "tone": "1", "interactive": "1", "live": "3" },
+                    "forest": { "shape": "2", "loading": "2", "tone": "3", "interactive": "2", "live": "3" },
+                    "high-contrast": { "shape": "1", "loading": "1", "tone": "3", "interactive": "2", "live": "1" },
+                    "sepia": { "shape": "2", "loading": "3", "tone": "3", "interactive": "2", "live": "3" },
+                    "blueprint": { "shape": "3", "loading": "3", "tone": "3", "interactive": "3", "live": "3" },
+                    "solstice": { "shape": "2", "loading": "3", "tone": "1", "interactive": "1", "live": "2" },
+                    "brutalism": { "shape": "2", "loading": "3", "tone": "2", "interactive": "3", "live": "1" },
+                    "deco": { "shape": "1", "loading": "3", "tone": "1", "interactive": "1", "live": "3" },
+                    "nostromo": { "shape": "r2-ns-shape-2", "loading": "2", "tone": "1", "interactive": "2", "live": "2" },
+                    "titanium": { "shape": "r2-ti-shape-1", "loading": "r2-ti-load-1", "tone": "1", "interactive": "r2-ti-int-2", "live": "3" }
+                }
+            }
+        },
+        "research/character-menu/": {
+            "decided": {
+                "decided": "2026-10-06 21:40 Brussels, Kenny: 22 of 22 approved (character-menu round 3); every close is its open played backwards",
+                "attributes": "data-mb-<aspect>=\"<key>\" on the menu wrapper, research/character-menu/ (menu.css, menu-a..d.css, round2-*, round3-*)",
+                "picks": {
+                    "formal": { "shape": "1", "loading": "1", "open": "1", "tone": "1", "interact": "1" },
+                    "dark": { "shape": "2", "loading": "r2-dk-load-3", "open": "3", "tone": "3", "interact": "1" },
+                    "cyberpunk": {
+                        "shape": "r3-cy-shape-1",
+                        "loading": "r3-cy-load-3",
+                        "open": "r3-cy-open-1",
+                        "tone": "r3-cy-tone-3",
+                        "interact": "r2-cp-interact-3"
+                    },
+                    "synthwave": { "shape": "2", "loading": "1", "open": "3", "tone": "1", "interact": "1" },
+                    "pastel": { "shape": "1", "loading": "2", "open": "3", "tone": "2", "interact": "2" },
+                    "forest": { "shape": "2", "loading": "r2-ft-load-5", "open": "3", "tone": "1", "interact": "1" },
+                    "high-contrast": { "shape": "1", "loading": "1", "open": "1", "tone": "1", "interact": "1" },
+                    "sepia": { "shape": "2", "loading": "3", "open": "2", "tone": "1", "interact": "2" },
+                    "blueprint": { "shape": "1", "loading": "1", "open": "1", "tone": "3", "interact": "2" },
+                    "solstice": { "shape": "2", "loading": "2", "open": "2", "tone": "1", "interact": "1" },
+                    "brutalism": { "shape": "2", "loading": "r2-bru-load-5", "open": "1", "tone": "1", "interact": "1" },
+                    "deco": { "shape": "1", "loading": "1", "open": "3", "tone": "1", "interact": "1" },
+                    "nostromo": { "shape": "1", "loading": "r2-nos-load-2", "open": "3", "tone": "1", "interact": "2" },
+                    "titanium": { "shape": "3", "loading": "r2-tin-load-1", "open": "2", "tone": "1", "interact": "3" }
+                }
+            }
+        },
+        "research/character-meter/": {
+            "decided": {
+                "decided": "2026-10-05 20:45 Brussels, Kenny: 22 of 22 approved (character-meter round 4; README.md); written 2026-10-07 from PICKED in demo.js plus the round-4 picks, for research/families/",
+                "attributes": "data-cm-<aspect>=\"<n>\" on the preview wrapper [data-cm-preview], research/character-meter/meters.css",
+                "picks": {
+                    "formal": { "shape": "1", "loading": "2", "arrival": "1", "tone": "1", "mark": "2" },
+                    "dark": { "shape": "1", "loading": "2", "arrival": "3", "tone": "3", "mark": "3" },
+                    "cyberpunk": { "shape": "2", "loading": "3", "arrival": "2", "tone": "3", "mark": "3" },
+                    "synthwave": { "shape": "1", "loading": "2", "arrival": "2", "tone": "2", "mark": "1" },
+                    "pastel": { "shape": "1", "loading": "1", "arrival": "3", "tone": "1", "mark": "2" },
+                    "forest": { "shape": "1", "loading": "3", "arrival": "1", "tone": "3", "mark": "3" },
+                    "high-contrast": { "shape": "2", "loading": "3", "arrival": "1", "tone": "1", "mark": "3" },
+                    "sepia": { "shape": "1", "loading": "2", "arrival": "2", "tone": "2", "mark": "2" },
+                    "blueprint": { "shape": "3", "loading": "1", "arrival": "1", "tone": "1", "mark": "3" },
+                    "solstice": { "shape": "3", "loading": "2", "arrival": "2", "tone": "2", "mark": "2" },
+                    "brutalism": { "shape": "1", "loading": "1", "arrival": "1", "tone": "3", "mark": "3" },
+                    "deco": { "shape": "1", "loading": "3", "arrival": "2", "tone": "3", "mark": "3" },
+                    "nostromo": { "shape": "1", "loading": "1", "arrival": "3", "tone": "2", "mark": "3" },
+                    "titanium": { "shape": "1", "loading": "1", "arrival": "3", "tone": "3", "mark": "3" }
+                }
+            }
+        },
+        "research/character-state/": {
+            "decided": {
+                "decided": "2026-10-06 21:41 Brussels, Kenny: 22 of 22 approved (character-state round 2)",
+                "attributes": "data-sw-<aspect>=\"<key>\" on the chip wrapper [data-sw], research/character-state/ (state.css, state-a..d.css, round2-a)",
+                "picks": {
+                    "formal": { "shape": "1", "tone": "2", "change": "1" },
+                    "dark": { "shape": "1", "tone": "3", "change": "1" },
+                    "cyberpunk": { "shape": "3", "tone": "2", "change": "1" },
+                    "synthwave": { "shape": "3", "tone": "3", "change": "1" },
+                    "pastel": { "shape": "3", "tone": "3", "change": "2" },
+                    "forest": { "shape": "1", "tone": "1", "change": "3" },
+                    "high-contrast": { "shape": "3", "tone": "2", "change": "1" },
+                    "sepia": { "shape": "2", "tone": "3", "change": "3" },
+                    "blueprint": { "shape": "2", "tone": "2", "change": "1" },
+                    "solstice": { "shape": "3", "tone": "3", "change": "1" },
+                    "brutalism": { "shape": "1", "tone": "3", "change": "2" },
+                    "deco": { "shape": "3", "tone": "3", "change": "1" },
+                    "nostromo": { "shape": "3", "tone": "3", "change": "1" },
+                    "titanium": { "shape": "3", "tone": "2", "change": "3" }
+                }
+            }
+        },
+        "research/character-tiles/": {
+            "decided": {
+                "decided": "2026-10-06 21:11 Brussels, Kenny: 22 of 22 approved in full (character-tiles)",
+                "attributes": "data-ti-<aspect>=\"<key>\" on the preview wrapper [data-ti], research/character-tiles/ (tiles.css, tiles-a..e.css and round2-a..d)",
+                "picks": {
+                    "formal": { "shape": "1", "loading": "1", "arrival": "2", "tone": "1", "hover": "1", "live": "3" },
+                    "dark": { "shape": "2", "loading": "1", "arrival": "2", "tone": "1", "hover": "1", "live": "2" },
+                    "cyberpunk": {
+                        "shape": "3",
+                        "loading": "r2-cy-load-6",
+                        "arrival": "r2-cy-arrive-3",
+                        "tone": "r2-cy-tone-2",
+                        "hover": "1",
+                        "live": "r2-cy-live-3"
+                    },
+                    "synthwave": { "shape": "3", "loading": "1", "arrival": "1", "tone": "r2-sw-tone-3", "hover": "3", "live": "2" },
+                    "pastel": { "shape": "3", "loading": "2", "arrival": "1", "tone": "2", "hover": "1", "live": "3" },
+                    "forest": { "shape": "3", "loading": "2", "arrival": "3", "tone": "3", "hover": "3", "live": "2" },
+                    "high-contrast": { "shape": "3", "loading": "1", "arrival": "3", "tone": "3", "hover": "2", "live": "2" },
+                    "sepia": { "shape": "3", "loading": "1", "arrival": "2", "tone": "r2-se-tone-1", "hover": "1", "live": "3" },
+                    "blueprint": { "shape": "3", "loading": "2", "arrival": "2", "tone": "1", "hover": "1", "live": "3" },
+                    "solstice": { "shape": "3", "loading": "3", "arrival": "3", "tone": "1", "hover": "3", "live": "3" },
+                    "brutalism": { "shape": "2", "loading": "1", "arrival": "3", "tone": "1", "hover": "1", "live": "2" },
+                    "deco": { "shape": "3", "loading": "2", "arrival": "3", "tone": "1", "hover": "2", "live": "2" },
+                    "nostromo": { "shape": "2", "loading": "1", "arrival": "2", "tone": "3", "hover": "3", "live": "1" },
+                    "titanium": { "shape": "1", "loading": "2", "arrival": "2", "tone": "1", "hover": "2", "live": "3" }
+                }
+            }
+        },
+        "research/character-trend/": {
+            "decided": {
+                "decided": "2026-10-06 21:08 Brussels, Kenny: 22 of 22 approved in full (character-trend)",
+                "attributes": "data-ct-<aspect>=\"<key>\" on the preview wrapper [data-ct], research/character-trend/ (trend.css and round files)",
+                "picks": {
+                    "formal": { "shape": "1", "loading": "2", "arrival": "2", "tone": "3", "live": "1" },
+                    "dark": { "shape": "1", "loading": "2", "arrival": "2", "tone": "3", "live": "3" },
+                    "cyberpunk": { "shape": "1", "loading": "1", "arrival": "3", "tone": "3", "live": "3" },
+                    "synthwave": { "shape": "1", "loading": "1", "arrival": "2", "tone": "3", "live": "3" },
+                    "pastel": { "shape": "1", "loading": "2", "arrival": "2", "tone": "3", "live": "3" },
+                    "forest": { "shape": "1", "loading": "3", "arrival": "3", "tone": "3", "live": "3" },
+                    "high-contrast": { "shape": "1", "loading": "2", "arrival": "1", "tone": "3", "live": "3" },
+                    "sepia": { "shape": "2", "loading": "3", "arrival": "2", "tone": "3", "live": "1" },
+                    "blueprint": { "shape": "1", "loading": "1", "arrival": "2", "tone": "3", "live": "1" },
+                    "solstice": { "shape": "2", "loading": "2", "arrival": "2", "tone": "3", "live": "2" },
+                    "brutalism": { "shape": "r3-br-shape-1", "loading": "r3-br-load-1", "arrival": "r3-br-arr-1", "tone": "3", "live": "1" },
+                    "deco": { "shape": "3", "loading": "r3-dc-load-1", "arrival": "2", "tone": "3", "live": "3" },
+                    "nostromo": { "shape": "r3-br-shape-1", "loading": "1", "arrival": "2", "tone": "3", "live": "2" },
+                    "titanium": { "shape": "2", "loading": "3", "arrival": "2", "tone": "3", "live": "3" }
+                }
+            }
+        },
+        "research/chassis-kit-pages/": {
+            "previous": {
+                "round": "chassis-kit-pages-27d90ddd-5b32-4b7b-94d5-f2bfd1d4d99a",
+                "from": "HEAD",
+                "commit": "860e46ec91982a665236f302f438d2a2e94f5d3b",
+                "made": "2026-10-19T05:32:12.466Z"
+            }
+        },
+        "research/cyberpunk-character/": {
+            "decided": {
+                "decided": "2026-10-07 23:52 Brussels, Kenny: 18 of 18 approved in the review dialog after two updates (research/cyberpunk-character/README.md); the anchor is the glitch",
+                "attributes": "data-cy-<question>=\"<key>\" on the .cy-scene, research/cyberpunk-character/options.css",
+                "picks": {
+                    "cyberpunk": {
+                        "curve": "split",
+                        "direction": "sideways",
+                        "opening": "split",
+                        "durations": "ticks",
+                        "colour": "roles",
+                        "corners": "notch",
+                        "surface": "holo",
+                        "tone": "lock",
+                        "live": "shape",
+                        "loading": "osd",
+                        "spinner": "glitch",
+                        "leave": "split",
+                        "composites": "own",
+                        "hover": "split",
+                        "focus": "brackets",
+                        "press": "closed",
+                        "type": "prefixed",
+                        "motifs": "meaning"
+                    }
+                }
+            },
+            "update": {
+                "update": 2,
+                "picks": {
+                    "cyberpunk": {
+                        "direction": "sideways",
+                        "durations": "ticks",
+                        "colour": "roles",
+                        "corners": "notch",
+                        "surface": "holo",
+                        "tone": "lock",
+                        "live": "shape",
+                        "type": "prefixed",
+                        "motifs": "meaning",
+                        "loading": "osd",
+                        "composites": "own",
+                        "focus": "brackets",
+                        "press": "closed"
+                    }
+                },
+                "questions": {
+                    "cyberpunk": {
+                        "curve": {
+                            "comment": "I kind of like 1, but it's a bit too shaky instead of glitchy if that makes sense. It should have more of that text glitch effect we use when updating a live value, make a couple of variations on that",
+                            "reply": "Option 1 stays as the reference. Four new options play the live-update stutter on the whole part instead of shaking it: two copies (yellow right and up, cyan right and down) come home 6, 4, 2 and 1 px in four ticks over 480 ms (converge, slice, tear, split). Converge is recommended."
+                        },
+                        "opening": {
+                            "comment": "power flicker seems best out of those, but one thing I don't like is that I have these corners that have an edge sometimes, but when the animation comes around, it draws a rectange around that and the corners are square again. So give me 5 alternatives on this one, make it aligned with the ones that I commissioned for the earlier step",
+                            "reply": "Fixed: the animations clipped the part with a plain rectangle and only the last frame put the notch back; the notch is now cut at every frame (checked on power flicker). Power flicker stays, plus glitched in and five alternatives in the same stutter language as the motion curve: converge, blink, slice, tear, split. Every close is still its open reversed."
+                        },
+                        "spinner": {
+                            "comment": "signal bars are best, give me a couple variations, maybe slow it a tad down, it's a bit too jumpy atm",
+                            "reply": "Signal bars are about a fifth as jumpy: one bar steps at a time, 240 ms a step instead of 120 ms (a loop is 2.4 s instead of 1.8 s). Five variations beside them: a rising meter, a glitching copy, a peak-hold tick, an equaliser from a centre line and a skyline with a travelling light."
+                        },
+                        "leave": {
+                            "comment": "glitched in is best, but make new variations based on the ones I commissioned in step 1 and 2",
+                            "reply": "Torn out, glitched in stays first. Six new pairs are built from the motion-curve and opening ideas: converge, blink, flicker, slice, tear and split. Every exit is its arrival reversed, measured frame by frame, and the notched corners stay cut at every frame."
+                        },
+                        "hover": {
+                            "comment": "I like split edge, but in menu, the right square edge goes beyond the edge of the corner of the menu itself, can we fix that? give me a couple of variations, let's say five, and five that are glitchy",
+                            "reply": "Fixed: the doubled edge now follows the part's own cut at every frame (the menu entry follows the menu's notch), so nothing sticks out at the corner. Split edge stays first; ten more: five variations of the doubled edge (end bar, double rule, closing half frame, staggered bars, swapped colours) and five glitchy ones (flash and split, jitter, slice, slit, beam). Enter and leave are exact mirrors."
+                        }
+                    }
+                }
+            }
+        },
+        "research/cyberpunk-live/": {
+            "decided": {
+                "decided": "2026-10-07 02:49 Brussels, Kenny: \"A live update in cyberpunk = Count-down stutter\" (cyberpunk-live round 2026-10-07-r1)",
+                "attributes": "data-cl-fx=\"<key>\" on the option card [data-cl-option], research/cyberpunk-live/demo.css; option 3 = key \"tick\"",
+                "picks": { "cyberpunk": { "live": "3" } }
+            }
+        },
+        "research/dark-anchor/": {
+            "decided": {
+                "decided": "2026-10-08 Brussels, Kenny: 1 of 1 approved in the review dialog, update 1 (research/dark-anchor/README.md): Dark's anchor element = The line lays the film down, turning (recommended)",
+                "attributes": "the ANCHORS keys in research/dark-anchor/anchors.js; the scenes in research/dark-anchor/options.css",
+                "picks": { "dark": { "anchor": "lays" } }
+            },
+            "update": {
+                "update": 1,
+                "picks": {},
+                "questions": {
+                    "dark": {
+                        "anchor": {
+                            "comment": "I love the colours of everythiung, especially the progress bar on option 1, but I also like the sleek animations of spectral line, can we combine these somehow?",
+                            "reply": "Five new candidates, each one way of making the film's turn and the spectral line one thing: the line lays the film down, turning (recommended); the line scans the edge round; two wavelengths meet in the middle; the slit stands and the film turns under it; the line sweeps, then the film turns. Every candidate keeps round one's progress bar exactly (the film fill whose colour turns as it fills) and adds the line to it."
+                        }
+                    }
+                }
+            }
+        },
+        "research/dark-character/": {
+            "decided": {
+                "decided": "2026-10-09 Brussels, Kenny: 19 of 19 approved in the review dialog (research/dark-character/README.md), update 1: every recommendation except The corners = chamfered on two opposite corners, Loading = A comet with a film tail and The spinner = The spectrum bars",
+                "attributes": "data-dk-<question>=\"<key>\" on the .dk-scene, research/dark-character/options.css",
+                "picks": {
+                    "dark": {
+                        "curve": "pass",
+                        "direction": "start",
+                        "opening": "swept",
+                        "durations": "pass",
+                        "colour": "film",
+                        "corners": "two",
+                        "surface": "instrument",
+                        "warning": "coral",
+                        "live": "pass",
+                        "loading": "comet",
+                        "busybar": "runs",
+                        "spinner": "bars",
+                        "leave": "pass",
+                        "composites": "own",
+                        "hover": "rests",
+                        "focus": "di2",
+                        "press": "quarter",
+                        "type": "archivo",
+                        "motifs": "film"
+                    }
+                }
+            },
+            "update": {
+                "update": 1,
+                "picks": {
+                    "dark": {
+                        "curve": "pass",
+                        "direction": "start",
+                        "durations": "pass",
+                        "colour": "film",
+                        "surface": "instrument",
+                        "warning": "coral",
+                        "live": "pass",
+                        "busybar": "runs",
+                        "leave": "pass",
+                        "composites": "own",
+                        "hover": "rests",
+                        "focus": "di2",
+                        "press": "quarter",
+                        "type": "archivo",
+                        "motifs": "film"
+                    }
+                },
+                "questions": {
+                    "dark": {
+                        "opening": {
+                            "comment": "I like option one, but even the ones tha topen from a button should open from left to right. And the firs toption here scans starting from the button, it should only scan the actual menu element, bu tthat's probably fixed when it's from left to right. Although at th etooltip, the scan is also too high, it should only be the height of the menu that actually opens",
+                            "reply": "Option 1 stays with the rule you gave: every opening is a pass from LEFT to RIGHT, the menu too. The line starts at the left edge of the opened element itself (never at the button) and crosses only that element’s own box, so a menu is swept over its own height only, a tooltip over the tooltip’s height only, a dialog over the dialog. The close is the pass back, right to left. The other two options are as before."
+                        },
+                        "corners": {
+                            "comment": "options 2 looks quite good, but the panel (and menu?) stil whos a black corner where the colour stops, key figure looks perfect, that's the shape I want, if it's the glow or shadow causing this, it should adapt to the shape",
+                            "reply": "Option 2 (the four chamfers) is now the first and recommended option, drawn as the key figure draws it. The black corner was the halo and the grey shadow of the panel and the menu, which were cut square and did not follow the chamfer: the halo, the shadow and the film edge are now one shape, cut by the same clip-path as the panel (the halo is a drop-shadow of the clipped element, so it takes the cut), on the panel, the menu, the dialog and the tooltip alike. The two-corner cut and the square stay as options."
+                        },
+                        "loading": {
+                            "comment": "give me ten variations on the line sweeps the slot, keep the colours",
+                            "reply": "Ten variations on the line sweeping the slot, all in the film’s colours and all one line passing a waiting part: the plain sweep, a comet with a film tail, the afterglow, a ladder down the lines, two lines passing through each other, a diagonal sweep, a sweep that stops to read, the edge chase, a prism line whose colour follows its place, and a grating of three thin lines."
+                        },
+                        "spinner": {
+                            "comment": "I feel like we can do better than this, give me ten more examples",
+                            "reply": "Ten more spinners, new ones, all in the film and the line, each a different idea: a prism turning its edge, a radar line with a fading wedge, a pendulum line, spectrum bars, a grating, the chamfer chase, ripples, breathing brackets, a hue dial and a Lissajous trail. Your earlier choices stay for reference: the line running the ring and the register’s ring."
+                        }
+                    }
+                }
+            }
+        },
+        "research/deco-anchor/": {
+            "decided": {
+                "decided": "2026-10-08 Brussels, Kenny: 1 of 1 approved in the review dialog (research/deco-anchor/README.md): Deco's anchor element = The fan opens (recommended); and the progress bar is to be redone (\"I'm really not a fan of the progress bar btw, that needs to be redone for sure\")",
+                "attributes": "the ANCHORS keys in research/deco-anchor/anchors.js; the scenes in research/deco-anchor/options.css",
+                "picks": { "deco": { "anchor": "fan" } }
+            }
+        },
+        "research/deco-character/": {
+            "decided": {
+                "decided": "2026-10-09 Brussels, Kenny: 19 of 19 approved in the review dialog (research/deco-character/README.md), after update 3: leaving and arriving = a great fan",
+                "attributes": "data-dc-<question>=\"<key>\" on the .dc-scene, research/deco-character/options.css",
+                "picks": {
+                    "deco": {
+                        "curve": "unfold",
+                        "direction": "centre",
+                        "opening": "inlay",
+                        "durations": "fan",
+                        "colour": "inlay",
+                        "corners": "cove",
+                        "surface": "lacquer",
+                        "warning": "figure",
+                        "live": "gilded",
+                        "loading": "doors",
+                        "bar": "double",
+                        "spinner": "rotate",
+                        "leave": "fan",
+                        "composites": "own",
+                        "hover": "leaf",
+                        "focus": "double",
+                        "press": "seal",
+                        "type": "poiret",
+                        "motifs": "inlay"
+                    }
+                }
+            },
+            "update": {
+                "update": 3,
+                "picks": {
+                    "deco": {
+                        "curve": "unfold",
+                        "direction": "centre",
+                        "opening": "inlay",
+                        "durations": "fan",
+                        "colour": "inlay",
+                        "corners": "cove",
+                        "surface": "lacquer",
+                        "warning": "figure",
+                        "live": "gilded",
+                        "loading": "doors",
+                        "bar": "double",
+                        "spinner": "rotate",
+                        "composites": "own",
+                        "hover": "leaf",
+                        "focus": "double",
+                        "press": "seal",
+                        "type": "poiret",
+                        "motifs": "inlay"
+                    }
+                },
+                "questions": {
+                    "deco": {
+                        "leave": {
+                            "comment": "I like five best becuse it's actually fancy and well drawn, i like the art style, bu tI'm not sure if curtains are the way to go. They also seem to stay in the window after they are open? So keep it in this art style, but come up with ten variations",
+                            "reply": "The festoon (five) stays the standard of the drawing, and the curtains that stayed in the window are fixed: when a part has arrived nothing of the dressing is drawn any more, and when it has left nothing is left either (hidden, not pulled to the top). Ten variations in that art style, the satin, the gold trim, the rosettes, the tassels and the braid, and none of them a plain curtain: the festoon itself (fixed), a Roman blind, a folding screen, a ribbon and bow, a velvet rope and its posts, shutters, a lift gate, a great fan, a bead curtain and a scallop shell."
+                        }
+                    }
+                }
+            }
+        },
+        "research/findings-1019/": {
+            "decided": { "decided": "2026-10-19 01:52, Kenny: every pair approved (research/findings-1019/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/focus-tracks-1019/": {
+            "decided": { "decided": "2026-10-19 11:22, Kenny: every pair approved (research/focus-tracks-1019/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/forest-character/": {
+            "decided": {
+                "decided": "2026-10-07 17:47 Brussels, Kenny: 17 of 17 approved in the review dialog (research/forest-character/README.md): every recommendation except The corners = the leaf corner",
+                "attributes": "data-fc-<question>=\"<key>\" on the .fc-scene, research/forest-character/options.css",
+                "picks": {
+                    "forest": {
+                        "curve": "tree",
+                        "direction": "grow",
+                        "opening": "anchor",
+                        "durations": "seen",
+                        "colour": "trail",
+                        "corners": "leaf",
+                        "surface": "kit",
+                        "live": "ring",
+                        "loading": "strip",
+                        "spinner": "tree",
+                        "leave": "wither",
+                        "composites": "own",
+                        "hover": "blaze",
+                        "focus": "di2",
+                        "press": "close",
+                        "type": "notes",
+                        "motifs": "place"
+                    }
+                }
+            }
+        },
+        "research/forest-skeleton/": {
+            "decided": {
+                "decided": "2026-10-07 20:05 Brussels, Kenny: 1 of 1 approved in the review dialog: option 1, The treeline fills in (recommended)",
+                "attributes": "data-sk-fx on the option card, research/forest-skeleton/options.css",
+                "picks": { "forest": { "skeleton": "1" } }
+            }
+        },
+        "research/forest-uniformity/": {
+            "decided": {
+                "decided": "2026-10-09 Brussels, Kenny: 10 of 10 approved in the review dialog (research/forest-uniformity/README.md), every recommendation",
+                "attributes": "data-fu-<question>=\"<key>\" on the scene, research/forest-uniformity/options.css",
+                "picks": {
+                    "forest": {
+                        "navigation": "grown",
+                        "loading": "row",
+                        "pointing": "blaze",
+                        "pairs": "mirror",
+                        "overlays": "family",
+                        "forms": "blaze",
+                        "rows": "entry",
+                        "feedback": "grown",
+                        "corners": "leaf",
+                        "timing": "breath"
+                    }
+                }
+            }
+        },
+        "research/formal-anchor/": {
+            "decided": {
+                "decided": "2026-10-08 Brussels, Kenny: 1 of 1 approved in the review dialog (research/formal-anchor/README.md): Formal's anchor element = The account is closed: the double rule",
+                "attributes": "the ANCHORS keys in research/formal-anchor/anchors.js; the scenes in research/formal-anchor/options.css",
+                "picks": { "formal": { "anchor": "rule" } }
+            }
+        },
+        "research/formal-character/": {
+            "decided": {
+                "decided": "2026-10-08 Brussels, Kenny: 19 of 19 approved in the review dialog (research/formal-character/README.md): every recommendation except Pointing at something = A rule under the label and Motifs = Those plus the seal where picked",
+                "attributes": "data-fm-<question>=\"<key>\" on the .fm-scene, research/formal-character/options.css",
+                "picks": {
+                    "formal": {
+                        "curve": "ruled",
+                        "direction": "along",
+                        "opening": "ruled",
+                        "durations": "ruling",
+                        "colour": "navy",
+                        "corners": "plates",
+                        "surface": "ledger",
+                        "warning": "redink",
+                        "live": "closed",
+                        "loading": "lines",
+                        "busybar": "closed",
+                        "spinner": "arc",
+                        "leave": "ruled",
+                        "composites": "own",
+                        "hover": "under",
+                        "focus": "di2",
+                        "press": "double",
+                        "type": "fraunces",
+                        "motifs": "seal"
+                    }
+                }
+            }
+        },
+        "research/gantt-fit-1101/": {
+            "decided": {
+                "decided": "2026-11-01 23:22, Kenny: the one pair approved in formal (research/gantt-fit-1101/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/gap-round-1/": {
+            "decided": { "decided": "2026-10-19 06:43, Kenny: every pair approved (research/gap-round-1/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/gaps-1031/": {
+            "decided": { "decided": "2026-10-31 22:17, Kenny: all seven pairs approved in formal (research/gaps-1031/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/heatstates-1102/": {
+            "decided": { "decided": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/heatstates-1102/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/high-contrast-anchor/": {
+            "decided": {
+                "decided": "2026-10-08 Brussels, Kenny: not approved; the theme is dropped (\"we are actually not going further with high contrast, the theme can be removed from everywhere\")",
+                "picks": {}
+            }
+        },
+        "research/kpadopt-controls/": {
+            "decided": {
+                "decided": "2026-10-16 04:39, Kenny: 48 of 48 approved in round 2 (round 1: the toolbar in formal jumped while its buttons opened, mended) (research/kpadopt-controls/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": { "round": "", "from": "ca32be54", "commit": "ca32be545a3b7673253d6b67e3f46b3a41affcd1", "made": "2026-10-16T01:08:47.026Z" }
+        },
+        "research/kpadopt-feedback/": {
+            "decided": { "decided": "2026-10-16 04:39, Kenny: 48 of 48 approved in round 1 (research/kpadopt-feedback/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/kpadopt-nav/": {
+            "decided": {
+                "decided": "2026-10-16 13:29, Kenny: every pair approved by round 5, the last one phantom's folding bar (round 4: its opened More menu had no ground, mended) (research/kpadopt-nav/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt-tooltip-sort/": {
+            "decided": {
+                "decided": "2026-10-16 04:39, Kenny: 48 of 48 approved in round 2 (round 1: oval hover card in light, pastel and solstice, groupalways in forest, mended) (research/kpadopt-tooltip-sort/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": { "round": "", "from": "ca32be54", "commit": "ca32be545a3b7673253d6b67e3f46b3a41affcd1", "made": "2026-10-16T01:08:46.709Z" }
+        },
+        "research/kpadopt2/": {
+            "decided": { "decided": "2026-10-16 19:17, Kenny: every pair approved by round 6 (research/kpadopt2/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "2026-10-16-r4",
+                "from": "46003cc3",
+                "commit": "46003cc362ff5202723b18aee499a8b3e72cb467",
+                "made": "2026-10-16T12:32:10.125Z"
+            }
+        },
+        "research/kpadopt3/": {
+            "decided": { "decided": "2026-10-16 19:17, Kenny: every pair approved by round 2 (research/kpadopt3/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "2026-10-16-r1",
+                "from": "HEAD",
+                "commit": "a9717a67059fd2228d48fe029cf1a67e44b2407f",
+                "made": "2026-10-16T14:15:14.873Z"
+            }
+        },
+        "research/kpadopt4-cards/": {
+            "decided": {
+                "decided": "2026-10-17 03:43, Kenny: every pair approved in the eleven themes (research/kpadopt4-cards/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt4-commands/": {
+            "decided": {
+                "decided": "2026-10-17 15:37, Kenny: every pair approved in the eleven themes (research/kpadopt4-commands/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt4-cooking/": {
+            "decided": {
+                "decided": "2026-10-17 18:30, Kenny: every pair approved in all twelve themes (research/kpadopt4-cooking/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "cooking-5f017563-0229-4477-b7b7-291d1d2580d1",
+                "from": "c0f75138",
+                "commit": "c0f75138efe5022067db34c46cf327883eb0f436",
+                "made": "2026-10-17T16:10:51.542Z"
+            }
+        },
+        "research/kpadopt4-flows/": {
+            "decided": {
+                "decided": "2026-10-17 03:43, Kenny: every pair approved in the eleven themes (research/kpadopt4-flows/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt4-records/": {
+            "decided": {
+                "decided": "2026-10-17 03:43, Kenny: every pair approved in the eleven themes (research/kpadopt4-records/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt4-rows/": {
+            "decided": {
+                "decided": "2026-10-17 03:43, Kenny: every pair approved in the eleven themes (research/kpadopt4-rows/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt4-secrets/": {
+            "decided": {
+                "decided": "2026-10-17 03:43, Kenny: every pair approved in the eleven themes (research/kpadopt4-secrets/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt4-time/": {
+            "decided": {
+                "decided": "2026-10-17 03:43, Kenny: every pair approved in the eleven themes (research/kpadopt4-time/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt4-values/": {
+            "decided": {
+                "decided": "2026-10-17 17:20, Kenny: tick in forest approved as branded digits; every pair approved (research/kpadopt4-values/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "2026-10-17-r3-values-3",
+                "from": "HEAD",
+                "commit": "21f265ce8efaa987c995814f8ab5249b2e303122",
+                "made": "2026-10-17T14:28:58.401Z"
+            }
+        },
+        "research/kpadopt4/": {
+            "decided": {
+                "decided": "2026-10-17 00:31, Kenny: every section approved in formal by round 2 (research/kpadopt4/VERDICTS.json); the eleven other themes are asked in research/kpadopt4-<topic>/",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "2026-10-16-r2",
+                "from": "HEAD",
+                "commit": "c76c9a2fb4d1b8686b2749e428f5999b832e1a31",
+                "made": "2026-10-16T22:38:14.738Z"
+            }
+        },
+        "research/kpadopt5-basics/": {
+            "decided": {
+                "decided": "2026-10-18 00:28, Kenny: every kpadopt5 basics pair approved in formal (research/kpadopt5-basics/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt5-ops/": {
+            "decided": {
+                "decided": "2026-10-18 01:21, Kenny: every kpadopt5-ops part approved in formal, defaults kept (research/kpadopt5-ops/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "ops-553b88cf-7ad0-4d60-b4b1-19d4090d8b91",
+                "from": "HEAD",
+                "commit": "ceaca448ad49f65fbe0511894f3ce976d18405dd",
+                "made": "2026-10-17T22:31:48.561Z"
+            }
+        },
+        "research/kpadopt5-people/": {
+            "decided": {
+                "decided": "2026-10-18 00:28, Kenny: every kpadopt5 people pair approved in formal (research/kpadopt5-people/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt5-rows/": {
+            "decided": {
+                "decided": "2026-10-18 01:21, Kenny: every kpadopt5-rows part approved in formal, defaults kept (research/kpadopt5-rows/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "rows-b7aeeae6-3b7f-4f9f-a823-d4447a1816e7",
+                "from": "HEAD",
+                "commit": "ceaca448ad49f65fbe0511894f3ce976d18405dd",
+                "made": "2026-10-17T22:31:49.214Z"
+            }
+        },
+        "research/kpadopt5-time/": {
+            "decided": {
+                "decided": "2026-10-18 00:28, Kenny: every kpadopt5 time pair approved in formal (research/kpadopt5-time/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt56-availability/": {
+            "decided": {
+                "decided": "2026-10-18 19:08, Kenny: every pair approved in the eleven themes (research/kpadopt56-availability/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt56-calm/": {
+            "decided": {
+                "decided": "2026-10-18 19:08, Kenny: every pair approved in the eleven themes (research/kpadopt56-calm/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt56-charts/": {
+            "decided": {
+                "decided": "2026-10-18 19:08, Kenny: every pair approved in the eleven themes (research/kpadopt56-charts/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt56-choose/": {
+            "decided": {
+                "decided": "2026-10-18 22:36, Kenny: every pair approved over three rounds, in the eleven themes and in formal (research/kpadopt56-choose/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "choose-3ea3603b-911d-4ef1-b750-f9510f39173a",
+                "from": "HEAD",
+                "commit": "a5063d09047dd6d7ef73f85525ee465e17dd64bf",
+                "made": "2026-10-18T19:39:48.359Z"
+            }
+        },
+        "research/kpadopt56-confirm/": {
+            "decided": {
+                "decided": "2026-10-18 19:08, Kenny: every pair approved in the eleven themes (research/kpadopt56-confirm/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt56-fields/": {
+            "decided": { "decided": "2026-10-18 21:37, Kenny: every pair approved (research/kpadopt56-fields/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "fields-ed220403-0d3a-4007-a0e6-0ae6fa0ae4a3",
+                "from": "HEAD",
+                "commit": "f519d73a56949cf3512efea6b6b422b6a034f82c",
+                "made": "2026-10-18T18:04:16.784Z"
+            }
+        },
+        "research/kpadopt56-followups/": {
+            "decided": { "decided": "2026-10-18 22:09, Kenny: every pair approved (research/kpadopt56-followups/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/kpadopt56-formal/": {
+            "decided": {
+                "decided": "2026-10-18 18:42, Kenny: every formal re-review section approved (round 1: 24 of 29, round 2: the other 5) (research/kpadopt56-formal/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "formal-8a67c2e1-80ab-4582-900b-0a92b9255d47",
+                "from": "HEAD",
+                "commit": "691f412b69427c7d997188bed923e97584097163",
+                "made": "2026-10-18T15:47:16.834Z"
+            }
+        },
+        "research/kpadopt56-lists/": {
+            "decided": { "decided": "2026-10-18 21:37, Kenny: every pair approved (research/kpadopt56-lists/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "lists-fd0135f1-5f88-417b-9f1e-2f26abb4c594",
+                "from": "HEAD",
+                "commit": "44e4cd6eecd7a00d40ad1ee732f8146a43ba0705",
+                "made": "2026-10-18T17:12:12.455Z"
+            }
+        },
+        "research/kpadopt56-media/": {
+            "decided": { "decided": "2026-10-18 21:37, Kenny: every pair approved (research/kpadopt56-media/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "media-5e5eef79-9b69-4ee0-b349-5d10362231cd",
+                "from": "HEAD",
+                "commit": "44e4cd6eecd7a00d40ad1ee732f8146a43ba0705",
+                "made": "2026-10-18T17:12:11.407Z"
+            }
+        },
+        "research/kpadopt56-pages/": {
+            "decided": {
+                "decided": "2026-10-18 19:08, Kenny: every pair approved in the eleven themes (research/kpadopt56-pages/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt56-people/": {
+            "decided": { "decided": "2026-10-18 21:37, Kenny: every pair approved (research/kpadopt56-people/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "people-4e5f79a9-d626-44a0-a2e0-5696ab2673db",
+                "from": "HEAD",
+                "commit": "44e4cd6eecd7a00d40ad1ee732f8146a43ba0705",
+                "made": "2026-10-18T17:12:11.941Z"
+            }
+        },
+        "research/kpadopt56-schedule/": {
+            "decided": { "decided": "2026-10-18 21:37, Kenny: every pair approved (research/kpadopt56-schedule/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/kpadopt56-status/": {
+            "decided": { "decided": "2026-10-18 21:37, Kenny: every pair approved (research/kpadopt56-status/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/kpadopt56-toggles/": {
+            "decided": {
+                "decided": "2026-10-18 19:53, Kenny: every pair approved over three rounds, in the eleven themes and in formal (research/kpadopt56-toggles/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": { "round": "2", "from": "HEAD", "commit": "46df905f3b1eb45e70921ad3935aab622f0922d4", "made": "2026-10-18T17:26:05.431Z" }
+        },
+        "research/kpadopt56-updates/": {
+            "decided": { "decided": "2026-10-18 21:37, Kenny: every pair approved (research/kpadopt56-updates/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/kpadopt6-calm/": {
+            "decided": {
+                "decided": "2026-10-18 00:28, Kenny: every part approved in formal, with his changed defaults applied (research/kpadopt6-calm/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "calm-c39372f2-91de-4620-b0fc-060c328526cc",
+                "from": "HEAD",
+                "commit": "ceaca448ad49f65fbe0511894f3ce976d18405dd",
+                "made": "2026-10-17T22:31:59.701Z"
+            }
+        },
+        "research/kpadopt6-media/": {
+            "decided": {
+                "decided": "2026-10-17 23:33, Kenny: all eleven media pairs approved in formal (research/kpadopt6-media/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/kpadopt6-ops/": {
+            "decided": {
+                "decided": "2026-10-18 01:21, Kenny: every kpadopt6-ops part approved in formal, defaults kept (research/kpadopt6-ops/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "ops-7ffed8d2-ee39-4201-801a-d337a3ceb71f",
+                "from": "HEAD",
+                "commit": "ceaca448ad49f65fbe0511894f3ce976d18405dd",
+                "made": "2026-10-17T22:41:06.471Z"
+            }
+        },
+        "research/kpadopt6-social/": {
+            "decided": {
+                "decided": "2026-10-18 00:28, Kenny: every part approved in formal, with his changed defaults applied (research/kpadopt6-social/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "social-59c461e0-c71c-4ade-9ee4-294c0a609479",
+                "from": "HEAD",
+                "commit": "ceaca448ad49f65fbe0511894f3ce976d18405dd",
+                "made": "2026-10-17T22:32:00.451Z"
+            }
+        },
+        "research/kyu-11-overview/": {
+            "decided": {
+                "decided": "2026-10-19 06:43, Kenny: every pair approved over two rounds (research/kyu-11-overview/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "kyu-11-overview-8e6b5c1e-7b53-4d77-9c52-0b0d3f6a2f14",
+                "from": "226ddb9c77b86db036d80288356a43d8924c2367",
+                "commit": "226ddb9c77b86db036d80288356a43d8924c2367",
+                "made": "2026-10-19T03:06:03.462Z"
+            }
+        },
+        "research/kyu-11-subscription/": {
+            "decided": { "decided": "2026-10-19 02:38, Kenny: every pair approved (research/kyu-11-subscription/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/kyu-11-topic-messages/": {
+            "decided": { "decided": "2026-10-19 02:38, Kenny: every pair approved (research/kyu-11-topic-messages/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/kyu-11-topic-subs/": {
+            "decided": { "decided": "2026-10-19 02:38, Kenny: every pair approved (research/kyu-11-topic-subs/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/kyu-11-topics/": {
+            "decided": { "decided": "2026-10-19 02:38, Kenny: every pair approved (research/kyu-11-topics/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/kyugaps-1102/": {
+            "decided": { "decided": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/kyugaps-1102/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/leftover-looks/": {
+            "decided": {
+                "decided": "2026-10-15T02:30:00+02:00",
+                "by": "Kenny",
+                "note": "Round 1 deco rejected (02:12, the demo showed no deco menu); round 2 approved.",
+                "picks": { "phantom-plate": {}, "deco-inlay": { "deco": "Under the button that opened it" } }
+            },
+            "previous": { "round": "", "from": "HEAD", "commit": "672e87bc60d5fcd0410c69e1c632d80cfcb27e02", "made": "2026-10-15T00:13:17.213Z" }
+        },
+        "research/list-action-1031/": {
+            "decided": {
+                "decided": "2026-10-31 21:38, Kenny: the one pair approved in formal (research/list-action-1031/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/live-options-1019/": {
+            "decided": { "decided": "2026-10-19 11:22, Kenny: every pair approved (research/live-options-1019/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/medgaps-1102/": {
+            "decided": { "decided": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/medgaps-1102/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/medicine-1030/": {
+            "decided": {
+                "decided": "2026-10-31 00:41, Kenny: every pair approved over two rounds (research/medicine-1030/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "medicine-1030-2e8f47fd-00d2-4b26-b645-1248df12cfb5",
+                "from": "HEAD",
+                "commit": "8be0b02752a6aeb430d9ef31adcf359487e470e7",
+                "made": "2026-10-30T23:03:59.169Z"
+            }
+        },
+        "research/nostromo-anchor/": {
+            "decided": {
+                "decided": "2026-10-07 20:10 Brussels, Kenny: 1 of 1 approved in the review dialog (research/nostromo-anchor/README.md): Nostromo's anchor element = The raster",
+                "attributes": "data-na-anchor=\"<key>\" on the .na-scene, research/nostromo-anchor/options.css",
+                "picks": { "nostromo": { "anchor": "raster" } }
+            }
+        },
+        "research/nostromo-character/": {
+            "decided": {
+                "decided": "2026-10-08 01:02 Brussels, Kenny: 19 of 19 approved in the review dialog (research/nostromo-character/README.md, update 3): every recommendation except the spinner (the tape reel) and the focus ring (the lamp lit orange); the busy progress bar keeps its LED window and its lamps compute",
+                "attributes": "data-nc-<question>=\"<key>\" on the .nc-scene, research/nostromo-character/options.css",
+                "picks": {
+                    "nostromo": {
+                        "curve": "frames",
+                        "direction": "raster",
+                        "opening": "raster",
+                        "durations": "frames",
+                        "colour": "indicate",
+                        "corners": "moulded",
+                        "surface": "both",
+                        "tone": "klaxon",
+                        "live": "raster",
+                        "loading": "raster",
+                        "spinner": "reel",
+                        "leave": "raster",
+                        "composites": "own",
+                        "hover": "lamp",
+                        "focus": "led",
+                        "press": "well",
+                        "type": "michroma",
+                        "motifs": "place",
+                        "busy": "led"
+                    }
+                }
+            },
+            "update": {
+                "update": 3,
+                "picks": {
+                    "nostromo": {
+                        "curve": "frames",
+                        "direction": "raster",
+                        "opening": "raster",
+                        "durations": "frames",
+                        "colour": "indicate",
+                        "corners": "moulded",
+                        "surface": "both",
+                        "tone": "klaxon",
+                        "live": "raster",
+                        "loading": "raster",
+                        "spinner": "reel",
+                        "leave": "raster",
+                        "composites": "own",
+                        "hover": "lamp",
+                        "focus": "led",
+                        "press": "well",
+                        "type": "michroma",
+                        "motifs": "place"
+                    }
+                },
+                "questions": {
+                    "nostromo": {
+                        "busy": {
+                            "comment": "kan je de progressbar uit mijn screenshot terugbrengen?",
+                            "reply": "Your screenshot shows the meter of the intro (whole LED cells, the lit share, the ▼ mark); that one has not changed. What did change, with your Loading pick (the screen redraws), is the busy progress bar: a bar that does not know its share yet was the LED bargraph and is now the small amber glass with COMPUTING written on it. This new question shows both on the same busy bar, in the same 20 frames of 80 ms (1.6 s a cycle): option 1 the COMPUTING glass as it is now, option 2 the LED window in its bezel with the cells of your screenshot (3 px on a 6 px pitch), its lamps switching in an unordered pattern every 4 frames, no sweep. I recommend option 2: the bar keeps its bezel and window whether it knows its share or not, and the word in the package's 1 rem bar is too small to read. The bar with a share, the meter and the other waiting parts (menu entry, chart plot, skeleton, days) are the same in both options. Pick one."
+                        }
+                    }
+                }
+            }
+        },
+        "research/parts-forms-1102/": {
+            "decided": { "decided": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/parts-forms-1102/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "parts-forms-1102-2da45ee3-3a55-4e11-b944-0f6037d5132a",
+                "from": "HEAD",
+                "commit": "c691b0e2adb1a06994ca5f1801443f6c6cff23cc",
+                "made": "2026-11-02T01:23:09.577Z"
+            }
+        },
+        "research/parts-habits-1102/": {
+            "decided": { "decided": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/parts-habits-1102/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "parts-habits-1102-f2341460-0182-4af6-8161-1eabf5de1613",
+                "from": "HEAD",
+                "commit": "c691b0e2adb1a06994ca5f1801443f6c6cff23cc",
+                "made": "2026-11-02T01:14:01.776Z"
+            }
+        },
+        "research/parts-layout-1102/": {
+            "decided": { "decided": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/parts-layout-1102/VERDICTS.json)", "by": "Kenny" },
+            "previous": {
+                "round": "parts-layout-1102-8fa90d25-b227-425e-a5cb-b7c5066b7113",
+                "from": "HEAD",
+                "commit": "c691b0e2adb1a06994ca5f1801443f6c6cff23cc",
+                "made": "2026-11-02T01:13:59.986Z"
+            }
+        },
+        "research/pastel-applied/": {
+            "previous": {
+                "round": "2026-10-14-r1",
+                "from": "HEAD",
+                "commit": "8012661193b0c3ba7c510c423afa1ab6d5af9f72",
+                "made": "2026-10-14T14:04:52.996Z"
+            }
+        },
+        "research/pastel-character/": {
+            "decided": {
+                "decided": "2026-10-14 03:23 Brussels, Kenny: 19 of 19 approved in the review dialog (research/pastel-character/README.md), update 2: anchor = printed twice, stuck on; focus = the dashed line alone (not the recommendation); leave = the anchor, then a thumbtack; loading = the pom-pom caterpillar 6 (everything becomes caterpillar); spinner = the pom-pom caterpillar 2 (the round trip); every other question its recommendation",
+                "attributes": "data-pa-<question>=\"<key>\" on the .pa-scene, research/pastel-character/options.css, pairs-a.css, pairs-b.css",
+                "picks": {
+                    "pastel": {
+                        "anchor": "twice",
+                        "curve": "landing",
+                        "direction": "corner",
+                        "opening": "stuck",
+                        "durations": "landing",
+                        "colour": "three",
+                        "corners": "two",
+                        "surface": "taped",
+                        "tone": "sticker",
+                        "live": "wobble",
+                        "composites": "own",
+                        "focus": "single",
+                        "press": "flat",
+                        "type": "one",
+                        "leave": "tack",
+                        "hover": "peel",
+                        "motifs": "sheet",
+                        "loading": "b-bug-6",
+                        "spinner": "b-curl-2"
+                    }
+                }
+            },
+            "update": {
+                "update": 2,
+                "picks": {
+                    "pastel": {
+                        "anchor": "twice",
+                        "curve": "landing",
+                        "direction": "corner",
+                        "opening": "stuck",
+                        "durations": "landing",
+                        "colour": "three",
+                        "corners": "two",
+                        "surface": "taped",
+                        "tone": "sticker",
+                        "live": "wobble",
+                        "composites": "own",
+                        "focus": "single",
+                        "press": "flat",
+                        "type": "one",
+                        "leave": "tack",
+                        "hover": "peel",
+                        "motifs": "sheet"
+                    }
+                },
+                "questions": {
+                    "pastel": {
+                        "loading": {
+                            "comment": "Onthoudt deze die ik al goed vind, optie 6, 11,  13, 20. Ik wil vijf varianten per optie die ik hier oplijstte, de rest mag weg. Wat ik bv niet zo goed vond aan het vliegtuigje en de rups, is dat ze niet rond de dagen van de maand vliegen, maar erdoor. Daar doet optie 6 het bv veel beter door daar een aparte optie voor te hebben. Dus wees creatief",
+                            "reply": "Round 3: only the four families Kenny kept stay (6 the doodle, 11 the tag, 13 the pom-pom caterpillar, 20 the paper plane), each as its original plus five new variants, loading and spinner matched by family and number; every variant treats each carrier on purpose, the day circles above all (around them, not through them)."
+                        },
+                        "spinner": {
+                            "comment": "Onthoudt deze die ik al goed vind, optie 6, 11,  13, 20. Ik wil vijf varianten per optie die ik hier oplijstte, de rest mag weg. Wat ik bv niet zo goed vond aan het vliegtuigje en de rups, is dat ze niet rond de dagen van de maand vliegen, maar erdoor. Daar doet optie 6 het bv veel beter door daar een aparte optie voor te hebben. Dus wees creatief. Wederom baseren op de opties die je voor het laden gaat aanmaken",
+                            "reply": "Round 3: only the four families Kenny kept stay (6 the doodle, 11 the tag, 13 the pom-pom caterpillar, 20 the paper plane), each as its original plus five new variants, loading and spinner matched by family and number; every variant treats each carrier on purpose, the day circles above all (around them, not through them)."
+                        }
+                    }
+                }
+            },
+            "previous": {
+                "round": "2026-10-14-r1",
+                "from": "HEAD",
+                "commit": "f0de9a0978304b98f410445ea66ee4c0a6c45f1f",
+                "made": "2026-10-13T23:50:11.305Z"
+            }
+        },
+        "research/round-2-1019/": {
+            "decided": { "decided": "2026-10-19 11:22, Kenny: every pair approved (research/round-2-1019/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/round-3-1019/": {
+            "decided": { "decided": "2026-10-19 17:20, Kenny: every pair approved (research/round-3-1019/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/round-4-1019/": {
+            "decided": {
+                "decided": "2026-10-19 11:22, Kenny: not reviewed. Not reviewed: fixes to approved components ship without a demo (Kenny, 2026-10-19 11:22)",
+                "by": "Kenny"
+            }
+        },
+        "research/rule-fixes-1019/": {
+            "decided": { "decided": "2026-10-19 06:43, Kenny: every pair approved (research/rule-fixes-1019/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/sepia-anchor/": {
+            "decided": {
+                "decided": "2026-10-08 Brussels, Kenny: not approved; the theme is dropped (\"We are also stopping with Sepia, it may be deleted\")",
+                "picks": {}
+            }
+        },
+        "research/sidenav-edge/": {
+            "previous": { "round": "", "from": "HEAD", "commit": "ef5d5196bd2b51a0e3be5b194822029900a1efb6", "made": "2026-10-13T21:25:43.014Z" }
+        },
+        "research/sidenav-minor/": {
+            "decided": { "decided": "Approved in full on 2026-10-14 19:12: behaviour 64 of 64 and look 96 of 96, in all 16 themes." }
+        },
+        "research/solstice-character/": {
+            "decided": {
+                "decided": "2026-10-07 23:18 Brussels, Kenny: 18 of 18 approved in the review dialog over two updates (research/solstice-character/README.md): every recommendation except The focus ring = a halo (the calendar's pick) and Leaving and arriving = the morning mist (his pick of 2026-10-04); Pointing at something = the sun climbs its arc and The press = the sun swells inside it (dimmer on the buttons, update 2)",
+                "attributes": "data-so-<question>=\"<key>\" on the .so-scene, research/solstice-character/options.css",
+                "picks": {
+                    "solstice": {
+                        "curve": "sine",
+                        "direction": "up",
+                        "opening": "dome",
+                        "durations": "units",
+                        "colour": "roles",
+                        "corners": "soft",
+                        "surface": "below",
+                        "tone": "sky",
+                        "live": "risen",
+                        "loading": "sun",
+                        "spinner": "arc",
+                        "leave": "mist",
+                        "composites": "own",
+                        "hover": "sun",
+                        "focus": "halo",
+                        "press": "swell",
+                        "voice": "serif",
+                        "motifs": "one"
+                    }
+                }
+            },
+            "update": {
+                "update": 2,
+                "picks": {
+                    "solstice": {
+                        "curve": "sine",
+                        "direction": "up",
+                        "opening": "dome",
+                        "durations": "units",
+                        "colour": "roles",
+                        "corners": "soft",
+                        "surface": "below",
+                        "tone": "sky",
+                        "live": "risen",
+                        "loading": "sun",
+                        "spinner": "arc",
+                        "leave": "mist",
+                        "composites": "own",
+                        "focus": "halo",
+                        "voice": "serif",
+                        "motifs": "one",
+                        "hover": "sun"
+                    }
+                },
+                "questions": {
+                    "solstice": {
+                        "press": {
+                            "comment": "I like option 1 best, but it' not quite right yet, especially on the buttons it's too bright",
+                            "reply": "Option 1, the sun swells, stays, and is toned down: on the buttons the pressed face now lifts about 1.2 to 1.4 times the rest brightness instead of 1.5 to 1.7 (the glow at about half, the foot line softer, the face moving half-way to its pressed shade). In and out are still the same time (t50 120 ms, t90 200 ms). Options 2 and 3 follow the same lower level."
+                        }
+                    }
+                }
+            }
+        },
+        "research/state-plates-1019/": {
+            "decided": {
+                "decided": "2026-10-19 18:55, Kenny: the rounds are closed; the network graph's loading is fixed directly in the package as the twelve animations approved in research/character-graph (2026-10-06), no further round (research/state-plates-1019/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "state-plates-3c06b96c-833d-419f-84e3-03a5d636617a",
+                "from": "HEAD",
+                "commit": "64e6031fef33a059fed9205e2de8fb3d0b62e7db",
+                "made": "2026-10-19T15:22:26.294Z"
+            }
+        },
+        "research/synth-alert-buttons/": {
+            "decided": {
+                "decided": "2026-10-19 00:50, Kenny: dark keys on every red alert in synthwave approved (research/synth-alert-buttons/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/synthwave-anchor/": {
+            "decided": {
+                "decided": "2026-10-07 21:21 Brussels, Kenny: the anchor is the page horizon (attempt 2 of round 2)",
+                "attributes": "data-sa-anchor=\"<key>\" on the .sa-scene, research/synthwave-anchor/options.css",
+                "picks": { "synthwave": { "anchor": "page" } }
+            }
+        },
+        "research/synthwave-character/": {
+            "decided": {
+                "decided": "2026-10-07 23:54 Brussels, Kenny: 18 of 18 settled over five updates in the review dialog (research/synthwave-character/README.md); the anchor is the page horizon (research/synthwave-anchor/decided.json)",
+                "attributes": "data-sy-<question>=\"<key>\" on the .sy-scene, research/synthwave-character/options.css",
+                "picks": {
+                    "synthwave": {
+                        "direction": "horizon",
+                        "durations": "beats",
+                        "colour": "roles",
+                        "surface": "floor",
+                        "live": "laser",
+                        "spinner": "sun",
+                        "composites": "own",
+                        "hover": "tube",
+                        "type": "osd",
+                        "motifs": "meaning",
+                        "curve": "lead",
+                        "opening": "climb",
+                        "tone": "osd",
+                        "focus": "rails",
+                        "press": "charge",
+                        "corners": "fall",
+                        "leave": "setssink",
+                        "loading": "combo"
+                    }
+                }
+            },
+            "update": {
+                "update": 3,
+                "picks": {
+                    "synthwave": {
+                        "direction": "horizon",
+                        "durations": "beats",
+                        "colour": "roles",
+                        "surface": "floor",
+                        "live": "laser",
+                        "spinner": "sun",
+                        "composites": "own",
+                        "hover": "tube",
+                        "type": "osd",
+                        "motifs": "meaning",
+                        "curve": "lead",
+                        "opening": "climb",
+                        "tone": "osd",
+                        "focus": "rails",
+                        "press": "charge",
+                        "corners": "fall",
+                        "leave": "setssink"
+                    }
+                },
+                "questions": {
+                    "synthwave": {
+                        "loading": {
+                            "comment": "I want a option 2, but with the progress bars of option 5",
+                            "reply": "Six options, all option 2's motion on the three bars of option 5 (Sync 72 %, Backup 48 %, Upload 88 %, with their mono captions): the page tube with the ramp flowing through it, 1800 ms, the floor driving toward you, 900 ms, and the bars under them. They differ only in what was still open: 1 the straight combination (the bars exactly as they were); 2 the ramp flows through each bar's head as a short tail; 3 each bar stands on a floor of its own that drives toward you; 4 everything on one beat clock (3600 ms), the bar heads stepping one notch per beat so each lands on a beat; 5 the bars busy (no share) with the package's road; 6 the ramp in the heads alternating, bar 2 against bars 1 and 3. Corners (the light runs down the sides from the stripe's colours and fades) and the leave (the sun sets through it, the part sinking with it) are locked and no longer asked. One correction to the last round's text: I measured the direction of the ramp. In the old option 2 the ramp travels from the tube's left end to its right (the old text said the reverse); it is kept exactly as you saw it, and the texts now say what you see."
+                        }
+                    }
+                }
+            }
+        },
+        "research/synthwave-floor/": {
+            "decided": {
+                "decided": "2026-10-08 01:00 Brussels, Kenny: the floor is the page, behind the plates (8.5 rem)",
+                "attributes": "data-sf-<question>=\"<key>\" on the scene, research/synthwave-floor/options.css",
+                "picks": { "synthwave": { "depth": "page" } }
+            }
+        },
+        "research/tip-1102/": {
+            "decided": { "decided": "2026-11-02 12:26 UTC, Kenny: approved in formal (research/tip-1102/VERDICTS.json)", "by": "Kenny" }
+        },
+        "research/titanium-spinner/": {
+            "decided": {
+                "decided": "2026-10-07 01:33 Brussels, Kenny: \"titanium · The spinner = The facing cut (recommended)\" (titanium-spinner round 2026-10-07-r1)",
+                "attributes": "data-ts-<aspect>=\"<key>\" on the scene wrapper [data-ts-spinner], research/titanium-spinner/options.css; option 1 = key \"facing\"",
+                "picks": { "titanium": { "spinner": "1" } }
+            }
+        },
+        "research/ux-dialogs-1101/": {
+            "decided": {
+                "decided": "2026-11-02 00:25 UTC, Kenny: drawer-beside approved in formal in round 2 (research/ux-dialogs-1101/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "ux-dialogs-1101-787e6d76-4423-4fec-a45c-ac2a1eece18a",
+                "from": "HEAD",
+                "commit": "d3e11caf8266702edf14b6c93bfa63493601b239",
+                "made": "2026-11-02T00:07:39.503Z"
+            }
+        },
+        "research/ux-fixes-1101/": {
+            "decided": {
+                "decided": "2026-11-01 23:22, Kenny: all eight pairs approved in formal (research/ux-fixes-1101/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        },
+        "research/ux-parts-1101/": {
+            "decided": {
+                "decided": "2026-11-01 23:40 UTC, Kenny: both remaining pairs approved in formal in round 2 (research/ux-parts-1101/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "ux-parts-1101-e994c521-37e0-4c56-b12b-ed4d536f4d1e",
+                "from": "674a1a188",
+                "commit": "674a1a1884964175e2da1ed8eee8c254e39e6ea9",
+                "made": "2026-11-01T22:45:26.269Z"
+            }
+        },
+        "research/ux-touch-1101/": {
+            "decided": {
+                "decided": "2026-11-02 00:03 UTC, Kenny: docs-nav approved in formal in round 2 (research/ux-touch-1101/VERDICTS.json)",
+                "by": "Kenny"
+            },
+            "previous": {
+                "round": "ux-touch-1101-c6cffc6a-0fb4-46ae-bb2b-1b9b6c2d2e20",
+                "from": "HEAD",
+                "commit": "307992288a6d30fc0ecd1f95f6544d1e182e5760",
+                "made": "2026-11-01T23:42:32.640Z"
+            }
+        },
+        "research/wishes-1120/": {
+            "decided": {
+                "decided": "2026-10-20, Kenny: 17 of 22 approved; the other 5 fixed directly in c649bfb5 and judged in the real app (research/wishes-1120/VERDICTS.json)",
+                "by": "Kenny"
+            }
+        }
+    }
+}

@@ -4,7 +4,6 @@ import { readFileSync } from 'node:fs';
 import { byCodeUnit } from '../code-unit-order.mjs';
 import { geckoRatio, readRegister, writeRegister } from './register.mjs';
 import { entriesAt } from './compare.mjs';
-import { registerPath } from './paths.mjs';
 /** @typedef {import('./types.mjs').Entry} Entry */
 /** @typedef {import('./types.mjs').Register} Register */
 
@@ -65,7 +64,7 @@ export async function annotateRatio(args) {
     const option = (/** @type {string} */ name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
     const from = option('--from');
     if (!from) throw new Error('annotate-ratio needs --from <readings.json>');
-    const file = option('--register') ?? registerPath;
+    const file = option('--register');
     const register = readRegister(file);
     const { readings } = JSON.parse(readFileSync(from, 'utf8'));
     const result = annotateRatios(register, readings, { commit: option('--commit') ?? null, engine: option('--engine') ?? 'firefox' });

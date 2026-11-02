@@ -17,6 +17,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
+import { demoVerdicts } from '../_review/verdicts-record.mjs';
 
 const here = new URL('./', import.meta.url);
 const ID = 'state-plates-1019';
@@ -297,10 +298,7 @@ const sections = [
 const shownSections = sections.filter(Boolean);
 const body = shownSections.join('\n');
 
-const verdictsFile = new URL('VERDICTS.json', here);
-if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, rounds: [] }, null, 4)}\n`);
-const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
-const received = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))];
+const { verdicts, received } = demoVerdicts(here, { demo: ID, rounds: [] });
 const out = fileURLToPath(new URL('demo.html', here));
 const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
 const roundId = current && /^state-plates-[0-9a-f]{8}-/.test(current) ? current : `state-plates-${randomUUID()}`;

@@ -2,18 +2,22 @@
 // an update, research/_review/README.md "An update after a verdict"):
 //   node research/_coherence/tools/merge-update.mjs <theme> <path to a module>
 // The module exports:
-//   UPDATE   the round's number (update.json "update")
+//   UPDATE   the round's number (the demo's update record, "update")
 //   ROUND    the new data-review-round id, e.g. '2026-10-09-r2'
 //   PICKS    { <question id>: <option key> } the questions he approved
 //   COMMENTS { <question id>: <his comment, verbatim> } the questions it reopens
 //   REPLY    what changed, shown beside every comment
 //   patch(aspects) -> aspects   the new data for the reopened questions
 //   STORY    (optional) a replacement for the intro's `STORY`
-// It rewrites aspects.js (the header comment kept, a note added), writes
-// update.json and bumps the round in demo.html. Run prettier afterwards.
+// It rewrites aspects.js (the header comment kept, a note added), writes the
+// demo's update into the review database (data/kp-themes.sqlite, table
+// demo_updates; catalogue/review-demos.json regenerated from it) and bumps the
+// round in demo.html. Run prettier afterwards.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
+import { saveDemoFact, writing } from '../../../gates/db/index.mjs';
+import { writeReviewData } from '../../../gates/generate-review-data.mjs';
 
 const [theme, modPath] = process.argv.slice(2);
 const dir = `research/${theme}-character`;
@@ -37,7 +41,7 @@ const header = old
     .join('\n');
 const story = upd.STORY ?? cur.STORY;
 const out = `${header}
-// Update ${upd.UPDATE} (${upd.ROUND}): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
+// Update ${upd.UPDATE} (${upd.ROUND}): the questions Kenny did not approve are redrawn (his comments are in the demo's update record, catalogue/review-demos.json); his picks stay as they were.
 
 export const THEME = ${JSON.stringify(cur.THEME)};
 export const LABEL = ${JSON.stringify(cur.LABEL)};
@@ -54,10 +58,8 @@ writeFileSync(`${dir}/aspects.js`, out);
 
 const questions = {};
 for (const [id, comment] of Object.entries(upd.COMMENTS)) questions[id] = { comment, reply: upd.REPLY[id] ?? upd.REPLY._ };
-writeFileSync(
-    `${dir}/update.json`,
-    JSON.stringify({ update: upd.UPDATE, picks: { [theme]: upd.PICKS }, questions: { [theme]: questions } }, null, 4) + '\n',
-);
+writing((db) => saveDemoFact(db, 'update', `${theme}-character`, { update: upd.UPDATE, picks: { [theme]: upd.PICKS }, questions: { [theme]: questions } }));
+console.log(await writeReviewData());
 
 const html = readFileSync(`${dir}/demo.html`, 'utf8');
 const bumped = html.replace(/\{ "round": "[^"]*", "reopen": \[[^\]]*\] \}/, `{ "round": "${upd.ROUND}", "reopen": [] }`);

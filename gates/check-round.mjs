@@ -20,14 +20,15 @@
 //   node gates/check-round.mjs --open     open a round at HEAD
 //   node gates/check-round.mjs --close    close it
 //
-// The round is `catalogue/round.json`.
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+// The round is the `round_state` row of the review database (data/kp-themes.sqlite, gates/db/).
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
+import { loadRound, reading, saveRound, writing } from './db/index.mjs';
 
 const root = new URL('../', import.meta.url);
-export const ROUND = 'catalogue/round.json';
+/** How messages name the round. */
+export const ROUND = 'the review round (data/kp-themes.sqlite)';
 
 /** Whether a path is one a block's look comes from [fix-46]. @param {string} path */
 export const movesABlock = (path) =>
@@ -44,30 +45,23 @@ export function refusedByRound(round, paths) {
     return paths.filter(movesABlock).sort();
 }
 
-const file = new URL(ROUND, root);
 const git = (/** @type {string[]} */ args) => execFileSync('git', args, { cwd: fileURLToPath(root), encoding: 'utf8' }).trim();
-const readRound = () => (existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null);
+const readRound = () => reading(loadRound);
 
 function main() {
     const [flag] = process.argv.slice(2);
     if (flag === '--open' || flag === '--close') {
         const open = flag === '--open';
-        writeFileSync(
-            file,
-            `${JSON.stringify(
-                {
-                    $comment:
-                        'The review round Kenny is in [fix-46]. While it is open, npm run gates refuses a commit that changes what a block ' +
-                        'looks like, so the review site does not move under him. Opened when Claude asks him to look, closed when he is through: ' +
-                        'node gates/check-round.mjs --open | --close.',
-                    open,
-                    commit: git(['rev-parse', 'HEAD']),
-                    opened: new Date().toISOString().slice(0, 10),
-                },
-                null,
-                4,
-            )}\n`,
-        );
+        const round = {
+            $comment:
+                'The review round Kenny is in [fix-46]. While it is open, npm run gates refuses a commit that changes what a block ' +
+                'looks like, so the review site does not move under him. Opened when Claude asks him to look, closed when he is through: ' +
+                'node gates/check-round.mjs --open | --close.',
+            open,
+            commit: git(['rev-parse', 'HEAD']),
+            opened: new Date().toISOString().slice(0, 10),
+        };
+        writing((db) => saveRound(db, round));
         console.log(`${ROUND}: the round is ${open ? 'open — blocks stay as they are until it closes' : 'closed'}.`);
         return;
     }

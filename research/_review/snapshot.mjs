@@ -8,10 +8,12 @@
 // loads, all as they stood at <ref> (default HEAD, the round about to be replaced), in the same relative layout, so
 // the copy runs on the static review site as it ran then:
 //
-//   _previous/previous.json             { round, from, commit, made }
 //   _previous/research/<topic>/…        the demo, without the review kit and the catalogue shell
 //   _previous/css/*.css                 every stylesheet of the package root (the registers too)
 //   _previous/js/…                      the modules the demo imports, followed through their imports
+//
+// The record of the copy, { round, from, commit, made }, goes into the review database (data/kp-themes.sqlite, table
+// demo_previous) and from there into catalogue/review-demos.json, which the review dialog reads.
 //
 // The fonts are not copied: the copy's fonts.css points at the live fonts/ folder. The review kit and the catalogue
 // shell are left out on purpose: the copy is only looked at, it must never read or write the verdicts.
@@ -22,6 +24,8 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, normalize, posix } from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { saveDemoFact, writing } from '../../gates/db/index.mjs';
+import { writeReviewData } from '../../gates/generate-review-data.mjs';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 const args = process.argv.slice(2);
@@ -126,7 +130,8 @@ while (queue.length) {
 }
 
 const round = option('--round', roundOf(show(`${demoDir}/demo.html`).toString()));
-write('previous.json', `${JSON.stringify({ round, from: ref, commit, made: new Date().toISOString() }, null, 4)}\n`);
+writing((db) => saveDemoFact(db, 'previous', topic, { round, from: ref, commit, made: new Date().toISOString() }));
+console.log(await writeReviewData());
 console.log(`research/${topic}/_previous: ${demoFiles.length} demo file(s), ${sharedSeen.size} shared research file(s) and ${seen.size} module(s) at ${commit.slice(0, 8)}${round ? `, round ${round}` : ''}`);
 
 /** The relative module specifiers in a source: static imports, re-exports and dynamic imports. */

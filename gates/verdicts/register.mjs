@@ -1,12 +1,19 @@
-// Reading, ordering and writing catalogue/verdicts.json, and the pixel-ratio helpers its entries use.
+// Reading, ordering and writing the verdict register (data/kp-themes.sqlite, table `verdicts`, through gates/db/), and
+// the pixel-ratio helpers its entries use. A one-off tool may still be pointed at a register kept as a JSON file
+// (`--register <file>`, the shape `node gates/review-db.mjs export` writes): then that file is read and written instead.
 
 import { readFileSync, writeFileSync } from 'node:fs';
-import { registerPath } from './paths.mjs';
+import { loadRegister, reading, saveRegister, writing } from '../db/index.mjs';
 /** @typedef {import('./types.mjs').Register} Register */
 
-/** @returns {Register} */
-export function readRegister(path = registerPath) {
-    return JSON.parse(readFileSync(path, 'utf8'));
+/**
+ * The register: from the database, or from a JSON copy when `path` names one.
+ * @param {string} [path]
+ * @returns {Register}
+ */
+export function readRegister(path) {
+    if (path) return JSON.parse(readFileSync(path, 'utf8'));
+    return /** @type {Register} */ (reading(loadRegister));
 }
 
 /**
@@ -41,9 +48,14 @@ export function sortedRegister(register) {
     return { hashVersion: register.hashVersion, verdicts };
 }
 
-/** @param {Register} register */
-export function writeRegister(register, path = registerPath) {
-    writeFileSync(path, `${JSON.stringify(sortedRegister(register), null, 4)}\n`);
+/**
+ * Write the register: into the database, or into the JSON copy `path` names.
+ * @param {Register} register
+ * @param {string} [path]
+ */
+export function writeRegister(register, path) {
+    if (path) return writeFileSync(path, `${JSON.stringify(sortedRegister(register), null, 4)}\n`);
+    writing((db) => saveRegister(db, sortedRegister(register)));
 }
 
 /** Today in the local calendar, as the register writes a date. */

@@ -14,6 +14,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
+import { demoVerdicts } from '../_review/verdicts-record.mjs';
 
 const here = new URL('./', import.meta.url);
 const ID = 'b3b4-1019';
@@ -230,10 +231,7 @@ ${jobsTable({ id: 'bb-expand', attrs: 'data-kp-expandable data-kp-page-size="8" 
 const body = sections.join('\n');
 const pairs = sections.reduce((n, s) => n + (/data-review-themes="([^"]+)"/.exec(s)?.[1].split(',').length ?? 1), 0);
 
-const verdictsFile = new URL('VERDICTS.json', here);
-if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, bundledInto: 'round-2-1019', rounds: [] }, null, 4)}\n`);
-const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
-const received = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))];
+const { verdicts, received } = demoVerdicts(here, { demo: ID, bundledInto: 'round-2-1019', rounds: [] });
 const out = fileURLToPath(new URL('demo.html', here));
 const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
 const roundId = current && /^b3b4-[0-9a-f]{8}-/.test(current) ? current : `b3b4-${randomUUID()}`;

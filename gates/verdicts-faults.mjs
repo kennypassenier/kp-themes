@@ -83,7 +83,8 @@ export function registerFaults(register, { hashVersion, known, themes, commitExi
  *
  *   { "<block key>": { "<theme>": { rejected, change, commit?, given } } }
  */
-export const NOTES = 'catalogue/review-notes.json';
+/** How messages name the notes: the `review_notes` table of the review database (gates/db/). */
+export const NOTES = 'the review notes (data/kp-themes.sqlite)';
 export const NOTE_FIELDS = ['change', 'commit', 'given', 'rejected'];
 
 /**

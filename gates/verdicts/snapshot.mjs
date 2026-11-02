@@ -1,15 +1,14 @@
-// The `snapshot` command: catalogue/hashes-now.json, the hashes the working tree reads now.
+// The `snapshot` command: the hashes the working tree reads now, kept in the review database (table `hash_readings`).
 
 import { hashVersion, knownBlocks } from '../check-verdicts.mjs';
-import { join } from 'node:path';
-import { writeFileSync } from 'node:fs';
+import { saveHashReadings, writing } from '../db/index.mjs';
 import { ratioOf, readRegister, today } from './register.mjs';
 import { hashAt } from './hash-at.mjs';
 import { ROOT, git } from './paths.mjs';
 /** @typedef {import('./types.mjs').Register} Register */
 
-/** Where the blocks as they stand now are written [scope-112]. */
-export const SNAPSHOT = 'catalogue/hashes-now.json';
+/** How messages name the blocks as they stand now [scope-112]: the `hash_readings` table of the review database. */
+export const SNAPSHOT = 'the hash readings (data/kp-themes.sqlite)';
 
 /**
  * The component pairs a snapshot measures, grouped by the engine and the
@@ -87,11 +86,8 @@ export async function snapshot(args) {
             if (reading.hash !== register.verdicts[key][theme][engine].hash) moved += 1;
         }
     }
-    const file = join(ROOT, SNAPSHOT);
-    writeFileSync(
-        file,
-        `${JSON.stringify(sortedSnapshot({ hashVersion: hashVersion(), commit: git('rev-parse', 'HEAD'), taken: today(), readings }), null, 4)}\n`,
-    );
+    const snapshot = sortedSnapshot({ hashVersion: hashVersion(), commit: git('rev-parse', 'HEAD'), taken: today(), readings });
+    writing((db) => saveHashReadings(db, snapshot));
     console.log(`${SNAPSHOT}: ${total} pair(s) measured, ${moved} of them no longer the block the verdict was given on.`);
 }
 

@@ -7,6 +7,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { SECTIONS } from './sections.mjs';
+import { demoVerdicts } from '../_review/verdicts-record.mjs';
 
 const here = new URL('./', import.meta.url);
 const ID = 'parts-habits-1102';
@@ -39,10 +40,7 @@ if (problems.length) {
     process.exit(1);
 }
 
-const verdictsFile = new URL('VERDICTS.json', here);
-if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, rounds: [] }, null, 4)}\n`);
-const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
-const received = [...new Set((verdicts.rounds ?? []).map((r) => r.page).filter(Boolean))];
+const { verdicts, received } = demoVerdicts(here, { demo: ID, rounds: [] });
 const out = fileURLToPath(new URL('demo.html', here));
 const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
 // A round id is never reused: once Kenny's answer to it is recorded (it is in `received`), the next page gets a new one.

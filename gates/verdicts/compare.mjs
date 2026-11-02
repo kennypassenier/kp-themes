@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { knownBlocks } from '../check-verdicts.mjs';
-import { ROOT, git, registerPath } from './paths.mjs';
+import { ROOT, git } from './paths.mjs';
 import { ratioOf, readRegister } from './register.mjs';
 import { hashAt } from './hash-at.mjs';
 /** @typedef {import('./types.mjs').Entry} Entry */
@@ -128,7 +128,7 @@ export async function compareAgainstBrowser(args) {
     // "the block changed since".
     const atRecorded = args.includes('--at-recorded');
     // --register <file>: another register than catalogue/verdicts.json (a copy to try a change on).
-    const entries = entriesAt(readRegister(option('--register') ?? registerPath), commit);
+    const entries = entriesAt(readRegister(option('--register')), commit);
     const known = await knownBlocks(ROOT);
     /** @type {Map<string, { hash: string }>} */
     const readings = new Map();

@@ -1392,8 +1392,8 @@
         "generate": "node gates/generate-themes.mjs && node gates/generate-css.mjs",
         "generate:css": "node gates/generate-css.mjs",
         "check:file-size": "node gates/check-file-size.mjs",
-        "generate:all": "npm run generate && npm run generate:css && npm run generate:code-version && npm run generate:agenda-index && npm run generate:agenda-bundle && npm run generate:fonts-css && npm run generate:utilities && npm run generate:bundle && npm run generate:min && npm run generate:examples && npm run generate:portraits && npm run generate:showcase && npm run generate:site && node gates/generate-compare.mjs && npm run generate:types && node gates/compliance.mjs && npm run checksums && prettier --write . >/dev/null",
-        "check:generated": "node gates/generate-themes.mjs --check && node gates/generate-css.mjs --check && node gates/generate-code-version.mjs --check && node gates/generate-agenda-index.mjs --check && node gates/generate-agenda-bundle.mjs --check",
+        "generate:all": "npm run generate && npm run generate:css && npm run generate:code-version && npm run generate:review-data && npm run generate:agenda-index && npm run generate:agenda-bundle && npm run generate:fonts-css && npm run generate:utilities && npm run generate:bundle && npm run generate:min && npm run generate:examples && npm run generate:portraits && npm run generate:showcase && npm run generate:site && node gates/generate-compare.mjs && npm run generate:types && node gates/compliance.mjs && npm run checksums && prettier --write . >/dev/null",
+        "check:generated": "node gates/generate-themes.mjs --check && node gates/generate-css.mjs --check && node gates/generate-code-version.mjs --check && node gates/generate-review-data.mjs --check && node gates/generate-agenda-index.mjs --check && node gates/generate-agenda-bundle.mjs --check",
         "test": "node --test gates/",
         "check:invariants": "node gates/check-invariants.mjs",
         "check:compliance": "node gates/compliance.mjs --check",
@@ -1458,6 +1458,7 @@
         "db:git-setup": "node gates/review-db.mjs git-setup",
         "generate:code-version": "node gates/generate-code-version.mjs",
         "generate:agenda-index": "node gates/generate-agenda-index.mjs",
+        "generate:review-data": "node gates/generate-review-data.mjs",
         "generate:agenda-bundle": "node gates/generate-agenda-bundle.mjs",
         "release:preflight": "node gates/release-preflight.mjs",
         "check:demo-variants": "node gates/check-demo-variants.mjs"

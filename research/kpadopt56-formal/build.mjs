@@ -18,6 +18,7 @@ import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 import { declareControls } from '../kpadopt56/controls-for.mjs';
+import { demoVerdicts } from '../_review/verdicts-record.mjs';
 
 const here = new URL('./', import.meta.url);
 const root = new URL('../../', import.meta.url);
@@ -531,9 +532,7 @@ ${frame('Full width: room enough, no scrolling', 'k56f-seg-full', 'none', 'k56f-
 // A later round shows only the sections Kenny has not approved (DEMO_RULES ch. 6, gates/check-rereview.mjs): the verdicts are
 // read from VERDICTS.json (recorded before the page changes), the latest round naming a section wins, and an `allJudged` round
 // approved every section it does not list as not approved.
-const verdictsFile = new URL('VERDICTS.json', here);
-if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, rounds: [] }, null, 4)}\n`);
-const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
+const { verdicts } = demoVerdicts(here, { demo: ID, rounds: [] });
 /** @type {Map<string, 'approved' | 'not approved'>} */
 const latest = new Map();
 const everyItem = [...WANTED.map((spec) => spec.id), 'segmented-scroll'];

@@ -15,6 +15,7 @@ import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 import { latestVerdicts } from '../../gates/check-rereview.mjs';
+import { demoVerdicts } from '../_review/verdicts-record.mjs';
 
 const here = new URL('./', import.meta.url);
 const SOURCE = fileURLToPath(new URL('demo.html', here));
@@ -44,9 +45,7 @@ for (const [i, part] of parts.entries()) {
     const id = `kpadopt4-${part.topic}`;
     const dir = new URL(`../${id}/`, here);
     if (!existsSync(dir)) mkdirSync(dir);
-    const verdictsFile = new URL('VERDICTS.json', dir);
-    const verdicts = existsSync(verdictsFile) ? JSON.parse(readFileSync(verdictsFile, 'utf8')) : { demo: id, rounds: [] };
-    if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify(verdicts, null, 4)}\n`);
+    const { verdicts } = demoVerdicts(dir, { demo: id, rounds: [] });
     // A pair Kenny approved stays off the page: its section asks only the themes still open. Once every pair is
     // approved the part is decided and keeps the page of its last round.
     const all = part.sections.flatMap((item) => THEMES.split(',').map((theme) => ({ item, theme })));

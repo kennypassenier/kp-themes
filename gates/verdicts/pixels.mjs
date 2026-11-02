@@ -1,15 +1,16 @@
 // The `pixels` command: which approvals still stand after a change, by comparing what they draw with.
 
-import { knownBlocks, REGISTER } from '../check-verdicts.mjs';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { knownBlocks } from '../check-verdicts.mjs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { DB_FILE, EXPORTS, loadPixelChecks, reading, savePixelChecks, saveRegister, writing } from '../db/index.mjs';
 import { ROOT, git } from './paths.mjs';
-import { ratioOf, readRegister, writeRegister } from './register.mjs';
+import { ratioOf, readRegister, sortedRegister } from './register.mjs';
 import { narrowing, shootAt } from './pixel-shoot.mjs';
 /** @typedef {import('./types.mjs').Entry} Entry */
 
-/** Where the pixel verdicts live [scope-138]. */
-export const PIXELS = 'catalogue/pixel-checks.json';
+/** How messages name the pixel verdicts [scope-138]: the `pixel_checks` table of the review database (gates/db/). */
+export const PIXELS = 'the pixel checks (data/kp-themes.sqlite)';
 
 /**
  * Judge by pixels what the markup hash cannot see [scope-138].
@@ -22,8 +23,8 @@ export const PIXELS = 'catalogue/pixel-checks.json';
  * carried to HEAD so the next run compares from here. Steady and different:
  * the pair comes back to Kenny. Not steady in either place: it comes back as
  * well, marked unstable. A block that no longer exists at HEAD comes back.
- * The outcome is written to catalogue/pixel-checks.json, which the review
- * page reads beside the register.
+ * The outcome is written to the review database beside the register; the
+ * review page reads it from the generated catalogue/review-pixels.json.
  * @param {string[]} args
  */
 export async function pixels(args) {
@@ -41,8 +42,8 @@ export async function pixels(args) {
         'fonts',
         'components',
         'research',
-        `:!${REGISTER}`,
-        `:!${PIXELS}`,
+        `:!${DB_FILE}`,
+        ...Object.values(EXPORTS).map((path) => `:!${path}`),
     );
     if (dirty) throw new Error(`pixels compares against HEAD, and the working tree has changes:\n${dirty}`);
     const started = Date.now();
@@ -73,8 +74,8 @@ export async function pixels(args) {
     const renderer = `${process.platform} playwright ${playwrightVersion} width ${width} head hidden, clock fixed`;
     /** @type {any} */
     let earlier = null;
-    if (existsSync(join(ROOT, PIXELS))) {
-        earlier = JSON.parse(readFileSync(join(ROOT, PIXELS), 'utf8'));
+    earlier = reading(loadPixelChecks);
+    if (earlier) {
         if (earlier.commit === head && earlier.hashVersion === register.hashVersion) checks = earlier.checks;
         if (earlier.hashVersion !== register.hashVersion || earlier.renderer !== renderer) earlier = null;
     }
@@ -217,26 +218,22 @@ export async function pixels(args) {
         console.log(`${PIXELS}: ${tally.carried} approval(s) stand, nothing they draw with moved; nothing written.`);
         return;
     }
-    writeRegister(register);
-    writeFileSync(
-        join(ROOT, PIXELS),
-        `${JSON.stringify(
-            {
-                $comment:
-                    'Pixel verdicts [scope-138]: each approved pair photographed at the commit it was approved or last carried at and at `commit`, in one browser of its engine at its ratio. carried: the same pixels, the approval stands; reopened: different pixels, or the block is gone; unstable: a photograph that did not repeat. Written by `node gates/verdicts.mjs pixels`.',
-                hashVersion: register.hashVersion,
-                commit: head,
-                checked: new Date().toISOString(),
-                renderer,
-                checks,
-            },
-            null,
-            4,
-        )}\n`,
-    );
+    writing((db) => {
+        saveRegister(db, sortedRegister(register));
+        savePixelChecks(db, {
+            $comment:
+                'Pixel verdicts [scope-138]: each approved pair photographed at the commit it was approved or last carried at and at `commit`, in one browser of its engine at its ratio. carried: the same pixels, the approval stands; reopened: different pixels, or the block is gone; unstable: a photograph that did not repeat. Written by `node gates/verdicts.mjs pixels`.',
+            hashVersion: register.hashVersion,
+            commit: head,
+            checked: new Date().toISOString(),
+            renderer,
+            checks,
+        });
+    });
     console.log(`pixels took ${Math.round((Date.now() - started) / 60000)} min`);
-    // The Agenda's index carries the checks that reopen (gates/generate-agenda-index.mjs): written with them, or the
-    // commit gate refuses the new pixel checks as a stale index [agenda-fast-1019].
+    // The browser export and the Agenda's index carry the checks (gates/generate-review-data.mjs,
+    // gates/generate-agenda-index.mjs): written with them, or the commit gate refuses them as stale [agenda-fast-1019].
+    console.log(await (await import('../generate-review-data.mjs')).writeReviewData());
     console.log(await (await import('../generate-agenda-index.mjs')).writeAgendaIndex());
     console.log(
         `${PIXELS}: ${tally.carried} carried, ${tally.reopened + tally.gone} reopened (${tally.gone} no longer a block), ${tally.unstable} unstable, compared against ${head.slice(0, 12)}.`,

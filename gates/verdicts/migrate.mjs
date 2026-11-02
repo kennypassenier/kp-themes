@@ -4,7 +4,6 @@ import { hashVersion } from '../check-verdicts.mjs';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { ratioOf, readRegister, writeRegister } from './register.mjs';
 import { entriesAt } from './compare.mjs';
-import { registerPath } from './paths.mjs';
 import { atCommit, hashAt } from './hash-at.mjs';
 /** @typedef {import('./types.mjs').Entry} Entry */
 /** @typedef {import('./types.mjs').Register} Register */
@@ -62,7 +61,7 @@ export async function migrate(args) {
     const to = Number(option('--to'));
     if (!Number.isInteger(to) || to < 3) throw new Error('migrate needs --to <version>, 3 or higher');
     const from = to - 1;
-    const file = option('--register') ?? registerPath;
+    const file = option('--register');
     const cache = option('--readings');
     const only = option('--only');
     if (only && !cache) throw new Error('--only needs --readings <file> to keep what it reads');

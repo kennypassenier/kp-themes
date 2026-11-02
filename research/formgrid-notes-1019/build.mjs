@@ -16,6 +16,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
+import { demoVerdicts } from '../_review/verdicts-record.mjs';
 
 const here = new URL('./', import.meta.url);
 const ID = 'formgrid-notes-1019';
@@ -247,9 +248,7 @@ ${proofTable('check-buttons')}
 
 const body = sections.join('\n');
 
-const verdictsFile = new URL('VERDICTS.json', here);
-const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
-const received = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))];
+const { verdicts, received } = demoVerdicts(here, { demo: ID });
 const out = fileURLToPath(new URL('demo.html', here));
 const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
 const roundId = current && /^formgridnotes-[0-9a-f]{8}-/.test(current) ? current : `formgridnotes-${randomUUID()}`;

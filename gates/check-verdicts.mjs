@@ -1,7 +1,6 @@
-// The verdict register's gate: catalogue/verdicts.json is well formed, every
-// key in it is a block a review page shows, and its hashes were taken with
-// the recipe the pages use now. The review notes beside it
-// (catalogue/review-notes.json) name known blocks and themes and say something.
+// The verdict register's gate: the register (the review database, data/kp-themes.sqlite, table verdicts) is well
+// formed, every key in it is a block a review page shows, and its hashes were taken with the recipe the pages use now.
+// The review notes beside it (table review_notes) name known blocks and themes and say something.
 //
 // Kenny, 2026-09-13, on the register: his verdicts are kept for good, and
 // "dit mag nooit veranderen door een change". A change to the hash recipe
@@ -26,6 +25,7 @@
 //
 // Run: node gates/check-verdicts.mjs
 import { readFileSync, existsSync } from 'node:fs';
+import { loadNotes, loadRegister, reading } from './db/index.mjs';
 
 
 import { execFileSync } from 'node:child_process';
@@ -154,10 +154,12 @@ async function main() {
     const HASH_VERSION = hashVersion();
     const { THEMES } = await import('../js/theme-registry.js');
     let register;
+    /** @type {any} */
+    let notes;
     try {
-        register = JSON.parse(readFileSync(new URL(REGISTER, root), 'utf8'));
+        [register, notes] = reading((db) => [loadRegister(db), loadNotes(db)]);
     } catch (error) {
-        console.error(`${REGISTER} cannot be read as JSON: ${error instanceof Error ? error.message : error}`);
+        console.error(`${REGISTER} cannot be read: ${error instanceof Error ? error.message : error}`);
         process.exit(1);
     }
     const known = await knownBlocks();
@@ -171,15 +173,6 @@ async function main() {
     if (faults.length) {
         console.error(`${faults.length} fault(s) in ${REGISTER}:\n  ${faults.join('\n  ')}`);
         process.exit(1);
-    }
-    let notes = {};
-    if (existsSync(new URL(NOTES, root))) {
-        try {
-            notes = JSON.parse(readFileSync(new URL(NOTES, root), 'utf8'));
-        } catch (error) {
-            console.error(`${NOTES} cannot be read as JSON: ${error instanceof Error ? error.message : error}`);
-            process.exit(1);
-        }
     }
     const noteFaults = notesFaults(notes, { known, themes });
     if (noteFaults.length) {

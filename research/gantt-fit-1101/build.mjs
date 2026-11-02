@@ -7,6 +7,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { demoVerdicts } from '../_review/verdicts-record.mjs';
 
 const here = new URL('./', import.meta.url);
 const ID = 'gantt-fit-1101';
@@ -86,10 +87,7 @@ function problemsOf(body) {
 
 /** The round id: kept until Kenny's answer to it is recorded (it is in `received`), then a new one. */
 function roundOf(out) {
-    const verdictsFile = new URL('VERDICTS.json', here);
-    if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, rounds: [] }, null, 4)}\n`);
-    const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
-    const received = [...new Set((verdicts.rounds ?? []).map((r) => r.page).filter(Boolean))];
+    const { verdicts, received } = demoVerdicts(here, { demo: ID, rounds: [] });
     const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
     const round = current && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) && !received.includes(current) ? current : `${ID}-${randomUUID()}`;
     return { round, received };

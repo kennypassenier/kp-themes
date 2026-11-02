@@ -29,6 +29,7 @@ import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 import { declareControls } from './controls-for.mjs';
+import { demoVerdicts } from '../_review/verdicts-record.mjs';
 
 const here = new URL('./', import.meta.url);
 const THEMES = ['dark', 'cyberpunk', 'synthwave', 'pastel', 'forest', 'blueprint', 'solstice', 'brutalism', 'deco', 'nostromo', 'titanium'];
@@ -549,10 +550,7 @@ for (const [i, part] of PARTS.entries()) {
     const id = `kpadopt56-${part.topic}`;
     const dir = new URL(`../${id}/`, here);
     if (!existsSync(dir)) mkdirSync(dir);
-    const verdictsFile = new URL('VERDICTS.json', dir);
-    if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: id, rounds: [] }, null, 4)}\n`);
-    const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
-    const received = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))];
+    const { verdicts, received } = demoVerdicts(dir, { demo: id, rounds: [] });
     // A page round id never collides and is never reused (Kenny, 2026-10-17): the page keeps the id it has while that
     // round is not received, else it takes a fresh UUID.
     const out = fileURLToPath(new URL('demo.html', dir));

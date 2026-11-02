@@ -14,7 +14,8 @@ const changed = [
     'components/sidenav.jsx',
     'catalogue/field.html',
     'themes/dark/tokens.json',
-    'catalogue/verdicts.json',
+    'data/kp-themes.sqlite',
+    'catalogue/review-data.json',
     'catalogue/review.js',
     'docs/SCOPE.md',
     'gates/check-round.mjs',
@@ -34,6 +35,6 @@ test('what moves a block, and what does not [fix-46]', () => {
 test('a closed round refuses nothing; an open one refuses what a reviewer would see move', () => {
     assert.deepEqual(refusedByRound(null, changed), []);
     assert.deepEqual(refusedByRound({ open: false }, changed), []);
-    assert.deepEqual(refusedByRound({ open: true }, ['docs/SCOPE.md', 'catalogue/verdicts.json']), []);
+    assert.deepEqual(refusedByRound({ open: true }, ['docs/SCOPE.md', 'data/kp-themes.sqlite', 'catalogue/review-data.json']), []);
     assert.deepEqual(refusedByRound({ open: true }, ['js/effects.js', 'docs/SCOPE.md']), ['js/effects.js']);
 });
