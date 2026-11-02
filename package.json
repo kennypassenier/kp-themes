@@ -12,7 +12,7 @@
     "sideEffects": [
         "*.css",
         "./js/auto.js",
-        "./dist/js/auto.js"
+        "./dist/js/*.js"
     ],
     "exports": {
         ".": {

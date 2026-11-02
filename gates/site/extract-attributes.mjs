@@ -27,6 +27,7 @@ import { moduleSource } from '../js-parts.mjs';
 import { stripComments } from './source.mjs';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
+import { byCodeUnit } from '../code-unit-order.mjs';
 
 const DIR = fileURLToPath(new URL('../../js/', import.meta.url));
 
@@ -115,7 +116,7 @@ export function extractAttributes() {
     // A split module is read whole: the facade and the parts under its folder are one text.
     for (const file of modules) scanModule(file.startsWith('effects/') ? readFileSync(DIR + file, 'utf8') : moduleSource(DIR, file), `js/${file}`, found);
 
-    const attributes = [...found.values()].sort((a, b) => a.name.localeCompare(b.name));
+    const attributes = [...found.values()].sort((a, b) => byCodeUnit(a.name, b.name));
     /** @type {Record<Role, number>} */
     const byRole = { selector: 0, read: 0, written: 0, prose: 0 };
     for (const attribute of attributes) for (const role of attribute.roles) byRole[role]++;

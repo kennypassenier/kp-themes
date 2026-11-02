@@ -22,6 +22,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
+import { byCodeUnit } from '../code-unit-order.mjs';
 import { matchingBracket } from './source.mjs';
 
 const FILE = fileURLToPath(new URL('../../css/components.css', import.meta.url));
@@ -137,7 +138,7 @@ export function extractKnobs(source = readFileSync(FILE, 'utf8')) {
         knob(match[0]);
     }
 
-    const all = [...knobs.values()].sort((a, b) => a.name.localeCompare(b.name));
+    const all = [...knobs.values()].sort((a, b) => byCodeUnit(a.name, b.name));
     return {
         knobs: all,
         expected: all.length,

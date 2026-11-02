@@ -1,6 +1,7 @@
 // The `annotate-ratio` command: give entries the pixel ratio at which a reading matches their hash.
 
 import { readFileSync } from 'node:fs';
+import { byCodeUnit } from '../code-unit-order.mjs';
 import { geckoRatio, readRegister, writeRegister } from './register.mjs';
 import { entriesAt } from './compare.mjs';
 import { registerPath } from './paths.mjs';
@@ -75,7 +76,7 @@ export async function annotateRatio(args) {
         const grouped = {};
         for (const { key, theme } of rows) (grouped[theme] ??= []).push(key);
         return Object.entries(grouped)
-            .sort(([a], [b]) => a.localeCompare(b))
+            .sort(([a], [b]) => byCodeUnit(a, b))
             .map(([theme, keys]) => `${theme} (${keys.length}): ${keys.sort().join(', ')}`);
     };
     /** @type {Record<string, number>} */

@@ -11,6 +11,7 @@
 
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { byCodeUnit } from './code-unit-order.mjs';
 
 /** A facade the bundle can build: `./js/<module>.js`, never a minified twin. */
 const FACADE = /^\.\/js\/[a-z-]+\.js$/;
@@ -39,7 +40,7 @@ export function entriesOf(pkg) {
         if (!key.startsWith('./js/') || typeof target !== 'string' || !FACADE.test(target) || target.includes('.min.')) continue;
         out.push({ out: key.slice('./js/'.length), module: target.slice(2) });
     }
-    return out.sort((a, b) => a.out.localeCompare(b.out));
+    return out.sort((a, b) => byCodeUnit(a.out, b.out));
 }
 
 /** The `./dist/js/<name>` export of one entry. */

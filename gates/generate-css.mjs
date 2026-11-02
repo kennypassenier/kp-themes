@@ -35,6 +35,7 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, relative } from 'node:path';
 import process from 'node:process';
+import { byCodeUnit } from './code-unit-order.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const HEADER = /^\/\* @part: [^\n]*\*\/\n/;
@@ -47,7 +48,7 @@ function walk(dir) {
 /** The manifests, in a fixed order: components and the base rules first, then the registers by theme name. */
 function manifestDirs() {
     const dirs = ['css/components', 'css/rules'];
-    for (const e of readdirSync(join(ROOT, 'css/registers'), { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    for (const e of readdirSync(join(ROOT, 'css/registers'), { withFileTypes: true }).sort((a, b) => byCodeUnit(a.name, b.name))) {
         if (e.isDirectory()) dirs.push(`css/registers/${e.name}`);
     }
     return dirs;

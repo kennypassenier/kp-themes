@@ -360,7 +360,12 @@ theme `core.js` reports. Measured in Firefox (2026-11-02), a page importing
 `toast`, `setMenu`, `registerShortcuts` and `applyTheme` from their entries
 fetches 27 files, 85 kB gzip, where `index.js` fetches 181 files, 739 kB.
 Serve `dist/js/chunk-*.js` with a long cache: their names carry a
-content hash.
+content hash, and only the hash of the chunk's own code (the version is
+printed on the entry files only), so a release that does not touch a chunk
+keeps its name. A chunk whose code changed gets a new name and the old one
+is deleted from `dist/js/`: deploy the whole folder at once, and keep the
+previous release's chunks on the server for as long as pages from before the
+deploy may still be open, or an `import()` from such a page gets a 404.
 
 ## The entry points worth naming
 

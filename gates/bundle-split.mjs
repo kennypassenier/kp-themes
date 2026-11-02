@@ -27,7 +27,8 @@
 // imports applyTheme from core.js holds one theme-core, one picker, one
 // state, as the loose files do.
 //
-// Chunk names carry a content hash, so a server can cache them forever. The
+// Chunk names carry a hash of the chunk's own code (the version banner is on the entries only, so a release that
+// changes no chunk keeps every chunk name) and a server can cache them forever. The
 // list of files changes with every edit to js/; it is generated into
 // gates/checksums-split.mjs for the manifest, and gates/check-manifest.mjs
 // walks the entries' imports and refuses any difference.
@@ -38,9 +39,13 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import * as esbuild from 'esbuild';
 import { entriesOf, readPackage } from './bundle-entries.mjs';
+import { byCodeUnit } from './code-unit-order.mjs';
 
 /** The folder the split bundle is written to, under dist/. */
 export const SPLIT_DIR = 'js';
+
+/** The name every shared chunk starts with; the rest is a hash of its content. */
+const CHUNK_PREFIX = 'chunk-';
 
 const ENTRY = 'kp-themes-index';
 
@@ -80,15 +85,32 @@ export async function splitFiles({ root, version, entry }) {
         sourcemap: true,
         outdir: join(root, 'dist', SPLIT_DIR),
         entryNames: '[name]',
-        chunkNames: 'chunk-[hash]',
+        chunkNames: `${CHUNK_PREFIX}[hash]`,
         write: false,
-        banner: { js: `/* @kp-soft/themes v${version}, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */` },
     });
     const prefix = join(root, 'dist') + '/';
     return result.outputFiles
-        .map((file) => ({ name: file.path.slice(prefix.length), content: file.text }))
-        .sort((a, b) => a.name.localeCompare(b.name));
+        .map((file) => ({ name: file.path.slice(prefix.length), content: bannered(file.path.slice(prefix.length), file.text, version) }))
+        .sort((a, b) => byCodeUnit(a.name, b.name));
 }
+
+/**
+ * Put the version banner on an entry file only. A chunk's name is a hash of its content, so a banner with the version
+ * in it renamed every chunk on every release and deleted the earlier release's chunks under a page that was open
+ * [bunfix-1102]. The banner is one line, so an entry's source map gets one empty line of mappings in front.
+ * @param {string} name file name relative to dist/
+ * @param {string} text the file's text as esbuild wrote it
+ * @param {string} version
+ * @returns {string}
+ */
+function bannered(name, text, version) {
+    if (name.startsWith(`${SPLIT_DIR}/${CHUNK_PREFIX}`)) return text;
+    if (name.endsWith('.js')) return `${banner(version)}\n${text}`;
+    if (!name.endsWith('.js.map')) return text;
+    return text.replace(/("mappings":\s*")/, '$1;');
+}
+
+const banner = (/** @type {string} */ version) => `/* @kp-soft/themes v${version}, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */`;
 
 /**
  * The types of every entry: each named one is its module's, index.js the bundle's names [homelab-1101 bundle-types].
