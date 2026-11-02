@@ -1,9 +1,9 @@
-export { HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, } from './heat/constants.js';
+export { HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, HEAT_DAYS_EVENT, HEAT_DAYS_ATTRIBUTE, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, } from './heat/constants.js';
 export { setHeat } from './heat/draw.js';
 export { setHeatPick, setHeatRows } from './heat/pick.js';
 export { heatOffset, setHeatPaging, removeHeatPaging } from './heat/paging.js';
 export { setHeatLegend } from './heat/legend.js';
-export { attachHeats } from './heat/wire.js';
+export { attachHeats, openHeatDays, closeHeatDays } from './heat/wire.js';
 export { setMatrix, setMatrixLit, setMatrixPick } from './heat/matrix.js';
 export { attachMatrices } from './heat/matrix-wire.js';
 export type GridTone = import('./heat/types.js').GridTone;

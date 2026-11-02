@@ -475,7 +475,9 @@ setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-error'</
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-full</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-heat</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-heat-days</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-heat-edit</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-heat-latest</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-heat-offset</code></td><td>read, written</td></tr>
@@ -487,6 +489,7 @@ setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-error'</
                             <tr><td><code>data-kp-inert</code></td><td>written, selector</td></tr>
                             <tr><td><code>data-kp-minor</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-picked</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-said</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-share</code></td><td>written</td></tr>
                     </tbody></table></div>
                 </section>
@@ -505,6 +508,7 @@ setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-error'</
                             <tr><td><code>kp-heat-row</code></td><td>Fired on a heat grid when a row label is pressed.</td></tr>
                             <tr><td><code>kp-heat-page</code></td><td>Fired on a heat grid on Page Up and Page Down.</td></tr>
                             <tr><td><code>kp-heat-retry</code></td><td>Fired on a heat grid, bubbling, when the Retry of its failed state is pressed [state-plates-1019].</td></tr>
+                            <tr><td><code>kp-heat-days</code></td><td>Fired on a heat grid when the list of one row's days opens (`open: true`) or closes [heatstates-1102].</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
@@ -519,6 +523,8 @@ setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-error'</
                             <tr><td><code>--kp-heat-cell-lift</code></td><td><code>none</code></td></tr>
                             <tr><td><code>--kp-heat-cell-radius</code></td><td><code>var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2))</code></td></tr>
                             <tr><td><code>--kp-heat-cols</code></td><td><code>30</code></td></tr>
+                            <tr><td><code>--kp-heat-days-max</code></td><td><code>min(26rem, 70vh)</code></td></tr>
+                            <tr><td><code>--kp-heat-days-width</code></td><td><code>min(20rem, 100vw - 2rem)</code></td></tr>
                             <tr><td><code>--kp-heat-fill</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-heat-from</code></td><td><code>auto</code></td></tr>
                             <tr><td><code>--kp-heat-gap-x</code></td><td><code>0.75rem</code></td></tr>
@@ -534,6 +540,7 @@ setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-error'</
                             <tr><td><code>--kp-heat-summary-height</code></td><td><code>30px</code></td></tr>
                             <tr><td><code>--kp-heat-to</code></td><td><code>auto</code></td></tr>
                             <tr><td><code>--kp-heat-warn</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
                             <tr><td><code>--kp-logged-fill</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-quiet-fill</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
@@ -543,6 +550,7 @@ setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-error'</
                             <tr><td><code>--kp-stateplate-floor</code></td><td><code>12rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
+                            <tr><td><code>--kp-touch-target</code></td><td><code>2.75rem</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
@@ -569,6 +577,7 @@ setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-error'</
                             <tr><td><code>the label column</code></td><td>The label column is as wide as its longest name, between a floor and a share of the grid (a name never breaks inside a word), and a long row name wraps: the row grows, the name is never cut.</td></tr>
                             <tr><td><code>the axis rule</code></td><td>`every` counts the columns without `minor`; `minor: true` is never named and not counted, `minor: false` is always named, and the last named column wins over the one before it when adjacent. A minor header carries its name in `aria-label` and no text.</td></tr>
                             <tr><td><code>setHeatLegend and the calm legend</code></td><td>`setHeatLegend(el, { entries, ramp, keys })` draws the legend (`legend` and `legendKeys` of `setHeat` do the same); the calm grid has its own legend, left out with `data-kp-legend=&quot;hide&quot;`.</td></tr>
+                            <tr><td><code>data-kp-heat-days</code></td><td>When a press on a row opens the list of that row’s days [heatstates-1102]: `auto` (default) a touch on a row whose cells are smaller than a fingertip (the package’s touch target, 44 px), `always` every pointer press, `off` the cells only. The list stands on the menu plate under the row, a full-height button a day with its swatch, its name (a column’s `full`, written as `data-kp-full` on its axis header, else its label) and what it says (`data-kp-said` on the cell); choosing one presses its cell (`kp-heat-pick` with `source: &quot;days&quot;`). `openHeatDays(el, rowKey, colKey?)` and `closeHeatDays(el)` drive it; `kp-heat-days` tells when it opens and closes. `setHeat`’s `days` writes the attribute.</td></tr>
                             <tr><td><code>failed and empty</code></td><td>`setHeat` takes `message`, `text` and `art` for the state plate, and `.kp-heat` holds its loaded height while a state shows; Retry fires `kp-heat-retry`.</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>

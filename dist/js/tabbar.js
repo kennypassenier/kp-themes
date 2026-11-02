@@ -1,3 +1,3 @@
 /* @kp-soft/themes v12.1.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
-import{a,b,c,d,e,f,g,h,i,j,k,l}from"./chunk-FODDLOTJ.js";import"./chunk-M4C4Z52O.js";import"./chunk-Q3EW47IZ.js";import"./chunk-4C666HHU.js";export{a as TAB,f as TABBAR,g as TABBAR_HEIGHT_PROPERTY,c as TAB_COUNT_EVENT,b as TAB_COUNT_TONES,k as attachTabCounts,l as attachTabbars,d as drawTabCount,e as setTabCount,h as setTabbarBadge,j as setTabbarBusy,i as setTabbarCurrent};
+import{a,b,c,d,e,f,g,h,i,j,k,l}from"./chunk-KP3O2GLE.js";import"./chunk-SKKF26LR.js";import"./chunk-Q3EW47IZ.js";import"./chunk-4C666HHU.js";export{a as TAB,f as TABBAR,g as TABBAR_HEIGHT_PROPERTY,c as TAB_COUNT_EVENT,b as TAB_COUNT_TONES,k as attachTabCounts,l as attachTabbars,d as drawTabCount,e as setTabCount,h as setTabbarBadge,j as setTabbarBusy,i as setTabbarCurrent};
 //# sourceMappingURL=tabbar.js.map

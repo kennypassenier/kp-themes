@@ -1,3 +1,3 @@
 /* @kp-soft/themes v12.1.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
-import{a,b,c,d,e,f,g,h,i,j,k}from"./chunk-FCLI4NR3.js";import"./chunk-M4C4Z52O.js";import"./chunk-Q3EW47IZ.js";import"./chunk-4C666HHU.js";export{b as VERSION_COPY_EVENT,a as VERSION_DELTA,c as VERSION_LEVELS,d as VERSION_SORT,k as attachVersionDeltas,h as githubRepo,i as releaseUrl,j as setVersionDelta,g as summarizeDeltas,f as versionLevel,e as versionNumbers};
+import{a,b,c,d,e,f,g,h,i,j,k}from"./chunk-SZULEOQK.js";import"./chunk-SKKF26LR.js";import"./chunk-Q3EW47IZ.js";import"./chunk-4C666HHU.js";export{b as VERSION_COPY_EVENT,a as VERSION_DELTA,c as VERSION_LEVELS,d as VERSION_SORT,k as attachVersionDeltas,h as githubRepo,i as releaseUrl,j as setVersionDelta,g as summarizeDeltas,f as versionLevel,e as versionNumbers};
 //# sourceMappingURL=version-delta.js.map

@@ -510,6 +510,22 @@
             "fingerprint": "aa8d7ff5a46ce939",
             "update": null
         },
+        "research/heatstates-1102/demo.html": {
+            "facts": {
+                "id": "heatstates-1102",
+                "themes": "formal",
+                "ask": null,
+                "askText": "The Habits app’s gap of 01/11/2026: on a phone the Counters history’s cells are too small to tap one by one, so a tap on a row now opens that row’s days. Beside it, a loading heat grid no longer stands taller than the loaded one. Formal only. 2 sections, 2 pairs.",
+                "sections": [
+                    { "item": "heat-days", "themes": null, "topic": "heat", "mode": null },
+                    { "item": "heat-states", "themes": null, "topic": "heat", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"heatstates-1102-1587a62c-3e6f-41ba-ba6c-a34f49c24f2f\",\"received\":[]}\n        "
+            },
+            "fingerprint": "7134fb68bf83bdbd",
+            "update": null
+        },
         "research/parts-forms-1102/demo.html": {
             "facts": {
                 "id": "parts-forms-1102",

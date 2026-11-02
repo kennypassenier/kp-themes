@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="heatstates-1102" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The heat grid on a phone: a tap on a row opens its days</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>The heat grid on a phone: a tap on a row opens its days</h1>
+                <p class="cat-intro">
+                    The Habits app&rsquo;s gap of 01/11/2026: on a phone the Counters history&rsquo;s cells are too small to tap one by one, so a tap on a
+                    row now opens that row&rsquo;s days. Beside it, a loading heat grid no longer stands taller than the loaded one. Formal only.
+                    2 sections, 2 pairs.
+                </p>
+                <p>Each section says under <b>Expected</b> what you should see and what each control does. A touch screen&rsquo;s tap is shown with the Opened control, because a mouse is not a finger.</p>
+            </header>
+
+        <section id="heat-days" data-review-item="heat-days" data-review-topic="heat" data-review-topic-title="The heat grid" data-review-components="heat-days" data-review-title="A tap on a row opens its days" aria-labelledby="h-heat-days">
+            <header class="pg-intro"><h2 id="h-heat-days">The Counters history, 30 days, on a phone</h2><p>The Habits history card. Opened shows a tap, because a mouse is not a finger.</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (Habits gap of 01/11/2026, heat grid cells on a phone): On a phone 30 days in a row are cells of 4 by 22 px, which no finger hits. A tap on a row now opens that row&rsquo;s days, one line a day.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Opened</b>: Walk&rsquo;s 30 days on the menu plate at its row, swatch, day and value in columns; Thu 15/10 focused.</li><li>Choosing a day marks its column; Escape or a tap outside closes the list.</li><li><b>Auto</b> (default): a touch on small cells; <b>Always</b>: every click; <b>Off</b>: cells only.</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that the list reads as the theme&rsquo;s own menu and stays whole on the screen.</p></div>
+            <div data-review-controls data-review-controls-for="heat-days-component"><div role="group" aria-label="Opened"><button type="button" class="kp-button kp-button--sm" data-pg="days-open" data-value="closed" data-target="heat-days-component" aria-pressed="true">Closed</button><button type="button" class="kp-button kp-button--sm" data-pg="days-open" data-value="open" data-target="heat-days-component" aria-pressed="false">Opened</button></div><div role="group" aria-label="When a row opens its days"><button type="button" class="kp-button kp-button--sm" data-pg="days-mode" data-value="auto" data-target="heat-days-component" aria-pressed="true">Auto (default)</button><button type="button" class="kp-button kp-button--sm" data-pg="days-mode" data-value="always" data-target="heat-days-component" aria-pressed="false">Always</button><button type="button" class="kp-button kp-button--sm" data-pg="days-mode" data-value="off" data-target="heat-days-component" aria-pressed="false">Off</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="heat-days-component" aria-pressed="true">Phone, 390 px</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="heat-days-component" aria-pressed="false">Full width</button></div></div>
+            <div id="heat-days-component" class="pg-component" data-pg-width="phone">
+        <div class="kp-card pg-card">
+                <h3 class="pg-card__title">Last 30 days</h3>
+                <p class="pg-card__lede">Every counter, one row each, the newest day on the right.</p>
+                <div class="pg-scroll"><div id="pg-heat-days" data-kp-heat></div></div>
+            </div><p class="pg-log" id="pg-heat-days-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section id="heat-states" data-review-item="heat-states" data-review-topic="heat" data-review-topic-title="The heat grid" data-review-components="heat-states" data-review-title="A loading heat grid keeps its rows&rsquo; height" aria-labelledby="h-heat-states">
+            <header class="pg-intro"><h2 id="h-heat-states">The Counters history in its four states</h2><p>The line under the card says the grid&rsquo;s height against its loaded height.</p></header>
+            <div class="pg-changed"><p><b>What changed</b> (Habits gap of 01/11/2026, state plates of the heat grid): Loading, each row stood 3 px taller in formal (the grid jumped 12 px). The waiting name now stays inside its row.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Loading</b>: the busy card over the cells, the grid as high as loaded.</li><li><b>Empty</b>, <b>Failed</b>: the package plate, centred, Failed with a normal Retry (at least 12rem high, as every plate).</li></ul></div>
+            <div data-review-look><p data-for="formal">Check that Loaded to Loading moves nothing under the grid.</p></div>
+            <div data-review-controls data-review-controls-for="heat-states-component"><div role="group" aria-label="State"><button type="button" class="kp-button kp-button--sm" data-pg="heat-state" data-value="ready" data-target="heat-states-component" aria-pressed="true">Loaded</button><button type="button" class="kp-button kp-button--sm" data-pg="heat-state" data-value="loading" data-target="heat-states-component" aria-pressed="false">Loading</button><button type="button" class="kp-button kp-button--sm" data-pg="heat-state" data-value="empty" data-target="heat-states-component" aria-pressed="false">Empty</button><button type="button" class="kp-button kp-button--sm" data-pg="heat-state" data-value="error" data-target="heat-states-component" aria-pressed="false">Failed</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="heat-states-component" aria-pressed="false">Phone, 390 px</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="heat-states-component" aria-pressed="true">Full width</button></div></div>
+            <div id="heat-states-component" class="pg-component" data-pg-width="full">
+        <div class="kp-card pg-card">
+                <h3 class="pg-card__title">Last 30 days</h3>
+                <p class="pg-card__lede">Every counter, one row each, the newest day on the right.</p>
+                <div class="pg-scroll"><div id="pg-heat-states" data-kp-heat></div></div>
+            </div><p class="pg-log" id="pg-heat-states-log" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+        </main>
+        <script type="application/json" data-review-round>
+            {"round":"heatstates-1102-1587a62c-3e6f-41ba-ba6c-a34f49c24f2f","received":[]}
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

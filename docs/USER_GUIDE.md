@@ -1198,6 +1198,19 @@ The root listens for the page: `kp-heat-pick` (a column was picked or dropped), 
 `data-kp-heat-toggle`) and `kp-heat-page` (Page Up and Page Down). `data-kp-heat-owned` leaves the state to the page.
 `tip` is the hover card's text (`js/hovercard.js`). A legend is a `ul.kp-heat__legend` of `.kp-heat__swatch[data-kp-tone]`.
 
+On a phone thirty days are cells a few pixels wide, so **the row is the target** [heatstates-1102]: a tap on a row whose cells are
+smaller than a fingertip (`--kp-touch-target`, 2.75rem) opens the list of that row's days on the menu plate under it, one
+full-height button a day with its swatch, its name and what it says; choosing one presses its cell (`kp-heat-pick` with
+`source: 'days'`), Escape or a tap outside closes it. Give each column its whole name for the list with `full` ("Fri 14/10";
+the label is used without it). The option is `data-kp-heat-days` (or `setHeat`'s `days`): `auto` (default; a mouse, a pen, the
+keys and cells big enough keep the cells), `always` (every pointer press opens the row, a mouse too) or `off`.
+`openHeatDays(el, rowKey, colKey?)` and `closeHeatDays(el)` open and close it from the page; `kp-heat-days` `{ rowKey, open }`
+fires both ways. Knobs: `--kp-heat-days-width`, `--kp-heat-days-max`, `--kp-heat-days-gap`.
+
+```js
+setHeat(grid, { columns: days.map((d) => ({ key: d.iso, label: d.day, full: d.name })), rows, days: 'auto' });
+```
+
 `.kp-matrix` is source by destination: `setMatrix(el, { rows, columns, cell: (row, column) => ({ tone, text, label }) })`. Each
 cell has a plate, a word or a glyph, and a label for the screen reader; the headers are buttons that light their row and
 column and stay in place while the grid scrolls (under 36rem the box scrolls). `kp-matrix-pick` and `kp-matrix-light` are its

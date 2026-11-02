@@ -19679,9 +19679,20 @@
         background: var(--kp-heat-mark, var(--primary));
     }
 
+    /* A waiting name is never taller than a row: a register's text-line skeleton (formal's ruled line is 1.5rem and a border)
+ * made every loading row 3 px taller, so a loading grid outgrew its loaded footprint by 3 px a row (pastel's by 4) [heatstates-1102]. */
     .kp-heat__label-skeleton {
+        box-sizing: border-box;
         inline-size: 70%;
         block-size: 0.75rem;
+        max-block-size: var(--kp-heat-cell-height, 22px);
+    }
+
+    /* And a register's margins round its text lines (pastel's 0.45em a side) do not lift the row either: the waiting name's
+ * box is one row high, whatever stands in it. */
+    .kp-heat__label:has(> .kp-heat__label-skeleton) {
+        max-block-size: var(--kp-heat-cell-height, 22px);
+        overflow: clip;
     }
 
     .kp-heat__sep {
@@ -19978,6 +19989,108 @@
         gap: 2px;
     }
 
+    /* --- A row's list of days [heatstates-1102] -----------------------------------
+ * A tap on a heat grid's row opens its days (js/heat/days.js) when its cells are too small for a finger: the menu's raised plate
+ * (`.kp-menu`, opaque in every register) hung under the row, the row's name over one line on what a choice does, then one
+ * button a day in three columns every day shares (the tone's swatch, the day's name, what it says), so the names and the
+ * values each start on one line. The list scrolls inside the plate; under a coarse pointer every day is a fingertip high.
+ * Knobs: --kp-heat-days-width (min(20rem, 100vw - 2rem)), --kp-heat-days-max (min(26rem, 70vh), the plate's most height); the
+ * space under the row is a knob js/heat/days.js reads (docs/USER_GUIDE.md). */
+    .kp-heat__days {
+        position: absolute;
+        z-index: 30;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: var(--kp-heat-days-width, min(20rem, 100vw - 2rem));
+        max-block-size: var(--kp-heat-days-max, min(26rem, 70vh));
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    .kp-heat__days:popover-open {
+        position: fixed !important;
+        inset: auto;
+        margin: 0;
+    }
+
+    .kp-heat__days-title {
+        margin: 0;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-heat__days-hint {
+        margin: 0;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-heat__days-list {
+        display: grid;
+        grid-template-columns: auto auto minmax(0, 1fr);
+        flex: 1 1 auto;
+        min-block-size: 0;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        list-style: none;
+    }
+
+    .kp-heat__days-item {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+    }
+
+    .kp-heat__day {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-heat__day-name {
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .kp-heat__day-value {
+        min-inline-size: 0;
+        color: var(--muted-foreground);
+        overflow-wrap: anywhere;
+    }
+
+    /* The picked day reads as chosen in words and weight, not in colour alone. */
+    .kp-heat__day[aria-pressed='true'] {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    }
+
+    .kp-heat__day[aria-pressed='true'] .kp-heat__day-value {
+        color: inherit;
+        font-weight: 600;
+    }
+
+    .kp-heat__day[aria-disabled='true'] {
+        opacity: 0.6;
+        cursor: default;
+    }
+
+    @media (pointer: coarse) {
+        .kp-heat__day {
+            min-block-size: var(--kp-touch-target, 2.75rem);
+        }
+    }
     /* --- Matrix [kpadopt2-grids] -------------------------------------------- */
 
     /* Source x destination: a cell per pair, each in words and a glyph as

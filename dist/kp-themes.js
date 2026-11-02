@@ -1118,6 +1118,8 @@ var init_table_heat = __esm({
       heatKeysPick: "pick a column",
       heatKeysDrop: "drop the pick",
       heatKeysPage: "earlier or later",
+      heatDaysLabel: (row2, days) => `${row2}: ${days} ${days === 1 ? "day" : "days"}`,
+      heatDaysHint: "Choose a day to mark it in the grid.",
       heatPagerLabel: "Show another period",
       heatEarlier: "Earlier",
       heatToday: "Today",
@@ -60437,7 +60439,7 @@ var init_page = __esm({
 });
 
 // js/heat/constants.js
-var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES4, HEAT_CELL, MATRIX_CELL, GLYPHS3;
+var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, HEAT_DAYS_EVENT, HEAT_DAYS_ATTRIBUTE, MATRIX_LIGHT_EVENT, TONES4, HEAT_CELL, MATRIX_CELL, GLYPHS3;
 var init_constants34 = __esm({
   "js/heat/constants.js"() {
     "use strict";
@@ -60449,6 +60451,8 @@ var init_constants34 = __esm({
     MATRIX_PICK_EVENT = "kp-matrix-pick";
     HEAT_RETRY_EVENT = "kp-heat-retry";
     MATRIX_RETRY_EVENT = "kp-matrix-retry";
+    HEAT_DAYS_EVENT = "kp-heat-days";
+    HEAT_DAYS_ATTRIBUTE = "data-kp-heat-days";
     MATRIX_LIGHT_EVENT = "kp-matrix-light";
     TONES4 = ["ok", "warn", "bad", "muted", "future", "before", "none", "level", "loading", "self", "logged", "quiet", "paused"];
     HEAT_CELL = ".kp-heat__cell[data-c]:not(.kp-skeleton)";
@@ -60589,6 +60593,7 @@ function drawAxis(doc, columns2, { every, picked, loading: loading2 }) {
   const before2 = open4[open4.length - 2];
   if (every > 1 && before2 !== void 0 && before2 === open4[open4.length - 1] - 1) named.delete(before2);
   const made6 = columns2.map((c, i) => column(c.key, loading2 && !c.label ? "" : c.label, c.minor ?? !named.has(i)));
+  columns2.forEach((c, i) => c.full && made6[i].setAttribute("data-kp-full", c.full));
   placeAxis(made6);
   heads.append(...made6);
   axis.append(heads);
@@ -60921,6 +60926,7 @@ function setHeat(el16, spec, options) {
   el16.setAttribute("data-kp-heat", "");
   el16.setAttribute("role", "grid");
   if (spec.label && !el16.hasAttribute("aria-label")) el16.setAttribute("aria-label", spec.label);
+  if (spec.days) el16.setAttribute("data-kp-heat-days", spec.days);
   el16.setAttribute("data-kp-state", state12);
   el16.toggleAttribute("aria-busy", loading2);
   if (loading2) el16.setAttribute("aria-busy", "true");
@@ -60990,6 +60996,7 @@ function setHeat(el16, spec, options) {
         "data-col-key": col.key,
         "aria-label": cell?.aria && !(calm && tone === "quiet") ? cell.aria : `${row2.label}, ${col.label}${said ? `: ${said}` : ""}`
       });
+      if (said) button6.setAttribute("data-kp-said", said);
       if (tone === "level") button6.style.setProperty("--kp-heat-level", unit(cell?.level));
       if (summary2 && cell?.share != null) button6.style.setProperty("--kp-heat-share", unit(cell.share));
       if (summary2) button6.setAttribute("data-kp-share", "");
@@ -61077,10 +61084,263 @@ function setHeatRows(el16, keys) {
     button6.setAttribute("aria-pressed", String(set.has(button6.dataset.key ?? "")));
   }
 }
+function pressCell(el16, cell, source) {
+  STOPS2.set(el16, { r: Number(cell.dataset.r), c: Number(cell.dataset.c) });
+  const key = cell.dataset.colKey ?? "";
+  const already = el16.getAttribute("data-kp-heat-picked") === key;
+  if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, already ? null : key);
+  const detail = { rowKey: cell.dataset.rowKey, colKey: key, cell, picked: !already, ...source ? { source } : {} };
+  el16.dispatchEvent(new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail }));
+}
 var init_pick = __esm({
   "js/heat/pick.js"() {
     "use strict";
+    init_constants34();
     init_grid_state();
+  }
+});
+
+// js/heat/days-list.js
+function columnNames(el16) {
+  const names = /* @__PURE__ */ new Map();
+  for (
+    const head of
+    /** @type {NodeListOf<HTMLElement>} */
+    el16.querySelectorAll(".kp-heat__axis .kp-heat__col[data-col-key]")
+  ) {
+    const key = head.dataset.colKey ?? "";
+    names.set(key, head.dataset.kpFull || head.textContent?.trim() || head.getAttribute("aria-label") || key);
+  }
+  return names;
+}
+function rowDays(el16, row2) {
+  const names = columnNames(el16);
+  const picked = el16.getAttribute("data-kp-heat-picked");
+  return [.../** @type {NodeListOf<HTMLElement>} */
+  row2.querySelectorAll(HEAT_CELL)].map((cell) => {
+    const key = cell.dataset.colKey ?? "";
+    return {
+      cell,
+      key,
+      name: names.get(key) ?? key,
+      value: cell.dataset.kpSaid ?? cell.getAttribute("aria-label") ?? "",
+      tone: cell.getAttribute("data-kp-tone") ?? "muted",
+      level: cell.style.getPropertyValue("--kp-heat-level"),
+      disabled: cell.getAttribute("aria-disabled") === "true",
+      picked: picked !== null && key === picked
+    };
+  });
+}
+function rowName(row2) {
+  return row2.querySelector(".kp-heat__label-text")?.textContent?.trim() || row2.dataset.rowKey || "";
+}
+function dayButton(doc, day2) {
+  const button6 = make16(doc, "button", "kp-menu__item kp-heat__day", { type: "button", "data-col-key": day2.key, "aria-pressed": String(day2.picked) });
+  const swatch = make16(doc, "i", "kp-heat__swatch kp-heat__day-swatch", { "aria-hidden": "true", "data-kp-tone": day2.tone });
+  if (day2.level) swatch.style.setProperty("--kp-heat-level", day2.level);
+  const name = make16(doc, "span", "kp-heat__day-name");
+  name.textContent = day2.name;
+  const value = make16(doc, "span", "kp-heat__day-value");
+  value.textContent = day2.value;
+  button6.append(swatch, name, value);
+  if (day2.disabled) button6.setAttribute("aria-disabled", "true");
+  return button6;
+}
+function daysPanel(doc, name, days, id) {
+  const s2 = getStrings();
+  const panel = make16(doc, "div", "kp-menu kp-heat__days", { id, role: "dialog", "aria-label": s2.heatDaysLabel(name, days.length) });
+  const title = make16(doc, "p", "kp-heat__days-title");
+  title.textContent = name;
+  const hint = make16(doc, "p", "kp-heat__days-hint");
+  hint.textContent = s2.heatDaysHint;
+  const list = make16(doc, "ul", "kp-heat__days-list", { role: "list" });
+  for (const day2 of days) {
+    const item = make16(doc, "li", "kp-heat__days-item");
+    item.append(dayButton(doc, day2));
+    list.append(item);
+  }
+  panel.append(title, hint, list);
+  return panel;
+}
+var init_days_list = __esm({
+  "js/heat/days-list.js"() {
+    "use strict";
+    init_strings();
+    init_constants34();
+    init_dom7();
+  }
+});
+
+// js/heat/days.js
+function opensDays(el16, row2, pointer) {
+  const mode2 = el16.getAttribute(HEAT_DAYS_ATTRIBUTE);
+  if (mode2 === "off" || !pointer || !row2.querySelector(HEAT_CELL)) return false;
+  if (mode2 === "always") return true;
+  if (pointer !== "touch") return false;
+  const cell = (
+    /** @type {HTMLElement} */
+    row2.querySelector(HEAT_CELL)
+  );
+  const box = cell.getBoundingClientRect();
+  return Math.min(box.width, box.height) < lengthAt(el16, FINGERTIP);
+}
+function lengthAt(el16, length) {
+  const probe = el16.ownerDocument.createElement("span");
+  probe.style.cssText = `position:absolute;visibility:hidden;inline-size:${length}`;
+  el16.append(probe);
+  const px5 = probe.getBoundingClientRect().width;
+  probe.remove();
+  return px5;
+}
+function centreIn(button6) {
+  const list = button6.closest(".kp-heat__days-list");
+  if (!(list instanceof HTMLElement)) return;
+  const at = button6.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop;
+  list.scrollTop = Math.max(0, at - (list.clientHeight - button6.offsetHeight) / 2);
+}
+var GAP2, FINGERTIP, idSeq2, HeatDays;
+var init_days = __esm({
+  "js/heat/days.js"() {
+    "use strict";
+    init_covered();
+    init_placement();
+    init_motion();
+    init_constants34();
+    init_days_list();
+    init_draw8();
+    init_pick();
+    GAP2 = "var(--kp-heat-days-gap, var(--kp-space-xs, 0.25rem))";
+    FINGERTIP = "var(--kp-touch-target, 2.75rem)";
+    idSeq2 = 0;
+    HeatDays = class {
+      /** @param {HTMLElement} el the grid */
+      constructor(el16) {
+        this.el = el16;
+        this.now = null;
+      }
+      /**
+       * Open the days of `row` under it, the day of `cell` focused (else the picked one, else the newest).
+       * @param {HTMLElement} row @param {HTMLElement | null} cell
+       */
+      open(row2, cell) {
+        const el16 = this.el;
+        const view = el16.ownerDocument.defaultView;
+        if (!view) return;
+        this.close(false);
+        const days = rowDays(el16, row2);
+        if (days.length === 0) return;
+        const panel = daysPanel(el16.ownerDocument, rowName(row2), days, `kp-heat-days-${idSeq2 += 1}`);
+        const anchor = el16.nextElementSibling?.matches(".kp-heat__legend") ? el16.nextElementSibling : el16;
+        anchor.after(panel);
+        const at = days.find((d) => d.cell === cell) ?? days.find((d) => d.picked) ?? days[days.length - 1];
+        const place5 = { wrapper: el16, button: row2, menu: panel, decorate: void 0, strings: void 0, drawn: "", pending: null, open: true, empty: false, off: [], placing: 0 };
+        this.now = { panel, row: row2, cell: at.cell, place: place5, off: [] };
+        this.hang(view);
+        this.listen(view);
+        const button6 = (
+          /** @type {HTMLElement | null} */
+          panel.querySelector(`.kp-heat__day[data-col-key="${CSS.escape(at.key)}"]`)
+        );
+        button6?.focus({ preventScroll: true });
+        if (button6) centreIn(button6);
+        el16.dispatchEvent(new CustomEvent(HEAT_DAYS_EVENT, { bubbles: true, detail: { rowKey: row2.dataset.rowKey, open: true } }));
+      }
+      /** Hang the panel under its row: its laid-out top moved to the row's bottom plus the gap, then placed whole on the screen. @param {Window} view */
+      hang(view) {
+        if (!this.now) return;
+        const { panel, row: row2, place: place5 } = this.now;
+        panel.style.setProperty("margin-block-start", "0px");
+        const gap = lengthAt(this.el, GAP2);
+        const drop = row2.getBoundingClientRect().bottom + gap - panel.getBoundingClientRect().top;
+        panel.style.setProperty("margin-block-start", `${drop}px`);
+        placeMenu(place5, view, coveredEdges(view, this.el, panel));
+        raiseMenu(place5, view);
+      }
+      /** Escape, the keys along the days, a press outside, the focus leaving, a resize and a redraw. @param {Window} view */
+      listen(view) {
+        const now = (
+          /** @type {NonNullable<HeatDays['now']>} */
+          this.now
+        );
+        const { panel } = now;
+        const inside = (t) => t instanceof Node && panel.contains(t);
+        const outside = (event) => !inside(event.target) && this.close(false);
+        const left = (event) => event.relatedTarget && !inside(event.relatedTarget) && this.close(false);
+        const keys = (event) => this.onKey(event);
+        const choose3 = (event) => this.onChoose(event);
+        const again2 = () => this.now && (lowerMenu(this.now.place), this.hang(view));
+        const redraw3 = new MutationObserver(() => !now.row.isConnected && this.close(false));
+        redraw3.observe(this.el, { childList: true });
+        view.document.addEventListener("pointerdown", outside, true);
+        panel.addEventListener("focusout", left);
+        panel.addEventListener("keydown", keys);
+        panel.addEventListener("click", choose3);
+        view.addEventListener("resize", again2);
+        now.off.push(
+          () => view.document.removeEventListener("pointerdown", outside, true),
+          () => panel.removeEventListener("focusout", left),
+          () => panel.removeEventListener("keydown", keys),
+          () => panel.removeEventListener("click", choose3),
+          () => view.removeEventListener("resize", again2),
+          () => redraw3.disconnect()
+        );
+      }
+      /** Arrows, Home and End move along the days; Escape closes with the focus back on the cell. @param {KeyboardEvent} event */
+      onKey(event) {
+        if (!this.now) return;
+        if (event.key === "Escape") {
+          event.preventDefault();
+          event.stopPropagation();
+          return this.close(true);
+        }
+        const buttons = (
+          /** @type {HTMLElement[]} */
+          [...this.now.panel.querySelectorAll(".kp-heat__day")]
+        );
+        const at = buttons.indexOf(
+          /** @type {HTMLElement} */
+          event.target
+        );
+        const to = { ArrowDown: at + 1, ArrowUp: at - 1, Home: 0, End: buttons.length - 1 }[event.key];
+        if (to === void 0 || at < 0) return;
+        event.preventDefault();
+        buttons[Math.max(0, Math.min(buttons.length - 1, to))]?.focus();
+      }
+      /** A day chosen: its cell pressed, the list closed, the focus on that cell. @param {MouseEvent} event */
+      onChoose(event) {
+        const now = this.now;
+        const button6 = event.target instanceof Element ? event.target.closest(".kp-heat__day") : null;
+        if (!now || !(button6 instanceof HTMLElement) || button6.getAttribute("aria-disabled") === "true") return;
+        const cell = (
+          /** @type {HTMLElement | null} */
+          now.row.querySelector(`${HEAT_CELL}[data-col-key="${CSS.escape(button6.dataset.colKey ?? "")}"]`)
+        );
+        if (!cell) return this.close(false);
+        now.cell = cell;
+        this.close(true);
+        pressCell(this.el, cell, "days");
+      }
+      /** Close it, backwards; with `focus` the focus goes back to its cell. @param {boolean} focus */
+      close(focus) {
+        const now = this.now;
+        if (!now) return;
+        this.now = null;
+        for (const off of now.off.splice(0)) off();
+        const { panel, cell, place: place5, row: row2 } = now;
+        if (focus && cell.isConnected) {
+          placeStop(this.el, HEAT_CELL, { r: Number(cell.dataset.r), c: Number(cell.dataset.c) });
+          cell.focus({ preventScroll: true });
+        }
+        panel.inert = true;
+        void playClose(panel).then(() => {
+          stopClose(panel);
+          lowerMenu(place5);
+          unplaceMenu(panel);
+          panel.remove();
+        });
+        this.el.dispatchEvent(new CustomEvent(HEAT_DAYS_EVENT, { bubbles: true, detail: { rowKey: row2.dataset.rowKey, open: false } }));
+      }
+    };
   }
 });
 
@@ -61107,6 +61367,18 @@ function attachHeats(root = document) {
   attachHoverCards(doc);
   return attachAll(root, HEAT, HeatGrid);
 }
+function openHeatDays(el16, rowKey, colKey) {
+  const grid2 = controllerOf(el16, HeatGrid);
+  const row2 = [...el16.querySelectorAll(".kp-heat__row:not(.kp-heat__axis)")].find((r) => r instanceof HTMLElement && r.dataset.rowKey === rowKey);
+  if (!grid2 || !(row2 instanceof HTMLElement) || !row2.querySelector(HEAT_CELL)) return false;
+  const cell = [.../** @type {NodeListOf<HTMLElement>} */
+  row2.querySelectorAll(HEAT_CELL)].find((c) => c.dataset.colKey === colKey) ?? null;
+  grid2.days.open(row2, cell);
+  return true;
+}
+function closeHeatDays(el16) {
+  controllerOf(el16, HeatGrid)?.days.close(false);
+}
 var HeatGrid;
 var init_wire2 = __esm({
   "js/heat/wire.js"() {
@@ -61114,17 +61386,27 @@ var init_wire2 = __esm({
     init_controller();
     init_hovercard();
     init_constants34();
+    init_days();
     init_draw8();
     init_grid_state();
     init_legend2();
     init_paging();
     init_pick();
     HeatGrid = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.days = new HeatDays(host);
+        this.pointer = "";
+      }
       connect() {
         const el16 = this.host;
         syncCalmLegend(el16);
         const legendWatch = this.observe(new MutationObserver(() => syncCalmLegend(el16)));
         legendWatch.observe(el16, { attributes: true, attributeFilter: ["data-kp-tones", "data-kp-legend"] });
+        this.own(() => this.days.close(false));
+        this.listen(el16, "pointerdown", (event) => this.pointer = /** @type {PointerEvent} */
+        event.pointerType || "");
         this.listen(el16, "click", (event) => this.onClick(event));
         this.listen(el16, "keydown", (event) => this.onKey(
           /** @type {KeyboardEvent} */
@@ -61145,13 +61427,22 @@ var init_wire2 = __esm({
           if (!el16.querySelector(`${HEAT_CELL}[tabindex="0"]`)) placeStop(el16, HEAT_CELL, void 0);
         }
       }
-      /** A row label lights its row; a cell picks its column. @param {Event} event */
+      /**
+       * A row label lights its row; a cell picks its column; a tap on a row whose cells are too small for a finger opens that row's
+       * days instead (js/heat/days.js) [heatstates-1102].
+       * @param {Event} event
+       */
       onClick(event) {
         const el16 = this.host;
         const target = (
           /** @type {Element} */
           event.target
         );
+        const pointer = (
+          /** @type {MouseEvent} */
+          event.detail === 0 ? "" : this.pointer
+        );
+        this.pointer = "";
         const label2 = (
           /** @type {HTMLElement | null} */
           target.closest(".kp-heat__label-button")
@@ -61161,12 +61452,13 @@ var init_wire2 = __esm({
           /** @type {HTMLElement | null} */
           target.closest(HEAT_CELL)
         );
+        const row2 = (
+          /** @type {HTMLElement | null} */
+          target.closest(".kp-heat__row:not(.kp-heat__axis)")
+        );
+        if (row2 && el16.contains(row2) && opensDays(el16, row2, pointer)) return this.days.open(row2, cell && el16.contains(cell) ? cell : null);
         if (!cell || !el16.contains(cell) || cell.hasAttribute("aria-disabled")) return;
-        STOPS2.set(el16, { r: Number(cell.dataset.r), c: Number(cell.dataset.c) });
-        const key = cell.dataset.colKey ?? "";
-        const already = el16.getAttribute("data-kp-heat-picked") === key;
-        if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, already ? null : key);
-        el16.dispatchEvent(new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: key, cell, picked: !already } }));
+        pressCell(el16, cell);
       }
       /** @param {HTMLElement} label */
       pressLabel(label2) {
@@ -62454,6 +62746,8 @@ var init_matrix_wire = __esm({
 var heat_exports = {};
 __export(heat_exports, {
   HEAT: () => HEAT,
+  HEAT_DAYS_ATTRIBUTE: () => HEAT_DAYS_ATTRIBUTE,
+  HEAT_DAYS_EVENT: () => HEAT_DAYS_EVENT,
   HEAT_PAGE_EVENT: () => HEAT_PAGE_EVENT,
   HEAT_PICK_EVENT: () => HEAT_PICK_EVENT,
   HEAT_RETRY_EVENT: () => HEAT_RETRY_EVENT,
@@ -62464,7 +62758,9 @@ __export(heat_exports, {
   MATRIX_RETRY_EVENT: () => MATRIX_RETRY_EVENT,
   attachHeats: () => attachHeats,
   attachMatrices: () => attachMatrices,
+  closeHeatDays: () => closeHeatDays,
   heatOffset: () => heatOffset,
+  openHeatDays: () => openHeatDays,
   removeHeatPaging: () => removeHeatPaging,
   setHeat: () => setHeat,
   setHeatLegend: () => setHeatLegend,
@@ -63378,7 +63674,7 @@ var init_instance2 = __esm({
 // js/sequencer/build.js
 function build5(el16, strings) {
   const doc = el16.ownerDocument;
-  const id = `kp-sequencer-${idSeq2 += 1}`;
+  const id = `kp-sequencer-${idSeq3 += 1}`;
   const bar = make18(doc, "div", "kp-gantt__bar kp-sequencer__bar");
   const zoomGroup = make18(doc, "div", "kp-sequencer__zoom");
   zoomGroup.setAttribute("role", "group");
@@ -63533,12 +63829,12 @@ function build5(el16, strings) {
     observer: null
   };
 }
-var idSeq2;
+var idSeq3;
 var init_build9 = __esm({
   "js/sequencer/build.js"() {
     "use strict";
     init_instance2();
-    idSeq2 = 0;
+    idSeq3 = 0;
   }
 });
 
@@ -65019,7 +65315,7 @@ function build6(c) {
     legend.append(li);
   }
   c.el.replaceChildren(bar, frame3, legend, hint, c.announcer);
-  c.el.dataset.kpGanttId = String(idSeq3 += 1);
+  c.el.dataset.kpGanttId = String(idSeq4 += 1);
 }
 function frame(c) {
   const w = windowOf(c);
@@ -65031,14 +65327,14 @@ function frame(c) {
   c.nowLine.setAttribute("aria-label", `${c.strings.ganttNow}, ${clock(c, c.now())}`);
   return w;
 }
-var idSeq3;
+var idSeq4;
 var init_build10 = __esm({
   "js/gantt/build.js"() {
     "use strict";
     init_scale();
     init_window();
     init_constants37();
-    idSeq3 = 0;
+    idSeq4 = 0;
   }
 });
 
@@ -66398,8 +66694,8 @@ var init_input2 = __esm({
       /** Arrows, Home and End move between day stops or between bars. @param {KeyboardEvent} event */
       onKey(event) {
         const target = event.target;
-        const dayButton = target instanceof HTMLButtonElement && target.hasAttribute("data-kp-gantt-day") ? target : null;
-        if (dayButton && !(event.altKey || event.ctrlKey || event.metaKey)) return this.onDayKey(event, dayButton);
+        const dayButton2 = target instanceof HTMLButtonElement && target.hasAttribute("data-kp-gantt-day") ? target : null;
+        if (dayButton2 && !(event.altKey || event.ctrlKey || event.metaKey)) return this.onDayKey(event, dayButton2);
         const bar = barOf(event);
         if (!bar || event.altKey || event.ctrlKey || event.metaKey) return;
         const to = this.barFrom(bar, event.key);
@@ -66408,13 +66704,13 @@ var init_input2 = __esm({
         focusBar(this.c, to);
       }
       /** @param {KeyboardEvent} event @param {HTMLButtonElement} dayButton */
-      onDayKey(event, dayButton) {
+      onDayKey(event, dayButton2) {
         const c = this.c;
         const buttons = (
           /** @type {HTMLButtonElement[]} */
           [...c.axis.querySelectorAll("button[data-kp-gantt-day]:not([data-kp-gantt-crowded])")]
         );
-        const at = buttons.indexOf(dayButton);
+        const at = buttons.indexOf(dayButton2);
         const rtl = getComputedStyle(c.axis).direction === "rtl";
         const step = event.key === "ArrowRight" ? rtl ? -1 : 1 : event.key === "ArrowLeft" ? rtl ? 1 : -1 : 0;
         const to = event.key === "Home" ? buttons[0] : event.key === "End" ? buttons[buttons.length - 1] : step ? buttons[Math.min(buttons.length - 1, Math.max(0, at + step))] : void 0;
@@ -75838,7 +76134,7 @@ function dayGroups(c, rows2, grouped) {
     return li;
   });
 }
-var init_days = __esm({
+var init_days2 = __esm({
   "js/feed/days.js"() {
     "use strict";
     init_freshness();
@@ -75986,7 +76282,7 @@ var init_render4 = __esm({
     init_state_plate();
     init_strings();
     init_constants40();
-    init_days();
+    init_days2();
     init_dom9();
     init_frame3();
     init_options7();
@@ -76595,7 +76891,7 @@ var init_view4 = __esm({
 });
 
 // js/notices/controller.js
-var idSeq4, NoticesCentre;
+var idSeq5, NoticesCentre;
 var init_controller71 = __esm({
   "js/notices/controller.js"() {
     "use strict";
@@ -76603,7 +76899,7 @@ var init_controller71 = __esm({
     init_events2();
     init_parts13();
     init_view4();
-    idSeq4 = 0;
+    idSeq5 = 0;
     NoticesCentre = class extends NoticesView {
       /** @param {HTMLElement} el */
       constructor(el16) {
@@ -76614,7 +76910,7 @@ var init_controller71 = __esm({
       connect() {
         const el16 = this.host;
         el16.classList.add("kp-notices");
-        this.p = buildParts5(this.doc, `kp-notices-${idSeq4 += 1}`, getStrings().noticesList);
+        this.p = buildParts5(this.doc, `kp-notices-${idSeq5 += 1}`, getStrings().noticesList);
         mountParts2(el16, this.p, this.inPage(), this.isPreview());
         this.own(() => {
           this.busy?.remove();
@@ -99082,6 +99378,8 @@ var init_table_heat2 = __esm({
       heatKeysPick: "een kolom kiezen",
       heatKeysDrop: "de keuze loslaten",
       heatKeysPage: "eerder of later",
+      heatDaysLabel: (row2, days) => `${row2}: ${days} ${days === 1 ? "dag" : "dagen"}`,
+      heatDaysHint: "Kies een dag om hem in het raster te markeren.",
       heatPagerLabel: "Een andere periode tonen",
       heatEarlier: "Eerder",
       heatToday: "Vandaag",
@@ -100846,8 +101144,8 @@ init_controller();
 init_strings();
 
 // js/tour/build.js
-var idSeq5 = 0;
-var nextId2 = (prefix) => `${prefix}-${idSeq5 += 1}`;
+var idSeq6 = 0;
+var nextId2 = (prefix) => `${prefix}-${idSeq6 += 1}`;
 var make40 = (doc, tag, className, text) => {
   const el16 = doc.createElement(tag);
   el16.className = className;
@@ -101889,6 +102187,8 @@ export {
   GROUP_ROW,
   HEADLINE_ROUTINES,
   HEAT,
+  HEAT_DAYS_ATTRIBUTE,
+  HEAT_DAYS_EVENT,
   HEAT_PAGE_EVENT,
   HEAT_PICK_EVENT,
   HEAT_RETRY_EVENT,
@@ -102631,6 +102931,7 @@ export {
   clearSettled,
   clockShift,
   closeDialog,
+  closeHeatDays,
   closeLabel,
   closeMenu,
   closeOnOutsidePress,
@@ -102913,6 +103214,7 @@ export {
   openDocPreview,
   openGalleryFromHash,
   openGalleryItem,
+  openHeatDays,
   openMenu,
   openPane,
   openPopoverForm,

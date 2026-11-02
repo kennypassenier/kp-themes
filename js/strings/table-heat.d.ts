@@ -126,6 +126,14 @@ export type TableHeatStrings = {
      */
     heatKeysPage: string;
     /**
+     * The name of a heat grid row's list of days, opened by a tap on the row (js/heat/days.js) [heatstates-1102]
+     */
+    heatDaysLabel: (row: string, days: number) => string;
+    /**
+     * The line under that list's title: what choosing a day does [heatstates-1102]
+     */
+    heatDaysHint: string;
+    /**
      * The name of a heat grid's Earlier / Today / Later bar for a screen reader (js/heat.js) [wish-1120]
      */
     heatPagerLabel: string;
@@ -359,6 +367,8 @@ export type TableHeatStrings = {
  * @property {string} heatKeysPick          Enter or Space on a cell: pick the column [gap-tab-count]
  * @property {string} heatKeysDrop          Escape: drop the picked column [gap-tab-count]
  * @property {string} heatKeysPage          Page Up and Page Down: show earlier or later columns [gap-tab-count]
+ * @property {(row: string, days: number) => string} heatDaysLabel  The name of a heat grid row's list of days, opened by a tap on the row (js/heat/days.js) [heatstates-1102]
+ * @property {string} heatDaysHint  The line under that list's title: what choosing a day does [heatstates-1102]
  * @property {string} heatPagerLabel  The name of a heat grid's Earlier / Today / Later bar for a screen reader (js/heat.js) [wish-1120]
  * @property {string} heatEarlier  The paging bar's button to the page before [wish-1120]
  * @property {string} heatToday  The paging bar's button back to the present [wish-1120]

@@ -51,12 +51,13 @@ export type HeatRow = {
 };
 export type HeatSpec = {
     /**
-     * `minor: true` draws no name, `minor: false` always does
+     * `minor: true` draws no name, `minor: false` always does; `full` is the column's whole name in a row's list of days ("Fri 14/10"; default its label) [heatstates-1102]
      */
     columns?: readonly {
         key: string;
         label: string;
         minor?: boolean;
+        full?: string;
     }[];
     summary?: HeatRow;
     rows?: readonly HeatRow[];
@@ -111,6 +112,10 @@ export type HeatSpec = {
      * the key line at the end of the legend
      */
     legendKeys?: HeatLegendOptions['keys'];
+    /**
+     * when a press on a row opens its list of days (`data-kp-heat-days`): `auto` (default) a touch on cells smaller than a fingertip, `always` every pointer press, `off` never [heatstates-1102]
+     */
+    days?: 'auto' | 'always' | 'off';
     /**
      * the Earlier / Today / Later bar before the grid (setHeatPaging); `false` takes it away [wish-1120]
      */
@@ -287,7 +292,7 @@ export type MatrixSpec = {
  */
 /**
  * @typedef {object} HeatSpec
- * @property {readonly { key: string, label: string, minor?: boolean }[]} [columns]  `minor: true` draws no name, `minor: false` always does
+ * @property {readonly { key: string, label: string, minor?: boolean, full?: string }[]} [columns]  `minor: true` draws no name, `minor: false` always does; `full` is the column's whole name in a row's list of days ("Fri 14/10"; default its label) [heatstates-1102]
  * @property {HeatRow} [summary]
  * @property {readonly HeatRow[]} [rows]
  * @property {'ready' | 'loading' | 'empty' | 'error'} [state]  default ready
@@ -302,6 +307,7 @@ export type MatrixSpec = {
  * @property {string} [label]  the grid's accessible name, when the element has none
  * @property {readonly HeatLegendEntry[] | false} [legend]  the legend under the grid (setHeatLegend); `false` takes it away
  * @property {HeatLegendOptions['keys']} [legendKeys]  the key line at the end of the legend
+ * @property {'auto' | 'always' | 'off'} [days]  when a press on a row opens its list of days (`data-kp-heat-days`): `auto` (default) a touch on cells smaller than a fingertip, `always` every pointer press, `off` never [heatstates-1102]
  * @property {HeatPaging | false} [paging]  the Earlier / Today / Later bar before the grid (setHeatPaging); `false` takes it away [wish-1120]
  */
 /**

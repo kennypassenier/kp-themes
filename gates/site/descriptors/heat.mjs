@@ -6,7 +6,7 @@ export const heatDescriptor = {
         title: 'Heat grid',
         group: 'Data',
         classes: ['kp-heat'],
-        aliases: ['picked', 'share', 'minor', 'inert'],
+        aliases: ['picked', 'share', 'minor', 'inert', 'full', 'said'],
         exports: [],
         intro: 'Rows by many columns of small cells, each toned by a state or a value: a stack per night, a service per hour. A label column on the start side (a press on a name toggles it, `data-kp-heat-toggle`), the column axis, an optional summary row whose cells fill from the bottom (`data-kp-share`), a legend (`.kp-heat__legend` with `.kp-heat__swatch` and `.kp-heat__ramp`), a picked column (`data-kp-picked`, `data-kp-heat-picked`) and hover detail through the hover card. A state is told by a pattern as well as a colour: a bad cell is striped, a warn cell ruled, a future cell dashed, a cell before the record hatched. `setHeat(el, spec)` in js/heat.js writes it and keeps its footprint in every state; `data-kp-heat-owned` leaves the picked column and the pressed names to the page. A cell on the axis that is not named is `data-kp-minor`; a cell that cannot be pressed is `data-kp-inert`.',
         whenToUse:
@@ -135,6 +135,7 @@ setHeat(document.getElementById('doc-heat-error'), { state: 'error', skeleton, m
             { name: 'the label column', what: 'The label column is as wide as its longest name, between a floor and a share of the grid (a name never breaks inside a word), and a long row name wraps: the row grows, the name is never cut.' },
             { name: 'the axis rule', what: '`every` counts the columns without `minor`; `minor: true` is never named and not counted, `minor: false` is always named, and the last named column wins over the one before it when adjacent. A minor header carries its name in `aria-label` and no text.' },
             { name: 'setHeatLegend and the calm legend', what: '`setHeatLegend(el, { entries, ramp, keys })` draws the legend (`legend` and `legendKeys` of `setHeat` do the same); the calm grid has its own legend, left out with `data-kp-legend="hide"`.' },
+            { name: 'data-kp-heat-days', what: 'When a press on a row opens the list of that row’s days [heatstates-1102]: `auto` (default) a touch on a row whose cells are smaller than a fingertip (the package’s touch target, 44 px), `always` every pointer press, `off` the cells only. The list stands on the menu plate under the row, a full-height button a day with its swatch, its name (a column’s `full`, written as `data-kp-full` on its axis header, else its label) and what it says (`data-kp-said` on the cell); choosing one presses its cell (`kp-heat-pick` with `source: "days"`). `openHeatDays(el, rowKey, colKey?)` and `closeHeatDays(el)` drive it; `kp-heat-days` tells when it opens and closes. `setHeat`’s `days` writes the attribute.' },
             { name: 'failed and empty', what: '`setHeat` takes `message`, `text` and `art` for the state plate, and `.kp-heat` holds its loaded height while a state shows; Retry fires `kp-heat-retry`.' },
         ],
         accessibility: [

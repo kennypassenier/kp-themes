@@ -120,9 +120,20 @@
         background: var(--kp-heat-mark, var(--primary));
     }
 
+    /* A waiting name is never taller than a row: a register's text-line skeleton (formal's ruled line is 1.5rem and a border)
+ * made every loading row 3 px taller, so a loading grid outgrew its loaded footprint by 3 px a row (pastel's by 4) [heatstates-1102]. */
     .kp-heat__label-skeleton {
+        box-sizing: border-box;
         inline-size: 70%;
         block-size: 0.75rem;
+        max-block-size: var(--kp-heat-cell-height, 22px);
+    }
+
+    /* And a register's margins round its text lines (pastel's 0.45em a side) do not lift the row either: the waiting name's
+ * box is one row high, whatever stands in it. */
+    .kp-heat__label:has(> .kp-heat__label-skeleton) {
+        max-block-size: var(--kp-heat-cell-height, 22px);
+        overflow: clip;
     }
 
     .kp-heat__sep {

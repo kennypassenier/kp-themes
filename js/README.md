@@ -344,12 +344,14 @@ Confirmations, skip links, back to top and the navigation toggles, menus and sti
 
 ## js/heat.js → js/heat/
 
-The heat grid and the matrix: coloured cells a person reads at a glance and asks about. 13 files.
+The heat grid and the matrix: coloured cells a person reads at a glance and asks about. 15 files.
 
 | File             | Does                                                                                      |
 | ---------------- | ----------------------------------------------------------------------------------------- |
 | `card.js`        | The busy card over a loading grid and the redraw that waits for it.                       |
 | `constants.js`   | The selectors, event names, tone list and cell selectors of the heat grid and the matrix. |
+| `days.js`        | HeatDays: a row's list of days, opened by a tap on a row whose cells are too small for a finger. |
+| `days-list.js`   | What a row's list of days holds, read from the drawn row, and the panel that shows it.    |
 | `dom.js`         | Element, tone and unit helpers every part of the heat grid uses.                          |
 | `draw-parts.js` | The pieces of a drawn grid: the state plate, the axis of column names, and the area a busy card covers. |
 | `draw.js`        | Draws the heat grid from its spec.                                                        |
@@ -358,7 +360,7 @@ The heat grid and the matrix: coloured cells a person reads at a glance and asks
 | `matrix-wire.js` | MatrixGrid: one matrix's pointer, keys and focus; attachMatrices().                       |
 | `matrix.js`      | Draws the matrix and sets its lit headers and its pinned cell.                            |
 | `paging.js`      | The Earlier / Today / Later bar before a heat grid.                                       |
-| `pick.js`        | The picked column and the lit rows of a heat grid.                                        |
+| `pick.js`        | The picked column, the lit rows and the press of a cell of a heat grid.                   |
 | `types.js`       | The types of the heat grid and the matrix: specs, cells, options and decorate info.       |
 | `wire.js`        | HeatGrid: one heat grid's pointer, keys, focus and calm legend; attachHeats().            |
 

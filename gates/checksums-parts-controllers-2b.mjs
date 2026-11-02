@@ -17,6 +17,8 @@ export const CONTROLLER_PART_FILES_2B = [
     'js/graph/view.js',
     'js/heat/card.js',
     'js/heat/constants.js',
+    'js/heat/days-list.js',
+    'js/heat/days.js',
     'js/heat/dom.js',
     'js/heat/draw-parts.js',
     'js/heat/draw.js',

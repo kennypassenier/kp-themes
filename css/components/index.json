@@ -112,6 +112,7 @@
         "month-heatmap/tones-status-colour-only.css",
         "heat-grid/base.css",
         "heat-grid/summary-row-cell-track.css",
+        "heat-grid/row-days.css",
         "matrix/base.css",
         "matrix/as-heat-grid-no.css",
         "bar-cell.css",

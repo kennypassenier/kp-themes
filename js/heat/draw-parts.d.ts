@@ -8,13 +8,14 @@ export type HeatSpec = import('./types.js').HeatSpec;
 export declare function drawStatePlate(el: HTMLElement, spec: HeatSpec, state: 'empty' | 'error'): void;
 /**
  * The axis row: the column names, every `every`th of the unmarked ones, the last always.
- * @param {Document} doc @param {readonly { key: string, label: string, minor?: boolean }[]} columns
+ * @param {Document} doc @param {readonly { key: string, label: string, minor?: boolean, full?: string }[]} columns
  * @param {{ every: number, picked: string | null, loading: boolean }} options
  */
 export declare function drawAxis(doc: Document, columns: readonly {
     key: string;
     label: string;
     minor?: boolean;
+    full?: string;
 }[], { every, picked, loading }: {
     every: number;
     picked: string | null;
