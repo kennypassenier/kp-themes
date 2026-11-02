@@ -1,0 +1,36 @@
+/* research/tip-1102: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own
+ * frame. Every element fills its column (Kenny's full-width rule). */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-changed,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The stage: the table answers its own box, not the window, so a phone is a 390 px box. */
+.pg-component {
+    display: grid;
+    min-inline-size: 0;
+}
+
+.pg-component[data-pg-width='phone'] {
+    inline-size: 100%;
+    max-inline-size: 390px;
+    margin-inline: auto;
+}
+
+/* Room under the table for the reason it shows (the review kit grows it to the open tooltip). */
+.pg-room {
+    min-inline-size: 0;
+    padding-block-end: var(--kp-space-xl, 2rem);
+}

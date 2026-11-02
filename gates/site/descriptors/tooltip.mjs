@@ -7,7 +7,7 @@ export const tooltipDescriptor = {
         group: 'Feedback',
         classes: ['kp-tooltip'],
         exports: ['Tooltip'],
-        aliases: ['tooltip-owner', 'open-delay', 'close-delay', 'close-on-escape', 'touch', 'hovercard'],
+        aliases: ['tooltip-owner', 'open-delay', 'close-delay', 'close-on-escape', 'touch', 'hovercard', 'tooltip-layer'],
         intro: 'A short label on the popover surface, anchored to the thing it describes. Both channels open it on hover and on focus, with a delay at both ends, and close it on Escape: the React component, and `attachTooltips` in js/overlays.js for a `.kp-tooltip-anchor` a server wrote.',
         whenToUse:
             'For naming a control whose glyph is not obvious, in a few words. Never for anything the reader needs — a tooltip cannot be reached on a touch screen, cannot be selected, and is gone the moment the pointer moves. Instructions, errors and help text belong in the page.',
@@ -50,6 +50,7 @@ table.addEventListener('kp-hovercard', (event) => {
             { name: 'hover and focus', what: 'Both open it in the React channel, with a delay before and after, so a pointer crossing the control does not flash it.' },
             { name: 'interactive', what: 'A tooltip can be made to take the pointer, for one that contains a link; by default it does not, so it cannot get in the way.' },
             { name: 'Escape', what: 'Closes it, like every other layer in the package.' },
+            { name: 'data-kp-tooltip-layer', what: 'Where `attachTooltips` draws a tooltip: `top` (the default) makes it a manual popover on the top layer while it is shown, so a table\'s scroll box, a card or a dialog body round the anchor cannot cut it; it stays in its anchor in the document, so the theme, the register rules and `aria-describedby` are unchanged, and it is placed by the same anchor positioning and fallbacks. `inline` keeps it in the anchor\'s layer, as before tip-1102. On the anchor, or `layer` in the options of `attachTooltips`.' },
             { name: 'data-kp-hovercard', what: 'The hover card: one tooltip for a whole page, filled when it opens (`attachHoverCards`), for anchors a page rebuilds or whose words are only known when the pointer arrives. The attribute holds the words, or a `fill(anchor, card)` callback supplies them; it is hoverable, dismissible, and a tap opens it on a touch screen (a tap outside closes it, a tap inside keeps it).' },
             { name: 'attachHoverCards options', what: '`{ selector, fill, openDelayMs, closeDelayMs, closeOnEscape, touch, cardClass }` (300 ms and 100 ms, Escape on, touch on). `touch: false` turns taps off for the root. Per anchor: `data-kp-open-delay`, `data-kp-close-delay`, `data-kp-close-on-escape="false"` and `data-kp-touch` (`off` leaves the anchor to touch alone; `tap` makes a link or button anchor open the card on the first tap and act on the second; a plain anchor opens on a tap by default). The attribute’s own text wins over `fill`.' },
             { name: 'hover card handle', what: '`attachHoverCards` returns the detach function with `{ card, open(anchor), hide(), refresh(), anchor() }` on it: `refresh()` fills the open card again when its data changed under the pointer. The card is `.kp-popover.kp-tooltip[data-kp-hovercard-card]` in the body, in the top layer, and its widest is a knob.' },

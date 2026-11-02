@@ -8731,11 +8731,53 @@ var init_dismissals = __esm({
   }
 });
 
+// js/overlays/tooltip-layer.js
+function layerOf(anchor, asked) {
+  const word = anchor.dataset.kpTooltipLayer ?? asked ?? "top";
+  if (word === "top" || word === "inline") return word;
+  console.warn(`kp-themes tooltip: unknown layer "${word}" on`, anchor, `(expected ${TOOLTIP_LAYERS.join(" or ")}); the top layer is used.`);
+  return "top";
+}
+function promote(tooltip) {
+  if (tooltip.hasAttribute("popover") || typeof tooltip.showPopover !== "function") return false;
+  tooltip.setAttribute("popover", "manual");
+  tooltip.setAttribute(TOOLTIP_LAYER_ATTR, "top");
+  return true;
+}
+function demote(tooltip) {
+  hideLayer(tooltip);
+  tooltip.removeAttribute("popover");
+  tooltip.removeAttribute(TOOLTIP_LAYER_ATTR);
+}
+function showLayer(tooltip) {
+  if (!tooltip.hasAttribute(TOOLTIP_LAYER_ATTR) || tooltip.matches(":popover-open")) return;
+  try {
+    tooltip.showPopover();
+  } catch (error) {
+    console.warn("kp-themes tooltip: could not put the tooltip on the top layer; it is drawn in its anchor instead.", tooltip, error);
+    tooltip.removeAttribute("popover");
+    tooltip.removeAttribute(TOOLTIP_LAYER_ATTR);
+  }
+}
+function hideLayer(tooltip) {
+  if (tooltip.hasAttribute(TOOLTIP_LAYER_ATTR) && tooltip.matches(":popover-open")) tooltip.hidePopover();
+}
+var TOOLTIP_LAYERS, TOOLTIP_LAYER_ATTR, onTopLayer;
+var init_tooltip_layer = __esm({
+  "js/overlays/tooltip-layer.js"() {
+    "use strict";
+    TOOLTIP_LAYERS = /** @type {const} */
+    ["top", "inline"];
+    TOOLTIP_LAYER_ATTR = "data-kp-tooltip-layer";
+    onTopLayer = (tooltip) => tooltip.hasAttribute(TOOLTIP_LAYER_ATTR) && tooltip.matches(":popover-open");
+  }
+});
+
 // js/overlays/tooltips.js
-function attachTooltips(root = document, { openDelayMs = OPEN_DELAY_MS, closeDelayMs = CLOSE_DELAY_MS, closeOnEscape = true, ownedBy = TOOLTIP_OWNED } = {}) {
+function attachTooltips(root = document, { openDelayMs = OPEN_DELAY_MS, closeDelayMs = CLOSE_DELAY_MS, closeOnEscape = true, ownedBy = TOOLTIP_OWNED, layer = "top" } = {}) {
   const made6 = (
     /** @type {HTMLElement[]} */
-    [...root.querySelectorAll(".kp-tooltip-anchor")].filter((anchor) => !(ownedBy !== "" && anchor.matches(ownedBy)) && !("kpTooltipAttached" in anchor.dataset)).filter((anchor) => partsOf(anchor) !== null).map((anchor, index) => attachOne(anchor, TooltipControl, { openDelayMs, closeDelayMs, closeOnEscape, count: index + 1 }))
+    [...root.querySelectorAll(".kp-tooltip-anchor")].filter((anchor) => !(ownedBy !== "" && anchor.matches(ownedBy)) && !("kpTooltipAttached" in anchor.dataset)).filter((anchor) => partsOf(anchor) !== null).map((anchor, index) => attachOne(anchor, TooltipControl, { openDelayMs, closeDelayMs, closeOnEscape, layer, count: index + 1 }))
   );
   return () => {
     for (const control of made6.splice(0)) control?.destroy();
@@ -8759,11 +8801,12 @@ var init_tooltips = __esm({
     init_controller();
     init_motion();
     init_constants2();
+    init_tooltip_layer();
     OPEN_DELAY_MS = 300;
     CLOSE_DELAY_MS = 100;
     numberOr = (value, fallback2) => value === void 0 || Number.isNaN(Number(value)) ? fallback2 : Number(value);
     TooltipControl = class extends Controller {
-      /** @param {HTMLElement} host @param {{ openDelayMs?: number, closeDelayMs?: number, closeOnEscape?: boolean, count?: number }} [options] */
+      /** @param {HTMLElement} host @param {{ openDelayMs?: number, closeDelayMs?: number, closeOnEscape?: boolean, layer?: string, count?: number }} [options] */
       constructor(host, options = {}) {
         super(host, options);
         const { tooltip, trigger } = (
@@ -8785,6 +8828,7 @@ var init_tooltips = __esm({
         this.escapes = host.dataset.kpCloseOnEscape === void 0 ? options.closeOnEscape ?? true : host.dataset.kpCloseOnEscape !== "false";
         this.timer = 0;
         this.going = false;
+        this.promoted = layerOf(host, options.layer) === "top" && promote(tooltip);
       }
       connect() {
         const { host: anchor, tooltip } = this;
@@ -8800,7 +8844,7 @@ var init_tooltips = __esm({
         this.listen(anchor, "focusout", () => this.schedule(false, 0));
         this.listen(document, "keydown", (event) => {
           if (this.escapes && /** @type {KeyboardEvent} */
-          event.key === "Escape" && !tooltip.hidden) this.set(false);
+          event.key === "Escape" && this.shown()) this.set(false);
         });
       }
       /**
@@ -8821,6 +8865,7 @@ var init_tooltips = __esm({
         clearTimeout(this.timer);
         this.going = false;
         stopReversing(tooltip);
+        if (this.promoted) demote(tooltip);
         tooltip.hidden = before2.hidden;
         if (before2.id === null) tooltip.removeAttribute("id");
         if (before2.describedby === null) trigger.removeAttribute("aria-describedby");
@@ -8836,10 +8881,17 @@ var init_tooltips = __esm({
         if (open4 && this.going) {
           this.going = false;
           stopReversing(tooltip);
-        } else if (this.going || tooltip.hidden === !open4) return;
-        else if (open4) tooltip.hidden = false;
-        else this.leave();
+        } else if (this.going || this.shown() === open4) return;
+        else if (open4) {
+          tooltip.hidden = false;
+          showLayer(tooltip);
+        } else this.leave();
         this.host.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open: open4, tooltip } }));
+      }
+      /** Is the tooltip on screen? A promoted one also needs the top layer: a popover taken out of the document (a table that
+       * re-rendered its rows) closes without its `hidden` changing, and must open again on the next hover. */
+      shown() {
+        return !this.tooltip.hidden && (!this.promoted || onTopLayer(this.tooltip));
       }
       /** Play the entrance backwards, then hide; a set(true) meanwhile takes it over. */
       leave() {
@@ -8849,6 +8901,7 @@ var init_tooltips = __esm({
           if (!this.going) return;
           this.going = false;
           tooltip.hidden = true;
+          hideLayer(tooltip);
           stopReversing(tooltip);
         });
       }
@@ -9122,6 +9175,7 @@ var init_reason = __esm({
   "js/reason.js"() {
     "use strict";
     init_overlays();
+    init_tooltip_layer();
     init_controller();
     DISABLED_REASON = "[data-kp-disabled-reason]";
     counter2 = 0;
@@ -9194,7 +9248,10 @@ var init_reason = __esm({
         const shown6 = text !== "" && isOff(control);
         tip.textContent = shown6 ? text : "";
         this.line.textContent = shown6 ? text : "";
-        if (!shown6) tip.hidden = true;
+        if (!shown6) {
+          tip.hidden = true;
+          hideLayer(tip);
+        }
         anchor.toggleAttribute("data-kp-reason-off", shown6);
         const ids2 = (control.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id !== "" && id !== tip.id);
         if (shown6) ids2.push(tip.id);

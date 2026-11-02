@@ -1,3 +1,0 @@
-/* @kp-soft/themes v12.1.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
-import{s as a,t as b}from"./chunk-5NGRF2Y7.js";import"./chunk-E6ORA5GK.js";import"./chunk-JERR2O5B.js";import"./chunk-RJXVEE24.js";import"./chunk-BU7FUMUG.js";import"./chunk-YKG3U2IW.js";import"./chunk-2KJBAKQ4.js";import"./chunk-AKTA6YO4.js";import"./chunk-5VNHYGXC.js";import"./chunk-44ANMXPB.js";import"./chunk-N7BLDCZV.js";import"./chunk-3Z4KKGO5.js";import"./chunk-XZE4YPAG.js";import"./chunk-OHFUIDCK.js";import"./chunk-OG6L4GK2.js";export{a as DISABLED_REASON,b as attachDisabledReasons};
-//# sourceMappingURL=chunk-CSFVMA56.js.map

@@ -14,14 +14,19 @@
  * names itself for anchor positioning, as the React channel does. Detach
  * puts back the attributes, the styles and the hidden state it found.
  *
+ * The tooltip is drawn on the top layer (a manual popover, js/overlays/tooltip-layer.js), so a box round the anchor that
+ * clips or contains (a table's scroll box, a card, a dialog's body) never cuts it [tip-1102]; `layer: 'inline'` keeps it in
+ * the anchor's layer.
+ *
  * @param {ParentNode} root
- * @param {{ openDelayMs?: number, closeDelayMs?: number, closeOnEscape?: boolean, ownedBy?: string }} [options]
- *   Per anchor: `data-kp-open-delay`, `data-kp-close-delay`, `data-kp-close-on-escape="false"`.
+ * @param {{ openDelayMs?: number, closeDelayMs?: number, closeOnEscape?: boolean, ownedBy?: string, layer?: 'top' | 'inline' }} [options]
+ *   Per anchor: `data-kp-open-delay`, `data-kp-close-delay`, `data-kp-close-on-escape="false"`, `data-kp-tooltip-layer`.
  * @returns {() => void} detach
  */
-export declare function attachTooltips(root?: ParentNode, { openDelayMs, closeDelayMs, closeOnEscape, ownedBy }?: {
+export declare function attachTooltips(root?: ParentNode, { openDelayMs, closeDelayMs, closeOnEscape, ownedBy, layer }?: {
     openDelayMs?: number;
     closeDelayMs?: number;
     closeOnEscape?: boolean;
     ownedBy?: string;
+    layer?: 'top' | 'inline';
 }): () => void;

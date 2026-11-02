@@ -3741,6 +3741,15 @@ The clip is not a defect and there is no repair for it: `overflow-x: auto`
 is what keeps a wide table off the page's own scrollbar (SC 1.4.10, DI11).
 Use the top layer for the thing that has to escape.
 
+**A tooltip already does** [tip-1102]. `attachTooltips` (and so the reason of a disabled control, `data-kp-disabled-reason`)
+makes each tooltip it wires a manual popover and shows it on the top layer, placed under its anchor by the same anchor
+positioning and fallbacks as before, and wrapped at its own width. Measured in Firefox 153 in Kitchen's ingredient table: the
+reason was cut at the card's edge at 390 px and ran under the next row at 1280 px; it is now whole and inside the window in
+all twelve themes. The tooltip stays in its anchor in the document, so its theme and the trigger's `aria-describedby` do not
+change. One thing does: on the top layer it stands above the page's texture (the register's grain or scanlines on
+`body::after`), as menus and dialogs already do, so its plate shows its own colour. `data-kp-tooltip-layer="inline"` on an
+anchor, or `attachTooltips(root, { layer: 'inline' })`, keeps the old layer (default `top`).
+
 **The package's own calendars and lists already do.** A `clip-path` clips
 the same way an overflow does, and four registers draw a container's
 silhouette with one — the cut corners of `.kp-card`, `.kp-alert`,

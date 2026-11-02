@@ -10070,6 +10070,10 @@
         max-width: var(--kp-tooltip-max-width, 18rem);
         padding: 0.25rem 0.5rem;
         font-size: var(--kp-text-sm, 0.8125rem);
+        /* A tooltip wraps at its own width, whatever its anchor does: a button in a table cell keeps its label on one line
+           (table.css), and the reason of a disabled Delete there inherited that and ran out of its plate in one line, cut
+           after "Used by 1 dish and 2 recip" [tip-1102, kitchen-1101]. A reason that fits on one line is drawn as before. */
+        white-space: normal;
     }
 
     /* A tooltip is placed against the window, not against the nearest positioned ancestor [homelab 135]. The popover's
@@ -10077,8 +10081,11 @@
        (a form grid's button row) has no height under it, so the reason was laid over the button, and a button at the end
        of one has no width beside it, so the reason was squeezed into a 100 px column of ten lines. Fixed, the area runs to
        the window's edges, as the add-filter menu does (below), and the reason falls back to the other side where it does not fit:
-       its own width is the one it wants (up to --kp-tooltip-max-width), so an area too narrow for it is a fallback, not a squeeze. */
-    .kp-tooltip.kp-popover:not([popover], [data-kp-hovercard-card]) {
+       its own width is the one it wants (up to --kp-tooltip-max-width), so an area too narrow for it is a fallback, not a squeeze.
+       On the top layer (js/overlays/tooltip-layer.js, [tip-1102]) the tooltip is a manual popover, and keeps this placement:
+       `[data-kp-tooltip-layer]` marks the tooltips the script put there, so a page's own popover and the hover card are not
+       taken in; `:where()` keeps the rule's weight what it was, above the popover rule's flips. */
+    .kp-tooltip.kp-popover:where(:not([popover]), [data-kp-tooltip-layer]):not([data-kp-hovercard-card]) {
         position: fixed;
         width: max-content;
         max-width: min(var(--kp-tooltip-max-width, 18rem), calc(100vw - 1rem));

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="tip-1102" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The reason of a disabled button, whole inside a table</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>The reason of a disabled button, whole inside a table</h1>
+                <p class="cat-intro">
+                    Kitchen found the reason of a disabled Delete cut at the edge of its table&rsquo;s card on a phone. The reason&rsquo;s tooltip now
+                    stands above the page, so nothing round the button can cut it. One section, formal only.
+                </p>
+                <p>The section says under <b>Expected</b> what you should see. Reason shows Garlic&rsquo;s reason or puts the table at rest; Width shows the table at a phone&rsquo;s 390 px, where its rows are cards.</p>
+            </header>
+
+        <section id="reason-in-table" data-review-item="reason-in-table" data-review-topic="reason" data-review-topic-title="The reason of a disabled button" data-review-components="reason-in-table" data-review-motion="none" data-review-title="The reason of a disabled Delete, whole inside a table" aria-labelledby="h-reason-in-table">
+            <header class="pg-intro"><h2 id="h-reason-in-table">Ingredients</h2><p>Kitchen&rsquo;s ingredients with Garlic&rsquo;s Delete turned off, because a dish and two recipes still use it.</p></header>
+            <div class="pg-changed"><p><b>What is asked</b> (kitchen-1101, disabled reason): In Kitchen the reason of a disabled Delete was cut at the edge of the table&rsquo;s card on a phone (&ldquo;In gebruik door 1 gerecht en 2 rece&hellip;&rdquo;) and ran under the next row on a laptop. The tooltip now stands on the top layer above the page, and wraps at its own width, so no table, card or dialog round the button can cut it. A tooltip that was never cut looks exactly as before (measured in all twelve themes).</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Reason shown</b>: under Garlic&rsquo;s Delete the reason in formal&rsquo;s tooltip, every word of it on three or four lines, over the rows below rather than under them; nothing of it is cut by the table or its card.</li><li><b>Phone, 390 px</b>: the rows are cards; the tooltip stays inside the window, wrapped, and is not cut at the card&rsquo;s edge. <b>At rest</b>: no tooltip; hover any grey Delete (or Tab to it where the browser allows) to see its reason, and Escape hides it.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the approved tooltip (hairline frame, small capitals). Check that the whole sentence is readable and the plate is the same as on any other tooltip.</p></div>
+            <div data-review-controls data-review-controls-for="reason-in-table-component"><div role="group" aria-label="Reason"><button type="button" class="kp-button kp-button--sm" data-pg="reason" data-value="shown" data-target="reason-in-table-component" aria-pressed="true">Reason shown</button><button type="button" class="kp-button kp-button--sm" data-pg="reason" data-value="rest" data-target="reason-in-table-component" aria-pressed="false">At rest</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="reason-in-table-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="reason-in-table-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="reason-in-table-component" class="pg-component" data-pg-width="full">
+        <div class="pg-room" data-review-room><div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-size="10">
+    <div class="kp-table-wrap">
+        <table class="kp-table">
+            <caption>Ingredients</caption>
+            <thead><tr>
+                <th scope="col" data-kp-sort="text">Name</th>
+                <th scope="col" data-kp-sort="text">Category</th>
+                <th scope="col">Used by</th>
+                <th scope="col" data-kp-col="actions">Actions</th>
+            </tr></thead>
+            <tbody><tr data-kp-row-key="garlic"><td>Garlic</td><td>Vegetables</td><td>1 dish and 2 recipes</td><td><div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="edit" aria-label="Edit Garlic">Edit</button><button type="button" class="kp-button kp-button--sm kp-button--destructive" data-kp-action="delete" aria-label="Delete Garlic" disabled data-kp-disabled-reason="Used by 1 dish and 2 recipes: Pasta aglio e olio (dish), Garlic bread (recipe), Roast chicken (recipe). Take it out of them first." data-pg-reason>Delete</button></div></td></tr><tr data-kp-row-key="olive-oil"><td>Olive oil</td><td>Oils and fats</td><td>6 dishes and 4 recipes</td><td><div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="edit" aria-label="Edit Olive oil">Edit</button><button type="button" class="kp-button kp-button--sm kp-button--destructive" data-kp-action="delete" aria-label="Delete Olive oil" disabled data-kp-disabled-reason="Used by 6 dishes and 4 recipes">Delete</button></div></td></tr><tr data-kp-row-key="saffron"><td>Saffron</td><td>Spices</td><td>Nothing</td><td><div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="edit" aria-label="Edit Saffron">Edit</button><button type="button" class="kp-button kp-button--sm kp-button--destructive" data-kp-action="delete" aria-label="Delete Saffron">Delete</button></div></td></tr><tr data-kp-row-key="parmesan"><td>Parmesan</td><td>Dairy</td><td>2 dishes</td><td><div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="edit" aria-label="Edit Parmesan">Edit</button><button type="button" class="kp-button kp-button--sm kp-button--destructive" data-kp-action="delete" aria-label="Delete Parmesan" disabled data-kp-disabled-reason="Used by 2 dishes: Pasta carbonara (dish), Risotto (dish). Take it out of them first.">Delete</button></div></td></tr></tbody>
+        </table>
+    </div>
+    <div class="kp-datatable__bar">
+        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+        <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+    </div>
+</div></div>
+            </div>
+        </section>
+        </main>
+        <script type="application/json" data-review-round>
+            {"round":"tip-1102-9859ed3b-e29e-4a47-b0f3-fc52cf80737e","received":[]}
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

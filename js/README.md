@@ -444,7 +444,7 @@ Copy buttons, secret blocks and secret inputs. 13 files.
 
 ## js/overlays.js → js/overlays/
 
-Dialogs, tabs, toasts, dismissible alerts, tooltips and scroll boxes. 9 files.
+Dialogs, tabs, toasts, dismissible alerts, tooltips and scroll boxes. 10 files.
 
 | File            | Does                                                                                                    |
 | --------------- | ------------------------------------------------------------------------------------------------------- |
@@ -456,6 +456,7 @@ Dialogs, tabs, toasts, dismissible alerts, tooltips and scroll boxes. 9 files.
 | `tab-row.js`    | Tab rows: keeping the selected tab in view and marking a row that overflows.                            |
 | `tabs.js`       | Tabs: selecting from outside and the attach.                                                            |
 | `toast.js`      | Toasts: the region, the stack, and ToastClock, the clock that waits while a toast is attended.          |
+| `tooltip-layer.js` | The layer a tooltip is drawn on: a manual popover on the top layer (default), or its anchor's layer. |
 | `tooltips.js`   | TooltipControl: one tooltip on the element that carries it.                                             |
 
 ## js/console.js → js/console/

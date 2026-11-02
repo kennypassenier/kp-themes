@@ -18,7 +18,7 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 37.1 kB | 19.0 kB | 49% |
 | `css/blueprint-register.css` | 261.1 kB | 140.2 kB | 46% |
 | `css/brutalism-register.css` | 254.4 kB | 144.7 kB | 43% |
-| `css/components.css` | 1334.1 kB | 651.8 kB | 51% |
+| `css/components.css` | 1334.9 kB | 651.9 kB | 51% |
 | `css/cyberpunk-register.css` | 321.3 kB | 185.6 kB | 42% |
 | `css/dark-register.css` | 229.9 kB | 114.7 kB | 50% |
 | `css/deco-register.css` | 259.1 kB | 149.9 kB | 42% |
@@ -33,12 +33,12 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 140.2 kB | 87.0 kB | 38% |
 | `css/titanium-register.css` | 221.5 kB | 121.1 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 4418.7 kB | 2347.5 kB | 47% |
-| `dist/kp-themes-base.css` | 1512.6 kB | 757.7 kB | 50% |
-| `dist/kp-themes.js` | 3943.6 kB | 2090.1 kB | 47% |
+| `dist/kp-themes.css` | 4419.4 kB | 2347.6 kB | 47% |
+| `dist/kp-themes-base.css` | 1513.4 kB | 757.8 kB | 50% |
+| `dist/kp-themes.js` | 3945.9 kB | 2091.3 kB | 47% |
 
-The loose stylesheets together weigh **4471.8 kB** authored and
-**2379.3 kB** minified, 47% less. A page loading one theme's
+The loose stylesheets together weigh **4472.6 kB** authored and
+**2379.4 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 **The base and the split bundle** [load-1102]. `dist/kp-themes-base.min.css` is the bundle without
@@ -48,11 +48,11 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 
 | Entry | Files it loads before it runs | Minified |
 | ----- | ----------------------------: | -------: |
-| `dist/js/auto.js` | 20 | 265.7 kB |
+| `dist/js/auto.js` | 20 | 266.7 kB |
 | `dist/js/lazy-register.js` | 6 | 85.9 kB |
 | `dist/js/core.js` | 4 | 81.1 kB |
-| `dist/js/index.js` | 169 | 2033.1 kB |
-| the whole folder | 313 | 2151.5 kB |
+| `dist/js/index.js` | 169 | 2034.1 kB |
+| the whole folder | 313 | 2152.6 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

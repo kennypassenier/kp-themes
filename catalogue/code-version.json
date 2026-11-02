@@ -101,7 +101,7 @@
         "js/quote.js": { "digest": "0e961a3a16537647", "when": "[data-kp-quote], [data-kp-quote-list]" },
         "js/range.js": { "digest": "2df1841818bb6770", "when": "[data-kp-range]" },
         "js/rating.js": { "digest": "561fbe00f3e5aa4c", "when": "[data-kp-rating]" },
-        "js/reason.js": { "digest": "86b349d51b98ae4b", "when": "[data-kp-disabled-reason]" },
+        "js/reason.js": { "digest": "8bdc8c220fddde65", "when": "[data-kp-disabled-reason]" },
         "js/request-inspector.js": { "digest": "d79def1e0b5620d6", "when": "[data-kp-requests]" },
         "js/row-editor.js": { "digest": "51c496ac3d0c8160", "when": "[data-kp-rows]" },
         "js/row-select.js": { "digest": "dba95f9a5c0c551b", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
@@ -10968,7 +10968,7 @@
         "||||.kp-toolbar__search": "458915210572ba81",
         "||||.kp-toolbar__search))": "63bec5323b02f614",
         "||||.kp-toolbar__state": "ec34caa51a7d45bc",
-        "||||.kp-tooltip": "cd97efc692deba3a",
+        "||||.kp-tooltip": "8728a71dcef49a4b",
         "||||.kp-tooltip[data-kp-hovercard-card]": "895e7925865fefd0",
         "||||.kp-tooltip__value": "6a00cd34fb609888",
         "||||.kp-tour": "32922be2269724da",
@@ -11352,7 +11352,6 @@
         "||||[data-kp-ghost])": "2dcc8ab06c152a16",
         "||||[data-kp-gliding='column']": "6c1525df455b36a6",
         "||||[data-kp-handle]": "da76852cc1ba95d5",
-        "||||[data-kp-hovercard-card])": "b829e76726e530a3",
         "||||[data-kp-inert])": "ade9be9e4a8edc71",
         "||||[data-kp-item]": "48f5f1a2bddc02fb",
         "||||[data-kp-item].kp-task-row": "9cfa0a7743841ef4",
@@ -11435,6 +11434,7 @@
         "||||[data-kp-tone='muted'])": "59843b22a87f275d",
         "||||[data-kp-tone='none'])": "a8f83ae897aa74d4",
         "||||[data-kp-tone='warning']": "6b607dd1a2a7298b",
+        "||||[data-kp-tooltip-layer]):not([data-kp-hovercard-card])": "e375fbed0db55b9c",
         "||||[data-kp-tour-target]": "9ffe675918fcb6d0",
         "||||[data-kp-upload-remove]": "a88f52cd79283e39",
         "||||[data-kp-uptime-group]": "ac4b8bc8bddf4b63",
@@ -11761,7 +11761,7 @@
             ]
         },
         "data": {
-            "modules": "7edff266b7b8bec4",
+            "modules": "a476f9f6b2d58c66",
             "families": [
                 "data-kp-activation",
                 "data-kp-active",
@@ -12493,6 +12493,7 @@
                 "data-kp-toolbar",
                 "data-kp-toolbar-clear",
                 "data-kp-toolbar-key",
+                "data-kp-tooltip-layer",
                 "data-kp-tooltip-owner",
                 "data-kp-track-value",
                 "data-kp-truncated",
@@ -12734,6 +12735,7 @@
                 "kp-task-open",
                 "kp-task-row",
                 "kp-task-toggle",
+                "kp-themes",
                 "kp-thread",
                 "kp-thread-action",
                 "kp-thread-add",
@@ -12976,7 +12978,7 @@
             ]
         },
         "feedback": {
-            "modules": "23ba876b29025a4c",
+            "modules": "4652c8c59b56b53c",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -13249,6 +13251,7 @@
                 "data-kp-today-resume",
                 "data-kp-today-since",
                 "data-kp-tone",
+                "data-kp-tooltip-layer",
                 "data-kp-tooltip-owner",
                 "data-kp-trace",
                 "data-kp-trace-copy",
@@ -14166,7 +14169,7 @@
             ]
         },
         "navigation": {
-            "modules": "ec14fe755ac478cc",
+            "modules": "a8db7aa224b025c6",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14358,6 +14361,7 @@
                 "data-kp-to-top-shown",
                 "data-kp-to-top-target",
                 "data-kp-tone",
+                "data-kp-tooltip-layer",
                 "data-kp-tooltip-owner",
                 "data-kp-tree",
                 "data-kp-type-confirm",
@@ -14399,7 +14403,7 @@
             ]
         },
         "overlays": {
-            "modules": "ab09f02579d0a430",
+            "modules": "82151c857b2d70c3",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14500,6 +14504,7 @@
                 "data-kp-time",
                 "data-kp-time-required",
                 "data-kp-toast-new",
+                "data-kp-tooltip-layer",
                 "data-kp-tooltip-owner",
                 "data-kp-touch",
                 "data-kp-tour-stepping",

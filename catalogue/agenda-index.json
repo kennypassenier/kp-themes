@@ -1,6 +1,19 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
+        "research/tip-1102/demo.html": {
+            "facts": {
+                "id": "tip-1102",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Kitchen found the reason of a disabled Delete cut at the edge of its table’s card on a phone. The reason’s tooltip now stands above the page, so nothing round the button can cut it. One section, formal only.",
+                "sections": [{ "item": "reason-in-table", "themes": null, "topic": "reason", "mode": null }],
+                "extra": null,
+                "round": "\n            {\"round\":\"tip-1102-9859ed3b-e29e-4a47-b0f3-fc52cf80737e\",\"received\":[]}\n        "
+            },
+            "fingerprint": "3e6b46f222a24199",
+            "update": null
+        },
         "research/graph-1020/demo.html": {
             "facts": {
                 "id": "graph-1020",

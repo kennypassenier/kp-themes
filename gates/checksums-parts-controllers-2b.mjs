@@ -72,6 +72,7 @@ export const CONTROLLER_PART_FILES_2B = [
     'js/overlays/tab-row.js',
     'js/overlays/tabs.js',
     'js/overlays/toast.js',
+    'js/overlays/tooltip-layer.js',
     'js/overlays/tooltips.js',
     'js/palette/api.js',
     'js/palette/attach.js',

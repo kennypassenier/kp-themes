@@ -75,6 +75,7 @@ each line its example and its option row, and empties the list.
 - ux-1101, site/components/action-columns.html: `data-kp-actions-narrow="stack"` (the narrow list's buttons are one row, the primary first, by default; `stack` keeps one per line), with a before and after.
 - ux-1101, site/components/disabled-reason.html and uptime.html: the reason printed under the control on a coarse pointer; the uptime row tap on a coarse pointer (sentences, no options).
 - ux-1101, site/components/list.html: the column head `.kp-listrow--head` (the rows drop their switch word while the list is wider than 40rem); site/components/attention.html and problems.html: the sentence on the band or the Problems list; site/components/menu-button.html: row actions behind a menu.
+- tip-1102, site/components/tooltip.html and disabled-reason.html: `data-kp-tooltip-layer` (`top` default: the tooltip on the top layer, never cut by a table, card or dialog; `inline` keeps the old layer), with a live example of a reason inside a data table's card.
 
 (Nothing waits. The pass of 2026-10-31, on Kenny's go "components-page: Nu bijwerken", brought every line of the Medicine Cabinet package
 (mc-1030) onto its page, with the new pages list rows and row editor, examples drawn from the approved demo research/medicine-1030: the quantity's
