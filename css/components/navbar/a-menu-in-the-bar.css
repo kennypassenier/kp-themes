@@ -1,0 +1,37 @@
+/* @part: navbar: A menu button that is one of the bar's links */
+    /* A menu button that is one of the bar's links [parts-1102; Medicine Cabinet 28]. A list item of `.kp-nav__links` may
+     * hold the package's menu button (js/menu-button.js) instead of a link: its button is a bar link with the disclosure's
+     * caret, its menu the rich menu (groups under small capitals, a label over a one-line hint per entry, the menu's keys and
+     * placement), so a page needs no classes of its own:
+     *
+     *   <li>
+     *     <div class="kp-menu-button" data-kp-menu-button>
+     *       <button type="button" class="kp-nav__link kp-nav__disclosure">Stock</button>
+     *       <div class="kp-menu kp-menu--rich" role="menu" aria-label="Stock"></div>
+     *     </div>
+     *   </li>
+     *
+     * setMenu(wrapper, groups) fills it, an entry with `href` is a link and `attrs: { 'aria-current': 'page' }` marks the page
+     * shown. While the page shown is one of its entries the page writes `aria-current="true"` on the button, which then reads
+     * as the bar's current link (as More does when the current page is folded behind it). Every register that dresses a bar
+     * link dresses the button; the menu is the theme's raised plate. In a folding bar (`data-kp-nav-fold`) such an item never
+     * folds behind More (a menu inside a menu): give it `data-kp-nav-keep`. */
+    .kp-nav__links > li > .kp-menu-button {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* The menu hangs from the button's start edge, as a bar's dropdown does; the script moves it back in where it would leave
+     * the window (menuPlacement). */
+    .kp-nav__links > li > .kp-menu-button > .kp-menu {
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+    }
+
+    .kp-nav__links > li > .kp-menu-button > .kp-nav__link[aria-current='true'] {
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
+

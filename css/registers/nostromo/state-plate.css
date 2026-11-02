@@ -52,3 +52,16 @@
         text-decoration-thickness: 3px;
     }
 
+    /* The one-line plate's mark [parts-1102]: a square of ink tape, the mark in the terminal's face. */
+    [data-theme='nostromo'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border-radius: 2px;
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        font-weight: 400;
+    }
+
+    [data-theme='nostromo'] .kp-empty[data-kp-empty='compact'] > .kp-empty__title {
+        margin: 0;
+    }
+

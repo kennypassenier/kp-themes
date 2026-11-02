@@ -2051,6 +2051,24 @@
         text-decoration-color: currentColor;
     }
 
+    /* The one-line plate's mark [parts-1102]: a clerk's seal, a hairline ring round the mark in the display face; the double rule
+       stays along the top outside a card, the ruled lines stay off (one line has no foot to rule). */
+    [data-theme='formal'] .kp-empty[data-kp-empty='compact'] {
+        background: none;
+    }
+
+    /* In a card the card's own rule is the line above it: a second double rule under the title would be two rules for one edge. */
+    [data-theme='formal'] .kp-card .kp-empty[data-kp-empty='compact'] {
+        border-block-start: 0;
+    }
+
+    [data-theme='formal'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px solid var(--border-strong);
+        background: none;
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+
     /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
        on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
        `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]` (which

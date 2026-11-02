@@ -14,6 +14,8 @@ export declare class FoldGroups {
     groups: MenuGroup[];
     /** The open group of plain links, while the folded items are plain links. @type {MenuItem[] | null} */
     plain: MenuItem[] | null;
+    /** The name of the open group of plain links: '' or the group a pinned item names [parts-1102]. */
+    plainName: string;
     /** A folded separator was seen: the next group stands below a rule. */
     rule: boolean;
     s: import("../strings/types.js").Strings;

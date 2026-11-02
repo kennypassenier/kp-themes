@@ -1433,12 +1433,13 @@ attachTabbars(bar.parentElement);
                             <tr><td><code>data-kp-nav-fold-skip</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-nav-folded</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-nav-folding</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-nav-hint</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-nav-idle</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-nav-keep</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-nav-menu-end</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-nav-menu-open</code></td><td>selector, read</td></tr>
                             <tr><td><code>data-kp-nav-menus-attached</code></td><td>written, read</td></tr>
-                            <tr><td><code>data-kp-nav-more</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-nav-more</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-nav-more-alert</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-nav-more-current</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-nav-open</code></td><td>read, written</td></tr>
@@ -1570,6 +1571,9 @@ attachTabbars(bar.parentElement);
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>data-kp-nav-fold</code></td><td>Opt-in on the nav: the links that do not fit are folded from the end behind a More menu (`attachNavFolds`; `NavBar` takes `fold`). The bar stays one row before and after, the fit is measured at the links’ natural widths so it cannot oscillate, and below the bar’s own phone breakpoint, with a toggle present, it stands down.</td></tr>
                             <tr><td><code>data-kp-nav-keep</code></td><td>On a list item: it stays in the bar wherever it is, and the fold takes the others.</td></tr>
+                            <tr><td><code>data-kp-nav-more</code></td><td>On a list item of a folding bar [parts-1102; Kitchen, chassis-rs Page::group]: it sits behind More whatever the width, its current-page mark and counter moving to the More button as a folded link’s do, so a page no longer builds the More item. A value names its group in the menu (a heading over the pinned items that share it; a group named as the More button itself has none). Where the bar’s own toggle is shown, it is a link of the open list. The script’s own item is `.kp-nav__more[data-kp-nav-more]` (`NAV_MORE`), a pinned one `NAV_PINNED`.</td></tr>
+                            <tr><td><code>data-kp-nav-hint</code></td><td>On a link or its list item: the one-line hint under its entry in the More menu (the rich menu’s shape) [parts-1102].</td></tr>
+                            <tr><td><code>a menu button in the bar</code></td><td>A list item that holds the package’s `.kp-menu-button` with a `kp-nav__link kp-nav__disclosure` button is one of the bar’s links [parts-1102; Medicine Cabinet 28]: the caret turns while open, the rich menu (groups, a label over a one-line hint per entry) hangs under it from its start edge, and `aria-current=&quot;true&quot;` on the button marks it current while the page shown is one of its entries. In a folding bar give it `data-kp-nav-keep`.</td></tr>
                             <tr><td><code>kp-nav-fold</code></td><td>Fired on the nav, bubbling, when the folded set changes: `{ folded, items }`. `planFold()` is the arithmetic on its own, `foldNav()` folds one bar.</td></tr>
                             <tr><td><code>fold marks</code></td><td>Written by the script: `data-kp-nav-fold-ready` once the bar is fitted, `data-kp-nav-folding` while anything is folded, `data-kp-nav-folded` on each folded item, `data-kp-nav-more-current` when the current page is behind More (and `aria-current` on its button) and `data-kp-nav-more-alert` when a `.kp-badge` count is (a dot on the button, announced).</td></tr>
                             <tr><td><code>--kp-nav-more-dot</code></td><td>The colour of the dot on the More button when a count is behind it. A list item with a dropdown or a mega menu becomes a named group in the More menu: its heading, then its links.</td></tr>

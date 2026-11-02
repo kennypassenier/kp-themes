@@ -2670,6 +2670,16 @@
         color: var(--foreground);
     }
 
+    /* The one-line plate's mark [parts-1102]: the zero stamp, small: a hard ring on the accent, turned and dropped. */
+    [data-theme='brutalism'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 2px solid var(--border-strong);
+        background: var(--accent);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+        box-shadow: 2px 2px 0 var(--border-strong);
+        rotate: -8deg;
+    }
+
     [data-theme='brutalism'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         color: var(--foreground);
         font-weight: 700;

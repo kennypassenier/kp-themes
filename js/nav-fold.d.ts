@@ -1,4 +1,4 @@
-export { NAV_FOLD, NAV_FOLD_EVENT, NAV_MORE, NAV_SEP, NAV_FOLD_OWNED } from './nav-fold/read.js';
+export { NAV_FOLD, NAV_FOLD_EVENT, NAV_MORE, NAV_PINNED, NAV_SEP, NAV_FOLD_OWNED } from './nav-fold/read.js';
 export { planFold, planSeparators } from './nav-fold/plan.js';
 export type NavFoldOptions = {
     /**

@@ -587,13 +587,14 @@ The context menu: a right click, a long press or Shift+F10 opens a kp menu at th
 
 ## js/popover-form.js → js/popover-form/
 
-The popover form: a small form anchored to its button, one field and accept, light dismiss [ux-1101]. 3 files.
+The popover form: a small form anchored to its button, one field (or a day and a time) and accept, light dismiss [ux-1101; parts-1102]. 4 files.
 
 | File            | Does                                                                                                                      |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `accept.js`     | Accepting: the browser's validity first, then the page's event, then the wait for its answer with its failure in the form. |
 | `constants.js`  | The selectors, attribute names and events of the popover form.                                                            |
 | `controller.js` | PopoverFormControl: opens under its button on the menu's plate, Enter accepts, Escape and light dismiss close it.          |
+| `fields.js`     | What the fields hold (a date picker's ISO day) and the first that may not be accepted (a date, a time field's refusal).    |
 
 ## js/date-nav.js → js/date-nav/
 
@@ -1015,12 +1016,13 @@ Tile sets that share one row height, and tile boards moved with the keys. 3 file
 
 ## js/wheel.js → js/wheel/
 
-The decision wheel, as a WheelControl controller over a per-wheel state. 4 files.
+The decision wheel, as a WheelControl controller over a per-wheel state. 5 files.
 
 | File            | Does                                                                                 |
 | --------------- | ------------------------------------------------------------------------------------ |
 | `controller.js` | WheelControl: lays and draws the wheel, the Spin button, kiosk keys, live redraws.   |
 | `draw.js`       | The parts laid once, the disc with fitted labels, and the answer, button and stage. |
+| `follow.js`     | A wheel that follows another (`data-kp-wheel-follows`) spins and settles with it.   |
 | `spin.js`       | The weights' glide, the items, the state, the result and the spin.                   |
 | `state.js`      | Selector, events, the per-wheel state, geometry, the weighted pick, the angles.     |
 

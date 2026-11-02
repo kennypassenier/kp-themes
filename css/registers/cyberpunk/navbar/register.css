@@ -71,7 +71,7 @@
         position: relative;
     }
 
-    [data-theme='cyberpunk'] .kp-nav__link:is([aria-current='page'], .kp-nav__more-button[aria-current='true']) {
+    [data-theme='cyberpunk'] .kp-nav__link:is([aria-current='page'], .kp-nav__more-button[aria-current='true'], .kp-menu-button > [aria-current='true']) {
         text-decoration: underline;
         text-underline-offset: 0.3em;
     }

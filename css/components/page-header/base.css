@@ -80,6 +80,23 @@
             }
         }
 
+        /* `data-kp-header-actions="equal"` on the header [parts-1102; almanac 21]: two buttons on two equal tracks, so a
+         * pair of actions reads as one block across the phone's column, also where the header is too narrow for the default
+         * pair (a long label then wraps inside its button, at its spaces). "auto" (the default) is the rows above. Read by CSS
+         * alone, so it switches at run time. */
+        .kp-page-header[data-kp-header-actions='equal'] .kp-page-header__actions:has(> :nth-child(2 of .kp-button, .kp-menu-button)):not(:has(> :nth-child(3 of .kp-button, .kp-menu-button))) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .kp-page-header[data-kp-header-actions='equal'] .kp-page-header__actions > .kp-menu-button {
+            inline-size: auto;
+        }
+
+        .kp-page-header[data-kp-header-actions='equal'] .kp-page-header__actions > .kp-menu-button > button {
+            flex: 1 1 auto;
+            justify-content: center;
+        }
+
         .kp-page-header__actions > .kp-button {
             justify-content: center;
             white-space: normal;

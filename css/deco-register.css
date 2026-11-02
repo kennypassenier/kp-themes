@@ -2727,6 +2727,14 @@
         font-size: 1.375rem;
     }
 
+    /* The one-line plate's mark [parts-1102]: a gold inlay ring, double, the mark in the display face. */
+    [data-theme='deco'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 3px double var(--accent);
+        background: none;
+        color: var(--accent);
+        font-family: var(--theme-font-display);
+    }
+
     /* The dialog: lacquer, the double rule under its title (the dialog is
        what matters), no crest. */
     [data-theme='deco'] .kp-dialog {

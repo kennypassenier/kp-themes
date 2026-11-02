@@ -40,3 +40,10 @@
         font-size: 0.78rem;
     }
 
+    /* The one-line plate's mark [parts-1102]: a milled square with a hairline edge, no rounding. */
+    [data-theme='titanium'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.08), transparent);
+    }
+

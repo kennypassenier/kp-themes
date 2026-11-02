@@ -618,6 +618,7 @@
                             <tr><td><code>.kp-page-header__updated</code></td><td>When the page was last read, after the title on its baseline, in the muted ink and same-width digits; a fixed least width keeps the title still while it changes, and it wraps under the title when the line is full.</td></tr>
                             <tr><td><code>.kp-page-header__actions</code></td><td>The buttons, the primary among them, the overflow last; a popover in it hangs under its button towards the start.</td></tr>
                             <tr><td><code>on a phone</code></td><td>Under 40rem the title takes the width and the buttons fold under the description: the buttons form one row of equal columns, the primary first, wrapping as equal columns when they cannot fit.</td></tr>
+                            <tr><td><code>data-kp-header-actions</code></td><td>`equal` [parts-1102]: on a phone two actions stand on two equal tracks and fill the row together, also where the header is too narrow for the default pair (a long label wraps inside its button). `auto` (the default): the primary takes the rest of the row and the secondary its own width, or one under the other when narrow. CSS alone, switchable at run time.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

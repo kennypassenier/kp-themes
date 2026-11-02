@@ -69,6 +69,7 @@ attachArt(document.getElementById('doc-art'));
             { name: 'as a heading', what: 'The title can be rendered as a real heading where the empty state stands for a whole section.' },
             { name: 'data-kp-art', what: 'A drawing at the top (`.kp-art`, js/art.js `attachArt`): `none`, `nomatch`, `error`, `offline`, `done` or `locked`, in the theme’s own set (`data-kp-art-set`; formal’s is the ledger), ruled in on arrival where the theme moves. `data-kp-art-kind` on the drawing says which.' },
             { name: 'data-kp-art-size', what: '`sm` (5rem) or `lg` (10rem) instead of 7.5rem.' },
+            { name: 'data-kp-empty', what: '`compact` [parts-1102]: one line, a mark (`.kp-empty__icon`) and the words, for a small card with nothing in it ("✓ No open alerts"); the plate keeps its theme\u2019s ground, edge and title voice and the theme\u2019s art comes back as the dress of the mark. `full` (the default) is the prominent plate.' },
         ],
         accessibility: [
             'Built in — the title is text in the page’s own ink rather than a picture of a shrug, so it is read out like any other message.',

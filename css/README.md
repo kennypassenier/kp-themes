@@ -134,7 +134,7 @@ concatenates that file into `css/themes.css`.
 | `meter.css`                     | Meter with a mark                                                                |
 | `month-heatmap/`                | Month heatmap (2 parts)                                                          |
 | `movable-grid.css`              | Movable grid layout                                                              |
-| `navbar/`                       | Navigation bar (4 parts)                                                         |
+| `navbar/`                       | Navigation bar (5 parts)                                                         |
 | `new-lines-pill.css`            | The "N new lines" pill                                                           |
 | `next-times.css`                | Next times                                                                       |
 | `notification-centre/`          | The notification centre (2 parts)                                                |
@@ -155,6 +155,7 @@ concatenates that file into `css/themes.css`.
 | `swipe.css`                     | Swipe row [parts-1102]                                                           |
 | `settled.css`                   | Settled row [parts-1102]                                                         |
 | `swatches.css`                  | Swatch picker [parts-1102]                                                       |
+| `empty-compact.css`             | The one-line empty plate for a small card [parts-1102]                           |
 | `markdown-editor.css`           | Markdown editor and task lists [habits-1101]                                     |
 | `plain-card.css`                | Plain card                                                                       |
 | `popover.css`                   | Dropdown and tooltip, on the popover layer                                       |

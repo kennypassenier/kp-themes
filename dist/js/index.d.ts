@@ -231,7 +231,7 @@ export { MARKDOWN_LIMIT, MARKDOWN_TASK_EVENT, markdownFragment, safeHref, toggle
 export { MASTER_DETAIL, PANE_ASIDE_FOLD_AT, PANE_ASIDE_WIDTH, PANE_CLOSE_EVENT, PANE_FOLD_AT, PANE_OPEN_EVENT, PANE_RETRY_EVENT, PANE_SELECT_EVENT, PANE_WIDTHS, attachMasterDetails, closePane, masterDetail, openPane, selectPane, setPaneState } from '../../js/master-detail.js';
 export { MENU_BUTTON, MENU_CLOSE_EVENT, MENU_COUNT_PROPERTY, MENU_GUTTER, MENU_OPEN_EVENT, MENU_SELECT_EVENT, attachMenuButtons, closeMenu, menuKeyTarget, menuLineCount, menuPlacement, menuSignature, openMenu, setMenu } from '../../js/menu-button.js';
 export { ARRIVE_KEYS, CLOSING_ATTRIBUTE, FOLDING_OUT, FOLD_SELECTOR, GROUP_FOLDING_ATTRIBUTE, PANEL_SELECTOR, REVERSING_ATTRIBUTE, SIZE_ATTRIBUTE, SIZE_SELECTOR, arriveShown, attachMotion, closeDialog, easeSize, glideGroup, leave, leavesState, motionWatchCount, playArrivalBackwards, playClose, playEntranceBackwards, registerTime, repaintedIn, reversedEase, sizeMotion, stopClose, stopReversing, themeMotion, turnEntrances, turnLines, withCustomProperties, withoutOvershoot } from '../../js/motion.js';
-export { NAV_FOLD, NAV_FOLD_EVENT, NAV_FOLD_OWNED, NAV_MORE, NAV_SEP, attachNavFolds, foldNav, planFold, planSeparators } from '../../js/nav-fold.js';
+export { NAV_FOLD, NAV_FOLD_EVENT, NAV_FOLD_OWNED, NAV_MORE, NAV_PINNED, NAV_SEP, attachNavFolds, foldNav, planFold, planSeparators } from '../../js/nav-fold.js';
 export { FOLLOW, FOLLOW_EVENT, FOLLOW_THRESHOLD, NEWPILL_JUMP_EVENT, NEWPILL_SAY_MS, attachNewPills, newPill } from '../../js/newpill.js';
 export { EFFECTS_ATTRIBUTE, NO_FLASH_SNIPPET, REGISTER_PATTERN_DEFAULT, THEME_ATTRIBUTE, applyStoredTheme, noFlashSnippet } from '../../js/no-flash.js';
 export { NOTICES, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICES_READ_ALL_EVENT, NOTICES_RETRY_EVENT, NOTICES_SOURCE_EVENT, NOTICE_FIX_EVENT, NOTICE_READ_EVENT, NOTICE_SEVERITIES, attachNotices, noticesOf, setNotices } from '../../js/notices.js';
@@ -306,7 +306,7 @@ export { VERSION_COPY_EVENT, VERSION_DELTA, VERSION_LEVELS, VERSION_SORT, attach
 export { VIEWER, VIEWER_CLOSE_EVENT, VIEWER_STATES, openViewer } from '../../js/viewer.js';
 export { WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_RETRY_EVENT, WEEK_TICK_MS, attachWeeks, pillCapacity, setWeekEvents, setWeekLegend, setWeekStart, setWeekState, stackPills } from '../../js/week.js';
 export { WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, attachWeekdays, dayNames, dayNumber, joinWords, monthSummary, setWeekdays, weekdaySummary, weekdays, weekdaysOf } from '../../js/weekdays.js';
-export { WHEEL, WHEEL_RESULT_EVENT, WHEEL_SPIN_EVENT, attachWheels, getWheelResult, pickWeighted, setWheelItems, setWheelState, spinWheel, wheelAngles } from '../../js/wheel.js';
+export { WHEEL, WHEEL_FOLLOWS, WHEEL_RESULT_EVENT, WHEEL_SPIN_EVENT, attachWheels, getWheelResult, pickWeighted, setWheelItems, setWheelState, spinWheel, wheelAngles } from '../../js/wheel.js';
 export { BEFORE_STEP_EVENT, FINISH_EVENT, STEP_EVENT, attachWizards, wizard } from '../../js/wizard.js';
 export { ROW_OPEN_EVENT as ACTIONS_ROW_OPEN_EVENT } from '../../js/actions.js';
 export { ROW_OPEN_EVENT as ROW_SELECT_ROW_OPEN_EVENT } from '../../js/row-select.js';

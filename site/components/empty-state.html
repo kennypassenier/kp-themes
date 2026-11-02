@@ -507,7 +507,13 @@ attachArt(document.getElementById(<span class="kp-code__string">'doc-art'</span>
                             <tr><td><code>--kp-art-rule</code></td><td><code>var(--primary)</code></td></tr>
                             <tr><td><code>--kp-art-size</code></td><td><code>7.5rem</code></td></tr>
                             <tr><td><code>--kp-art-stroke</code></td><td><code>1.5px</code></td></tr>
+                            <tr><td><code>--kp-empty-compact-height</code></td><td><code>2.75rem</code></td></tr>
+                            <tr><td><code>--kp-empty-compact-mark</code></td><td><code>1.5rem</code></td></tr>
+                            <tr><td><code>--kp-empty-compact-pad</code></td><td><code>var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem)</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
@@ -532,6 +538,7 @@ attachArt(document.getElementById(<span class="kp-code__string">'doc-art'</span>
                             <tr><td><code>as a heading</code></td><td>The title can be rendered as a real heading where the empty state stands for a whole section.</td></tr>
                             <tr><td><code>data-kp-art</code></td><td>A drawing at the top (`.kp-art`, js/art.js `attachArt`): `none`, `nomatch`, `error`, `offline`, `done` or `locked`, in the theme’s own set (`data-kp-art-set`; formal’s is the ledger), ruled in on arrival where the theme moves. `data-kp-art-kind` on the drawing says which.</td></tr>
                             <tr><td><code>data-kp-art-size</code></td><td>`sm` (5rem) or `lg` (10rem) instead of 7.5rem.</td></tr>
+                            <tr><td><code>data-kp-empty</code></td><td>`compact` [parts-1102]: one line, a mark (`.kp-empty__icon`) and the words, for a small card with nothing in it (&quot;✓ No open alerts&quot;); the plate keeps its theme’s ground, edge and title voice and the theme’s art comes back as the dress of the mark. `full` (the default) is the prominent plate.</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>

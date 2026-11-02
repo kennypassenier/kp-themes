@@ -1,0 +1,81 @@
+/* @part: empty-compact: The one-line empty plate for a small card */
+/* --- The one-line empty plate [parts-1102; homelab UX review 2026-11-01] ---------------------------------------------------
+ * `data-kp-empty="compact"` on a `.kp-empty`: one line, a mark and the words, for a small card with nothing in it
+ * ("✓ No open alerts"), where the full plate (heading size, the theme's art above the words, the whole footprint) would
+ * outweigh the card. Opt-in: every other empty area keeps the prominent plate (DEMO_RULES ch. 3).
+ *
+ *   <p class="kp-empty" data-kp-empty="compact">
+ *     <span class="kp-empty__icon" aria-hidden="true">✓</span>
+ *     <span class="kp-empty__title">No open alerts</span>
+ *   </p>
+ *
+ * The plate keeps its theme's own ground, edge and title voice; the theme's art leaves (there is no room for a sun, a stamp
+ * or a raster over one line) and comes back as the dress of the mark, which each register gives (`.kp-empty__icon`). A
+ * second line (`.kp-empty__body`) stands under the words in the same track. Without a mark the words start on the plate's
+ * edge. "full" (the default) is the plate as it was. Knobs [KT6]: --kp-empty-compact-height (2.75rem, at least one touch
+ * target), --kp-empty-compact-pad (the air round the line), --kp-empty-compact-mark (1.5rem, the mark's size). */
+@layer kp.components {
+    .kp-empty__icon {
+        display: inline-grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-empty-compact-mark, 1.5rem);
+        block-size: var(--kp-empty-compact-mark, 1.5rem);
+        border-radius: 50%;
+        background: color-mix(in oklab, var(--foreground) 10%, transparent);
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 700;
+        line-height: 1;
+    }
+}
+
+/* The shape lives in the last layer: every register sets the plate's padding, art and title margin in a later layer than the
+ * components and would undo a one-line plate. Ground, edge, colours and type stay the register's. */
+@layer kp.layout {
+    .kp-empty[data-kp-empty='compact'] {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        align-content: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-empty-compact-height, 2.75rem);
+        margin: 0;
+        padding: var(--kp-empty-compact-pad, var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem));
+        text-align: start;
+    }
+
+    .kp-empty[data-kp-empty='compact']:not(:has(> .kp-empty__icon)) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-empty[data-kp-empty='compact']::before,
+    .kp-empty[data-kp-empty='compact']::after {
+        content: none;
+        display: none;
+    }
+
+    .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+
+    .kp-empty[data-kp-empty='compact'] > :is(.kp-empty__title, .kp-empty__body) {
+        grid-column: -2;
+        justify-self: start;
+        min-inline-size: 0;
+        margin: 0;
+        overflow-wrap: break-word;
+    }
+
+    .kp-empty[data-kp-empty='compact'] > .kp-empty__title {
+        font-size: var(--kp-text-md, 1rem);
+        line-height: 1.35;
+    }
+
+    .kp-empty[data-kp-empty='compact'] > .kp-empty__body {
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+}
+

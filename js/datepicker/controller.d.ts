@@ -51,6 +51,8 @@ export declare class DatePickerController extends Controller {
     connect(): void;
     /** Put back what the picker changed on its markup. */
     restore(): void;
+    /** The ISO value as the field's text reads now, without an event. */
+    followText(): void;
     /** The date in the field, or null when it is empty or not a date. */
     read(): Date | null;
     /** Whether a day may not be chosen: outside the range, on a disabled weekday, or refused by the page. @param {Date} date */

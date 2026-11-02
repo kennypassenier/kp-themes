@@ -3489,6 +3489,23 @@
             }
         }
 
+        /* `data-kp-header-actions="equal"` on the header [parts-1102; almanac 21]: two buttons on two equal tracks, so a
+         * pair of actions reads as one block across the phone's column, also where the header is too narrow for the default
+         * pair (a long label then wraps inside its button, at its spaces). "auto" (the default) is the rows above. Read by CSS
+         * alone, so it switches at run time. */
+        .kp-page-header[data-kp-header-actions='equal'] .kp-page-header__actions:has(> :nth-child(2 of .kp-button, .kp-menu-button)):not(:has(> :nth-child(3 of .kp-button, .kp-menu-button))) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .kp-page-header[data-kp-header-actions='equal'] .kp-page-header__actions > .kp-menu-button {
+            inline-size: auto;
+        }
+
+        .kp-page-header[data-kp-header-actions='equal'] .kp-page-header__actions > .kp-menu-button > button {
+            flex: 1 1 auto;
+            justify-content: center;
+        }
+
         .kp-page-header__actions > .kp-button {
             justify-content: center;
             white-space: normal;
@@ -6858,6 +6875,13 @@
         align-self: start;
     }
 
+    /* Without data-kp-subgrid a band in a form grid is one block across the grid's tracks, label to actions [parts-1102]: as a
+       plain grid item it fell into the label track, and its words broke after every word (Almanac's Settings, 92 px wide). */
+    .kp-formgrid > .kp-attention:not([data-kp-subgrid]),
+    .kp-formgrid__group > .kp-attention:not([data-kp-subgrid]) {
+        grid-column: label-start / actions-end;
+    }
+
     /* The narrow fold, inside a form grid or not: under 36rem of the nearest size container (the form grid, a card, the
        page), or of the screen where there is none, each item is two tracks, the icon and the words, with its fix under
        them on the full width. Written twice, once per query, as a container query cannot fall back to the viewport. */
@@ -8179,7 +8203,8 @@
     }
 
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > li[data-kp-nav-folded],
-    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > [data-kp-nav-more][data-kp-nav-idle] {
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > .kp-nav__more[data-kp-nav-idle],
+    .kp-nav:where([data-kp-nav-fold]:not([data-kp-nav-fold-ready], :has(> .kp-nav__toggle))) > .kp-nav__links > li[data-kp-nav-more]:not(.kp-nav__more) {
         /* !important: a register that dresses the list items (cyberpunk's `position: relative` on every one) sits in a
          * later layer and would put a folded item, and the idle More, back in the flow; it would push the More button
          * out of the bar. An important declaration of this layer beats every normal one of a later layer. */
@@ -8279,8 +8304,18 @@
             white-space: normal;
         }
 
-        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links > [data-kp-nav-more] {
+        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links > .kp-nav__more {
             display: none;
+        }
+    }
+
+    /* A link pinned behind More (`data-kp-nav-more` on its item) [parts-1102] never shows in the bar, not even in the frame
+     * before the script has fitted it; where the bar's own toggle is shown it is a link of the open list like the others. */
+    @container kp-nav (min-width: 40.0625rem) {
+        .kp-nav:where([data-kp-nav-fold]:not([data-kp-nav-fold-ready])) > .kp-nav__links > li[data-kp-nav-more]:not(.kp-nav__more) {
+            position: absolute !important;
+            visibility: hidden !important;
+            pointer-events: none;
         }
     }
 
@@ -8360,6 +8395,42 @@
 
     .kp-nav__link[aria-current='page'] {
         font-weight: 600;
+        text-decoration-thickness: 2px;
+    }
+
+    /* A menu button that is one of the bar's links [parts-1102; Medicine Cabinet 28]. A list item of `.kp-nav__links` may
+     * hold the package's menu button (js/menu-button.js) instead of a link: its button is a bar link with the disclosure's
+     * caret, its menu the rich menu (groups under small capitals, a label over a one-line hint per entry, the menu's keys and
+     * placement), so a page needs no classes of its own:
+     *
+     *   <li>
+     *     <div class="kp-menu-button" data-kp-menu-button>
+     *       <button type="button" class="kp-nav__link kp-nav__disclosure">Stock</button>
+     *       <div class="kp-menu kp-menu--rich" role="menu" aria-label="Stock"></div>
+     *     </div>
+     *   </li>
+     *
+     * setMenu(wrapper, groups) fills it, an entry with `href` is a link and `attrs: { 'aria-current': 'page' }` marks the page
+     * shown. While the page shown is one of its entries the page writes `aria-current="true"` on the button, which then reads
+     * as the bar's current link (as More does when the current page is folded behind it). Every register that dresses a bar
+     * link dresses the button; the menu is the theme's raised plate. In a folding bar (`data-kp-nav-fold`) such an item never
+     * folds behind More (a menu inside a menu): give it `data-kp-nav-keep`. */
+    .kp-nav__links > li > .kp-menu-button {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* The menu hangs from the button's start edge, as a bar's dropdown does; the script moves it back in where it would leave
+     * the window (menuPlacement). */
+    .kp-nav__links > li > .kp-menu-button > .kp-menu {
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+    }
+
+    .kp-nav__links > li > .kp-menu-button > .kp-nav__link[aria-current='true'] {
+        font-weight: 600;
+        text-decoration: underline;
         text-decoration-thickness: 2px;
     }
 
@@ -16080,6 +16151,89 @@
 
     .kp-popover-form__row > :first-child {
         min-inline-size: 0;
+    }
+
+    /* Two fields side by side [parts-1102; Homelab's "Snooze until"]: `.kp-popover-form__pair` holds two
+     * `.kp-popover-form__field`s (a label over its control, a date picker and a time field, say). The plate is then two tracks:
+     * the first field takes the room, the second a track of its own (--kp-popover-form-pair-second, 8.5rem, a time field's width); the labels share one row and the controls the next, so both
+     * controls start and end on one line. The problem line stands under the first field and the accept button
+     * (`.kp-popover-form__accept`) under the second, as wide as it, so the button ends on the fields' edge. The plate has a
+     * width of its own, so a form opened near the window's edge is not squeezed: the knob --kp-popover-form-pair-width
+     * (min(24rem, 100vw - 2rem)); on a phone the two tracks stay. */
+    .kp-popover-form > .kp-popover-form__panel:has(> .kp-popover-form__pair) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, var(--kp-popover-form-pair-second, 8.5rem));
+        column-gap: var(--kp-space-sm, 0.5rem);
+        inline-size: var(--kp-popover-form-pair-width, min(24rem, 100vw - 2rem));
+        max-inline-size: none;
+    }
+
+    .kp-popover-form__panel:has(> .kp-popover-form__pair) > * {
+        grid-column: 1 / -1;
+    }
+
+    .kp-popover-form__panel > .kp-popover-form__pair {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-template-rows: auto auto;
+        row-gap: var(--kp-space-xs, 0.25rem);
+        margin-block-end: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-popover-form__pair > .kp-popover-form__field {
+        display: grid;
+        grid-row: span 2;
+        grid-template-rows: subgrid;
+        align-items: stretch;
+        min-inline-size: 0;
+    }
+
+    /* The labels stand on the controls; the controls share the taller one's height (a time field is a fingertip high on a
+     * phone), so both start and end on one line. */
+    .kp-popover-form__field > .kp-popover-form__label {
+        align-self: end;
+    }
+
+    /* Each control fills its track: the date picker's input gives way to its calendar button, the time field is the track's width. */
+    .kp-popover-form__field > * {
+        min-inline-size: 0;
+    }
+
+    .kp-popover-form__field > .kp-datepicker {
+        flex-wrap: nowrap;
+        align-items: stretch;
+    }
+
+    .kp-popover-form__field > .kp-datepicker > [data-kp-date-open] {
+        align-self: center;
+    }
+
+    .kp-popover-form__field > .kp-datepicker > .kp-field__input {
+        flex: 1 1 0;
+        min-inline-size: 0;
+    }
+
+    .kp-popover-form__field > .kp-time {
+        display: block;
+    }
+
+    .kp-popover-form__field > .kp-time > .kp-time__control {
+        display: flex;
+    }
+
+    .kp-popover-form__field > .kp-time .kp-time__input.kp-field__input {
+        flex: 1 1 auto;
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-popover-form__panel:has(> .kp-popover-form__pair) > .kp-popover-form__problem {
+        grid-column: 1;
+        align-self: center;
+    }
+
+    .kp-popover-form__panel:has(> .kp-popover-form__pair) > .kp-popover-form__accept {
+        grid-column: 2;
+        justify-content: center;
     }
 
     .kp-popover-form__problem {
@@ -37828,6 +37982,86 @@
     }
 }
 
+/* --- The one-line empty plate [parts-1102; homelab UX review 2026-11-01] ---------------------------------------------------
+ * `data-kp-empty="compact"` on a `.kp-empty`: one line, a mark and the words, for a small card with nothing in it
+ * ("✓ No open alerts"), where the full plate (heading size, the theme's art above the words, the whole footprint) would
+ * outweigh the card. Opt-in: every other empty area keeps the prominent plate (DEMO_RULES ch. 3).
+ *
+ *   <p class="kp-empty" data-kp-empty="compact">
+ *     <span class="kp-empty__icon" aria-hidden="true">✓</span>
+ *     <span class="kp-empty__title">No open alerts</span>
+ *   </p>
+ *
+ * The plate keeps its theme's own ground, edge and title voice; the theme's art leaves (there is no room for a sun, a stamp
+ * or a raster over one line) and comes back as the dress of the mark, which each register gives (`.kp-empty__icon`). A
+ * second line (`.kp-empty__body`) stands under the words in the same track. Without a mark the words start on the plate's
+ * edge. "full" (the default) is the plate as it was. Knobs [KT6]: --kp-empty-compact-height (2.75rem, at least one touch
+ * target), --kp-empty-compact-pad (the air round the line), --kp-empty-compact-mark (1.5rem, the mark's size). */
+@layer kp.components {
+    .kp-empty__icon {
+        display: inline-grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-empty-compact-mark, 1.5rem);
+        block-size: var(--kp-empty-compact-mark, 1.5rem);
+        border-radius: 50%;
+        background: color-mix(in oklab, var(--foreground) 10%, transparent);
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 700;
+        line-height: 1;
+    }
+}
+
+/* The shape lives in the last layer: every register sets the plate's padding, art and title margin in a later layer than the
+ * components and would undo a one-line plate. Ground, edge, colours and type stay the register's. */
+@layer kp.layout {
+    .kp-empty[data-kp-empty='compact'] {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        align-content: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-empty-compact-height, 2.75rem);
+        margin: 0;
+        padding: var(--kp-empty-compact-pad, var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem));
+        text-align: start;
+    }
+
+    .kp-empty[data-kp-empty='compact']:not(:has(> .kp-empty__icon)) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-empty[data-kp-empty='compact']::before,
+    .kp-empty[data-kp-empty='compact']::after {
+        content: none;
+        display: none;
+    }
+
+    .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+
+    .kp-empty[data-kp-empty='compact'] > :is(.kp-empty__title, .kp-empty__body) {
+        grid-column: -2;
+        justify-self: start;
+        min-inline-size: 0;
+        margin: 0;
+        overflow-wrap: break-word;
+    }
+
+    .kp-empty[data-kp-empty='compact'] > .kp-empty__title {
+        font-size: var(--kp-text-md, 1rem);
+        line-height: 1.35;
+    }
+
+    .kp-empty[data-kp-empty='compact'] > .kp-empty__body {
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+}
+
 @layer kp.components {
     /* --- A live log viewer [gap-log-viewer] ------------------------------
  *
@@ -40780,7 +41014,7 @@
         position: relative;
     }
 
-    [data-theme='cyberpunk'] .kp-nav__link:is([aria-current='page'], .kp-nav__more-button[aria-current='true']) {
+    [data-theme='cyberpunk'] .kp-nav__link:is([aria-current='page'], .kp-nav__more-button[aria-current='true'], .kp-menu-button > [aria-current='true']) {
         text-decoration: underline;
         text-underline-offset: 0.3em;
     }
@@ -44570,6 +44804,16 @@
         margin: 0;
         font-family: var(--kp-mono);
         font-size: 0.8rem;
+    }
+
+    /* The one-line plate's mark [parts-1102]: a cut-corner chip in the neon edge, mono. */
+    [data-theme='cyberpunk'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: hsl(from var(--primary) h s l / 0.12);
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
     }
 
     [data-theme='cyberpunk'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
@@ -51465,6 +51709,12 @@
         letter-spacing: 0.04em;
     }
 
+    /* The one-line plate's mark [parts-1102]: the striped sun, small, the mark over it. */
+    [data-theme='synthwave'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        background: var(--kp-sig-sw-sun);
+        color: var(--background);
+    }
+
     [data-theme='synthwave'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         padding-block-end: 2px;
         text-decoration: none;
@@ -57334,6 +57584,16 @@
     [data-theme='brutalism'] .kp-empty__body {
         margin: 0;
         color: var(--foreground);
+    }
+
+    /* The one-line plate's mark [parts-1102]: the zero stamp, small: a hard ring on the accent, turned and dropped. */
+    [data-theme='brutalism'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 2px solid var(--border-strong);
+        background: var(--accent);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+        box-shadow: 2px 2px 0 var(--border-strong);
+        rotate: -8deg;
     }
 
     [data-theme='brutalism'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
@@ -63337,6 +63597,13 @@
         margin: 0;
         font-family: var(--theme-font-mono);
         font-size: 0.78rem;
+    }
+
+    /* The one-line plate's mark [parts-1102]: a milled square with a hairline edge, no rounding. */
+    [data-theme='titanium'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.08), transparent);
     }
 
     [data-theme='titanium'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
@@ -70523,6 +70790,13 @@
         margin: 0;
     }
 
+    /* The one-line plate's mark [parts-1102]: printed twice, the second pass a little off, stuck on. */
+    [data-theme='pastel'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px solid var(--border-strong);
+        background: var(--muted);
+        box-shadow: 2px 2px 0 hsl(from var(--primary) h s l / 0.55);
+    }
+
     /* A link in running text: a mint plate grows in behind its words, start
        to end, on the landing in the contact time; a link in a navigation, a
        menu, a breadcrumb or the footer keeps its own component's look
@@ -74912,6 +75186,13 @@
         text-decoration-style: solid;
         text-decoration-color: var(--primary);
         text-decoration-thickness: 2px;
+    }
+
+    /* The one-line plate's mark [parts-1102]: a leaf, two round corners, on the forest's green. */
+    [data-theme='forest'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border-radius: 0 50%;
+        background: hsl(from var(--primary) h s l / 0.2);
+        color: var(--primary);
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -81353,6 +81634,14 @@
         font-size: 1.375rem;
     }
 
+    /* The one-line plate's mark [parts-1102]: a gold inlay ring, double, the mark in the display face. */
+    [data-theme='deco'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 3px double var(--accent);
+        background: none;
+        color: var(--accent);
+        font-family: var(--theme-font-display);
+    }
+
     /* The dialog: lacquer, the double rule under its title (the dialog is
        what matters), no crest. */
     [data-theme='deco'] .kp-dialog {
@@ -87025,6 +87314,12 @@
 
     [data-theme='blueprint'] .kp-empty__body {
         margin: 0;
+    }
+
+    /* The one-line plate's mark [parts-1102]: a pencilled circle, dashed like the plate's edge. */
+    [data-theme='blueprint'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.6);
+        background: none;
     }
 
     /* The link signature is for links in running text; a link in a navigation,
@@ -93777,6 +94072,19 @@
         text-decoration-thickness: 3px;
     }
 
+    /* The one-line plate's mark [parts-1102]: a square of ink tape, the mark in the terminal's face. */
+    [data-theme='nostromo'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border-radius: 2px;
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        font-weight: 400;
+    }
+
+    [data-theme='nostromo'] .kp-empty[data-kp-empty='compact'] > .kp-empty__title {
+        margin: 0;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='nostromo'] .kp-spinner::before {
             animation: kp-sig-nostromo-no-reel var(--kp-sig-dur) steps(20, end) infinite;
@@ -100244,6 +100552,12 @@
         letter-spacing: 0.02em;
     }
 
+    /* The one-line plate's mark [parts-1102]: a soft lit disc in the accent, the plate's glow in miniature. */
+    [data-theme='dark'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        background: hsl(from var(--primary) h s l / 0.18);
+        color: var(--primary);
+    }
+
     [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-thickness: 1px;
         text-decoration-color: hsl(from var(--foreground) h s l / 0.5);
@@ -105319,6 +105633,24 @@
         text-decoration-color: currentColor;
     }
 
+    /* The one-line plate's mark [parts-1102]: a clerk's seal, a hairline ring round the mark in the display face; the double rule
+       stays along the top outside a card, the ruled lines stay off (one line has no foot to rule). */
+    [data-theme='formal'] .kp-empty[data-kp-empty='compact'] {
+        background: none;
+    }
+
+    /* In a card the card's own rule is the line above it: a second double rule under the title would be two rules for one edge. */
+    [data-theme='formal'] .kp-card .kp-empty[data-kp-empty='compact'] {
+        border-block-start: 0;
+    }
+
+    [data-theme='formal'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px solid var(--border-strong);
+        background: none;
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+
     /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
        on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
        `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]` (which
@@ -109757,6 +110089,12 @@
         text-decoration-color: var(--primary);
         text-decoration-thickness: 2px;
         text-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.35);
+    }
+
+    /* The one-line plate's mark [parts-1102]: the risen sun itself, the mark on its disc. */
+    [data-theme='solstice'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        background: radial-gradient(circle, var(--primary) 0 62%, hsl(from var(--primary) h s l / 0.25) 62% 72%, transparent 72%);
+        color: var(--primary-foreground);
     }
 
     @media (prefers-reduced-motion: no-preference) {

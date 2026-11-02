@@ -3848,6 +3848,13 @@
         margin: 0;
     }
 
+    /* The one-line plate's mark [parts-1102]: printed twice, the second pass a little off, stuck on. */
+    [data-theme='pastel'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px solid var(--border-strong);
+        background: var(--muted);
+        box-shadow: 2px 2px 0 hsl(from var(--primary) h s l / 0.55);
+    }
+
     /* A link in running text: a mint plate grows in behind its words, start
        to end, on the landing in the contact time; a link in a navigation, a
        menu, a breadcrumb or the footer keeps its own component's look

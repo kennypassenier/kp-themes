@@ -2769,6 +2769,8 @@ var init_ux_parts = __esm({
       triTagExclude: "not",
       popoverFormInvalid: "This value cannot be used.",
       popoverFormClose: "Close",
+      popoverFormDate: "Type a date as dd/mm/yyyy, or pick one in the calendar.",
+      popoverFormDateRange: "Pick a day the calendar offers.",
       dateNavGroup: "Dates shown",
       dateNavPrev: "\u2039 Previous",
       dateNavNext: "Next \u203A",
@@ -5517,6 +5519,27 @@ var init_controller3 = __esm({
           event
         ));
         this.listen(field2.input, "input", () => this.onInput());
+        this.followFormReset();
+      }
+      /**
+       * A form reset brings back the time the field started with, as a native field's does [parts-1102]: the popover form resets
+       * on every open. The browser puts the two inputs back to their default values itself; the field's own value follows after.
+       */
+      followFormReset() {
+        const { field: field2 } = this;
+        field2.input.defaultValue = field2.input.value;
+        field2.hidden.defaultValue = field2.hidden.value;
+        const form2 = field2.input.form;
+        if (!form2) return;
+        this.listen(
+          form2,
+          "reset",
+          () => queueMicrotask(() => {
+            if (this.destroyed) return;
+            field2.write(field2.hidden.value, { text: field2.input.value, silent: true });
+            field2.setInvalid("");
+          })
+        );
       }
       /** Every option is live: presets and the list's entries follow their attributes. */
       watchAttributes() {
@@ -6402,17 +6425,17 @@ function playEntranceBackwards(el16) {
       (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
       a.effect?.target === el16 && a.effect?.getComputedTiming().iterations !== Infinity && a.playState !== "finished"
     );
-    const settle3 = (waited) => {
+    const settle4 = (waited) => {
       if (own.__kpReversing === void 0) return;
       void Promise.all(waited.map(ended)).then(() => {
         if (own.__kpReversing === void 0) return;
         const next2 = running();
-        if (next2.length > 0) return settle3(next2);
+        if (next2.length > 0) return settle4(next2);
         delete own.__kpReversing;
         resolve(true);
       });
     };
-    settle3(plays);
+    settle4(plays);
   });
 }
 function stopReversing(el16) {
@@ -24582,15 +24605,19 @@ function counterOf(el16) {
   const badge = el16.querySelector(".kp-badge:not([hidden])");
   return (badge?.textContent ?? "").replace(/\s+/g, " ").trim();
 }
-var NAV_FOLD, NAV_FOLD_EVENT, NAV_MORE, NAV_SEP, NAV_FOLD_OWNED, isSep, unavailable;
+var NAV_FOLD, NAV_FOLD_EVENT, NAV_MORE, NAV_PINNED, NAV_SEP, NAV_FOLD_OWNED, isPinned, pinnedGroup, hintOf, isSep, unavailable;
 var init_read4 = __esm({
   "js/nav-fold/read.js"() {
     "use strict";
     NAV_FOLD = "[data-kp-nav-fold]";
     NAV_FOLD_EVENT = "kp-nav-fold";
-    NAV_MORE = "[data-kp-nav-more]";
+    NAV_MORE = ".kp-nav__more[data-kp-nav-more]";
+    NAV_PINNED = "li[data-kp-nav-more]:not(.kp-nav__more)";
     NAV_SEP = ".kp-nav__sep";
     NAV_FOLD_OWNED = "[data-kp-nav-owner]";
+    isPinned = (li) => li.matches(NAV_PINNED);
+    pinnedGroup = (li) => isPinned(li) ? (li.getAttribute("data-kp-nav-more") ?? "").trim() : "";
+    hintOf = (el16) => (el16.getAttribute("data-kp-nav-hint") ?? el16.closest("li")?.getAttribute("data-kp-nav-hint") ?? "").trim();
     isSep = (li) => li.matches(NAV_SEP);
     unavailable = (el16) => el16.hasAttribute("disabled") || el16.getAttribute("aria-disabled") === "true";
   }
@@ -24611,6 +24638,7 @@ var init_groups = __esm({
         this.ruledAt = [];
         this.groups = [];
         this.plain = null;
+        this.plainName = "";
         this.rule = false;
         this.s = words3();
       }
@@ -24623,6 +24651,7 @@ var init_groups = __esm({
         this.s = this.words();
         this.groups = [];
         this.plain = null;
+        this.plainName = "";
         this.rule = false;
         this.ruled = /* @__PURE__ */ new Set();
         this.sources = [];
@@ -24646,9 +24675,12 @@ var init_groups = __esm({
         const panel = li.querySelector(":scope > .kp-nav__menu");
         if (!panel) {
           if (!primary) return;
-          if (!this.plain) {
+          const named = pinnedGroup(li);
+          const name = named === this.s.navMore ? "" : named;
+          if (!this.plain || this.plainName !== name) {
             this.plain = [];
-            this.open({ group: "", items: this.plain });
+            this.plainName = name;
+            this.open({ group: name, items: this.plain });
           }
           this.plain.push(this.entry(primary));
           return;
@@ -24672,6 +24704,8 @@ var init_groups = __esm({
         const name = wordsOf(el16) || (el16.getAttribute("aria-label") ?? "");
         const count4 = counterOf(el16);
         const item = { label: count4 ? `${name} \xB7 ${count4}` : name, value: String(this.sources.length) };
+        const hint = hintOf(el16);
+        if (hint) item.hint = hint;
         const href = el16.getAttribute("href");
         if (href && el16.tagName === "A") item.href = href;
         const current2 = el16.getAttribute("aria-current");
@@ -24725,16 +24759,19 @@ var init_more = __esm({
 });
 
 // js/nav-fold/plan.js
-function planFold({ widths: widths2, gap, room, moreWidth, keep = [] }) {
-  const n = widths2.length;
-  const total = widths2.reduce((sum, w) => sum + w, 0) + gap * Math.max(0, n - 1);
-  if (total <= room) return widths2.map(() => false);
+function planFold({ widths: widths2, gap, room, moreWidth, keep = [], pinned = [] }) {
+  const inBar = widths2.map((_, i) => pinned[i] !== true);
+  const shown6 = widths2.filter((_, i) => inBar[i]);
+  const total = shown6.reduce((sum, w) => sum + w, 0) + gap * Math.max(0, shown6.length - 1);
+  const anyPinned = inBar.includes(false);
+  if (!anyPinned && total <= room) return widths2.map(() => false);
+  if (anyPinned && total + (shown6.length ? gap : 0) + moreWidth <= room) return inBar.map((b) => !b);
   const budget = room - moreWidth - gap;
-  const fits = widths2.map((_, i) => keep[i] === true);
+  const fits = widths2.map((_, i) => inBar[i] && keep[i] === true);
   let count4 = fits.filter(Boolean).length;
   let used = widths2.reduce((sum, w, i) => fits[i] ? sum + w : sum, 0) + gap * Math.max(0, count4 - 1);
-  for (let i = 0; i < n; i += 1) {
-    if (fits[i]) continue;
+  for (let i = 0; i < widths2.length; i += 1) {
+    if (fits[i] || !inBar[i]) continue;
     const next2 = used + widths2[i] + (count4 > 0 ? gap : 0);
     if (next2 > budget) break;
     fits[i] = true;
@@ -24833,7 +24870,8 @@ var init_core3 = __esm({
             gap: Number.parseFloat(view.getComputedStyle(list).columnGap) || 0,
             room: list.clientWidth - ROOM_SAFETY_PX,
             moreWidth: more.offsetWidth,
-            keep: items2.map((li) => li.hasAttribute("data-kp-nav-keep"))
+            keep: items2.map((li) => li.hasAttribute("data-kp-nav-keep")),
+            pinned: items2.map(isPinned)
           });
         }
         const seps = items2.map(isSep);
@@ -24908,7 +24946,7 @@ var init_core3 = __esm({
       }
       /** Draw the More menu from the groups when they changed. @param {import('../menu-button.js').MenuGroup[]} groups */
       drawMenu(groups) {
-        const next2 = JSON.stringify([groups.map((g) => [g.group, g.items.map((i) => [i.label, i.href ?? "", i.disabled ?? "", i.attrs ?? null])]), this.groups.ruledAt]);
+        const next2 = JSON.stringify([groups.map((g) => [g.group, g.items.map((i) => [i.label, i.href ?? "", i.disabled ?? "", i.hint ?? "", i.attrs ?? null])]), this.groups.ruledAt]);
         if (next2 !== this.signature) {
           this.signature = next2;
           if (groups.length) setMenu(this.wrapper, groups);
@@ -25001,7 +25039,7 @@ var init_controller12 = __esm({
           childList: true,
           characterData: true,
           attributes: true,
-          attributeFilter: ["aria-current", "hidden", "disabled", "aria-disabled", "data-kp-nav-keep"]
+          attributeFilter: ["aria-current", "hidden", "disabled", "aria-disabled", "data-kp-nav-keep", "data-kp-nav-more", "data-kp-nav-hint"]
         });
       }
       /** @param {MouseEvent} event */
@@ -25030,6 +25068,7 @@ __export(nav_fold_exports, {
   NAV_FOLD_EVENT: () => NAV_FOLD_EVENT,
   NAV_FOLD_OWNED: () => NAV_FOLD_OWNED,
   NAV_MORE: () => NAV_MORE,
+  NAV_PINNED: () => NAV_PINNED,
   NAV_SEP: () => NAV_SEP,
   attachNavFolds: () => attachNavFolds,
   foldNav: () => foldNav,
@@ -25906,6 +25945,81 @@ var init_constants11 = __esm({
   }
 });
 
+// js/popover-form/fields.js
+function valuesOf(form2) {
+  const values = {};
+  for (const [name, value] of new FormData(form2)) if (typeof value === "string") values[name] = value;
+  for (
+    const input of
+    /** @type {HTMLInputElement[]} */
+    [...form2.querySelectorAll(DATE_INPUT)]
+  ) {
+    if (input.name) values[input.name] = input.dataset.kpDateValue ?? "";
+  }
+  return values;
+}
+function dateProblem(input) {
+  const s2 = getStrings();
+  const iso = input.dataset.kpDateValue;
+  if (input.value.trim() === "") return input.required ? input.validationMessage || s2.popoverFormDate : "";
+  if (!iso) return s2.popoverFormDate;
+  const picker = (
+    /** @type {HTMLElement} */
+    input.closest("[data-kp-datepicker]")
+  );
+  const min = picker.dataset.kpMin ?? "";
+  const max = picker.dataset.kpMax ?? "";
+  if (ISO_DAY.test(min) && iso < min || ISO_DAY.test(max) && iso > max) return s2.popoverFormDateRange;
+  return "";
+}
+function refusedTime(form2) {
+  for (
+    const root of
+    /** @type {HTMLElement[]} */
+    [...form2.querySelectorAll("[data-kp-time]")]
+  ) {
+    const input = (
+      /** @type {HTMLInputElement | null} */
+      root.querySelector(".kp-time__input")
+    );
+    const value = (
+      /** @type {HTMLInputElement | null} */
+      root.querySelector(".kp-time__value")
+    );
+    if (!input) continue;
+    if (input.getAttribute("aria-invalid") === "true") return input;
+    if (root.hasAttribute("data-kp-time-required") && value?.value === "") return input;
+  }
+  return null;
+}
+function firstInvalid(form2) {
+  const refused = (
+    /** @type {HTMLInputElement[]} */
+    [...form2.querySelectorAll(":invalid:is(input, select, textarea)")]
+  );
+  const field2 = refused.find((one) => !one.matches(DATE_INPUT));
+  if (field2) return { field: field2, text: field2.validationMessage || getStrings().popoverFormInvalid, own: false };
+  for (
+    const input of
+    /** @type {HTMLInputElement[]} */
+    [...form2.querySelectorAll(DATE_INPUT)]
+  ) {
+    const text = dateProblem(input);
+    if (text) return { field: input, text, own: false };
+  }
+  const time = refusedTime(form2);
+  return time ? { field: time, text: "", own: true } : null;
+}
+var DATE_INPUT, ISO_DAY;
+var init_fields = __esm({
+  "js/popover-form/fields.js"() {
+    "use strict";
+    init_strings();
+    DATE_INPUT = "[data-kp-datepicker] [data-kp-date-input]";
+    ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+  }
+});
+
 // js/popover-form/accept.js
 function problemLine(form2) {
   let line = (
@@ -25931,18 +26045,6 @@ function writeProblem(form2, text, field2 = form2.querySelector(FIELDS3)) {
   described.add(line.id);
   field2.setAttribute("aria-describedby", [...described].join(" "));
 }
-function valuesOf(form2) {
-  const values = {};
-  for (const [name, value] of new FormData(form2)) if (typeof value === "string") values[name] = value;
-  return values;
-}
-function firstInvalid(form2) {
-  const field2 = (
-    /** @type {HTMLInputElement | null} */
-    form2.querySelector(":invalid:is(input, select, textarea)")
-  );
-  return field2 ? { field: field2, text: field2.validationMessage || getStrings().popoverFormInvalid } : null;
-}
 function setBusy(form2, busy) {
   form2.toggleAttribute("aria-busy", busy);
   for (const button6 of form2.querySelectorAll('button[type="submit"], button:not([type])')) button6.disabled = busy;
@@ -25950,7 +26052,8 @@ function setBusy(form2, busy) {
 async function acceptForm(wrapper, form2, opener) {
   const invalid = firstInvalid(form2);
   if (invalid) {
-    writeProblem(form2, invalid.text, invalid.field);
+    if (invalid.own) problemLine(form2).textContent = "";
+    else writeProblem(form2, invalid.text, invalid.field);
     invalid.field.focus();
     return false;
   }
@@ -25980,6 +26083,7 @@ var init_accept = __esm({
     "use strict";
     init_strings();
     init_constants11();
+    init_fields();
   }
 });
 
@@ -26059,6 +26163,7 @@ var init_controller15 = __esm({
         const inside = (target) => target instanceof Node && this.host.contains(target);
         const escape2 = (event) => {
           if (event.key !== "Escape") return;
+          if (this.form?.querySelector('[aria-expanded="true"]')) return;
           event.preventDefault();
           event.stopPropagation();
           this.close("escape", true);
@@ -29459,7 +29564,7 @@ var init_secret_base = __esm({
        * @param {string} name what the announcement calls the field
        * @param {(idle: string) => void} settle puts the button's own words back: the ones it had before the copy
        */
-      async copyOut(copy3, read2, name, settle3) {
+      async copyOut(copy3, read2, name, settle4) {
         let text = "";
         try {
           text = await read2();
@@ -29477,7 +29582,7 @@ var init_secret_base = __esm({
         copy3.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text: "" } }));
         this.say(this.s.copiedAnnouncement(name));
         window.clearTimeout(this.copiedTimer);
-        this.copiedTimer = window.setTimeout(() => settle3(this.copyIdle), this.copiedMs);
+        this.copiedTimer = window.setTimeout(() => settle4(this.copyIdle), this.copiedMs);
         this.scheduleClear(text);
       }
       /** Empty the clipboard again some seconds after a copy [wish-1120, homelab 108]. @param {string} secret */
@@ -30203,7 +30308,7 @@ var init_undo = __esm({
         const detail = { target, button: button6, key, restore: restore2 };
         const action = { settled: false, timer: 0, cancel: () => {
         } };
-        const settle3 = () => {
+        const settle4 = () => {
           if (action.settled) return false;
           action.settled = true;
           this.inFlight.delete(action.cancel);
@@ -30211,18 +30316,18 @@ var init_undo = __esm({
           return true;
         };
         const message = this.offer(() => {
-          if (!settle3()) return;
+          if (!settle4()) return;
           restore2();
           message.dismiss();
           target.dispatchEvent(new CustomEvent(UNDO_EVENT, { bubbles: true, detail }));
         });
         action.timer = window.setTimeout(() => {
-          if (!settle3()) return;
+          if (!settle4()) return;
           delete target.dataset.kpUndoPending;
           target.dispatchEvent(new CustomEvent(COMMIT_EVENT, { bubbles: true, detail }));
         }, this.ms);
         action.cancel = () => {
-          if (!settle3()) return;
+          if (!settle4()) return;
           restore2();
           message.dismiss();
         };
@@ -32296,18 +32401,18 @@ function paintPhoto(el16, name, src) {
   img.decoding = "async";
   img.draggable = false;
   img.loading = el16.getAttribute("data-kp-idmark-loading") === "eager" ? "eager" : "lazy";
-  const settle3 = (state12) => {
+  const settle4 = (state12) => {
     if (ASKED2.get(el16) !== src) return;
     if (state12 === "failed") img.remove();
     el16.setAttribute("data-kp-photo", state12);
     el16.dispatchEvent(new CustomEvent("kp-idmark-photo", { bubbles: true, detail: { state: state12, src } }));
   };
-  img.addEventListener("load", () => settle3("loaded"));
-  img.addEventListener("error", () => settle3("failed"));
+  img.addEventListener("load", () => settle4("loaded"));
+  img.addEventListener("error", () => settle4("failed"));
   el16.setAttribute("data-kp-photo", "loading");
   img.src = src;
   el16.prepend(img);
-  if (img.complete && img.naturalWidth > 0) settle3("loaded");
+  if (img.complete && img.naturalWidth > 0) settle4("loaded");
 }
 function decorateAvatar(el16, name) {
   const src = (el16.getAttribute("data-kp-idmark-src") ?? "").trim();
@@ -33681,7 +33786,7 @@ function extraOf(doc, row2) {
   }
   return slot;
 }
-function hintOf(doc, id, refused, { options, last }) {
+function hintOf2(doc, id, refused, { options, last }) {
   const strings = getStrings();
   const hint = make9(doc, "kp-passkeys__hint", "p");
   hint.setAttribute("id", `${id}-hint`);
@@ -33773,7 +33878,7 @@ function rowItem(doc, c, row2, context2) {
     context2.options.missingUse
   ));
   const flags = flagsOf(doc, row2, context2);
-  what.append(hintOf(doc, id, refused, context2));
+  what.append(hintOf2(doc, id, refused, context2));
   li.append(way, what, flags, actionsOf2(doc, row2, id, renaming, busy, context2));
   return li;
 }
@@ -41296,21 +41401,8 @@ function getWheelResult(root) {
   const item = stateOf(root).items.find((i) => i.id === won);
   return item ? { ...item } : null;
 }
-async function spinWheel(root, { random = Math.random } = {}) {
-  if (!(root instanceof HTMLElement)) return null;
+function planSpin(root, land, random, settle4) {
   const state12 = stateOf(root);
-  if (state12.spinning || state12.items.length < 2 || root.hasAttribute("aria-busy") || root.hasAttribute("data-kp-wheel-error")) return null;
-  const avoid = root.getAttribute("data-kp-wheel-repeat") === "true" ? null : state12.last;
-  const index = pickWeighted(state12.items, { random, avoid });
-  if (index < 0) return null;
-  const item = state12.items[index];
-  cancelAnimationFrame(state12.glide);
-  state12.order = state12.items.map((i) => i.id);
-  state12.shown = new Map(state12.items.map((i) => [i.id, weightOf(i)]));
-  root.removeAttribute("data-kp-wheel-won");
-  drawDisc(root, true);
-  const [a0, a1] = wheelAngles(state12.items.map(weightOf))[index];
-  const land = a0 + (a1 - a0) * (0.5 + (random() - 0.5) * 0.6);
   const short = reduced4();
   const attr16 = (name) => {
     const raw = root.getAttribute(name);
@@ -41326,34 +41418,54 @@ async function spinWheel(root, { random = Math.random } = {}) {
   const rest = ((-land - from) % 360 + 360) % 360;
   const to = from + turns * 360 + rest;
   const mean = ((least + most) / 2 + 0.5) * 360;
-  const duration2 = short ? base : base * Math.min(1.4, Math.max(0.6, (to - from) / mean));
-  state12.spinning = true;
-  root.setAttribute("data-kp-wheel-spinning", "");
-  part(root, "result").setAttribute("aria-busy", "true");
-  paint5(root);
-  root.dispatchEvent(new CustomEvent(WHEEL_SPIN_EVENT, { bubbles: true, detail: { item: { ...item }, index, turns: (to - from) / 360 } }));
+  const own = short ? base : base * Math.min(1.4, Math.max(0.6, (to - from) / mean));
+  return { from, to, duration: settle4 !== void 0 && Number.isFinite(settle4) ? Math.max(0, settle4) : own, short };
+}
+async function turnDisc(root, { from, to, duration: duration2, short }) {
   const disc = part(root, "disc");
   if (duration2 > 0 && to !== from) {
     const ease = getComputedStyle(root).getPropertyValue("--kp-wheel-ease").trim() || "cubic-bezier(0.12, 0.6, 0.1, 1)";
-    const motion = disc.animate([{ rotate: `${from}deg` }, { rotate: `${to}deg` }], {
-      duration: duration2,
-      easing: short ? "ease-out" : ease,
-      fill: "forwards"
-    });
+    const motion = disc.animate([{ rotate: `${from}deg` }, { rotate: `${to}deg` }], { duration: duration2, easing: short ? "ease-out" : ease, fill: "forwards" });
     await motion.finished.catch(() => void 0);
     disc.style.rotate = `${to}deg`;
     motion.cancel();
   } else disc.style.rotate = `${to}deg`;
+}
+async function spinWheel(root, { random = Math.random, duration: duration2 } = {}) {
+  if (!(root instanceof HTMLElement)) return null;
+  const state12 = stateOf(root);
+  if (state12.spinning || state12.items.length < 2 || root.hasAttribute("aria-busy") || root.hasAttribute("data-kp-wheel-error")) return null;
+  const avoid = root.getAttribute("data-kp-wheel-repeat") === "true" ? null : state12.last;
+  const index = pickWeighted(state12.items, { random, avoid });
+  if (index < 0) return null;
+  const item = state12.items[index];
+  cancelAnimationFrame(state12.glide);
+  state12.order = state12.items.map((i) => i.id);
+  state12.shown = new Map(state12.items.map((i) => [i.id, weightOf(i)]));
+  root.removeAttribute("data-kp-wheel-won");
+  drawDisc(root, true);
+  const [a0, a1] = wheelAngles(state12.items.map(weightOf))[index];
+  const plan = planSpin(root, a0 + (a1 - a0) * (0.5 + (random() - 0.5) * 0.6), random, duration2);
+  state12.spinning = true;
+  root.setAttribute("data-kp-wheel-spinning", "");
+  part(root, "result").setAttribute("aria-busy", "true");
+  paint5(root);
+  const detail = { item: { ...item }, index, turns: (plan.to - plan.from) / 360, duration: plan.duration };
+  root.dispatchEvent(new CustomEvent(WHEEL_SPIN_EVENT, { bubbles: true, detail }));
+  await turnDisc(root, plan);
+  return settle(root, item, index, plan.to);
+}
+function settle(root, item, index, to) {
+  const state12 = stateOf(root);
   state12.angle = to % 360;
-  disc.style.rotate = `${state12.angle}deg`;
+  part(root, "disc").style.rotate = `${state12.angle}deg`;
   state12.spinning = false;
   state12.last = item.id;
   root.removeAttribute("data-kp-wheel-spinning");
   root.setAttribute("data-kp-wheel-won", item.id);
   drawDisc(root, true);
   paint5(root);
-  const result = part(root, "result");
-  result.removeAttribute("aria-busy");
+  part(root, "result").removeAttribute("aria-busy");
   root.dispatchEvent(new CustomEvent(WHEEL_RESULT_EVENT, { bubbles: true, detail: { item: { ...item }, index, source: "spin" } }));
   return { ...item };
 }
@@ -41370,6 +41482,32 @@ var init_spin = __esm({
   }
 });
 
+// js/wheel/follow.js
+function followLeader(follower) {
+  const doc = follower.ownerDocument;
+  const onSpin = (event) => {
+    const leader = event.target;
+    const id = follower.getAttribute(WHEEL_FOLLOWS)?.trim();
+    if (!id || !(leader instanceof HTMLElement) || leader === follower || leader.id !== id || !follower.isConnected) return;
+    const { duration: duration2 } = (
+      /** @type {CustomEvent<{ duration?: number }>} */
+      event.detail ?? {}
+    );
+    void spinWheel(follower, { duration: duration2 });
+  };
+  doc.addEventListener(WHEEL_SPIN_EVENT, onSpin);
+  return () => doc.removeEventListener(WHEEL_SPIN_EVENT, onSpin);
+}
+var WHEEL_FOLLOWS;
+var init_follow = __esm({
+  "js/wheel/follow.js"() {
+    "use strict";
+    init_state14();
+    init_spin();
+    WHEEL_FOLLOWS = "data-kp-wheel-follows";
+  }
+});
+
 // js/wheel/controller.js
 var WheelControl;
 var init_controller37 = __esm({
@@ -41377,6 +41515,7 @@ var init_controller37 = __esm({
     "use strict";
     init_controller();
     init_draw7();
+    init_follow();
     init_spin();
     init_state14();
     WheelControl = class extends Controller {
@@ -41390,6 +41529,7 @@ var init_controller37 = __esm({
           /** @type {KeyboardEvent} */
           event
         ));
+        this.own(followLeader(root));
         this.observe(new MutationObserver(() => paint5(root))).observe(root, { attributes: true, attributeFilter: ["data-kp-wheel-kiosk"] });
         void document.fonts?.ready.then(() => root.isConnected && !stateOf(root).spinning && drawDisc(root, true));
       }
@@ -41420,6 +41560,7 @@ var init_controller37 = __esm({
 var wheel_exports = {};
 __export(wheel_exports, {
   WHEEL: () => WHEEL,
+  WHEEL_FOLLOWS: () => WHEEL_FOLLOWS,
   WHEEL_RESULT_EVENT: () => WHEEL_RESULT_EVENT,
   WHEEL_SPIN_EVENT: () => WHEEL_SPIN_EVENT,
   attachWheels: () => attachWheels,
@@ -41441,6 +41582,7 @@ var init_wheel = __esm({
     init_state14();
     init_state14();
     init_spin();
+    init_follow();
   }
 });
 
@@ -52158,6 +52300,7 @@ var init_controller46 = __esm({
         const initial = this.read();
         if (initial !== null) input.dataset.kpDateValue = toISO(initial);
         this.handle = this.makeHandle();
+        if (input.form) this.listen(input.form, "reset", () => queueMicrotask(() => this.followText()));
       }
       /** Put back what the picker changed on its markup. */
       restore() {
@@ -52175,6 +52318,13 @@ var init_controller46 = __esm({
         if (before2.expanded === null) open4.removeAttribute("aria-expanded");
         else open4.setAttribute("aria-expanded", before2.expanded);
         delete picker.dataset.kpDatepickerAttached;
+      }
+      /** The ISO value as the field's text reads now, without an event. */
+      followText() {
+        if (this.destroyed) return;
+        const date = this.read();
+        if (date === null) delete this.input.dataset.kpDateValue;
+        else this.input.dataset.kpDateValue = toISO(date);
       }
       /** The date in the field, or null when it is empty or not a date. */
       read() {
@@ -61151,7 +61301,7 @@ function sequencerLink(items2, id, partnerId, options = {}) {
       /** @type {SequencerItem} */
       by.get(r).start + delta
     );
-  const verdict = settle(list, delta === 0 ? [] : riders, options.overlap ?? "refuse");
+  const verdict = settle2(list, delta === 0 ? [] : riders, options.overlap ?? "refuse");
   if (!verdict.ok) return fail(verdict.reason, verdict.blocker);
   return { ok: true, items: list, changed: changedIds(items2, list), pushed: verdict.pushed, reason: null, blocker: null };
 }
@@ -61270,7 +61420,7 @@ function followersOf(items2, id) {
   }
   return out;
 }
-function settle(list, movedIds, policy) {
+function settle2(list, movedIds, policy) {
   if (policy === "allow") return { ok: true, pushed: [] };
   const first = new Set(movedIds);
   const movers = new Set(first);
@@ -61385,7 +61535,7 @@ function sequencerPlan(items2, edit, options = {}) {
     }
     moved = new Set(group);
   }
-  const verdict = settle(list, moved, o.overlap);
+  const verdict = settle2(list, moved, o.overlap);
   if (!verdict.ok) return fail(verdict.reason, verdict.blocker);
   return { ok: true, items: list, changed: changedIds(items2, list), pushed: verdict.pushed, reason: null, blocker: null };
 }
@@ -69196,7 +69346,7 @@ var init_faces = __esm({
 });
 
 // js/flash/outcome.js
-async function settle2(button6, work) {
+async function settle3(button6, work) {
   const s2 = getStrings();
   try {
     const answer2 = await work();
@@ -69299,7 +69449,7 @@ var init_run3 = __esm({
       async run(work, options = {}) {
         if (this.running) return null;
         this.begin(options);
-        const outcome = await settle2(this.host, work);
+        const outcome = await settle3(this.host, work);
         this.showOutcome(outcome, options);
         return outcome;
       }
@@ -84382,7 +84532,7 @@ function wordsBefore(field2) {
   return before2;
 }
 var SENTENCE, SENTENCE_EVENT, LINES, CONTROLS3, tidy, COMPUTED_NONE, NAME_WORDS, isButton;
-var init_fields = __esm({
+var init_fields2 = __esm({
   "js/sentence/fields.js"() {
     "use strict";
     init_strings();
@@ -84405,7 +84555,7 @@ var init_controller80 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_fields();
+    init_fields2();
     seq4 = 0;
     SAY_AFTER_MS2 = 500;
     STACK_BELOW_PX = 480;
@@ -84630,8 +84780,8 @@ var init_sentence = __esm({
     "use strict";
     init_controller();
     init_controller80();
-    init_fields();
-    init_fields();
+    init_fields2();
+    init_fields2();
   }
 });
 
@@ -84683,7 +84833,7 @@ var init_time2 = __esm({
 });
 
 // js/dated-options/rows.js
-function hintOf2(c, o) {
+function hintOf3(c, o) {
   if (o.disabled) return o.disabled;
   const t = stamp2(o);
   if (Number.isNaN(t)) return "";
@@ -84749,7 +84899,7 @@ function listItem(c, o, i) {
   first.className = "kp-dated__item-name";
   nameLine(c, first, o);
   li.append(first);
-  const subText = hintOf2(c, o);
+  const subText = hintOf3(c, o);
   if (subText) {
     const sub = doc.createElement("span");
     sub.className = "kp-dated__item-hint";
@@ -84890,7 +85040,7 @@ function radioRow(c, o, i) {
   const title = doc.createElement("span");
   title.className = "kp-field__option-title";
   nameLine(c, title, o);
-  const hintText = hintOf2(c, o);
+  const hintText = hintOf3(c, o);
   row2.append(input, title);
   if (hintText) {
     const hint = doc.createElement("span");
@@ -99643,6 +99793,7 @@ export {
   NAV_FOLD_OWNED,
   NAV_MORE,
   NAV_OWNED,
+  NAV_PINNED,
   NAV_SEP,
   NAV_STICKY_OWNED,
   NAV_TOGGLE_EVENT,
@@ -100034,6 +100185,7 @@ export {
   WEEK_RETRY_EVENT,
   WEEK_TICK_MS,
   WHEEL,
+  WHEEL_FOLLOWS,
   WHEEL_RESULT_EVENT,
   WHEEL_SPIN_EVENT,
   WRAP_SELECTOR,

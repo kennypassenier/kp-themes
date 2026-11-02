@@ -327,7 +327,7 @@
         position: relative;
     }
 
-    [data-theme='cyberpunk'] .kp-nav__link:is([aria-current='page'], .kp-nav__more-button[aria-current='true']) {
+    [data-theme='cyberpunk'] .kp-nav__link:is([aria-current='page'], .kp-nav__more-button[aria-current='true'], .kp-menu-button > [aria-current='true']) {
         text-decoration: underline;
         text-underline-offset: 0.3em;
     }
@@ -4117,6 +4117,16 @@
         margin: 0;
         font-family: var(--kp-mono);
         font-size: 0.8rem;
+    }
+
+    /* The one-line plate's mark [parts-1102]: a cut-corner chip in the neon edge, mono. */
+    [data-theme='cyberpunk'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: hsl(from var(--primary) h s l / 0.12);
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
     }
 
     [data-theme='cyberpunk'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {

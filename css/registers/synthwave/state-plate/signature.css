@@ -50,3 +50,9 @@
         letter-spacing: 0.04em;
     }
 
+    /* The one-line plate's mark [parts-1102]: the striped sun, small, the mark over it. */
+    [data-theme='synthwave'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        background: var(--kp-sig-sw-sun);
+        color: var(--background);
+    }
+

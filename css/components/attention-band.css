@@ -104,6 +104,13 @@
         align-self: start;
     }
 
+    /* Without data-kp-subgrid a band in a form grid is one block across the grid's tracks, label to actions [parts-1102]: as a
+       plain grid item it fell into the label track, and its words broke after every word (Almanac's Settings, 92 px wide). */
+    .kp-formgrid > .kp-attention:not([data-kp-subgrid]),
+    .kp-formgrid__group > .kp-attention:not([data-kp-subgrid]) {
+        grid-column: label-start / actions-end;
+    }
+
     /* The narrow fold, inside a form grid or not: under 36rem of the nearest size container (the form grid, a card, the
        page), or of the screen where there is none, each item is two tracks, the icon and the words, with its fix under
        them on the full width. Written twice, once per query, as a container query cannot fall back to the viewport. */

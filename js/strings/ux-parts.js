@@ -13,6 +13,8 @@
  * @property {string} triTagExclude  Its visible word while the value must not be in [ux-1101]
  * @property {string} popoverFormInvalid  A popover form's problem line when the field is refused and the browser gave no words of its own [ux-1101]
  * @property {string} popoverFormClose  The name of a popover form's close button [ux-1101]
+ * @property {string} popoverFormDate  A popover form's problem line when its date field holds text that is not a date [parts-1102]
+ * @property {string} popoverFormDateRange  Its problem line when the date lies outside the days its calendar offers [parts-1102]
  * @property {string} dateNavGroup  The name of a date navigation when the page gives none [ux-1101]
  * @property {string} dateNavPrev  Its button to the range before, as shown [ux-1101]
  * @property {string} dateNavNext  Its button to the range after, as shown [ux-1101]
@@ -63,6 +65,8 @@ export const UX_PARTS_STRINGS = {
     triTagExclude: 'not',
     popoverFormInvalid: 'This value cannot be used.',
     popoverFormClose: 'Close',
+    popoverFormDate: 'Type a date as dd/mm/yyyy, or pick one in the calendar.',
+    popoverFormDateRange: 'Pick a day the calendar offers.',
     dateNavGroup: 'Dates shown',
     dateNavPrev: '‹ Previous',
     dateNavNext: 'Next ›',

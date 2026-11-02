@@ -55,7 +55,8 @@
     }
 
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > li[data-kp-nav-folded],
-    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > [data-kp-nav-more][data-kp-nav-idle] {
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > .kp-nav__more[data-kp-nav-idle],
+    .kp-nav:where([data-kp-nav-fold]:not([data-kp-nav-fold-ready], :has(> .kp-nav__toggle))) > .kp-nav__links > li[data-kp-nav-more]:not(.kp-nav__more) {
         /* !important: a register that dresses the list items (cyberpunk's `position: relative` on every one) sits in a
          * later layer and would put a folded item, and the idle More, back in the flow; it would push the More button
          * out of the bar. An important declaration of this layer beats every normal one of a later layer. */
@@ -155,8 +156,18 @@
             white-space: normal;
         }
 
-        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links > [data-kp-nav-more] {
+        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links > .kp-nav__more {
             display: none;
+        }
+    }
+
+    /* A link pinned behind More (`data-kp-nav-more` on its item) [parts-1102] never shows in the bar, not even in the frame
+     * before the script has fitted it; where the bar's own toggle is shown it is a link of the open list like the others. */
+    @container kp-nav (min-width: 40.0625rem) {
+        .kp-nav:where([data-kp-nav-fold]:not([data-kp-nav-fold-ready])) > .kp-nav__links > li[data-kp-nav-more]:not(.kp-nav__more) {
+            position: absolute !important;
+            visibility: hidden !important;
+            pointer-events: none;
         }
     }
 

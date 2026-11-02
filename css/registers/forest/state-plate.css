@@ -60,3 +60,10 @@
         text-decoration-thickness: 2px;
     }
 
+    /* The one-line plate's mark [parts-1102]: a leaf, two round corners, on the forest's green. */
+    [data-theme='forest'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border-radius: 0 50%;
+        background: hsl(from var(--primary) h s l / 0.2);
+        color: var(--primary);
+    }
+

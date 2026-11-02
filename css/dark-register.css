@@ -2636,6 +2636,12 @@
         letter-spacing: 0.02em;
     }
 
+    /* The one-line plate's mark [parts-1102]: a soft lit disc in the accent, the plate's glow in miniature. */
+    [data-theme='dark'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        background: hsl(from var(--primary) h s l / 0.18);
+        color: var(--primary);
+    }
+
     [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-thickness: 1px;
         text-decoration-color: hsl(from var(--foreground) h s l / 0.5);

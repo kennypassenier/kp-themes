@@ -62,6 +62,89 @@
         min-inline-size: 0;
     }
 
+    /* Two fields side by side [parts-1102; Homelab's "Snooze until"]: `.kp-popover-form__pair` holds two
+     * `.kp-popover-form__field`s (a label over its control, a date picker and a time field, say). The plate is then two tracks:
+     * the first field takes the room, the second a track of its own (--kp-popover-form-pair-second, 8.5rem, a time field's width); the labels share one row and the controls the next, so both
+     * controls start and end on one line. The problem line stands under the first field and the accept button
+     * (`.kp-popover-form__accept`) under the second, as wide as it, so the button ends on the fields' edge. The plate has a
+     * width of its own, so a form opened near the window's edge is not squeezed: the knob --kp-popover-form-pair-width
+     * (min(24rem, 100vw - 2rem)); on a phone the two tracks stay. */
+    .kp-popover-form > .kp-popover-form__panel:has(> .kp-popover-form__pair) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, var(--kp-popover-form-pair-second, 8.5rem));
+        column-gap: var(--kp-space-sm, 0.5rem);
+        inline-size: var(--kp-popover-form-pair-width, min(24rem, 100vw - 2rem));
+        max-inline-size: none;
+    }
+
+    .kp-popover-form__panel:has(> .kp-popover-form__pair) > * {
+        grid-column: 1 / -1;
+    }
+
+    .kp-popover-form__panel > .kp-popover-form__pair {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-template-rows: auto auto;
+        row-gap: var(--kp-space-xs, 0.25rem);
+        margin-block-end: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-popover-form__pair > .kp-popover-form__field {
+        display: grid;
+        grid-row: span 2;
+        grid-template-rows: subgrid;
+        align-items: stretch;
+        min-inline-size: 0;
+    }
+
+    /* The labels stand on the controls; the controls share the taller one's height (a time field is a fingertip high on a
+     * phone), so both start and end on one line. */
+    .kp-popover-form__field > .kp-popover-form__label {
+        align-self: end;
+    }
+
+    /* Each control fills its track: the date picker's input gives way to its calendar button, the time field is the track's width. */
+    .kp-popover-form__field > * {
+        min-inline-size: 0;
+    }
+
+    .kp-popover-form__field > .kp-datepicker {
+        flex-wrap: nowrap;
+        align-items: stretch;
+    }
+
+    .kp-popover-form__field > .kp-datepicker > [data-kp-date-open] {
+        align-self: center;
+    }
+
+    .kp-popover-form__field > .kp-datepicker > .kp-field__input {
+        flex: 1 1 0;
+        min-inline-size: 0;
+    }
+
+    .kp-popover-form__field > .kp-time {
+        display: block;
+    }
+
+    .kp-popover-form__field > .kp-time > .kp-time__control {
+        display: flex;
+    }
+
+    .kp-popover-form__field > .kp-time .kp-time__input.kp-field__input {
+        flex: 1 1 auto;
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-popover-form__panel:has(> .kp-popover-form__pair) > .kp-popover-form__problem {
+        grid-column: 1;
+        align-self: center;
+    }
+
+    .kp-popover-form__panel:has(> .kp-popover-form__pair) > .kp-popover-form__accept {
+        grid-column: 2;
+        justify-content: center;
+    }
+
     .kp-popover-form__problem {
         min-block-size: 1lh;
         margin: 0;

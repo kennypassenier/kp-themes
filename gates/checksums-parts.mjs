@@ -237,6 +237,7 @@ export const PART_FILES = [
     'js/uptime/state.js',
     'js/wheel/controller.js',
     'js/wheel/draw.js',
+    'js/wheel/follow.js',
     'js/wheel/spin.js',
     'js/wheel/state.js',
 ];

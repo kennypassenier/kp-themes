@@ -60,3 +60,9 @@
         text-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.35);
     }
 
+    /* The one-line plate's mark [parts-1102]: the risen sun itself, the mark on its disc. */
+    [data-theme='solstice'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        background: radial-gradient(circle, var(--primary) 0 62%, hsl(from var(--primary) h s l / 0.25) 62% 72%, transparent 72%);
+        color: var(--primary-foreground);
+    }
+

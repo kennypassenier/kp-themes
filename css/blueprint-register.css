@@ -1931,6 +1931,12 @@
         margin: 0;
     }
 
+    /* The one-line plate's mark [parts-1102]: a pencilled circle, dashed like the plate's edge. */
+    [data-theme='blueprint'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.6);
+        background: none;
+    }
+
     /* The link signature is for links in running text; a link in a navigation,
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */

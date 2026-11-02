@@ -74,6 +74,7 @@ setWheelState(document.getElementById('doc-wheel-failed'), 'error', 'The choices
             { name: 'data-kp-wheel-empty', what: 'The sentence when nothing fits.' },
             { name: 'short', what: 'An item field: a shorter name for the face of the wheel. A long name is no longer cut on its segment: it is set at the largest size, over two lines, then `short`, else not drawn, and the segment’s tooltip holds the whole name.' },
             { name: 'data-kp-wheel-kiosk', what: 'No hub button: the wheel is the control, and it stays live. `data-kp-wheel-answer` shows the answer card. Items take `tag` and `resting`; the words are `wheelIdleKiosk`, `wheelSpinKiosk` and `wheelResting`.' },
+            { name: 'data-kp-wheel-follows', what: 'The id of another wheel [parts-1102]: when that wheel spins this one spins too, over its own choices and weights, for exactly the leader\u2019s time, so both settle together; each keeps its own outcome, answer card and events. Its own Spin still turns it alone. Read at every spin, so it can be set or removed at any time. `kp-wheel-spin` carries `duration` (ms); `spinWheel(el, { duration })` fixes the time of one spin.' },
         ],
         accessibility: [
             'Built in — Spin is a real button (Space, Enter); the outcome is a status region said once, after the turn.',

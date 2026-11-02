@@ -205,4 +205,5 @@ export const CONTROLLER_PART_FILES_2B = [
     'js/popover-form/accept.js',
     'js/popover-form/constants.js',
     'js/popover-form/controller.js',
+    'js/popover-form/fields.js',
 ];

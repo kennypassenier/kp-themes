@@ -34,3 +34,9 @@
         margin: 0;
     }
 
+    /* The one-line plate's mark [parts-1102]: a pencilled circle, dashed like the plate's edge. */
+    [data-theme='blueprint'] .kp-empty[data-kp-empty='compact'] > .kp-empty__icon {
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.6);
+        background: none;
+    }
+

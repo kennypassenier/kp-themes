@@ -88,6 +88,7 @@ export const pageHeaderDescriptor = {
             { name: '.kp-page-header__updated', what: 'When the page was last read, after the title on its baseline, in the muted ink and same-width digits; a fixed least width keeps the title still while it changes, and it wraps under the title when the line is full.' },
             { name: '.kp-page-header__actions', what: 'The buttons, the primary among them, the overflow last; a popover in it hangs under its button towards the start.' },
             { name: 'on a phone', what: 'Under 40rem the title takes the width and the buttons fold under the description: the buttons form one row of equal columns, the primary first, wrapping as equal columns when they cannot fit.' },
+            { name: 'data-kp-header-actions', what: '`equal` [parts-1102]: on a phone two actions stand on two equal tracks and fill the row together, also where the header is too narrow for the default pair (a long label wraps inside its button). `auto` (the default): the primary takes the rest of the row and the secondary its own width, or one under the other when narrow. CSS alone, switchable at run time.' },
         ],
         accessibility: [
             'Built in — the order on a phone is visual only; in the markup and the tab order the buttons keep yours.',

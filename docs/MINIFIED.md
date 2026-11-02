@@ -16,29 +16,29 @@ the selectors and their order are identical, which is what
 | File | Authored | Minified | Saved |
 | ---- | -------: | -------: | ----: |
 | `css/_rules.css` | 37.1 kB | 19.0 kB | 49% |
-| `css/blueprint-register.css` | 260.8 kB | 140.0 kB | 46% |
-| `css/brutalism-register.css` | 254.0 kB | 144.4 kB | 43% |
-| `css/components.css` | 1310.4 kB | 641.0 kB | 51% |
-| `css/cyberpunk-register.css` | 320.8 kB | 185.3 kB | 42% |
-| `css/dark-register.css` | 229.7 kB | 114.5 kB | 50% |
-| `css/deco-register.css` | 258.8 kB | 149.8 kB | 42% |
+| `css/blueprint-register.css` | 261.1 kB | 140.2 kB | 46% |
+| `css/brutalism-register.css` | 254.4 kB | 144.7 kB | 43% |
+| `css/components.css` | 1320.8 kB | 645.1 kB | 51% |
+| `css/cyberpunk-register.css` | 321.3 kB | 185.6 kB | 42% |
+| `css/dark-register.css` | 229.9 kB | 114.7 kB | 50% |
+| `css/deco-register.css` | 259.1 kB | 149.9 kB | 42% |
 | `css/fonts.css` | 16.6 kB | 12.0 kB | 27% |
-| `css/forest-register.css` | 244.1 kB | 126.8 kB | 48% |
-| `css/formal-register.css` | 192.6 kB | 98.8 kB | 49% |
+| `css/forest-register.css` | 244.4 kB | 126.9 kB | 48% |
+| `css/formal-register.css` | 193.4 kB | 99.1 kB | 49% |
 | `css/layout.css` | 13.0 kB | 2.5 kB | 81% |
-| `css/nostromo-register.css` | 249.4 kB | 139.1 kB | 44% |
-| `css/pastel-register.css` | 240.6 kB | 127.3 kB | 47% |
-| `css/solstice-register.css` | 191.2 kB | 113.0 kB | 41% |
-| `css/synthwave-register.css` | 254.7 kB | 139.9 kB | 45% |
+| `css/nostromo-register.css` | 249.9 kB | 139.4 kB | 44% |
+| `css/pastel-register.css` | 241.0 kB | 127.5 kB | 47% |
+| `css/solstice-register.css` | 191.5 kB | 113.2 kB | 41% |
+| `css/synthwave-register.css` | 255.0 kB | 140.1 kB | 45% |
 | `css/themes.css` | 140.2 kB | 87.0 kB | 38% |
-| `css/titanium-register.css` | 221.1 kB | 120.9 kB | 45% |
+| `css/titanium-register.css` | 221.5 kB | 121.1 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 4390.3 kB | 2334.2 kB | 47% |
-| `dist/kp-themes-base.css` | 1488.9 kB | 746.9 kB | 50% |
-| `dist/kp-themes.js` | 3890.4 kB | 2062.5 kB | 47% |
+| `dist/kp-themes.css` | 4405.4 kB | 2340.8 kB | 47% |
+| `dist/kp-themes-base.css` | 1499.3 kB | 751.0 kB | 50% |
+| `dist/kp-themes.js` | 3896.4 kB | 2065.6 kB | 47% |
 
-The loose stylesheets together weigh **4443.4 kB** authored and
-**2366.0 kB** minified, 47% less. A page loading one theme's
+The loose stylesheets together weigh **4458.5 kB** authored and
+**2372.6 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 **The base and the split bundle** [load-1102]. `dist/kp-themes-base.min.css` is the bundle without
@@ -48,11 +48,11 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 
 | Entry | Files it loads before it runs | Minified |
 | ----- | ----------------------------: | -------: |
-| `dist/js/auto.js` | 19 | 261.8 kB |
-| `dist/js/lazy-register.js` | 6 | 85.5 kB |
-| `dist/js/core.js` | 4 | 80.6 kB |
-| `dist/js/index.js` | 158 | 2001.7 kB |
-| the whole folder | 299 | 2115.1 kB |
+| `dist/js/auto.js` | 19 | 262.3 kB |
+| `dist/js/lazy-register.js` | 6 | 85.6 kB |
+| `dist/js/core.js` | 4 | 80.7 kB |
+| `dist/js/index.js` | 158 | 2004.5 kB |
+| the whole folder | 299 | 2118.0 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

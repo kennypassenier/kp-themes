@@ -21,11 +21,13 @@ export declare function setWheelState(root: Element, kind: 'loading' | 'error' |
 export declare function getWheelResult(root: Element): WheelItem | null;
 /**
  * Spin: draw the outcome by the weights, turn the wheel to it, say it.
- * Resolves with the outcome (null when it could not spin).
+ * Resolves with the outcome (null when it could not spin). `duration` (ms) fixes how long it turns, instead of the time its
+ * travel takes: a wheel that follows another settles with it (`data-kp-wheel-follows`, js/wheel/follow.js).
  * @param {Element} root
- * @param {{ random?: () => number }} [options]
+ * @param {{ random?: () => number, duration?: number }} [options]
  * @returns {Promise<WheelItem | null>}
  */
-export declare function spinWheel(root: Element, { random }?: {
+export declare function spinWheel(root: Element, { random, duration }?: {
     random?: () => number;
+    duration?: number;
 }): Promise<WheelItem | null>;

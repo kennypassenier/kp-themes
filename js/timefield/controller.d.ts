@@ -5,6 +5,11 @@ export declare class TimeController extends Controller {
     /** @param {HTMLElement} host */
     constructor(host: HTMLElement);
     connect(): void;
+    /**
+     * A form reset brings back the time the field started with, as a native field's does [parts-1102]: the popover form resets
+     * on every open. The browser puts the two inputs back to their default values itself; the field's own value follows after.
+     */
+    followFormReset(): void;
     /** Every option is live: presets and the list's entries follow their attributes. */
     watchAttributes(): void;
     /** Digits typed fast: 0230 becomes 02:30 as the fourth digit arrives; an open list follows the typed time. */

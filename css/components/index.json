@@ -40,6 +40,7 @@
         "action-columns/align-pkg-1019-action.css",
         "navbar/base.css",
         "navbar/bar-that-folds-what.css",
+        "navbar/a-menu-in-the-bar.css",
         "navbar/a-dropdown-under-a-link.css",
         "navbar/dropdowns-mega-menus-links.css",
         "media.css",
@@ -379,6 +380,9 @@
     },
     {
       "file": "layout/one-state-plate-for-every.css"
+    },
+    {
+      "file": "empty-compact.css"
     },
     {
       "open": "@layer kp.components {\n",

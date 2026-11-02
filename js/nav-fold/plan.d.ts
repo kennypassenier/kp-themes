@@ -4,7 +4,9 @@
  * Items are kept from the start for as long as they fit beside the More
  * button; the first that does not fit folds with everything after it. An
  * item marked to keep stays in the bar wherever it is. When everything fits
- * without the More button, nothing folds.
+ * without the More button, nothing folds. An item pinned behind More
+ * (`data-kp-nav-more`) folds whatever the width, and while one is pinned the
+ * More button always takes its room [parts-1102].
  *
  * @param {object} at
  * @param {readonly number[]} at.widths each item's natural width
@@ -12,14 +14,16 @@
  * @param {number} at.room the width the list has
  * @param {number} at.moreWidth the More item's width
  * @param {readonly boolean[]} [at.keep] items that never fold
+ * @param {readonly boolean[]} [at.pinned] items that always fold
  * @returns {boolean[]} per item: true when it folds
  */
-export declare function planFold({ widths, gap, room, moreWidth, keep }: {
+export declare function planFold({ widths, gap, room, moreWidth, keep, pinned }: {
     widths: readonly number[];
     gap: number;
     room: number;
     moreWidth: number;
     keep?: readonly boolean[];
+    pinned?: readonly boolean[];
 }): boolean[];
 /**
  * Which separators fold with the links around them: pure, beside planFold().
