@@ -50,7 +50,9 @@ export declare class AutosizeController extends Controller {
     connect(): void;
     /** Size the box for its text, with the engine in use, and report the height. */
     measure(): void;
-    /** A change of width changes the wrapping; the viewport and a font arriving change the cap and the lines. */
+    /** Size the box with the others that ask in the same task, so many boxes cost one layout. */
+    measureTogether(): void;
+    /** A change of width changes the wrapping; the viewport and a font arriving change the cap and the lines. All measure together. */
     watchSize(): void;
     /** Undo what the box got: the card, frame, counter, twin, inline sizes, class and marks. */
     reset(): void;

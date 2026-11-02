@@ -4902,7 +4902,7 @@ function say(doc, text) {
     if (region) region.textContent = text;
   }, 30);
 }
-function setCalm(on, { doc = document, scope, loading, remember: remember3 = true, announce: announce7 = true } = {}) {
+function setCalm(on, { doc = document, scope, loading, remember: remember3 = true, announce: announce8 = true } = {}) {
   const root = doc.documentElement;
   const was = root.hasAttribute(CALM_ATTRIBUTE);
   if (scope !== void 0) root.setAttribute("data-kp-calm-scope", scope);
@@ -4918,7 +4918,7 @@ function setCalm(on, { doc = document, scope, loading, remember: remember3 = tru
   }
   syncSwitches(doc);
   if (was === on && scope === void 0 && loading === void 0) return;
-  if (announce7 && was !== on) say(doc, on ? getStrings().calmOn : getStrings().calmOff);
+  if (announce8 && was !== on) say(doc, on ? getStrings().calmOn : getStrings().calmOff);
   root.dispatchEvent(
     new CustomEvent(CALM_EVENT, {
       bubbles: true,
@@ -5770,7 +5770,7 @@ function outerTracked(node) {
   }
   return found;
 }
-function setTrackValue(el16, value, { text, announce: announce7 = true, initial = false } = {}) {
+function setTrackValue(el16, value, { text, announce: announce8 = true, initial = false } = {}) {
   el16.setAttribute(TRACK_VALUE, value);
   if (text === void 0 || text === value) el16.removeAttribute(TRACK_TEXT);
   else el16.setAttribute(TRACK_TEXT, text);
@@ -5778,7 +5778,7 @@ function setTrackValue(el16, value, { text, announce: announce7 = true, initial 
     el16.setAttribute(TRACK_DEFAULT, value);
     if (text !== void 0 && text !== value) el16.setAttribute(TRACK_DEFAULT_TEXT, text);
   }
-  if (announce7) el16.dispatchEvent(new CustomEvent(TRACK_EVENT, { bubbles: true, detail: { value, text: text ?? value } }));
+  if (announce8) el16.dispatchEvent(new CustomEvent(TRACK_EVENT, { bubbles: true, detail: { value, text: text ?? value } }));
 }
 function writeTrackValue(el16, value) {
   el16.setAttribute(TRACK_VALUE, value);
@@ -6737,8 +6737,8 @@ function withoutOvershoot(ease) {
   const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
   if (!m) return ease;
   const [x1, y1, x2, y2] = m.slice(1).map(Number);
-  const hold2 = (y) => Math.min(1, Math.max(0, y));
-  return `cubic-bezier(${x1}, ${hold2(y1)}, ${x2}, ${hold2(y2)})`;
+  const hold3 = (y) => Math.min(1, Math.max(0, y));
+  return `cubic-bezier(${x1}, ${hold3(y1)}, ${x2}, ${hold3(y2)})`;
 }
 function sizeEase(box, ease, change2, plain3 = false) {
   if (plain3 && getComputedStyle(box).getPropertyValue("--kp-accordion-size").trim() === "own") plain3 = false;
@@ -10302,13 +10302,13 @@ function hideBusy(tile) {
   if (mark2?.querySelector(".kp-spinner")) mark2.replaceChildren();
   tile.querySelector(":scope > .kp-action__state")?.remove();
 }
-function syncTile(tile, { announce: announce7 = false } = {}) {
+function syncTile(tile, { announce: announce8 = false } = {}) {
   const busy = tile.getAttribute("aria-busy") === "true";
   if (busy) showBusy(tile);
   else hideBusy(tile);
   const before2 = synced.get(tile);
   synced.set(tile, busy);
-  if (announce7 && before2 !== void 0 && before2 !== busy) {
+  if (announce8 && before2 !== void 0 && before2 !== busy) {
     tile.dispatchEvent(new CustomEvent(ACTION_BUSY_EVENT, { bubbles: true, detail: { tile, busy } }));
   }
 }
@@ -11958,16 +11958,16 @@ function tracking(run) {
 }
 function draw(run) {
   const { ctx, el: el16, routine } = run;
-  const { state: state12, view, cfg, announce: announce7, done, finishers } = ctx;
+  const { state: state12, view, cfg, announce: announce8, done, finishers } = ctx;
   if (!view || typeof view.IntersectionObserver !== "function") {
     el16.classList.add(STATE.in);
-    announce7(el16, "headline", routine, true);
+    announce8(el16, "headline", routine, true);
     return;
   }
   state12.pending++;
   finishers.push(() => {
     el16.classList.add(STATE.in);
-    announce7(el16, "headline", routine, false);
+    announce8(el16, "headline", routine, false);
   });
   state12.ioHeadline ??= new view.IntersectionObserver(
     (entries2) => {
@@ -11975,7 +11975,7 @@ function draw(run) {
         if (!entry.isIntersecting) continue;
         state12.ioHeadline?.unobserve(entry.target);
         entry.target.classList.add(STATE.in);
-        announce7(entry.target, "headline", routine, false);
+        announce8(entry.target, "headline", routine, false);
         state12.pending--;
         done();
       }
@@ -12344,7 +12344,7 @@ var init_emphasis = __esm({
     EmphasisHook = class extends EffectHook {
       /** @param {Element[]} marks @param {number} first @param {number} step @param {Element} on @param {string} routine */
       clearInSteps(marks, first, step, on, routine) {
-        const { state: state12, finishers, done, announce: announce7, later } = this.ctx;
+        const { state: state12, finishers, done, announce: announce8, later } = this.ctx;
         if (marks.length === 0) return;
         state12.pending++;
         finishers.push(() => clearAll(marks));
@@ -12353,20 +12353,20 @@ var init_emphasis = __esm({
             mark2.classList.add(STATE.cleared);
             if (i !== marks.length - 1) return;
             state12.pending--;
-            announce7(on, "emphasis", routine, false);
+            announce8(on, "emphasis", routine, false);
             done();
           }, first + i * step);
         });
       }
       /** @param {Element} container an element carrying data-kp-reveal="emphasis" */
       emphasis(container) {
-        const { reduced: reduced5, cfg, announce: announce7, routineOf, seen } = this.ctx;
+        const { reduced: reduced5, cfg, announce: announce8, routineOf, seen } = this.ctx;
         const marks = [...container.querySelectorAll("mark")];
         copyText(marks);
         const routine = routineOf(container, "emphasis");
         const trigger = container.querySelector(`[${HOOKS.revealTrigger}]`);
         if (marks.length === 0) {
-          announce7(container, "emphasis", routine, true);
+          announce8(container, "emphasis", routine, true);
           return;
         }
         if (routine === "" || reduced5()) {
@@ -12414,7 +12414,7 @@ var init_emphasis = __esm({
       }
       /** The marks outside any emphasis container clear on load, one after another. @param {ParentNode} scope */
       looseMarks(scope) {
-        const { reduced: reduced5, cfg, announce: announce7, routineOf, seen, started: started2 } = this.ctx;
+        const { reduced: reduced5, cfg, announce: announce8, routineOf, seen, started: started2 } = this.ctx;
         const marks = [...scope.querySelectorAll("mark")].filter((m) => m.closest(`[${HOOKS.reveal}='emphasis']`) === null && !started2.has(m));
         if (marks.length === 0) return;
         copyText(marks);
@@ -12423,7 +12423,7 @@ var init_emphasis = __esm({
         const routine = routineOf(first, "emphasis");
         if (routine === "" || reduced5() || seen(first, "emphasis")) {
           clearAll(marks);
-          announce7(first, "emphasis", routine, true);
+          announce8(first, "emphasis", routine, true);
           return;
         }
         this.clearInSteps(marks, cfg.delay, cfg.stagger, first, routine);
@@ -12469,12 +12469,12 @@ var init_rule = __esm({
       }
       /** The rules that entered the viewport draw, once each. @param {IntersectionObserverEntry[]} entries @param {string} routine */
       onSeen(entries2, routine) {
-        const { state: state12, announce: announce7, done } = this.ctx;
+        const { state: state12, announce: announce8, done } = this.ctx;
         for (const entry of entries2) {
           if (!entry.isIntersecting) continue;
           state12.io?.unobserve(entry.target);
           entry.target.classList.add(STATE.in);
-          announce7(entry.target, "rule", routine, false);
+          announce8(entry.target, "rule", routine, false);
           state12.pending--;
           done();
         }
@@ -13315,10 +13315,10 @@ var init_arrival = __esm({
     init_arrival_run();
     ArrivalHook = class extends EffectHook {
       arrival() {
-        const { doc, html, announce: announce7, arrivalRoutine, arrivalPerformed, arrivalPlays } = this.ctx;
+        const { doc, html, announce: announce8, arrivalRoutine, arrivalPerformed, arrivalPlays } = this.ctx;
         if (!arrivalPerformed || !doc.body) return;
         if (!arrivalPlays) {
-          announce7(html, "arrival", arrivalRoutine, true);
+          announce8(html, "arrival", arrivalRoutine, true);
           return;
         }
         new ArrivalRun(this.ctx, doc.body).play((undo) => this.own(undo));
@@ -13642,10 +13642,10 @@ var init_engine = __esm({
           return;
         }
         state12.pending++;
-        let waiting = true;
+        let waiting2 = true;
         const go = () => {
-          if (!waiting) return;
-          waiting = false;
+          if (!waiting2) return;
+          waiting2 = false;
           held2.delete(go);
           state12.pending--;
           if (state12.detached) this.use("headline").then((hook) => hook.headline(el16, true));
@@ -18678,14 +18678,14 @@ function readGroup(group) {
   const text = values.map(label2).join(", ");
   return { value: JSON.stringify(values), text: text || labelOf2(items2.find(isAll) ?? group) };
 }
-function writeGroupTrack(group, announce7 = false) {
+function writeGroupTrack(group, announce8 = false) {
   if (!isTrackedGroup(group)) return;
   const { value, text } = readGroup(group);
   setTrackValue(
     /** @type {HTMLElement} */
     group,
     value,
-    { text, announce: announce7, initial: true }
+    { text, announce: announce8, initial: true }
   );
 }
 function listenGroupWrites(group, set) {
@@ -20665,14 +20665,14 @@ var init_store2 = __esm({
 });
 
 // js/theme-core/apply.js
-function applyTheme(theme, { root, darkClass, strict = false, announce: announce7 = true } = {}) {
+function applyTheme(theme, { root, darkClass, strict = false, announce: announce8 = true } = {}) {
   const known4 = asTheme(theme);
   if (known4 === null && strict) throw new RangeError(`kp-themes: "${String(theme)}" is not a theme`);
   const next2 = known4 ?? DEFAULT_THEME;
   const element = rootOf(root);
   if (known4 === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next2, "apply", element);
   const previous = asTheme(element.getAttribute(PREVIEW_THEME_ATTRIBUTE) ?? element.getAttribute("data-theme"));
-  if (announce7 && previous !== next2) {
+  if (announce8 && previous !== next2) {
     const ask2 = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next2, previous } });
     if (!element.dispatchEvent(ask2)) {
       endPreview({ root: element, darkClass });
@@ -20684,7 +20684,7 @@ function applyTheme(theme, { root, darkClass, strict = false, announce: announce
   element.removeAttribute(PENDING_THEME_ATTRIBUTE);
   const cls = darkClass === void 0 ? config2.darkClass : darkClass;
   if (cls) element.classList.toggle(cls, DARK.has(next2));
-  if (announce7 && previous !== next2) {
+  if (announce8 && previous !== next2) {
     element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next2, previous, root: element } }));
   }
   return next2;
@@ -21287,7 +21287,7 @@ var init_item2 = __esm({
        * @param {{ announce?: boolean }} [options]
        * @returns {StepState}
        */
-      sync({ announce: announce7 = false } = {}) {
+      sync({ announce: announce8 = false } = {}) {
         const { item } = this;
         const state12 = known(item.getAttribute("data-state"));
         if (item.getAttribute("data-state") !== state12) item.setAttribute("data-state", state12);
@@ -21298,7 +21298,7 @@ var init_item2 = __esm({
         const previous = this.state;
         this.state = state12;
         const list = item.closest(STEPLIST_SELECTOR);
-        if (list && announce7 && previous !== void 0 && previous !== state12) this.announce(list, state12, previous);
+        if (list && announce8 && previous !== void 0 && previous !== state12) this.announce(list, state12, previous);
         return state12;
       }
       /** The mark, with the theme's spinner on the running step. @param {StepState} state */
@@ -21439,8 +21439,8 @@ var init_steplist = __esm({
 });
 
 // js/kpi/scope.js
-function attachScope(Watch, scope, options = {}) {
-  const watch2 = new Watch(scope, options);
+function attachScope(Watch2, scope, options = {}) {
+  const watch2 = new Watch2(scope, options);
   try {
     watch2.connect();
   } catch (error) {
@@ -25108,7 +25108,7 @@ var init_trend_view = __esm({
        * @param {number} k
        * @param {boolean} [announce] say it to a screen reader (keys only)
        */
-      show(k, announce7 = false) {
+      show(k, announce8 = false) {
         const { pts, plot, cross, ctx } = this;
         if (pts.length < 2) return;
         const i = Math.max(0, Math.min(pts.length - 1, k));
@@ -25121,7 +25121,7 @@ var init_trend_view = __esm({
         cross.style.insetInlineStart = `${x}px`;
         cross.hidden = false;
         this.placeChip(moment, this.fmt(value, "spark"), x, width);
-        if (announce7) this.live.textContent = `${moment} \xB7 ${this.fmt(value, "readout")}`;
+        if (announce8) this.live.textContent = `${moment} \xB7 ${this.fmt(value, "readout")}`;
       }
       /**
        * The chip over the line, kept inside the trend; the value under the moment when the two do not fit on one line, and in the
@@ -25604,18 +25604,18 @@ function attachMatching(root, options, selector) {
     const locale = resolveLocale(options.locale, groupEl ?? host);
     const state12 = drawOne(host, group, locale, ctx);
     if (!state12) continue;
-    const hold2 = seen != null && state12.view != null && host.getAttribute("data-kp-chart-lazy") !== "off";
-    if (hold2) state12.view?.(false);
+    const hold3 = seen != null && state12.view != null && host.getAttribute("data-kp-chart-lazy") !== "off";
+    if (hold3) state12.view?.(false);
     state12.unobserve = () => {
       resize.unobserve(host);
-      if (hold2) seen?.unobserve(host);
+      if (hold3) seen?.unobserve(host);
     };
     CHARTS.set(host, state12);
     group.charts.add(state12);
     touched.add(group);
     states2.push(state12);
     resize.observe(host);
-    if (hold2) seen?.observe(host);
+    if (hold3) seen?.observe(host);
   }
   for (const group of touched) {
     group.bindChips();
@@ -28144,12 +28144,12 @@ var init_controller17 = __esm({
         this.moveFocus(to);
       }
       /** @param {number} year @param {number} month @param {boolean} announce */
-      showMonth(year, month, announce7) {
+      showMonth(year, month, announce8) {
         if (this.year === year && this.month === month) return;
         this.year = year;
         this.month = month;
         paintCalendar(this);
-        if (announce7) this.el.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month } }));
+        if (announce8) this.el.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month } }));
       }
       /** @param {string} iso */
       buttonFor(iso) {
@@ -28880,10 +28880,10 @@ function paint4(c) {
   const was = c.upcoming.on;
   c.upcoming.on = upcomingOn(c);
   if (was !== c.upcoming.on) c.held = null;
-  const waiting = c.state === "loading" || c.leaving !== null;
+  const waiting2 = c.state === "loading" || c.leaving !== null;
   drawBusy(c);
   holdRows(c);
-  if (c.upcoming.list) paintUpcoming(c, c.upcoming.on && !waiting ? upcomingItems(c, c.now()) : []);
+  if (c.upcoming.list) paintUpcoming(c, c.upcoming.on && !waiting2 ? upcomingItems(c, c.now()) : []);
   for (const col of c.cols) {
     const nodes = c.state === "loading" || c.leaving || c.upcoming.on ? [] : col.items.map((item) => item.button);
     const wanted = [col.now, ...nodes];
@@ -29033,7 +29033,7 @@ var init_api7 = __esm({
 });
 
 // js/date-nav/link.js
-function driveTarget(nav, range, announce7) {
+function driveTarget(nav, range, announce8) {
   const id = nav.getAttribute(FOR_ATTRIBUTE);
   if (!id) return;
   const target = nav.ownerDocument.getElementById(id);
@@ -29043,13 +29043,13 @@ function driveTarget(nav, range, announce7) {
   }
   if (target.hasAttribute("data-kp-week")) {
     setWeekStart(target, range.start);
-    if (announce7) target.dispatchEvent(new CustomEvent(WEEK_RANGE_EVENT, { bubbles: true, detail: { start: range.start, source: "date-nav" } }));
+    if (announce8) target.dispatchEvent(new CustomEvent(WEEK_RANGE_EVENT, { bubbles: true, detail: { start: range.start, source: "date-nav" } }));
     return;
   }
   if (target.hasAttribute("data-kp-calendar")) {
     const [year = 0, month = 1] = range.at.split("-").map(Number);
     calendarMonth(target, { year, month });
-    if (announce7) target.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month, source: "date-nav" } }));
+    if (announce8) target.dispatchEvent(new CustomEvent(CALENDAR_MONTH_EVENT, { bubbles: true, detail: { year, month, source: "date-nav" } }));
     return;
   }
   console.warn(`kp-date-nav: #${id} is neither a week agenda (data-kp-week) nor a calendar (data-kp-calendar)`);
@@ -31399,8 +31399,8 @@ var init_secret_display = __esm({
       }
       /** The three options; `readOptions()` is the one place that reads them. */
       readOptions() {
-        const { hold: hold2, seconds, mask } = displayOptions(this.host);
-        this.hold = hold2;
+        const { hold: hold3, seconds, mask } = displayOptions(this.host);
+        this.hold = hold3;
         this.seconds = seconds;
         this.mask = mask;
       }
@@ -33299,7 +33299,7 @@ var init_sync2 = __esm({
        * @param {{ announce?: boolean, options?: CardStateOptions }} [how]
        * @returns {CardState}
        */
-      sync({ announce: announce7 = false, options } = {}) {
+      sync({ announce: announce8 = false, options } = {}) {
         const { card } = this;
         const state12 = known2(card.getAttribute("data-kp-state"));
         if (card.getAttribute("data-kp-state") !== state12) card.setAttribute("data-kp-state", state12);
@@ -33316,7 +33316,7 @@ var init_sync2 = __esm({
         this.syncBusy(parts2.stage, loading, opts);
         this.drawn = true;
         this.state = state12;
-        if (announce7 && previous !== void 0 && previous !== state12)
+        if (announce8 && previous !== void 0 && previous !== state12)
           card.dispatchEvent(new CustomEvent(CARD_STATE_EVENT, { bubbles: true, detail: { card, state: state12, previous } }));
         return state12;
       }
@@ -33558,7 +33558,7 @@ function writeText2(item, { label: label2, detail, fix, since }) {
     part7.replaceChildren(fix);
   }
 }
-function syncItem2(item, { announce: announce7 = false } = {}) {
+function syncItem2(item, { announce: announce8 = false } = {}) {
   const calm = isCalm2(item.closest(STATUS_LIST));
   const state12 = known3(item.getAttribute("data-state"), calm);
   if (item.getAttribute("data-state") !== state12) item.setAttribute("data-state", state12);
@@ -33594,7 +33594,7 @@ function syncItem2(item, { announce: announce7 = false } = {}) {
   } else syncAction(item, state12, list);
   const previous = synced2.get(item);
   synced2.set(item, state12);
-  if (list && announce7 && previous !== void 0 && previous !== state12) {
+  if (list && announce8 && previous !== void 0 && previous !== state12) {
     if (state12 !== "loading") {
       say3(list, {
         label: labelOf5(item),
@@ -37971,8 +37971,8 @@ __export(footprint_exports, {
   holdFootprint: () => holdFootprint
 });
 function holdFootprint(host) {
-  const hold2 = attachOne(host, FootprintHold);
-  return () => hold2?.destroy();
+  const hold3 = attachOne(host, FootprintHold);
+  return () => hold3?.destroy();
 }
 var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, STATE_ATTRIBUTES, FootprintHold, attachFootprints;
 var init_footprint = __esm({
@@ -45803,7 +45803,7 @@ function finish2(list, timer, { quiet = false } = {}) {
   if (!quiet) {
     const sound = list.getAttribute("data-kp-timers-sound") ?? "chime";
     const speak = list.getAttribute("data-kp-timers-speak") === "on";
-    const announce7 = () => {
+    const announce8 = () => {
       const length = playTimerSound(sound);
       if (speak)
         setTimeout(
@@ -45812,14 +45812,14 @@ function finish2(list, timer, { quiet = false } = {}) {
         );
     };
     if (sound !== "off" || speak) {
-      announce7();
+      announce8();
       const ring = Number(list.getAttribute("data-kp-timers-ring") ?? 60);
       if (ring > 0) {
         const until = Date.now() + ring * 1e3;
         timer.card.setAttribute("data-kp-timer-ringing", "");
         timer.ring = setInterval(() => {
           if (Date.now() >= until || timer.state !== "done") return stopRing(timer);
-          announce7();
+          announce8();
         }, 4e3);
       }
     }
@@ -59423,14 +59423,14 @@ var init_view2 = __esm({
        * Draw the current step; announce it (focus and event) unless rendering silently.
        * @param {{ announce?: boolean, previous?: number }} [how]
        */
-      show({ announce: announce7 = true, previous = this.at } = {}) {
+      show({ announce: announce8 = true, previous = this.at } = {}) {
         const { at, steps: steps2 } = this;
         steps2.forEach((step, i) => {
           step.hidden = i !== at;
         });
         this.showLabels();
         this.showButtons();
-        if (!announce7) return;
+        if (!announce8) return;
         if (this.moveFocus) {
           steps2[at]?.setAttribute("tabindex", "-1");
           steps2[at]?.focus();
@@ -59833,7 +59833,7 @@ var init_colorpicker = __esm({
        * @param {boolean} announce
        * @returns {ColourDetail}
        */
-      update(announce7) {
+      update(announce8) {
         const picker = this.host;
         const colour = this.read();
         const text = formatHsl(colour);
@@ -59843,7 +59843,7 @@ var init_colorpicker = __esm({
         const against = this.target();
         const { ratio, ok } = this.measure(colour, against);
         const detail = { value: text, ...colour, ratio, ok, against };
-        if (announce7) picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail }));
+        if (announce8) picker.dispatchEvent(new CustomEvent(COLOR_EVENT, { bubbles: true, detail }));
         return detail;
       }
       /**
@@ -60307,16 +60307,16 @@ var init_constants34 = __esm({
 
 // js/heat/card.js
 function waitForCard(el16, spec, loading, draw6) {
-  const waiting = WAITING.get(el16);
+  const waiting2 = WAITING.get(el16);
   if (loading) {
-    if (waiting) {
+    if (waiting2) {
       WAITING.delete(el16);
-      waiting.card.remove();
+      waiting2.card.remove();
     }
     return false;
   }
-  if (waiting) {
-    waiting.spec = spec;
+  if (waiting2) {
+    waiting2.spec = spec;
     return true;
   }
   const card = CARDS.get(el16);
@@ -63563,6 +63563,34 @@ function syncTicks(c) {
     c.lines.append(rule);
   }
 }
+function measureNames(c, list, perUnit) {
+  const probes = list.map((item) => {
+    const wrap2 = (
+      /** @type {HTMLElement} */
+      c.measure.cloneNode(false)
+    );
+    const line = (
+      /** @type {HTMLElement} */
+      c.ruler.cloneNode(false)
+    );
+    wrap2.textContent = item.label;
+    wrap2.style.inlineSize = `${Math.max(0, (item.start + item.duration) * perUnit - item.start * perUnit - 2)}px`;
+    line.textContent = item.label;
+    return { item, wrap: wrap2, line };
+  });
+  c.layer.append(...probes.flatMap((p) => [p.wrap, p.line]));
+  const sizes = new Map(
+    probes.map(({ item, wrap: wrap2, line }) => [
+      item.id,
+      { high: wrap2.scrollHeight, scroll: wrap2.scrollWidth, client: wrap2.clientWidth, need: line.offsetWidth }
+    ])
+  );
+  for (const p of probes) {
+    p.wrap.remove();
+    p.line.remove();
+  }
+  return sizes;
+}
 function placeLabels(c) {
   const width = c.plot.clientWidth;
   if (!width) return;
@@ -63570,6 +63598,7 @@ function placeLabels(c) {
   const doc = c.el.ownerDocument;
   const pad2 = Number.parseFloat(getComputedStyle(c.measure).paddingLeft) * 2 || 12;
   const barPx = c.rowPx * 0.8;
+  const sizes = measureNames(c, c.view, perUnit);
   const byRow = /* @__PURE__ */ new Map();
   for (const item of c.view) {
     const key = `${item.lane}|${c.rows.rows.get(item.id) ?? 0}`;
@@ -63583,11 +63612,12 @@ function placeLabels(c) {
       if (!bar) return;
       const left = item.start * perUnit;
       const right = (item.start + item.duration) * perUnit;
-      c.measure.textContent = item.label;
-      c.measure.style.inlineSize = `${Math.max(0, right - left - 2)}px`;
-      const fits = right - left - 2 > pad2 + 8 && c.measure.scrollHeight <= barPx - 2 + 0.5 && c.measure.scrollWidth <= c.measure.clientWidth + 0.5;
-      c.ruler.textContent = item.label;
-      const need = c.ruler.offsetWidth;
+      const size2 = (
+        /** @type {NameSize} */
+        sizes.get(item.id)
+      );
+      const fits = right - left - 2 > pad2 + 8 && size2.high <= barPx - 2 + 0.5 && size2.scroll <= size2.client + 0.5;
+      const need = size2.need;
       const prev = row2[i - 1];
       const next2 = row2[i + 1];
       const after = (next2 ? next2.start * perUnit : width) - right - 8;
@@ -67867,13 +67897,13 @@ var init_helpers4 = __esm({
 function setUptime(el16, spec) {
   SPECS.set(el16, spec);
   const loading = spec.state === "loading";
-  const waiting = WAITING2.get(el16);
-  if (loading && waiting) {
+  const waiting2 = WAITING2.get(el16);
+  if (loading && waiting2) {
     WAITING2.delete(el16);
-    waiting.card.remove();
+    waiting2.card.remove();
   } else if (!loading) {
-    if (waiting) {
-      waiting.spec = spec;
+    if (waiting2) {
+      waiting2.spec = spec;
       return;
     }
     const card = CARDS2.get(el16);
@@ -69914,11 +69944,11 @@ var init_load = __esm({
       }
       settle() {
         const el16 = this.host;
-        const waiting = this.held || this.images.some((img) => !img.complete);
-        el16.dataset.kpCompareState = waiting ? "loading" : "ready";
-        el16.setAttribute("aria-busy", String(waiting));
-        if (waiting && !this.card) this.card = openBusyCard(el16, { words: this.s.compareLoading, area: () => [el16], className: "kp-compare__busy", arrive: this.drawn });
-        else if (!waiting && this.card) {
+        const waiting2 = this.held || this.images.some((img) => !img.complete);
+        el16.dataset.kpCompareState = waiting2 ? "loading" : "ready";
+        el16.setAttribute("aria-busy", String(waiting2));
+        if (waiting2 && !this.card) this.card = openBusyCard(el16, { words: this.s.compareLoading, area: () => [el16], className: "kp-compare__busy", arrive: this.drawn });
+        else if (!waiting2 && this.card) {
           const leaving = this.card;
           this.card = null;
           void leaving.close();
@@ -72715,10 +72745,10 @@ function sharedSize(done, total, base) {
   const scaled = new Intl.NumberFormat(void 0, { maximumFractionDigits: power === 0 ? 0 : SIZE_DECIMALS }).format(done / base ** power);
   return getStrings().jobLineBytes(scaled, all);
 }
-function jobLineText(report4, { base = DECIMAL_BASE } = {}) {
+function jobLineText(report3, { base = DECIMAL_BASE } = {}) {
   const s2 = getStrings();
   const parts2 = [];
-  const { step, steps: steps2, done, total } = report4;
+  const { step, steps: steps2, done, total } = report3;
   if (Number.isFinite(step) && Number.isFinite(steps2) && /** @type {number} */
   steps2 > 0)
     parts2.push(s2.jobLineStep(
@@ -72746,16 +72776,16 @@ function jobLineText(report4, { base = DECIMAL_BASE } = {}) {
     void 0,
     { base }
   )));
-  let eta = report4.etaSeconds;
-  if (!Number.isFinite(eta) && Number.isFinite(report4.rate) && /** @type {number} */
-  report4.rate > 0 && Number.isFinite(total) && Number.isFinite(done)) {
+  let eta = report3.etaSeconds;
+  if (!Number.isFinite(eta) && Number.isFinite(report3.rate) && /** @type {number} */
+  report3.rate > 0 && Number.isFinite(total) && Number.isFinite(done)) {
     eta = Math.max(
       0,
       /** @type {number} */
       total - /** @type {number} */
       done
     ) / /** @type {number} */
-    report4.rate;
+    report3.rate;
   }
   if (Number.isFinite(eta)) parts2.push(s2.transferLeft(transferEta(
     /** @type {number} */
@@ -72767,16 +72797,16 @@ function stepPosition(list) {
   const items2 = [...list.querySelectorAll(":scope > .kp-steplist__item")];
   if (items2.every((item) => (item.getAttribute("data-state") ?? "pending") === "pending")) return { step: 0, steps: items2.length };
   const at = items2.findIndex((item) => ["running", "current"].includes(item.getAttribute("data-state") ?? ""));
-  const waiting = items2.findIndex((item) => (item.getAttribute("data-state") ?? "pending") === "pending");
-  const index = at >= 0 ? at : waiting >= 0 ? waiting : items2.length - 1;
+  const waiting2 = items2.findIndex((item) => (item.getAttribute("data-state") ?? "pending") === "pending");
+  const index = at >= 0 ? at : waiting2 >= 0 ? waiting2 : items2.length - 1;
   return { step: Math.max(0, index) + 1, steps: items2.length };
 }
-function paint10(line, report4) {
+function paint10(line, report3) {
   const base = (
     /** @type {1000 | 1024} */
     line.getAttribute("data-kp-bytes-base") === String(BINARY_BASE) ? BINARY_BASE : DECIMAL_BASE
   );
-  const text = jobLineText(report4, { base });
+  const text = jobLineText(report3, { base });
   if (line.textContent !== text) {
     line.textContent = text;
     line.dispatchEvent(new CustomEvent(JOBLINE_EVENT, { bubbles: true, detail: { text } }));
@@ -72787,16 +72817,16 @@ function listOf4(line) {
   const found = target ? document.querySelector(target) : null;
   return found?.matches(STEPLIST_SELECTOR) ? found : null;
 }
-function setJobLine(line, report4) {
+function setJobLine(line, report3) {
   const next2 = { ...reports.get(line) ?? {} };
-  for (const [key, value] of Object.entries(report4)) {
+  for (const [key, value] of Object.entries(report3)) {
     if (value === null || value === void 0) delete /** @type {any} */
     next2[key];
     else next2[key] = value;
   }
   reports.set(line, next2);
   const list = listOf4(line);
-  paint10(line, list && !("step" in report4) ? { ...next2, ...stepPosition(list) } : next2);
+  paint10(line, list && !("step" in report3) ? { ...next2, ...stepPosition(list) } : next2);
 }
 function buildJobLine({ label: label2, steplist } = {}) {
   const line = document.createElement("p");
@@ -74228,9 +74258,9 @@ var init_controller68 = __esm({
         }
       }
       /** Keep `data-kp-track-value` in step with the days, when the page asked for it; `announce` for a person's change. @param {boolean} announce */
-      track(announce7) {
+      track(announce8) {
         if (!this.host.hasAttribute(TRACK_VALUE)) return;
-        setTrackValue(this.host, this.values().join(","), { text: this.words(), announce: announce7, initial: true });
+        setTrackValue(this.host, this.values().join(","), { text: this.words(), announce: announce8, initial: true });
       }
       /** Replace the picked days, without the event. @param {readonly (number | string)[]} next */
       set(next2) {
@@ -82931,22 +82961,35 @@ function dropTwin(area) {
   TWINS.get(area)?.remove();
   TWINS.delete(area);
 }
-function fitTextarea(area, { minRows = AUTOSIZE_MIN_LINES, maxRows = AUTOSIZE_MAX_LINES, maxPx, keepPx = 0, apply: apply2 = true } = {}) {
-  const view = area.ownerDocument.defaultView;
+function readFit(area, options = {}) {
   const cs = (
     /** @type {Window} */
-    view.getComputedStyle(area)
+    area.ownerDocument.defaultView.getComputedStyle(area)
   );
-  const lh = lineHeightOf(cs);
-  const chrome = chromeOf(cs);
+  const wrap2 = {};
+  for (const name of WRAP_PROPS) wrap2[name] = /** @type {any} */
+  cs[name];
+  return {
+    area,
+    options,
+    wrap: wrap2,
+    lh: lineHeightOf(cs),
+    chrome: chromeOf(cs),
+    border: px3(cs.borderTopWidth) + px3(cs.borderBottomWidth),
+    width: area.getBoundingClientRect().width
+  };
+}
+function stageFit({ area, wrap: wrap2, width }) {
   const twin = twinOf(area);
   const ts = twin.style;
-  for (const name of WRAP_PROPS) ts[name] = /** @type {any} */
-  cs[name];
-  ts.inlineSize = `${area.getBoundingClientRect().width}px`;
+  for (const name of WRAP_PROPS) ts[name] = wrap2[name];
+  ts.inlineSize = `${width}px`;
   twin.value = area.value === "" ? " " : area.value;
-  const border = px3(cs.borderTopWidth) + px3(cs.borderBottomWidth);
-  const content = twin.scrollHeight + border;
+}
+function finishFit({ area, options, lh, chrome, border, width }) {
+  const { minRows = AUTOSIZE_MIN_LINES, maxRows = AUTOSIZE_MAX_LINES, maxPx, keepPx = 0, apply: apply2 = true } = options;
+  const twinHeight = twinOf(area).scrollHeight;
+  const content = twinHeight + border;
   const least = Math.max(1, minRows) * lh + chrome;
   let most = maxRows === null ? Number.POSITIVE_INFINITY : Math.max(maxRows, minRows) * lh + chrome;
   if (maxPx !== void 0) most = Math.max(least, Math.min(most, maxPx));
@@ -82957,7 +83000,12 @@ function fitTextarea(area, { minRows = AUTOSIZE_MIN_LINES, maxRows = AUTOSIZE_MA
     area.style.blockSize = `${height}px`;
     area.style.overflowY = scrolls ? "auto" : "hidden";
   }
-  return { height, scrolls, capped: wanted > most, lines: Math.max(1, Math.round((twin.scrollHeight - (chrome - border)) / lh)), lineHeight: lh };
+  return { height, scrolls, capped: wanted > most, lines: Math.max(1, Math.round((twinHeight - (chrome - border)) / lh)), lineHeight: lh, width };
+}
+function fitTextarea(area, options = {}) {
+  const job = readFit(area, options);
+  stageFit(job);
+  return finishFit(job);
 }
 function cssAutosizeSupported() {
   return typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
@@ -83140,7 +83188,7 @@ function hookValueSetter(c) {
     },
     set(v) {
       set.call(this, v);
-      c.measure();
+      c.measureTogether();
       c.drawCounter();
     }
   });
@@ -83182,59 +83230,181 @@ var init_hooks = __esm({
 });
 
 // js/autosize/measure.js
-function measureArea(c) {
-  const area = c.area;
-  if (c.state === "loading") {
-    const cs = c.view.getComputedStyle(area);
-    area.style.blockSize = `${Math.ceil(c.minRows() * lineHeightOf(cs) + chromeOf(cs))}px`;
-    area.style.overflowY = "hidden";
-    return;
-  }
-  const engine2 = c.engineInUse();
-  area.setAttribute("data-kp-autosize-engine-used", engine2);
-  if (engine2 === "css") measureCss(c);
-  else measureJs(c);
-}
-function measureCss(c) {
-  const area = c.area;
-  const cs = c.view.getComputedStyle(area);
+function readArea(c) {
+  const cs = c.view.getComputedStyle(c.area);
   const lh = lineHeightOf(cs);
   const chrome = chromeOf(cs);
+  if (c.state === "loading") return { c, engine: (
+    /** @type {AreaPlan['engine']} */
+    "loading"
+  ), lh, chrome, rows: null, cap: void 0, job: null };
+  const engine2 = (
+    /** @type {AreaPlan['engine']} */
+    c.engineInUse()
+  );
   const rows2 = c.maxRows();
   const cap2 = c.phoneCap();
-  area.style.blockSize = "";
-  area.style.overflowY = "";
-  area.style.setProperty("--kp-autosize-min", `${Math.ceil(c.minRows() * lh + chrome)}px`);
-  const most = rows2 === null ? "none" : `${Math.ceil(Math.min(rows2 * lh + chrome, cap2 ?? Number.POSITIVE_INFINITY))}px`;
-  area.style.setProperty("--kp-autosize-max", most);
-  const result = fitTextarea(area, { minRows: c.minRows(), maxRows: rows2, ...cap2 !== void 0 ? { maxPx: cap2 } : {}, apply: false });
-  report2(c, result.height, result.lines, result.capped);
-}
-function measureJs(c) {
-  const area = c.area;
-  const cap2 = c.phoneCap();
-  area.style.removeProperty("--kp-autosize-min");
-  area.style.removeProperty("--kp-autosize-max");
-  const result = fitTextarea(area, {
+  const job = readFit(c.area, {
     minRows: c.minRows(),
-    maxRows: c.maxRows(),
+    maxRows: rows2,
     ...cap2 !== void 0 ? { maxPx: cap2 } : {},
-    keepPx: c.shrinks() ? 0 : c.tallest
+    ...engine2 === "js" ? { keepPx: c.shrinks() ? 0 : c.tallest } : {},
+    apply: false
   });
-  c.tallest = Math.max(c.tallest, result.height);
-  report2(c, result.height, result.lines, result.capped);
+  return { c, engine: engine2, lh, chrome, rows: rows2, cap: cap2, job };
 }
-function report2(c, height, lines4, capped) {
-  c.area.toggleAttribute("data-kp-autosize-capped", capped);
-  if (height === c.lastHeight) return;
-  c.lastHeight = height;
-  c.area.dispatchEvent(new CustomEvent(AUTOSIZE_EVENT, { bubbles: true, detail: { height, lines: lines4, capped } }));
+function stageArea(read2) {
+  if (read2.job) stageFit(read2.job);
+}
+function planArea({ c, engine: engine2, lh, chrome, rows: rows2, cap: cap2, job }) {
+  if (!job || engine2 === "loading") {
+    return { engine: "loading", height: Math.ceil(c.minRows() * lh + chrome), scrolls: false, capped: false, lines: 0, width: c.width };
+  }
+  const fit2 = finishFit(job);
+  const plan = { engine: engine2, height: fit2.height, scrolls: fit2.scrolls, capped: fit2.capped, lines: fit2.lines, width: Math.round(fit2.width) };
+  if (engine2 === "js") return plan;
+  const most = rows2 === null ? "none" : `${Math.ceil(Math.min(rows2 * lh + chrome, cap2 ?? Number.POSITIVE_INFINITY))}px`;
+  return { ...plan, least: `${Math.ceil(c.minRows() * lh + chrome)}px`, most };
+}
+function writeArea(c, plan) {
+  const area = c.area;
+  c.width = plan.width;
+  if (plan.engine === "loading") {
+    area.style.blockSize = `${plan.height}px`;
+    area.style.overflowY = "hidden";
+    return null;
+  }
+  area.setAttribute("data-kp-autosize-engine-used", plan.engine);
+  if (plan.engine === "css") {
+    area.style.blockSize = "";
+    area.style.overflowY = "";
+    area.style.setProperty("--kp-autosize-min", plan.least ?? "0px");
+    area.style.setProperty("--kp-autosize-max", plan.most ?? "none");
+  } else {
+    area.style.removeProperty("--kp-autosize-min");
+    area.style.removeProperty("--kp-autosize-max");
+    area.style.blockSize = `${plan.height}px`;
+    area.style.overflowY = plan.scrolls ? "auto" : "hidden";
+    c.tallest = Math.max(c.tallest, plan.height);
+  }
+  area.toggleAttribute("data-kp-autosize-capped", plan.capped);
+  if (plan.height === c.lastHeight) return null;
+  c.lastHeight = plan.height;
+  return { height: plan.height, lines: plan.lines, capped: plan.capped };
+}
+function announce5(c, detail) {
+  if (detail) c.area.dispatchEvent(new CustomEvent(AUTOSIZE_EVENT, { bubbles: true, detail }));
+}
+function measureArea(c) {
+  const read2 = readArea(c);
+  stageArea(read2);
+  announce5(c, writeArea(c, planArea(read2)));
+}
+function measureAreas(list) {
+  const reads = list.map((c) => readArea(c));
+  for (const read2 of reads) stageArea(read2);
+  const plans = reads.map((read2) => planArea(read2));
+  const details = list.map((c, i) => writeArea(
+    c,
+    /** @type {AreaPlan} */
+    plans[i]
+  ));
+  list.forEach((c, i) => announce5(c, details[i] ?? null));
 }
 var init_measure2 = __esm({
   "js/autosize/measure.js"() {
     "use strict";
     init_constants45();
     init_fit6();
+  }
+});
+
+// js/autosize/schedule.js
+function flushMeasures() {
+  hold2.queued = false;
+  const list = [...waiting].filter((c) => !c.destroyed);
+  waiting.clear();
+  if (list.length === 1) measureArea(
+    /** @type {AutosizeController} */
+    list[0]
+  );
+  else if (list.length) measureAreas(list);
+}
+function measureSoon(c) {
+  waiting.add(c);
+  if (hold2.depth > 0 || hold2.queued) return;
+  hold2.queued = true;
+  queueMicrotask(flushMeasures);
+}
+function measureOrHold(c) {
+  if (hold2.depth > 0) measureSoon(c);
+  else measureArea(c);
+}
+function holdMeasures(work) {
+  hold2.depth += 1;
+  try {
+    return work();
+  } finally {
+    hold2.depth -= 1;
+    if (hold2.depth === 0) flushMeasures();
+  }
+}
+function watchBox(c) {
+  const watch2 = WATCHES.get(c.view) ?? new Watch(c.view);
+  WATCHES.set(c.view, watch2);
+  watch2.boxes.set(c.area, c);
+  watch2.observer?.observe(c.area);
+  return () => {
+    watch2.boxes.delete(c.area);
+    watch2.observer?.unobserve(c.area);
+    if (watch2.boxes.size > 0) return;
+    watch2.dispose();
+    if (WATCHES.get(c.view) === watch2) WATCHES.delete(c.view);
+  };
+}
+var waiting, hold2, Watch, WATCHES;
+var init_schedule = __esm({
+  "js/autosize/schedule.js"() {
+    "use strict";
+    init_constants45();
+    init_measure2();
+    waiting = /* @__PURE__ */ new Set();
+    hold2 = { depth: 0, queued: false };
+    Watch = class {
+      /** @param {Window} view */
+      constructor(view) {
+        this.view = view;
+        this.boxes = /* @__PURE__ */ new Map();
+        this.observer = typeof ResizeObserver === "function" ? new ResizeObserver((entries2) => this.onResize(entries2)) : null;
+        this.phone = view.matchMedia?.(PHONE2) ?? null;
+        this.onViewport = () => this.measureAll();
+        view.visualViewport?.addEventListener("resize", this.onViewport);
+        this.phone?.addEventListener("change", this.onViewport);
+      }
+      /** A change of width changes the wrapping; only boxes whose width moved measure, together. @param {ResizeObserverEntry[]} entries */
+      onResize(entries2) {
+        const moved = [];
+        for (const entry of entries2) {
+          const c = this.boxes.get(entry.target);
+          if (!c) continue;
+          const width = Math.round(entry.borderBoxSize?.[0]?.inlineSize ?? entry.target.getBoundingClientRect().width);
+          if (width === c.width) continue;
+          c.width = width;
+          moved.push(c);
+        }
+        if (moved.length) measureAreas(moved);
+      }
+      measureAll() {
+        const list = [...this.boxes.values()];
+        if (list.length) measureAreas(list);
+      }
+      dispose() {
+        this.observer?.disconnect();
+        this.view.visualViewport?.removeEventListener("resize", this.onViewport);
+        this.phone?.removeEventListener("change", this.onViewport);
+      }
+    };
+    WATCHES = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -83346,6 +83516,7 @@ var init_controller80 = __esm({
     init_fit6();
     init_hooks();
     init_measure2();
+    init_schedule();
     init_status();
     AutosizeController = class extends Controller {
       /**
@@ -83443,7 +83614,7 @@ var init_controller80 = __esm({
           this.pasteAt = area.selectionStart;
         });
         this.listen(area, "change", () => this.onChange());
-        this.measure();
+        measureOrHold(this);
         this.drawCounter();
         if (area.getAttribute("data-kp-state") === "loading") applyState(this, "loading");
       }
@@ -83451,24 +83622,14 @@ var init_controller80 = __esm({
       measure() {
         measureArea(this);
       }
-      /** A change of width changes the wrapping; the viewport and a font arriving change the cap and the lines. */
+      /** Size the box with the others that ask in the same task, so many boxes cost one layout. */
+      measureTogether() {
+        measureSoon(this);
+      }
+      /** A change of width changes the wrapping; the viewport and a font arriving change the cap and the lines. All measure together. */
       watchSize() {
-        const area = this.area;
-        if (typeof ResizeObserver === "function") {
-          const resizes = this.observe(
-            new ResizeObserver(() => {
-              const w = Math.round(area.getBoundingClientRect().width);
-              if (w === this.width) return;
-              this.width = w;
-              this.measure();
-            })
-          );
-          resizes.observe(area);
-        }
-        const onViewport = () => this.measure();
-        if (this.view.visualViewport) this.listen(this.view.visualViewport, "resize", onViewport);
-        if (this.phoneQuery) this.listen(this.phoneQuery, "change", onViewport);
-        void this.doc.fonts?.ready.then(() => this.measure());
+        this.own(watchBox(this));
+        void this.doc.fonts?.ready.then(() => this.measureTogether());
       }
       /** Undo what the box got: the card, frame, counter, twin, inline sizes, class and marks. */
       reset() {
@@ -83532,7 +83693,9 @@ function setAutosizeState(element, state12, message) {
   if (box) applyState(box, state12, message);
 }
 function attachAutosize(root = document, options = {}) {
-  const made6 = hostsOf(root, AUTOSIZE).filter((area) => !controllerFor(area) && area.getAttribute("data-kp-autosize") !== "off").map((area) => attachOne(area, AutosizeController, options)).filter((box) => box !== void 0);
+  const made6 = holdMeasures(
+    () => hostsOf(root, AUTOSIZE).filter((area) => !controllerFor(area) && area.getAttribute("data-kp-autosize") !== "off").map((area) => attachOne(area, AutosizeController, options)).filter((box) => box !== void 0)
+  );
   return () => {
     for (const box of made6) box.destroy();
   };
@@ -83544,6 +83707,7 @@ var init_api23 = __esm({
     init_controller();
     init_constants45();
     init_controller80();
+    init_schedule();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -88154,7 +88318,7 @@ function writeAddButton(add, s2, unit2, atMax) {
   add.toggleAttribute("aria-disabled", atMax);
   if (atMax) add.setAttribute("aria-disabled", "true");
 }
-function announce5(host, words3) {
+function announce6(host, words3) {
   let live4 = host.querySelector(".kp-rows__live");
   if (!live4) {
     live4 = host.ownerDocument.createElement("span");
@@ -88259,9 +88423,9 @@ async function writeRows(editor, raw) {
   track(editor, false);
   requestAnimationFrame(() => track(editor, false));
 }
-function track(editor, announce7) {
+function track(editor, announce8) {
   const { value, text } = readRows(editor);
-  setTrackValue(editor.host, value, { text, announce: announce7, initial: true });
+  setTrackValue(editor.host, value, { text, announce: announce8, initial: true });
 }
 function trackRows(editor) {
   const host = editor.host;
@@ -88502,7 +88666,7 @@ var init_row_editor = __esm({
       }
       /** Say something to a screen reader, in the status line. @param {string} words */
       say(words3) {
-        announce5(this.host, words3);
+        announce6(this.host, words3);
       }
       /** @param {string} type @param {HTMLElement} row @param {number} index */
       emit(type, row2, index) {
@@ -90929,7 +91093,7 @@ async function takeAll(list) {
   const open4 = before2.filter((i) => byOf(i).length === 0 && !i.claim?.locked);
   if (open4.length === 0) return;
   const by = (i) => open4.includes(i) ? [viewer] : byOf(i);
-  let waiting = null;
+  let waiting2 = null;
   const detail = {
     id: "",
     action: "take-all",
@@ -90938,12 +91102,12 @@ async function takeAll(list) {
     previousBy: [],
     items: before2,
     ids: open4.map((i) => i.id),
-    settle: (a) => void (waiting = a)
+    settle: (a) => void (waiting2 = a)
   };
   if (!list.dispatchEvent(new CustomEvent(CLAIM_EVENT, { bubbles: true, cancelable: true, detail }))) return;
-  if (waiting) {
+  if (waiting2) {
     try {
-      if (await waiting === false) return;
+      if (await waiting2 === false) return;
     } catch {
       say11(list, s2.claimNotSaved);
       return;
@@ -91005,7 +91169,7 @@ async function request(list, id, action, person, { undo = true } = {}) {
   const joining = action === "join" || action === "assign";
   const by = joining ? person && !among(person, previousBy) ? [...previousBy, person] : previousBy : previousBy.filter((p) => p.id !== person?.id);
   if (by.length === previousBy.length && by.every((p, i) => p.id === previousBy[i]?.id)) return;
-  let waiting = null;
+  let waiting2 = null;
   const detail = {
     id,
     action,
@@ -91013,19 +91177,19 @@ async function request(list, id, action, person, { undo = true } = {}) {
     by,
     previousBy,
     items: getChecklistItems(list),
-    settle: (answer2) => void (waiting = answer2)
+    settle: (answer2) => void (waiting2 = answer2)
   };
   const go = list.dispatchEvent(new CustomEvent(CLAIM_EVENT, { bubbles: true, cancelable: true, detail }));
   if (!go) {
     refuse2(list, item, previousBy, s2.claimNotSaved);
     return;
   }
-  if (waiting) {
+  if (waiting2) {
     st.busy.add(id);
     decorate(list);
     let answer2;
     try {
-      answer2 = await waiting;
+      answer2 = await waiting2;
     } catch {
       answer2 = false;
     }
@@ -91048,7 +91212,7 @@ async function request(list, id, action, person, { undo = true } = {}) {
     }
   }
   write(list, id, by);
-  announce6(list, item.label, by, joining, person);
+  announce7(list, item.label, by, joining, person);
   if (!joining && undo) offerUndo2(list, item, previousBy, person);
 }
 function refuse2(list, item, by, why) {
@@ -91070,7 +91234,7 @@ function refuse2(list, item, by, why) {
     setTimeout(() => note2.remove(), CLAIM_REFUSED_MS);
   }
 }
-function announce6(list, label2, by, joining, person) {
+function announce7(list, label2, by, joining, person) {
   const s2 = getStrings();
   if (list.getAttribute("data-kp-announce") === "off") return;
   say11(list, by.length ? s2.claimAnnounce(label2, joinNames2(by.map((p) => p.name))) : s2.claimAnnounceNobody(label2));
@@ -91572,11 +91736,11 @@ function syncListCard(root, body, on) {
     openBusyCard(body, { words: getStrings().heatLoading, area: () => [list], className: "kp-availability__busy", arrive: false })
   );
 }
-function columnsList(root, people2, waiting = false) {
+function columnsList(root, people2, waiting2 = false) {
   const st = stateOf7(root);
   const s2 = getStrings();
   const wrap2 = el11("kp-availability__columns");
-  if (waiting) {
+  if (waiting2) {
     wrap2.classList.add("kp-availability__columns--waiting");
     wrap2.inert = true;
   }
@@ -91998,7 +92162,7 @@ async function request2(root, person, keys, answer2, { stroke = false } = {}) {
   const changing = keys.filter((k) => editable(root, person, k) && row2[k] !== (answer2 ?? void 0));
   if (changing.length === 0) return;
   for (const k of changing) previous[k] = row2[k];
-  let waiting = null;
+  let waiting2 = null;
   const nextAnswers = structuredClone(st.set.answers);
   for (const k of changing) {
     const r = nextAnswers[person] ??= {};
@@ -92011,7 +92175,7 @@ async function request2(root, person, keys, answer2, { stroke = false } = {}) {
     answer: answer2,
     previous,
     answers: nextAnswers,
-    settle: (p) => void (waiting = p)
+    settle: (p) => void (waiting2 = p)
   };
   const go = root.dispatchEvent(new CustomEvent(AVAILABILITY_EVENT, { bubbles: true, cancelable: true, detail }));
   const label2 = (ks) => ks.map((k) => st.set.columns.find((c) => c.key === k)?.label ?? k).join(", ");
@@ -92041,12 +92205,12 @@ async function request2(root, person, keys, answer2, { stroke = false } = {}) {
     say12(root, why);
   };
   if (!go) return refuse3(s2.availabilityNotSaved(label2(changing)));
-  if (waiting) {
+  if (waiting2) {
     for (const k of changing) st.saving.add(cellKey(person, k));
     paintKeys(root, person, changing);
     let result;
     try {
-      result = await waiting;
+      result = await waiting2;
     } catch {
       result = false;
     }
@@ -96475,7 +96639,7 @@ function fileOf(root, path) {
   const section = [...root.querySelectorAll(".kp-diffview__file")].find((node) => node.getAttribute("data-kp-diff-path") === path);
   return file && section instanceof HTMLElement ? { file, section } : null;
 }
-function toggleFile(root, path, open4, announce7 = true) {
+function toggleFile(root, path, open4, announce8 = true) {
   const found = fileOf(root, path);
   if (!found) return;
   const st = stateOf11(root);
@@ -96490,7 +96654,7 @@ function toggleFile(root, path, open4, announce7 = true) {
   if (open4 && body.childElementCount === 0) fillBody(root, st, file, body);
   body.hidden = !open4;
   syncBar(root);
-  if (announce7) root.dispatchEvent(new CustomEvent(DIFF_TOGGLE_EVENT, { bubbles: true, detail: { path, open: open4 } }));
+  if (announce8) root.dispatchEvent(new CustomEvent(DIFF_TOGGLE_EVENT, { bubbles: true, detail: { path, open: open4 } }));
 }
 async function copyPath(root, button6) {
   const path = button6.closest(".kp-diffview__file")?.getAttribute("data-kp-diff-path") ?? "";
@@ -99533,15 +99697,15 @@ init_strings();
 function diagnose(stylesheet, script, strings = getStrings()) {
   const onlyInStylesheet = stylesheet.themes.filter((name) => !script.themes.includes(name));
   const onlyInScript = script.themes.filter((name) => !stylesheet.themes.includes(name));
-  const report4 = (status, verdict) => ({ status, stylesheet, script, onlyInStylesheet, onlyInScript, verdict });
-  if (stylesheet.version === null) return report4("no-version", strings.diagnosticsNoVersion);
+  const report3 = (status, verdict) => ({ status, stylesheet, script, onlyInStylesheet, onlyInScript, verdict });
+  if (stylesheet.version === null) return report3("no-version", strings.diagnosticsNoVersion);
   const order = compareVersions(stylesheet.version, script.version ?? "");
   if (order === null || order === 0) {
-    if (onlyInStylesheet.length === 0 && onlyInScript.length === 0) return report4("match", strings.diagnosticsMatch);
-    return report4("themes-differ", strings.diagnosticsThemesDiffer(stylesheet.version));
+    if (onlyInStylesheet.length === 0 && onlyInScript.length === 0) return report3("match", strings.diagnosticsMatch);
+    return report3("themes-differ", strings.diagnosticsThemesDiffer(stylesheet.version));
   }
-  if (order < 0) return report4("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
-  return report4("script-behind", strings.diagnosticsScriptBehind(stylesheet.version, script.version ?? ""));
+  if (order < 0) return report3("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
+  return report3("script-behind", strings.diagnosticsScriptBehind(stylesheet.version, script.version ?? ""));
 }
 function diagnostics({ root, strings } = {}) {
   return diagnose(stylesheetSide({ root }), scriptSide(), strings ?? getStrings());
@@ -99576,38 +99740,38 @@ function tableHead(s2) {
   thead.append(head);
   return thead;
 }
-function tableBody(s2, report4) {
+function tableBody(s2, report3) {
   const unknown = s2.diagnosticsUnknownVersion;
   const tbody = document.createElement("tbody");
   tbody.append(
-    tableRow(s2.diagnosticsVersion, report4.stylesheet.version ?? unknown, report4.script.version ?? unknown, "version"),
-    tableRow(s2.diagnosticsThemes, report4.stylesheet.themes.join(" "), report4.script.themes.join(" "), "themes"),
+    tableRow(s2.diagnosticsVersion, report3.stylesheet.version ?? unknown, report3.script.version ?? unknown, "version"),
+    tableRow(s2.diagnosticsThemes, report3.stylesheet.themes.join(" "), report3.script.themes.join(" "), "themes"),
     tableRow(
       s2.diagnosticsEffects,
       "\u2014",
-      report4.script.unknownEffects?.length ? report4.script.unknownEffects.join(" ") : s2.diagnosticsEffectsNone,
+      report3.script.unknownEffects?.length ? report3.script.unknownEffects.join(" ") : s2.diagnosticsEffectsNone,
       "effects"
     )
   );
   return tbody;
 }
-function verdictLine(report4) {
+function verdictLine(report3) {
   const verdict = document.createElement("p");
-  verdict.className = report4.status === "match" ? "kp-alert kp-alert--success" : "kp-alert kp-alert--warning";
+  verdict.className = report3.status === "match" ? "kp-alert kp-alert--success" : "kp-alert kp-alert--warning";
   verdict.dataset.kpDiagnostic = "verdict";
-  verdict.dataset.kpStatus = report4.status;
-  verdict.textContent = report4.verdict;
+  verdict.dataset.kpStatus = report3.status;
+  verdict.textContent = report3.verdict;
   return verdict;
 }
-function detailList(s2, report4) {
+function detailList(s2, report3) {
   const detail = document.createElement("ul");
   detail.dataset.kpDiagnostic = "detail";
   for (
     const [names, sentence2] of
     /** @type {[string[], (n: string) => string][]} */
     [
-      [report4.onlyInStylesheet, s2.diagnosticsOnlyInStylesheet],
-      [report4.onlyInScript, s2.diagnosticsOnlyInScript]
+      [report3.onlyInStylesheet, s2.diagnosticsOnlyInStylesheet],
+      [report3.onlyInScript, s2.diagnosticsOnlyInScript]
     ]
   ) {
     if (names.length === 0) continue;
@@ -99619,14 +99783,14 @@ function detailList(s2, report4) {
 }
 function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
   const s2 = strings ?? getStrings();
-  const report4 = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
+  const report3 = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
   const heading = document.createElement("h2");
   heading.textContent = s2.diagnosticsHeading;
   const table = document.createElement("table");
   table.className = "kp-table";
-  table.append(tableHead(s2), tableBody(s2, report4));
-  target.replaceChildren(heading, verdictLine(report4), table, detailList(s2, report4));
-  return report4;
+  table.append(tableHead(s2), tableBody(s2, report3));
+  target.replaceChildren(heading, verdictLine(report3), table, detailList(s2, report3));
+  return report3;
 }
 
 // kp-themes-entry.js
@@ -99791,7 +99955,7 @@ function ensureRegister(theme, { pattern = REGISTER_PATTERN, doc = document } = 
 }
 
 // js/lazy-register/controller.js
-var report3 = (error) => console.error(error instanceof Error ? error.message : error);
+var report2 = (error) => console.error(error instanceof Error ? error.message : error);
 var LazyRegisters = class extends Controller {
   /**
    * @param {HTMLElement} host the element that wears the theme (default: theme-core's root)
@@ -99799,8 +99963,8 @@ var LazyRegisters = class extends Controller {
    */
   constructor(host, options = {}) {
     super(host, options);
-    const { pattern = REGISTER_PATTERN, hold: hold2 = true, prune = false } = options;
-    this.hold = hold2;
+    const { pattern = REGISTER_PATTERN, hold: hold3 = true, prune = false } = options;
+    this.hold = hold3;
     this.prune = prune;
     this.doc = host.ownerDocument;
     this.loadOptions = { pattern, doc: this.doc };
@@ -99809,7 +99973,7 @@ var LazyRegisters = class extends Controller {
     this.listen(this.host, BEFORE_THEME_EVENT, (e) => this.onBefore(e));
     this.own(onThemeChange((theme, { previous }) => this.onChange(theme, previous), { root: this.host }));
     this.own(() => this.dropHeld());
-    ensureRegister(currentTheme({ root: this.host }), this.loadOptions).catch(report3);
+    ensureRegister(currentTheme({ root: this.host }), this.loadOptions).catch(report2);
   }
   /**
    * Before a change: when the new register is not here yet, refuse the
@@ -99845,11 +100009,11 @@ var LazyRegisters = class extends Controller {
   /** The register failed: the held change is dropped and the error reported. @param {Element} element @param {string} theme @param {unknown} error */
   giveUp(element, theme, error) {
     if (element.getAttribute(PENDING_THEME_ATTRIBUTE) === theme) element.removeAttribute(PENDING_THEME_ATTRIBUTE);
-    report3(error);
+    report2(error);
   }
   /** A theme was worn: fetch its register, and prune the previous one when asked to. @param {string} theme @param {string | null | undefined} previous */
   onChange(theme, previous) {
-    ensureRegister(theme, this.loadOptions).catch(report3);
+    ensureRegister(theme, this.loadOptions).catch(report2);
     if (!this.prune || !previous || previous === theme) return;
     const link2 = registerLink(previous, this.loadOptions);
     if (!link2) return;
@@ -99863,12 +100027,12 @@ var LazyRegisters = class extends Controller {
     for (const el16 of [this.host, ...this.host.querySelectorAll(`[${PENDING_THEME_ATTRIBUTE}]`)]) el16.removeAttribute(PENDING_THEME_ATTRIBUTE);
   }
 };
-function followRegisters({ pattern, hold: hold2, prune, root }) {
+function followRegisters({ pattern, hold: hold3, prune, root }) {
   const host = (
     /** @type {HTMLElement} */
     root ?? document.documentElement
   );
-  const made6 = controllerOf(host, LazyRegisters) ? void 0 : attachOne(host, LazyRegisters, { pattern, hold: hold2, prune });
+  const made6 = controllerOf(host, LazyRegisters) ? void 0 : attachOne(host, LazyRegisters, { pattern, hold: hold3, prune });
   return () => made6?.destroy();
 }
 

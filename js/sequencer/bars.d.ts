@@ -8,6 +8,12 @@ export declare function syncBars(c: SequencerModel, list: SequencerItem[]): void
 export declare function syncJoins(c: SequencerModel, list: SequencerItem[]): void;
 /** Axis ticks and the rules under them. @param {SequencerModel} c */
 export declare function syncTicks(c: SequencerModel): void;
+export type NameSize = {
+    high: number;
+    scroll: number;
+    client: number;
+    need: number;
+};
 /**
  * A name that does not fit its bar (wrapped on at most the lines the bar is tall for) stands outside it: after it when the row has
  * room, else before it, else it is left to the bar's name (its label). Never cut with an ellipsis. @param {SequencerModel} c

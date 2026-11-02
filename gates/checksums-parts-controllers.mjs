@@ -48,6 +48,7 @@ export const CONTROLLER_PART_FILES = [
     'js/autosize/counter.js',
     'js/autosize/draft.js',
     'js/autosize/fit.js',
+    'js/autosize/schedule.js',
     'js/autosize/state.js',
     'js/autosize/status.js',
     'js/bullets/controller.js',
