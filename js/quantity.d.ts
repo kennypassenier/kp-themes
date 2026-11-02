@@ -11,7 +11,7 @@ export type QuantityRules = {
 /** @typedef {{ min: number, max: number, step: number, decimals: number, locale: string }} QuantityRules */
 /**
  * Set the value without firing the event (a page that moves it because
- * something else moved), kept inside the bounds and on a step.
+ * something else moved), kept inside the bounds and on a step. A focused field keeps the text being typed.
  * @param {Element} root @param {number} value
  */
 export declare function setQuantity(root: Element, value: number): void;

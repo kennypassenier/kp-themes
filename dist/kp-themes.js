@@ -405,7 +405,7 @@ var init_read = __esm({
       /** @type {HTMLInputElement | null} */
       root.querySelector(".kp-quantity__input")
     );
-    isDisabled = (root) => root.hasAttribute("data-kp-quantity-disabled") || (inputOf(root)?.disabled ?? false);
+    isDisabled = (root) => root.hasAttribute("data-kp-quantity-disabled");
     unitFor = (root, value) => {
       const one = root.getAttribute("data-kp-quantity-unit-one");
       return value === 1 && one ? one : root.getAttribute("data-kp-quantity-unit") ?? "";
@@ -3769,11 +3769,11 @@ function writeButtons(root, rules, value, disabled2) {
     else b.removeAttribute("aria-disabled");
   }
 }
-function paint(root, value) {
+function paint(root, value, keepText = false) {
   const rules = rulesOf(root);
   const input = build(root);
   const text = formatQuantity(value, rules);
-  if (document.activeElement !== input || input.value !== text) input.value = text;
+  if (!keepText && input.value !== text) input.value = text;
   root.setAttribute("data-kp-quantity-value", String(value));
   const unit2 = unitFor(root, value);
   writeSpinbutton(input, rules, value, text, unit2);
@@ -3782,7 +3782,11 @@ function paint(root, value) {
   writeWidth(root, rules, value);
   const disabled2 = isDisabled(root);
   input.disabled = disabled2;
-  writeButtons(root, rules, value, disabled2);
+  const typed = keepText ? parseQuantity(input.value) : NaN;
+  writeButtons(root, rules, Number.isFinite(typed) ? settleQuantity(typed, rules) : value, disabled2);
+}
+function markButtons(root, value) {
+  writeButtons(root, rulesOf(root), settleQuantity(value, rulesOf(root)), isDisabled(root));
 }
 function change(root, wanted, source) {
   if (isDisabled(root)) return false;
@@ -3843,6 +3847,7 @@ var init_controller2 = __esm({
         ));
         this.listen(root, "input", () => this.typing());
         this.listen(root, "focusout", () => this.commit());
+        this.observe(new MutationObserver(() => paint(root, getQuantity(root), document.activeElement === inputOf(root)))).observe(root, { attributes: true, attributeFilter: ["data-kp-quantity-disabled"] });
         for (const type of RELEASE_EVENTS) this.listen(root, type, () => this.stop(), true);
         this.own(() => this.stop());
       }
@@ -3942,7 +3947,10 @@ var init_controller2 = __esm({
         if (!input) return;
         const read2 = parseQuantity(input.value);
         if (input.value.trim() === "" || !Number.isFinite(read2)) input.setAttribute("aria-invalid", "true");
-        else input.removeAttribute("aria-invalid");
+        else {
+          input.removeAttribute("aria-invalid");
+          markButtons(this.host, read2);
+        }
       }
       /** Take what is typed: change to it, or put the last value back. */
       commit() {
@@ -3974,7 +3982,7 @@ __export(quantity_exports, {
 });
 function setQuantity(root, value) {
   if (!(root instanceof HTMLElement)) return;
-  paint(root, settleQuantity(value, rulesOf(root)));
+  paint(root, settleQuantity(value, rulesOf(root)), document.activeElement === inputOf(root));
 }
 function attachQuantities(scope = document) {
   return attachAll(scope, QUANTITY, QuantityControl);
@@ -3987,6 +3995,7 @@ var init_quantity = __esm({
     init_controller2();
     init_math();
     init_paint();
+    init_read();
     init_values();
     init_math();
     init_read();
