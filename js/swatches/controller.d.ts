@@ -28,5 +28,5 @@ export declare class SwatchesControl extends Controller {
     /** The swatches on the first row as drawn (the grid may wrap sooner than its columns on a narrow picker). @param {HTMLElement[]} buttons */
     columns(buttons: HTMLElement[]): number;
     /** A person picked a swatch. @param {string} value @param {'pointer' | 'keyboard'} source */
-    pick(value: string, source: 'pointer' | 'keyboard'): void;
+    pick(value: string, source: 'pointer' | 'keyboard'): undefined;
 }

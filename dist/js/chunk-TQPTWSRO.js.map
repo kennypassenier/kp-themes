@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../js/live-say.js"],
+  "sourcesContent": ["// Say a sentence in a polite status line so a screen reader hears it again even when it is the same as the last one [dlfix-1102]:\n// the line is emptied first and given its words on the next frame (a text swapped for the same text is no change to a reader).\n\n/** @param {HTMLElement} live @param {string} text */\nexport function say(live, text) {\n    live.textContent = '';\n    requestAnimationFrame(() => (live.textContent = text));\n}\n"],
+  "mappings": "AAIO,SAASA,EAAIC,EAAMC,EAAM,CAC5BD,EAAK,YAAc,GACnB,sBAAsB,IAAOA,EAAK,YAAcC,CAAK,CACzD",
+  "names": ["say", "live", "text"]
+}

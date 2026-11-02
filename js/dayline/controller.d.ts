@@ -30,6 +30,8 @@ export declare class DaylineControl extends Controller {
     st: import('./states.js').StateParts;
     /** Whether the person has scrolled or worked in the box: from then on it is never scrolled for them. */
     touched: boolean;
+    /** The sentence the status line was given last, so a finished move does not say its final step a second time. */
+    lastSaid: string;
     clock: () => number;
     walk: KeyWalk;
     /** @param {HTMLElement} host @param {{ now?: () => number }} [options] */
@@ -56,8 +58,13 @@ export declare class DaylineControl extends Controller {
     setItems(items: readonly DaylineItem[], allDay: readonly DaylineItem[] | undefined): void;
     /** @param {DaylineState} state @param {string} words @param {string} text */
     setState(state: DaylineState, words: string, text: string): void;
-    /** Draw the grid, the blocks, the strip and the now line; the focused handle keeps the focus. */
+    /** Draw the grid, the blocks, the strip and the now line; the focused handle or body button keeps the focus, without scrolling. */
     draw(): void;
+    /** The block part that holds the focus (its handle or its body button), to give it back after a draw. @returns {{ id: string, part: string } | null} */
+    focusedPart(): {
+        id: string;
+        part: string;
+    } | null;
     paintStates(): void;
     /** The clock's minute of the day, from the frozen attribute or the clock. */
     nowClock(): number;

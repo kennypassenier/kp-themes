@@ -35,9 +35,9 @@ the selectors and their order are identical, which is what
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
 | `dist/kp-themes.css` | 4439.7 kB | 2355.2 kB | 47% |
 | `dist/kp-themes-base.css` | 1533.4 kB | 765.4 kB | 50% |
-| `dist/kp-themes.js` | 3975.9 kB | 2106.2 kB | 47% |
+| `dist/kp-themes.js` | 3979.1 kB | 2107.8 kB | 47% |
 
-The loose stylesheets together weigh **4492.8 kB** authored and
+The loose stylesheets together weigh **4492.9 kB** authored and
 **2387.1 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
@@ -90,7 +90,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/date-nav.js` | 14 | 185.3 kB |
 | `dist/js/dated-options.js` | 30 | 293.6 kB |
 | `dist/js/datepicker.js` | 10 | 139.8 kB |
-| `dist/js/dayline.js` | 9 | 103.2 kB |
+| `dist/js/dayline.js` | 10 | 103.9 kB |
 | `dist/js/deplist.js` | 22 | 229.9 kB |
 | `dist/js/diagnostics.js` | 7 | 120.0 kB |
 | `dist/js/diff.js` | 20 | 222.5 kB |
@@ -165,7 +165,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/selection-bar.js` | 9 | 110.8 kB |
 | `dist/js/sentence.js` | 22 | 180.5 kB |
 | `dist/js/sequencer.js` | 8 | 119.8 kB |
-| `dist/js/settled.js` | 5 | 79.8 kB |
+| `dist/js/settled.js` | 6 | 80.8 kB |
 | `dist/js/shortcuts.js` | 5 | 89.6 kB |
 | `dist/js/sidenav.js` | 9 | 160.1 kB |
 | `dist/js/slider.js` | 7 | 99.7 kB |
@@ -178,7 +178,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/strings-nl.js` | 3 | 78.9 kB |
 | `dist/js/structure.js` | 9 | 139.5 kB |
 | `dist/js/swatches.js` | 6 | 81.6 kB |
-| `dist/js/swipe.js` | 5 | 82.2 kB |
+| `dist/js/swipe.js` | 6 | 82.6 kB |
 | `dist/js/tabbar.js` | 5 | 86.4 kB |
 | `dist/js/tables.js` | 5 | 79.2 kB |
 | `dist/js/task-row.js` | 14 | 138.5 kB |
@@ -206,8 +206,8 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/weekdays.js` | 21 | 171.3 kB |
 | `dist/js/wheel.js` | 7 | 99.2 kB |
 | `dist/js/wizard.js` | 7 | 93.8 kB |
-| `dist/js/index.js` | 181 | 2035.8 kB |
-| the whole folder | 350 | 2165.8 kB |
+| `dist/js/index.js` | 182 | 2037.5 kB |
+| the whole folder | 351 | 2167.6 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

@@ -5,8 +5,8 @@
  * left, cut to the plate so they never show through the row. Armed past the threshold, the words go bold and the plate's inner
  * edge takes a rule in the words' ink. The row's own frame stays put. The slide home runs on the theme's own motion
  * (--fx-duration, --fx-ease: formal's eased glide, brutalism's hard step, titanium's milled curve), none under reduced motion.
- * On a coarse pointer the rows leave the vertical move to the page's scroll. Tokens only. */
-    @media (pointer: coarse) {
+ * Under any coarse pointer (a touch laptop included) the rows leave the vertical move to the page's scroll. Tokens only. */
+    @media (any-pointer: coarse) {
         [data-kp-swipe]:not([data-kp-swipe='off']) > * {
             touch-action: pan-y;
         }

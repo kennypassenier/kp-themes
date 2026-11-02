@@ -311,6 +311,11 @@
             "why": "attribute options that are read again when the attribute changes [live-options-1019]"
         },
         {
+            "path": "js/live-say.js",
+            "tags": ["@component:foundations"],
+            "why": "the polite status line said again, cleared first [dlfix-1102]"
+        },
+        {
             "path": "js/footprint.js",
             "tags": ["@component:data"],
             "why": "a data component holds its loaded height while a state shows [t56-statefix-1018]"

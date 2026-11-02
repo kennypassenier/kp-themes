@@ -17121,13 +17121,13 @@
     /* A source beside the day [parts-1102 r2]: grabbed by any pointer, so no text selection or callout gets in the way; lifted (held
      * or carried), it stays in its list quiet under the theme's ring, and its copy follows the pointer in the top layer on the
      * theme's card with the ring and the theme's offset shadow, a little see-through so the hour under it still reads. */
-    [data-kp-dayline-movable] {
+    [data-kp-dayline-source] {
         -webkit-touch-callout: none;
         user-select: none;
         cursor: grab;
     }
 
-    [data-kp-dayline-movable][data-kp-lifted] {
+    [data-kp-dayline-source][data-kp-lifted] {
         opacity: 0.55;
         outline: 2px solid var(--ring);
         outline-offset: -2px;
@@ -17165,8 +17165,8 @@
  * left, cut to the plate so they never show through the row. Armed past the threshold, the words go bold and the plate's inner
  * edge takes a rule in the words' ink. The row's own frame stays put. The slide home runs on the theme's own motion
  * (--fx-duration, --fx-ease: formal's eased glide, brutalism's hard step, titanium's milled curve), none under reduced motion.
- * On a coarse pointer the rows leave the vertical move to the page's scroll. Tokens only. */
-    @media (pointer: coarse) {
+ * Under any coarse pointer (a touch laptop included) the rows leave the vertical move to the page's scroll. Tokens only. */
+    @media (any-pointer: coarse) {
         [data-kp-swipe]:not([data-kp-swipe='off']) > * {
             touch-action: pan-y;
         }

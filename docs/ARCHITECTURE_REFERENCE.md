@@ -74,6 +74,8 @@ js/feed.js           the activity feed, day by  │
                      day, who did what and when │
 js/live-options.js   an option read again when  │
                      its attribute changes      │
+js/live-say.js       a status line said again,  │
+                     emptied first              │
 js/motion.js         closing, and easing a size │
 js/update.js         a value updated in place,  │
                      the theme's way            │

@@ -74,6 +74,7 @@ export const JS_FILES = [
     'js/footprint.js',
     'js/controller.js',
     'js/live-options.js',
+    'js/live-say.js',
     'js/problems.js',
     'js/flash.js',
     'js/reason.js',

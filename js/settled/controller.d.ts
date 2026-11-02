@@ -12,6 +12,8 @@ export declare class SettledList extends Controller {
     connect(): void;
     /** @param {MutationRecord[]} records */
     onChange(records: MutationRecord[]): void;
+    /** Rows put into the list already carrying the attribute (the page drew the list again): dressed, not announced. @param {NodeList} added */
+    dressAdded(added: NodeList): void;
     /** Say the row settled, and tell the page. @param {HTMLElement} row @param {string} word */
     said(row: HTMLElement, word: string): void;
     /** The polite line, made once beside the list. */

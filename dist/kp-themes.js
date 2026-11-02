@@ -10110,8 +10110,8 @@ var init_sync = __esm({
       syncTargets() {
         for (const target of targetsOf(this.host)) {
           this.guardTarget(target);
-          const holding2 = siblingsOf(this.host).some(open);
-          if (holding2) this.hold(target);
+          const holding = siblingsOf(this.host).some(open);
+          if (holding) this.hold(target);
           else if (target.getAttribute("data-kp-ack-held") !== null) this.release(target);
         }
       }
@@ -23152,20 +23152,20 @@ function trendAxis(points, { now, step = 6e5, timeZone = CHART_TIME_ZONE, time, 
   if (points.length < 2) return [BLANK, BLANK];
   const print = time ?? numericTime(timeZone);
   const s2 = getStrings();
-  const say17 = words3 ?? { now: s2.chartNow, today: s2.chartToday, yesterday: s2.chartYesterday };
+  const say18 = words3 ?? { now: s2.chartNow, today: s2.chartToday, yesterday: s2.chartYesterday };
   const w = wallTime(now, timeZone);
   const today = dayKeyOf(w);
   const yesterday = dayKeyOf(wallTime(Date.UTC(w.year, w.month - 1, w.day - 1, 12), "UTC"));
   const dayWord2 = (ms) => {
     const day2 = dayKeyOf(wallTime(ms, timeZone));
-    if (day2 === today) return say17.today;
-    if (day2 === yesterday) return say17.yesterday;
+    if (day2 === today) return say18.today;
+    if (day2 === yesterday) return say18.yesterday;
     return print(ms, "tick", { stride: DAY });
   };
   const first = points[0][0];
   const last = points[points.length - 1][0];
   const left = `${print(first, "clock", {})} ${dayWord2(first)}`;
-  const right = now - last <= 2 * step ? say17.now : dayKeyOf(wallTime(last, timeZone)) === today ? print(last, "clock", {}) : `${print(last, "clock", {})} ${dayWord2(last)}`;
+  const right = now - last <= 2 * step ? say18.now : dayKeyOf(wallTime(last, timeZone)) === today ? print(last, "clock", {}) : `${print(last, "clock", {})} ${dayWord2(last)}`;
   return [left, right];
 }
 function tickStride(span6, most) {
@@ -26800,7 +26800,7 @@ var init_values16 = __esm({
     INNER = "inner";
     ANCHOR_CLASS = "kp-context-menu";
     NO_CHILD = "input, textarea, select, img, ul, ol, dl, table, thead, tbody, tfoot, tr, [data-kp-reorder]";
-    OWN_PRESS = 'input, textarea, select, [contenteditable=""], [contenteditable="true"], [data-kp-handle], [data-kp-dayline-movable], .kp-dayline__item';
+    OWN_PRESS = 'input, textarea, select, [contenteditable=""], [contenteditable="true"], [data-kp-handle], [data-kp-dayline-source], .kp-dayline__item';
     PRESS_SLOP_PX = 10;
     KEY_ECHO_MS = 400;
     KEY_INSET_PX = 16;
@@ -29346,6 +29346,17 @@ var init_constants17 = __esm({
   }
 });
 
+// js/live-say.js
+function say3(live4, text) {
+  live4.textContent = "";
+  requestAnimationFrame(() => live4.textContent = text);
+}
+var init_live_say = __esm({
+  "js/live-say.js"() {
+    "use strict";
+  }
+});
+
 // js/dayline/edge-scroll.js
 function edgeScroller(box, onScroll) {
   const win = box.ownerDocument.defaultView;
@@ -29387,28 +29398,47 @@ var init_edge_scroll = __esm({
 });
 
 // js/dayline/press.js
-function holdScroll(el16) {
-  const stop = (e) => {
-    if (holding && e.cancelable) e.preventDefault();
-  };
-  el16.addEventListener("touchmove", stop, { passive: false });
-  return () => el16.removeEventListener("touchmove", stop);
+function holdsOf(doc) {
+  let set = HOLDS.get(doc);
+  if (!set) HOLDS.set(doc, set = /* @__PURE__ */ new Set());
+  return set;
 }
-function swallowClick(doc) {
+function holdScroll(doc) {
+  const stop = (e) => {
+    if (holdsOf(doc).size && e.cancelable) e.preventDefault();
+  };
+  doc.addEventListener("touchmove", stop, { passive: false });
+  return () => doc.removeEventListener("touchmove", stop);
+}
+function swallowClick(doc, afterUp = false) {
   const win = doc.defaultView;
   if (!win) return;
+  let timer = (
+    /** @type {ReturnType<typeof setTimeout> | undefined} */
+    void 0
+  );
   const eat = (e) => {
     e.preventDefault();
     e.stopPropagation();
     done();
   };
   const done = () => {
+    clearTimeout(timer);
     win.removeEventListener("click", eat, true);
     win.removeEventListener("pointerdown", done, true);
+    win.removeEventListener("pointerup", arm, true);
+    win.removeEventListener("pointercancel", done, true);
   };
-  win.addEventListener("click", eat, true);
+  const arm = () => {
+    win.removeEventListener("pointerup", arm, true);
+    win.removeEventListener("pointercancel", done, true);
+    win.addEventListener("click", eat, true);
+    timer = setTimeout(done, 400);
+  };
   win.addEventListener("pointerdown", done, true);
-  setTimeout(done, 400);
+  if (!afterUp) return void arm();
+  win.addEventListener("pointerup", arm, true);
+  win.addEventListener("pointercancel", done, true);
 }
 function followPress(down, h2) {
   const doc = (
@@ -29417,6 +29447,8 @@ function followPress(down, h2) {
     down.target.ownerDocument
   );
   const finger = down.pointerType === "touch";
+  const token = {};
+  const hold3 = (on) => void (on ? holdsOf(doc).add(token) : holdsOf(doc).delete(token));
   let phase = "pending";
   let timer = (
     /** @type {ReturnType<typeof setTimeout> | undefined} */
@@ -29424,7 +29456,7 @@ function followPress(down, h2) {
   );
   const off = () => {
     clearTimeout(timer);
-    holding = false;
+    hold3(false);
     doc.removeEventListener("pointermove", onMove2);
     doc.removeEventListener("pointerup", onUp2);
     doc.removeEventListener("pointercancel", onCancel3);
@@ -29434,7 +29466,7 @@ function followPress(down, h2) {
   const begin2 = (e) => {
     if (!h2.start(e)) return void off();
     phase = "dragging";
-    holding = finger;
+    hold3(finger);
     try {
       h2.capture.setPointerCapture(down.pointerId);
     } catch {
@@ -29470,7 +29502,7 @@ function followPress(down, h2) {
     e.stopPropagation();
     off();
     h2.end("back", null);
-    swallowClick(doc);
+    swallowClick(doc, true);
   };
   const onMenu = (e) => {
     if (!finger) return;
@@ -29486,17 +29518,17 @@ function followPress(down, h2) {
     timer = setTimeout(() => {
       if (phase !== "pending") return;
       phase = "lifted";
-      holding = true;
+      hold3(true);
       h2.lift?.();
     }, h2.holdMs);
   }
 }
-var holding;
+var HOLDS;
 var init_press = __esm({
   "js/dayline/press.js"() {
     "use strict";
     init_constants17();
-    holding = false;
+    HOLDS = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -29543,15 +29575,6 @@ var init_ghost2 = __esm({
 });
 
 // js/dayline/drop.js
-function markSources(host) {
-  for (const source of host.ownerDocument.querySelectorAll(`[${SOURCE_ATTRIBUTE}]`)) {
-    source.setAttribute("data-kp-dayline-movable", "");
-    if (!HELD.has(source)) {
-      HELD.add(source);
-      holdScroll(source);
-    }
-  }
-}
 function rowAt(y, d) {
   const box = d.grid.getBoundingClientRect();
   const share = (y - box.top) / Math.max(1, box.height);
@@ -29640,7 +29663,8 @@ function wireDrop(d) {
       dragSource(e, source, days);
     };
     doc.addEventListener("pointerdown", press2);
-    shared = { days, off: () => doc.removeEventListener("pointerdown", press2) };
+    const unhold = holdScroll(doc);
+    shared = { days, off: () => (doc.removeEventListener("pointerdown", press2), unhold()) };
     PER_DOCUMENT.set(doc, shared);
   }
   shared.days.add(d);
@@ -29652,7 +29676,7 @@ function wireDrop(d) {
     PER_DOCUMENT.delete(doc);
   };
 }
-var PER_DOCUMENT, HELD, takes;
+var PER_DOCUMENT, takes;
 var init_drop = __esm({
   "js/dayline/drop.js"() {
     "use strict";
@@ -29661,7 +29685,6 @@ var init_drop = __esm({
     init_press();
     init_ghost2();
     PER_DOCUMENT = /* @__PURE__ */ new WeakMap();
-    HELD = /* @__PURE__ */ new WeakSet();
     takes = (source, d) => {
       const only = source.getAttribute(SOURCE_FOR_ATTRIBUTE);
       const state12 = d.host.dataset.kpState;
@@ -29704,8 +29727,8 @@ function placeItems2(items2, { startHour, step, rowsTotal }) {
     const clock4 = toMinutes(item.start);
     if (clock4 === null || item.allDay) continue;
     const at = dayMinute(clock4, startHour);
-    const row2 = Math.round(at / step);
-    if (row2 >= rowsTotal) continue;
+    if (at / step >= rowsTotal) continue;
+    const row2 = Math.min(rowsTotal - 1, Math.round(at / step));
     const minutes = Math.max(1, Math.round(item.minutes ?? step));
     const rows2 = Math.min(rowsTotal - row2, Math.max(minRows, Math.round(minutes / step)));
     placed.push({ item, at, minutes, row: row2, rows: rows2, lane: 0, lanes: 1 });
@@ -29770,7 +29793,7 @@ function grabbed(target, host) {
 }
 function dragFrom(down, host) {
   const hit = grabbed(down.target, host);
-  if (!hit || down.pointerType === "mouse" && down.button !== 0) return;
+  if (!hit || !down.isPrimary || down.pointerType === "mouse" && down.button !== 0) return;
   if (hit.onHandle) down.preventDefault();
   const { p, block } = hit;
   const rowPx = host.grid.getBoundingClientRect().height / host.rowsTotal();
@@ -30035,13 +30058,13 @@ var init_controller19 = __esm({
   "js/dayline/controller.js"() {
     "use strict";
     init_controller();
+    init_live_say();
     init_live_options();
     init_strings();
     init_constants17();
     init_drop();
     init_layout2();
     init_move();
-    init_press();
     init_render();
     init_states();
     DaylineControl = class extends Controller {
@@ -30054,6 +30077,7 @@ var init_controller19 = __esm({
         this.placed = /* @__PURE__ */ new Map();
         this.st = { host, frame: this.parts.frame, scroll: this.parts.scroll, plate: this.parts.plate, state: "ready", words: "", text: "", drawn: false, busy: null };
         this.touched = false;
+        this.lastSaid = "";
         this.clock = typeof options.now === "function" ? options.now : () => Date.now();
         this.walk = new KeyWalk(this.mover());
       }
@@ -30069,7 +30093,6 @@ var init_controller19 = __esm({
           e,
           this.mover()
         ));
-        this.own(holdScroll(p.grid));
         this.listen(p.grid, "keydown", (e) => this.walk.onKey(
           /** @type {KeyboardEvent} */
           e
@@ -30145,13 +30168,13 @@ var init_controller19 = __esm({
         this.host.dataset.kpState = state12;
         this.paintStates();
       }
-      /** Draw the grid, the blocks, the strip and the now line; the focused handle keeps the focus. */
+      /** Draw the grid, the blocks, the strip and the now line; the focused handle or body button keeps the focus, without scrolling. */
       draw() {
         const g = this.grid();
         const p = this.parts;
         const doc = this.host.ownerDocument;
         const s2 = getStrings();
-        const focused2 = doc.activeElement?.closest(".kp-dayline__handle")?.closest("[data-kp-dayline-id]")?.getAttribute("data-kp-dayline-id");
+        const focused2 = this.focusedPart();
         p.grid.style.setProperty("--kp-dayline-rows", String(g.rowsTotal));
         p.grid.style.setProperty("--kp-dayline-per-hour", String(g.perHour));
         const placed = placeItems2(this.items, g);
@@ -30160,12 +30183,18 @@ var init_controller19 = __esm({
         p.allDay.hidden = this.allDay === null;
         p.allDayName.textContent = s2.daylineAllDay;
         p.allDayList.replaceChildren(...allDayItems(doc, this.allDay ?? [], s2));
-        markSources(this.host);
         this.paintNow();
         this.paintStates();
-        if (focused2) p.grid.querySelector(`[data-kp-dayline-id="${CSS.escape(focused2)}"] .kp-dayline__handle`)?.focus();
+        if (focused2) p.grid.querySelector(`[data-kp-dayline-id="${CSS.escape(focused2.id)}"] .${focused2.part}`)?.focus({ preventScroll: true });
         this.reveal();
         this.st.drawn = true;
+      }
+      /** The block part that holds the focus (its handle or its body button), to give it back after a draw. @returns {{ id: string, part: string } | null} */
+      focusedPart() {
+        const active = this.host.ownerDocument.activeElement;
+        const id = active && this.parts.grid.contains(active) ? active.closest("[data-kp-dayline-id]")?.getAttribute("data-kp-dayline-id") : null;
+        const part7 = ["kp-dayline__handle", "kp-dayline__body"].find((name) => active?.classList.contains(name));
+        return id && part7 ? { id, part: part7 } : null;
       }
       paintStates() {
         const s2 = getStrings();
@@ -30193,7 +30222,7 @@ var init_controller19 = __esm({
         scroll.scrollTop = Math.max(0, share * grid2.scrollHeight - scroll.clientHeight * NOW_VIEW_SHARE);
       }
       /** Stand a block on a row (a step of a move) and, when asked, say where. @param {Placed} p @param {number} row @param {boolean} say */
-      show(p, row2, say17) {
+      show(p, row2, say18) {
         const g = this.grid();
         const block = (
           /** @type {HTMLElement | null} */
@@ -30203,7 +30232,7 @@ var init_controller19 = __esm({
         block.style.gridRow = `${row2 + 1} / span ${p.rows}`;
         const time = block.querySelector(".kp-dayline__time");
         if (time) time.textContent = spanOf({ ...p, at: row2 * g.step }, g.startHour);
-        if (say17) this.say(getStrings().daylineMoved(p.item.label, clockAt(row2 * g.step, g.startHour)));
+        if (say18) this.say(getStrings().daylineMoved(p.item.label, clockAt(row2 * g.step, g.startHour)));
       }
       /** A finished move: the item takes its new start, the lanes are laid again, the event fires. @param {Placed} p @param {number} row @param {'pointer' | 'keyboard'} source */
       commit(p, row2, source) {
@@ -30213,7 +30242,8 @@ var init_controller19 = __esm({
         const item = this.items.find((one) => one.id === p.item.id);
         if (item) item.start = start;
         this.draw();
-        this.say(getStrings().daylineMoved(p.item.label, start));
+        const words3 = getStrings().daylineMoved(p.item.label, start);
+        if (this.lastSaid !== words3) this.say(words3);
         this.host.dispatchEvent(new CustomEvent(DAYLINE_CHANGE_EVENT, { bubbles: true, detail: { id: p.item.id, start, from, source } }));
       }
       /** @param {Placed} p */
@@ -30230,9 +30260,8 @@ var init_controller19 = __esm({
       }
       /** Write a sentence to the status line, cleared first so the same sentence twice is still heard. @param {string} text */
       say(text) {
-        const { status } = this.parts;
-        status.textContent = "";
-        requestAnimationFrame(() => status.textContent = text);
+        this.lastSaid = text;
+        say3(this.parts.status, text);
       }
     };
   }
@@ -30405,8 +30434,14 @@ function swallowNextClick(row2) {
     e.preventDefault();
     e.stopPropagation();
   };
+  const done = () => {
+    clearTimeout(timer);
+    row2.removeEventListener("click", stop, { capture: true });
+    row2.removeEventListener("pointerdown", done, { capture: true });
+  };
+  const timer = setTimeout(done, CLICK_GUARD_MS);
   row2.addEventListener("click", stop, { capture: true, once: true });
-  setTimeout(() => row2.removeEventListener("click", stop, { capture: true }), CLICK_GUARD_MS);
+  row2.addEventListener("pointerdown", done, { capture: true });
 }
 var sideOf, begin;
 var init_gesture = __esm({
@@ -30442,6 +30477,7 @@ var init_controller20 = __esm({
     init_strings();
     init_constants18();
     init_gesture();
+    init_live_say();
     keyOf4 = (row2) => row2.dataset.kpSwipeKey ?? row2.dataset.kpRowKey ?? row2.dataset.kpItem ?? row2.id;
     nameOf5 = (row2) => row2.dataset.kpLabel ?? row2.getAttribute("aria-label") ?? row2.textContent?.trim().slice(0, 80) ?? "";
     SwipeControl = class extends Controller {
@@ -30450,6 +30486,8 @@ var init_controller20 = __esm({
         registerOffset();
         let g = null;
         this.listen(list, "pointerdown", (e) => {
+          if (!/** @type {PointerEvent} */
+          e.isPrimary) return;
           g = this.start(
             /** @type {PointerEvent} */
             e
@@ -30495,8 +30533,11 @@ var init_controller20 = __esm({
       }
       /** @param {HTMLElement} row @param {SwipeAction} action */
       fire(row2, action) {
-        const live4 = this.host.ownerDocument.querySelector("[data-kp-swipe-status]") ?? this.makeLive();
-        live4.textContent = getStrings().swipeSaid(nameOf5(row2), action.label);
+        const live4 = (
+          /** @type {HTMLElement} */
+          this.host.ownerDocument.querySelector("[data-kp-swipe-status]") ?? this.makeLive()
+        );
+        say3(live4, getStrings().swipeSaid(nameOf5(row2), action.label));
         row2.dispatchEvent(new CustomEvent(SWIPE_EVENT, { bubbles: true, detail: { key: keyOf4(row2), action: action.key, row: row2 } }));
       }
       /** The one polite line the swipes are said in. */
@@ -30547,8 +30588,27 @@ var init_constants19 = __esm({
 });
 
 // js/settled/controller.js
+function handOffFocus(row2) {
+  if (!row2.contains(row2.ownerDocument.activeElement)) return;
+  const open4 = (el16) => el16 instanceof HTMLElement && !el16.hasAttribute(SETTLED_ATTRIBUTE) ? el16 : null;
+  let next2 = row2.nextElementSibling;
+  while (next2 && !open4(next2)) next2 = next2.nextElementSibling;
+  let prev = row2.previousElementSibling;
+  while (prev && !open4(prev)) prev = prev.previousElementSibling;
+  const target = open4(next2) ?? open4(prev) ?? row2.parentElement;
+  if (!target) return;
+  const inner = target.querySelector('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  const to = inner instanceof HTMLElement ? inner : target;
+  if (to === target && to.tabIndex < 0) to.tabIndex = -1;
+  to.focus({ preventScroll: true });
+}
 function dress2(row2, word) {
-  if (!row2.style.getPropertyValue("--kp-settled-height")) row2.style.setProperty("--kp-settled-height", `${row2.getBoundingClientRect().height}px`);
+  if (!Number.parseFloat(row2.style.getPropertyValue("--kp-settled-height"))) {
+    const height = row2.getBoundingClientRect().height;
+    if (height > 0) row2.style.setProperty("--kp-settled-height", `${height}px`);
+    else row2.style.removeProperty("--kp-settled-height");
+  }
+  handOffFocus(row2);
   row2.inert = true;
   let mark2 = (
     /** @type {HTMLElement | null} */
@@ -30571,6 +30631,7 @@ var init_controller21 = __esm({
   "js/settled/controller.js"() {
     "use strict";
     init_controller();
+    init_live_say();
     init_strings();
     init_constants19();
     nameOf6 = (row2) => row2.dataset.kpLabel ?? row2.getAttribute("aria-label") ?? row2.querySelector(".kp-checklist__label, .kp-task-row__title")?.textContent?.trim() ?? getStrings().settledNameless;
@@ -30583,11 +30644,15 @@ var init_controller21 = __esm({
           list.querySelectorAll(SETTLED)
         ) dress2(row2, row2.getAttribute(SETTLED_ATTRIBUTE) ?? "");
         const watch2 = this.observe(new MutationObserver((records) => this.onChange(records)));
-        watch2.observe(list, { subtree: true, attributes: true, attributeFilter: [SETTLED_ATTRIBUTE], attributeOldValue: true });
+        watch2.observe(list, { subtree: true, childList: true, attributes: true, attributeFilter: [SETTLED_ATTRIBUTE], attributeOldValue: true });
       }
       /** @param {MutationRecord[]} records */
       onChange(records) {
         for (const record of records) {
+          if (record.type === "childList") {
+            this.dressAdded(record.addedNodes);
+            continue;
+          }
           const row2 = (
             /** @type {HTMLElement} */
             record.target
@@ -30601,10 +30666,22 @@ var init_controller21 = __esm({
           if (record.oldValue === null) this.said(row2, word);
         }
       }
+      /** Rows put into the list already carrying the attribute (the page drew the list again): dressed, not announced. @param {NodeList} added */
+      dressAdded(added2) {
+        for (const node of added2) {
+          if (!(node instanceof HTMLElement)) continue;
+          const rows2 = node.matches(SETTLED) ? [node] : [];
+          for (const row2 of [...rows2, ...node.querySelectorAll(SETTLED)]) dress2(
+            /** @type {HTMLElement} */
+            row2,
+            row2.getAttribute(SETTLED_ATTRIBUTE) ?? ""
+          );
+        }
+      }
       /** Say the row settled, and tell the page. @param {HTMLElement} row @param {string} word */
       said(row2, word) {
         const live4 = this.live();
-        live4.textContent = getStrings().settledSaid(nameOf6(row2), word);
+        say3(live4, getStrings().settledSaid(nameOf6(row2), word));
         row2.dispatchEvent(new CustomEvent(SETTLED_EVENT, { bubbles: true, detail: { key: row2.dataset.kpRowKey ?? row2.dataset.kpItem ?? row2.id, word } }));
       }
       /** The polite line, made once beside the list. */
@@ -30789,6 +30866,7 @@ var init_controller22 = __esm({
       pick(value, source) {
         const swatch = this.swatches.find((one) => one.value === value);
         if (!swatch) return;
+        if (value === this.current) return void this.buttonOf(value)?.focus();
         this.current = value;
         this.paint();
         this.buttonOf(value)?.focus();
@@ -30953,11 +31031,11 @@ var init_secret_read = __esm({
 });
 
 // js/patterns/clipboard.js
-function clearClipboardLater(field2, secret, wait, say17) {
+function clearClipboardLater(field2, secret, wait, say18) {
   const s2 = getStrings();
   let dropFocus = null;
   const done = (cleared, reason) => {
-    if (cleared) say17(s2.secretClipboardCleared);
+    if (cleared) say18(s2.secretClipboardCleared);
     field2.dispatchEvent(new CustomEvent(SECRET_CLIPBOARD_EVENT, { bubbles: true, detail: { cleared, reason } }));
   };
   const clear2 = async () => {
@@ -33536,7 +33614,7 @@ function regionOf2(list) {
   list.after(region);
   return region;
 }
-function say3(list, entry) {
+function say4(list, entry) {
   const fresh = !(list.nextElementSibling?.classList.contains("kp-statuslist__live") ?? false);
   const region = regionOf2(list);
   const queue = pending.get(region);
@@ -33618,7 +33696,7 @@ function syncItem2(item, { announce: announce8 = false } = {}) {
   synced2.set(item, state12);
   if (list && announce8 && previous !== void 0 && previous !== state12) {
     if (state12 !== "loading") {
-      say3(list, {
+      say4(list, {
         label: labelOf5(item),
         state: state12,
         detail: state12 === "ok" ? "" : item.querySelector(".kp-statusrow__detail")?.textContent?.trim() ?? ""
@@ -40096,7 +40174,7 @@ function draw3(bar, memory) {
   }
   p.clear.disabled = Boolean(memory.busy);
 }
-function say4(bar, memory, text) {
+function say5(bar, memory, text) {
   const live4 = (
     /** @type {HTMLElement | null} */
     bar.querySelector(":scope > .kp-selection__live")
@@ -40141,9 +40219,9 @@ function sync(bar, memory) {
     const dropped = before2.filter((item) => !read2.known.has(item.key)).length;
     memory.items = read2.items;
     memory.known = read2.known;
-    if (dropped > 0) say4(bar, memory, strings.selectionDropped(dropped));
+    if (dropped > 0) say5(bar, memory, strings.selectionDropped(dropped));
     else if (read2.items.length !== before2.length)
-      say4(bar, memory, read2.items.length === 0 ? strings.selectionCleared : strings.selectionCount(read2.items.length));
+      say5(bar, memory, read2.items.length === 0 ? strings.selectionCleared : strings.selectionCount(read2.items.length));
     if (memory.matching && (read2.shown === 0 || read2.shownTicked < read2.shown)) {
       memory.matching = false;
       bar.dispatchEvent(new CustomEvent(SELECTION_MATCHING_EVENT, { bubbles: true, detail: { matching: false, total: memory.matchingTotal } }));
@@ -40344,7 +40422,7 @@ var init_controller36 = __esm({
         memory.matching = on;
         draw3(bar, memory);
         bar.dispatchEvent(new CustomEvent(SELECTION_MATCHING_EVENT, { bubbles: true, detail: { matching: memory.matching, total: memory.matchingTotal } }));
-        say4(bar, memory, memory.matching ? getStrings().selectionMatchingOn(memory.matchingTotal) : getStrings().selectionCount(memory.items.length));
+        say5(bar, memory, memory.matching ? getStrings().selectionMatchingOn(memory.matchingTotal) : getStrings().selectionCount(memory.items.length));
         bar.querySelector(".kp-selection__take")?.focus();
       }
       /** An action button: refused while it is off, else told to the page with what is selected. @param {MouseEvent} event @param {HTMLElement} button */
@@ -44937,7 +45015,7 @@ function applyProgress(root, stored) {
   }
   paint6(root, false);
   recompute(root);
-  say5(root, getStrings().focusResumed(state12.index + 1));
+  say6(root, getStrings().focusResumed(state12.index + 1));
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_RESUME_EVENT, {
       bubbles: true,
@@ -44992,7 +45070,7 @@ function trackNext(root) {
   paint6(root, true);
   const strings = getStrings();
   const finished = track2.order.every((i) => state12.done.has(i));
-  say5(
+  say6(
     root,
     finished ? strings.focusTrackFinishedTitle(track2.name) : `${strings.focusTrackCount(track2.name, track2.pos + 1, track2.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`
   );
@@ -45029,7 +45107,7 @@ function trackPrev(root) {
   renderBand(root);
   paint6(root, true);
   const strings = getStrings();
-  say5(root, `${strings.focusTrackCount(track2.name, track2.pos + 1, track2.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`);
+  say6(root, `${strings.focusTrackCount(track2.name, track2.pos + 1, track2.order.length)}. ${state12.steps[state12.index]?.text ?? ""}`);
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_EVENT, {
       bubbles: true,
@@ -45114,7 +45192,7 @@ function takeAnswer(root, value, source, extra = {}) {
   );
   const strings = getStrings();
   const said = source === "skip" ? strings.focusSkipped : wordsOf2(answer2, value);
-  say5(root, strings.focusAnswered(said, state12.index + 1, state12.steps.length));
+  say6(root, strings.focusAnswered(said, state12.index + 1, state12.steps.length));
   return true;
 }
 function scheduleAdvance(root) {
@@ -45210,7 +45288,7 @@ function paintAnswerState(root) {
   if (answerReady(root, answer2)) next2.removeAttribute("aria-disabled");
   else next2.setAttribute("aria-disabled", "true");
 }
-function say5(root, message) {
+function say6(root, message) {
   const region = part2(root, "live");
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
@@ -45262,7 +45340,7 @@ function raiseAlert(root, track2, alert) {
   const state12 = stateOf2(root);
   state12.alerts.set(track2.key, alert);
   renderBand(root);
-  say5(root, `${alert.title}. ${alert.text}`);
+  say6(root, `${alert.title}. ${alert.text}`);
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_TRACK_ATTENTION_EVENT, {
       bubbles: true,
@@ -45311,7 +45389,7 @@ function switchTrack(root, key, reason) {
   paint6(root, true);
   remember2(root);
   const strings = getStrings();
-  say5(root, strings.focusTrackSwitched(to.name, strings.focusLaneStep(to.pos + 1, to.order.length), state12.steps[state12.index]?.text ?? ""));
+  say6(root, strings.focusTrackSwitched(to.name, strings.focusLaneStep(to.pos + 1, to.order.length), state12.steps[state12.index]?.text ?? ""));
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_TRACK_EVENT, {
       bubbles: true,
@@ -45349,7 +45427,7 @@ function recompute(root) {
     if (lane.status === "waiting" || !state12.waiting.has(lane.key) || lane.status === "finished") continue;
     const cur = lane.track.order[lane.track.pos] ?? 0;
     if (lane.active) {
-      say5(root, strings.focusTrackUnlocked(stepLabel(state12, cur)));
+      say6(root, strings.focusTrackUnlocked(stepLabel(state12, cur)));
     } else if (!state12.alerts.has(lane.key)) {
       raiseAlert(root, lane.track, {
         reason: "ready",
@@ -45484,7 +45562,7 @@ function part3(list, name) {
   }
   return node;
 }
-function say6(list, message, where = "live") {
+function say7(list, message, where = "live") {
   const region = part3(list, where);
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
@@ -45808,7 +45886,7 @@ function tick3(list) {
     else {
       if (!timer.warned && left <= 6e4 && timer.total > 9e4) {
         timer.warned = true;
-        say6(list, getStrings().timerLastMinute(timer.name));
+        say7(list, getStrings().timerLastMinute(timer.name));
       }
       paint7(timer);
     }
@@ -45821,7 +45899,7 @@ function finish2(list, timer, { quiet = false } = {}) {
   timer.left = 0;
   paint7(timer);
   const strings = getStrings();
-  say6(list, strings.timerDone(timer.name), "alert");
+  say7(list, strings.timerDone(timer.name), "alert");
   if (!quiet) {
     const sound = list.getAttribute("data-kp-timers-sound") ?? "chime";
     const speak = list.getAttribute("data-kp-timers-speak") === "on";
@@ -45904,7 +45982,7 @@ function startTimer(list, { name, seconds, id, say: message = "" }) {
   part3(list, "list").append(card);
   void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => card.isConnected && m.arriveShown(card));
   sync2(list);
-  say6(list, getStrings().timerStartedNamed(name, clockOf2(timer, timer.total)));
+  say7(list, getStrings().timerStartedNamed(name, clockOf2(timer, timer.total)));
   emit(list, timer, TIMER_START_EVENT);
   return key;
 }
@@ -46100,7 +46178,7 @@ var init_controller42 = __esm({
         const running = find(list, id);
         if (running && running.state !== "done") {
           running.card.querySelector(".kp-timer__toggle")?.focus();
-          say6(list, getStrings().timerAlready(name));
+          say7(list, getStrings().timerAlready(name));
           return;
         }
         const message = starter.getAttribute("data-kp-timer-say") ?? "";
@@ -46205,7 +46283,7 @@ function goToStep(root, index) {
   const asking2 = answering(root);
   if (asking2 && hadFocus) part2(root, "step").focus({ preventScroll: true });
   const step = state12.steps[to];
-  say5(
+  say6(
     root,
     asking2 ? `${strings.focusQuestionCount(to + 1, state12.steps.length)}. ${step?.text ?? strings.focusSummaryTitle}` : `${strings.focusCount(to + 1, state12.steps.length)}. ${step?.text ?? ""}`
   );
@@ -46832,7 +46910,7 @@ function part4(list, name) {
   }
   return node;
 }
-function say7(list, message) {
+function say8(list, message) {
   const region = part4(list, "live");
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
@@ -47228,9 +47306,9 @@ var init_controller44 = __esm({
           const next2 = shownOrder(list, group)[placeBefore];
           const target = next2 && !next2.checked ? list.querySelector(`.kp-checklist__item[data-id="${CSS.escape(next2.id)}"] .kp-checklist__check`) : null;
           if (target instanceof HTMLElement) target.focus();
-          say7(list, strings.checklistDoneMoved(item.label));
+          say8(list, strings.checklistDoneMoved(item.label));
         } else {
-          say7(list, check.checked ? strings.checklistDone(item.label) : strings.checklistOpen(item.label));
+          say8(list, check.checked ? strings.checklistDone(item.label) : strings.checklistOpen(item.label));
         }
         emit2(list, CHECKLIST_EVENT, { id, checked: check.checked });
       }
@@ -47257,7 +47335,7 @@ var init_controller44 = __esm({
         const opposite = on ? ".kp-checklist__none:not(:disabled)" : ".kp-checklist__all:not(:disabled)";
         if (document.activeElement === document.body || target.closest(pressed2)?.matches(":disabled"))
           part4(list, "bar").querySelector(opposite)?.focus();
-        say7(list, getStrings().checklistSummary(on ? items2.length : 0, items2.length));
+        say8(list, getStrings().checklistSummary(on ? items2.length : 0, items2.length));
         emit2(list, CHECKLIST_EVENT, { id: null, checked: on });
       }
       /** Clear checked: the ticked items leave, and Undo is on offer for a while. */
@@ -47284,7 +47362,7 @@ var init_controller44 = __esm({
         button6.hidden = false;
         render(list);
         button6.focus();
-        say7(list, strings.checklistCleared(removed.length));
+        say8(list, strings.checklistCleared(removed.length));
         emit2(list, CHECKLIST_CLEAR_EVENT, { removed: removed.map((i) => ({ ...i })) });
       }
       /** Undo: the cleared items come back at the places they had. */
@@ -47296,7 +47374,7 @@ var init_controller44 = __esm({
         for (const item of offer.removed) restored.splice(Math.min(offer.at.get(item.id) ?? restored.length, restored.length), 0, item);
         ITEMS.set(list, restored);
         endUndo(list);
-        say7(list, getStrings().checklistRestored(offer.removed.length));
+        say8(list, getStrings().checklistRestored(offer.removed.length));
         emit2(list, CHECKLIST_UNDO_EVENT, { restored: offer.removed.map((i) => ({ ...i })) });
       }
     };
@@ -65851,7 +65929,7 @@ function paint9(c) {
     c.states.set(run.id, run.state);
     const item = { run, s: rel(c, startMs), e: endRaw == null ? null : rel(c, Math.max(endRaw, startMs)), bar, row: 0 };
     const plannedMs = run.state === "running" && run.plannedEnd != null ? toMs2(run.plannedEnd) : Number.NaN;
-    if (Number.isFinite(plannedMs)) HELD2.set(item, rel(c, Math.max(plannedMs, nowMs, startMs)));
+    if (Number.isFinite(plannedMs)) HELD.set(item, rel(c, Math.max(plannedMs, nowMs, startMs)));
     byLane.get(run.lane)?.push(item);
   }
   for (const [id, bar] of c.bars)
@@ -65897,7 +65975,7 @@ function paint9(c) {
     const bars = (byLane.get(id) ?? []).sort((a, b) => a.s - b.s);
     const packed = fit2 ? packFit(c, bars, marksOf.get(id) ?? [], minBar) : packRows(
       bars.map((b) => {
-        const e = b.e ?? HELD2.get(b) ?? null;
+        const e = b.e ?? HELD.get(b) ?? null;
         return { id: b.run.id, s: b.s, e: e == null ? null : Math.max(e, b.s + reach3) };
       }),
       before2,
@@ -65915,7 +65993,7 @@ function paint9(c) {
     fillLaneLabel(c, model.label, lane);
     model.track.setAttribute("aria-label", lane.label);
     const spareOn = c.el.getAttribute("data-kp-gantt-spare") !== "off";
-    const spare = spareOn && bars.some((b) => b.e == null && !HELD2.has(b)) ? 1 : 0;
+    const spare = spareOn && bars.some((b) => b.e == null && !HELD.has(b)) ? 1 : 0;
     model.rows = fit2 ? packed.count : Math.max(model.rows, packed.count + spare);
     for (const b of bars) b.row = packed.rows.get(b.run.id) ?? 0;
     model.bars = bars;
@@ -66019,7 +66097,7 @@ function viewHeight(c) {
   }
   return fit2 > c.axis.offsetHeight ? fit2 : natural;
 }
-var HELD2;
+var HELD;
 var init_paint9 = __esm({
   "js/gantt/paint.js"() {
     "use strict";
@@ -66033,7 +66111,7 @@ var init_paint9 = __esm({
     init_busy5();
     init_fit4();
     init_selection3();
-    HELD2 = /* @__PURE__ */ new WeakMap();
+    HELD = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -76907,7 +76985,7 @@ var init_paint10 = __esm({
 });
 
 // js/rating/commit.js
-function say8(m, text) {
+function say9(m, text) {
   m.live.textContent = "";
   window.setTimeout(() => {
     m.live.textContent = text;
@@ -76932,7 +77010,7 @@ function pop(m, value) {
 function afterChange(m, value, previous, source, s2, item) {
   m.busy = false;
   paint11(m);
-  if (announceLevel(m) !== "off") say8(m, value > 0 ? s2.ratingAnnounce(item, plain2(value), m.max) : s2.ratingAnnounceCleared(item));
+  if (announceLevel(m) !== "off") say9(m, value > 0 ? s2.ratingAnnounce(item, plain2(value), m.max) : s2.ratingAnnounceCleared(item));
   const ms = m.el.hasAttribute("data-kp-undo-ms") ? Number(m.el.getAttribute("data-kp-undo-ms")) : DEFAULT_UNDO_MS;
   if (source !== "undo" && ms > 0) {
     undoToast(value > 0 ? s2.ratingToast(item, value) : s2.ratingToastCleared(item), {
@@ -77550,7 +77628,7 @@ var init_render5 = __esm({
 });
 
 // js/quote/actions.js
-function say9(c, text) {
+function say10(c, text) {
   if ((c.el.getAttribute("data-kp-announce") ?? "state") === "off") return;
   c.live.textContent = "";
   window.setTimeout(() => {
@@ -77589,7 +77667,7 @@ function hide(c) {
     }
     if (outcome === "committed" || outcome === "left") c.hiding = false;
   });
-  say9(c, s2.quoteAnnounceHidden);
+  say10(c, s2.quoteAnnounceHidden);
 }
 function flashCopy(c, button6, word) {
   if (!button6) return;
@@ -77608,9 +77686,9 @@ async function copy2(c) {
   try {
     await navigator.clipboard.writeText(c.text);
     flashCopy(c, button6, s2.quoteCopied);
-    say9(c, s2.quoteCopied);
+    say10(c, s2.quoteCopied);
   } catch {
-    say9(c, s2.quoteCopyFailed);
+    say10(c, s2.quoteCopyFailed);
     flashCopy(c, button6, s2.quoteCopyFailed);
   }
 }
@@ -77983,7 +78061,7 @@ function canFold(m) {
   const mode2 = attr7(m, "all");
   return mode2 === "fold" || mode2 !== "open" && m.items.length > USUAL_FOLD_ABOVE;
 }
-function say10(m, text) {
+function say11(m, text) {
   if (m.status) m.status.textContent = text;
 }
 var models, make31, attr7, clamp2, realOptions;
@@ -78217,7 +78295,7 @@ var init_picking = __esm({
     "use strict";
     init_listbox();
     init_model9();
-    sayAfter = (m, text) => window.setTimeout(() => say10(m, text), 0);
+    sayAfter = (m, text) => window.setTimeout(() => say11(m, text), 0);
   }
 });
 
@@ -90633,7 +90711,7 @@ function claimPeople(by) {
   if (!by) return [];
   return (Array.isArray(by) ? by : [by]).filter((p) => p && p.id !== void 0).map((p) => ({ id: String(p.id), name: String(p.name ?? p.id) }));
 }
-function say11(list, message) {
+function say12(list, message) {
   let region = (
     /** @type {HTMLElement | null} */
     list.querySelector(":scope > .kp-claim__live")
@@ -91131,7 +91209,7 @@ async function takeAll(list) {
     try {
       if (await waiting2 === false) return;
     } catch {
-      say11(list, s2.claimNotSaved);
+      say12(list, s2.claimNotSaved);
       return;
     }
   }
@@ -91139,7 +91217,7 @@ async function takeAll(list) {
     list,
     before2.map((i) => ({ ...i, claim: { ...i.claim, by: by(i) } }))
   );
-  say11(list, s2.claimTookAll(open4.length));
+  say12(list, s2.claimTookAll(open4.length));
   const ms = Number(attr10(list, "undo-ms", String(CLAIM_UNDO_MS)));
   if (ms > 0)
     undoToast(s2.claimTookAll(open4.length), {
@@ -91154,9 +91232,9 @@ async function copyGaps(list) {
   if (names.length === 0) return;
   try {
     await navigator.clipboard.writeText(s2.claimCopyLine(names.join(", ")));
-    say11(list, s2.claimCopied(names.length));
+    say12(list, s2.claimCopied(names.length));
   } catch {
-    say11(list, s2.claimCopyFailed);
+    say12(list, s2.claimCopyFailed);
   }
 }
 var init_bulk = __esm({
@@ -91241,7 +91319,7 @@ function refuse2(list, item, by, why) {
   write(list, item.id, by);
   flashRefused(list, item.id);
   decorate(list);
-  say11(list, why);
+  say12(list, why);
   const line = (
     /** @type {HTMLElement | null} */
     list.querySelector(`.kp-checklist__item[data-id="${CSS.escape(item.id)}"] .kp-claim__why`)
@@ -91259,7 +91337,7 @@ function refuse2(list, item, by, why) {
 function announce7(list, label2, by, joining, person) {
   const s2 = getStrings();
   if (list.getAttribute("data-kp-announce") === "off") return;
-  say11(list, by.length ? s2.claimAnnounce(label2, joinNames2(by.map((p) => p.name))) : s2.claimAnnounceNobody(label2));
+  say12(list, by.length ? s2.claimAnnounce(label2, joinNames2(by.map((p) => p.name))) : s2.claimAnnounceNobody(label2));
   void joining;
   void person;
 }
@@ -91677,7 +91755,7 @@ var init_facts = __esm({
 });
 
 // js/availability/cell.js
-function say12(root, message) {
+function say13(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   let region = (
     /** @type {HTMLElement | null} */
@@ -92224,7 +92302,7 @@ async function request2(root, person, keys, answer2, { stroke = false } = {}) {
         if (line.textContent === why) line.textContent = "";
       }, AVAILABILITY_REFUSED_MS);
     }
-    say12(root, why);
+    say13(root, why);
   };
   if (!go) return refuse3(s2.availabilityNotSaved(label2(changing)));
   if (waiting2) {
@@ -92260,7 +92338,7 @@ async function request2(root, person, keys, answer2, { stroke = false } = {}) {
   });
   if (stroke) {
     const mine = Object.values(st.set.answers[person] ?? {});
-    say12(
+    say13(
       root,
       s2.availabilityYourAnswers(
         mine.filter((a) => a === "yes").length,
@@ -92293,9 +92371,9 @@ async function request2(root, person, keys, answer2, { stroke = false } = {}) {
         }
       });
     }
-  } else if (nowComplete.length) say12(root, s2.availabilityEveryone(nowComplete[0].label));
+  } else if (nowComplete.length) say13(root, s2.availabilityEveryone(nowComplete[0].label));
   else
-    say12(root, s2.availabilityCellSaid(st.spec.people?.find((p) => p.id === person)?.name ?? person, label2(changing), wordOf(answer2 ?? void 0)));
+    say13(root, s2.availabilityCellSaid(st.spec.people?.find((p) => p.id === person)?.name ?? person, label2(changing), wordOf(answer2 ?? void 0)));
   const again2 = (
     /** @type {HTMLElement | null} */
     root.querySelector(`.kp-heat__cell[data-row-key="${CSS.escape(person)}"][data-col-key="${CSS.escape(changing[0])}"]`)
@@ -93489,7 +93567,7 @@ function stateOf8(root) {
   }
   return st;
 }
-function say13(root, message) {
+function say14(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   let region = (
     /** @type {HTMLElement | null} */
@@ -93675,7 +93753,7 @@ function drawCode(root, plate2, caption, matrix, st, s2) {
   const value = valueOf3(root);
   if (st.said !== value) {
     st.said = value;
-    say13(root, s2.qrReady);
+    say14(root, s2.qrReady);
   }
 }
 function renderStandIn(root, plate2, state12, hidden2, st, s2) {
@@ -94043,7 +94121,7 @@ function elapsed(ms) {
   const m = Math.floor(total / 60);
   return `${m} min ${total % 60} s`;
 }
-function say14(root, message) {
+function say15(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   let region = (
     /** @type {HTMLElement | null} */
@@ -94607,7 +94685,7 @@ function applyChange(root, id, change2) {
     const last = st.blocks[st.blocks.length - 1];
     if (last && last.id === id) {
       const s2 = getStrings();
-      say14(
+      say15(
         root,
         b.state === "ok" ? s2.consoleFinishedOk(b.code ?? 0) : b.state === "failed" ? s2.consoleFinishedFailed(b.code ?? 1) : b.state === "refused" ? s2.consoleFinishedRefused : b.state === "cancelled" ? s2.consoleCancelled : s2.consoleLost
       );
@@ -94654,7 +94732,7 @@ async function submit(root) {
       drawBar(root);
     }, 6e3);
     drawBar(root);
-    say14(root, getStrings().consoleConfirmSaid(command));
+    say15(root, getStrings().consoleConfirmSaid(command));
     return;
   }
   window.clearTimeout(st.pendingTimer);
@@ -94720,7 +94798,7 @@ function clearConsole(root, { undo = true } = {}) {
   const s2 = getStrings();
   st.blocks = [];
   drawBody2(root);
-  say14(root, s2.consoleCleared);
+  say15(root, s2.consoleCleared);
   if (undo)
     undoToast(s2.consoleCleared, {
       mode: "revert",
@@ -94965,7 +95043,7 @@ var init_controller91 = __esm({
           complete.append(b);
         }
         complete.hidden = false;
-        say14(this.host, getStrings().consoleMatches(found.length));
+        say15(this.host, getStrings().consoleMatches(found.length));
       }
       /** A block's tool, a completion, Retry, or the earlier blocks. @param {Event} event */
       onClick(event) {
@@ -95129,7 +95207,7 @@ var init_model12 = __esm({
 function toolsOf(root) {
   return attr14(root, "tools", "search,follow,wrap,time,level,copy,download").split(",").map((t) => t.trim()).filter(Boolean);
 }
-function say15(root, message) {
+function say16(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   const st = stateOf10(root);
   if (st.said === message) return;
@@ -95701,7 +95779,7 @@ function stepLogMatch(el16, delta = 1) {
   if (at.left < box.left + 120) log.scrollLeft -= box.left + 120 - at.left;
   else if (at.right > box.right - 16) log.scrollLeft += at.right - (box.right - 16);
   refresh2(root);
-  say15(root, matchWords(root));
+  say16(root, matchWords(root));
   return st.at + 1;
 }
 function setLogViewer(el16, spec) {
@@ -95843,8 +95921,8 @@ var init_controller92 = __esm({
         if (find2.value.trim() === "") viewer.removeAttribute("data-kp-log-search");
         else viewer.setAttribute("data-kp-log-search", find2.value);
         syncOptions(viewer);
-        if (stateOf10(viewer).matches.length > 0) say15(viewer, matchWords(viewer));
-        else if (queryOf(viewer) !== "") say15(viewer, getStrings().logviewerSearchNone);
+        if (stateOf10(viewer).matches.length > 0) say16(viewer, matchWords(viewer));
+        else if (queryOf(viewer) !== "") say16(viewer, getStrings().logviewerSearchNone);
       }
       /** Enter steps to the next match (Shift: the one before); Esc empties the field. @param {KeyboardEvent} event @param {HTMLInputElement} find */
       onFindKey(event, find2) {
@@ -96209,7 +96287,7 @@ function isOpen2(root, st, file, index) {
       return true;
   }
 }
-function say16(root, message) {
+function say17(root, message) {
   if (root.getAttribute("data-kp-announce") === "off") return;
   let region = (
     /** @type {HTMLElement | null} */
@@ -96602,7 +96680,7 @@ function render6(root) {
     const summary2 = s2.diffReady(st.files.length, added2, removed);
     if (st.said !== summary2) {
       st.said = summary2;
-      say16(root, summary2);
+      say17(root, summary2);
     }
     return;
   }
@@ -96793,7 +96871,7 @@ var init_controller93 = __esm({
           found.section.querySelector(".kp-diffview__body")
         );
         root.querySelector(`[data-kp-diff-fold-key="${CSS.escape(key)}"]`)?.focus();
-        say16(root, open4 ? s2.diffUnchangedShown(lines4) : s2.diffUnchangedHidden(lines4));
+        say17(root, open4 ? s2.diffUnchangedShown(lines4) : s2.diffUnchangedHidden(lines4));
         root.dispatchEvent(new CustomEvent(DIFF_EXPAND_EVENT, { bubbles: true, detail: { path, lines: lines4, open: open4 } }));
       }
       /** Draw the rest of a long file, past its line cap. @param {Element} more */

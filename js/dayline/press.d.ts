@@ -25,8 +25,9 @@ export type PressHandlers = {
      */
     lift?: () => void;
 };
-/** Hold back the scroll of a touch that lifted an item. Put on an element before any touch starts on it. @param {EventTarget} el */
-export declare function holdScroll(el: EventTarget): () => void;
+/** Hold back the scroll of a touch that lifted an item: the document's one non-passive touchmove, put there before any touch
+ * starts. Returns what removes it. @param {Document} doc */
+export declare function holdScroll(doc: Document): () => void;
 /**
  * Follow one press. Its listeners go when it ends.
  * @param {PointerEvent} down
