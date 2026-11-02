@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { openAtTop, revealTab, TOAST_MS, watchScrollbar, watchTabOverflow } from '../js/overlays.js';
 import { attachMotion } from '../js/motion.js';
+import { demote, hideLayer, layerOf, promote, showLayer } from '../js/overlays/tooltip-layer.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
 
@@ -348,6 +349,22 @@ function TooltipInner(
     /** @type {import('react').RefObject<HTMLSpanElement | null>} */
     const tip = useRef(null);
     useEffect(() => (tip.current ? watchScrollbar(tip.current) : undefined), []);
+    // The tooltip is drawn on the top layer, as the framework-free one is, so a table, card or dialog round the anchor never
+    // cuts it [rtip-1102]; `data-kp-tooltip-layer="inline"` on the anchor keeps it in the anchor's layer. Same module, same stylesheet.
+    useEffect(() => {
+        const tooltip = tip.current;
+        if (!tooltip || !inner.current || layerOf(inner.current, undefined) !== 'top' || !promote(tooltip)) return undefined;
+        return () => demote(tooltip);
+    }, []);
+    useEffect(() => {
+        const tooltip = tip.current;
+        if (!tooltip) return;
+        // A tooltip the top layer refuses is hidden again by showLayer(); the state follows it.
+        if (shown) {
+            if (!showLayer(tooltip) && tooltip.hidden) setShown(false);
+        } else hideLayer(tooltip);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [shown]);
     /** @param {boolean} next @param {number} delay */
     const schedule = (next, delay) => {
         clearTimeout(timer.current);
