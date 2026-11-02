@@ -8,6 +8,9 @@
 //   node gates/review-db.mjs roundtrip --from <checkout>
 //                                                     import the checkout's JSON stores into a scratch database, export
 //                                                     them again and compare every file: as data, key order, bytes
+//   node gates/review-db.mjs adopt                    move the research VERDICTS.json, decided.json, update.json and
+//                                                     _previous/previous.json files this checkout still holds (a branch
+//                                                     from before the move) into the database and delete them
 //   node gates/review-db.mjs git-setup                wire git's text view and merge driver for the database file
 //                                                     (.gitattributes names them; the commands live in .git/config)
 //
@@ -20,7 +23,8 @@ import { dirname, join, resolve } from 'node:path';
 import process from 'node:process';
 import { databasePath, openDatabase, reading, withDatabase, writing } from './db/index.mjs';
 import { deepEqual, firstDifference, orderedEqual } from './db/compare.mjs';
-import { exportTree, importTree } from './db/legacy-json.mjs';
+import { adoptDemoFiles, catalogueFiles, exportTree, importTree } from './db/legacy-json.mjs';
+import { ROOT } from './db/config.mjs';
 
 const TABLES = [
     'verdicts', 'review_notes', 'pixel_checks', 'hash_readings', 'round_state', 'demos', 'demo_rounds',
@@ -105,6 +109,15 @@ function runRoundtrip(args) {
     }
 }
 
+function runAdopt() {
+    const stale = catalogueFiles(ROOT);
+    if (stale.length) throw new Error(`${stale.join(', ')}: merge these by hand (node gates/review-db.mjs export, compare, then the verdict tools); adopt takes only research files`);
+    const read = writing((db) => adoptDemoFiles(db, ROOT));
+    for (const path of read) rmSync(join(ROOT, path));
+    console.log(`${read.length} file(s) moved into ${databasePath()} and deleted${read.length ? `:\n  ${read.join('\n  ')}` : ''}`);
+    if (read.length) console.log('now run node gates/generate-review-data.mjs and node gates/generate-agenda-index.mjs');
+}
+
 /** The git settings `diff=kp-sqlite` and `merge=kp-sqlite` in .gitattributes point at. */
 const GIT_SETTINGS = [
     ['diff.kp-sqlite.textconv', 'node gates/db/git-dump.mjs'],
@@ -125,7 +138,8 @@ function main() {
     if (command === 'export') return runExport(args);
     if (command === 'roundtrip') return runRoundtrip(args);
     if (command === 'git-setup') return runGitSetup();
-    console.error('usage: node gates/review-db.mjs migrate | counts | import --from <checkout> [--replace] | export --to <dir> | roundtrip --from <checkout> | git-setup');
+    if (command === 'adopt') return runAdopt();
+    console.error('usage: node gates/review-db.mjs migrate | counts | import --from <checkout> [--replace] | export --to <dir> | roundtrip --from <checkout> | adopt | git-setup');
     process.exitCode = 2;
 }
 

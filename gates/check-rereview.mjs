@@ -25,6 +25,7 @@
 // Run: node gates/check-rereview.mjs
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { loadDemoVerdicts, openDatabase, verdictDemos } from './db/index.mjs';
+import { demoFiles } from './db/legacy-json.mjs';
 import { fileURLToPath } from 'node:url';
 import { THEMES } from '../js/theme-registry.js';
 
@@ -149,6 +150,10 @@ function main() {
     let checked = 0;
     const db = openDatabase();
     try {
+        // Kenny, 2026-11-02: no separate JSON files any more; a VERDICTS.json, decided.json, update.json or
+        // _previous/previous.json beside a demo (a branch from before the move) goes into the database.
+        for (const [file] of demoFiles(fileURLToPath(root)))
+            faults.push(`${file}: a review store kept as a file; move it into the database with node gates/review-db.mjs adopt`);
         // A record whose demo is gone (the folder deleted, the record left behind) is a fault of its own.
         for (const demo of verdictDemos(db))
             if (!existsSync(path(`research/${demo}/demo.html`))) faults.push(`research/${demo}: a verdict record and no demo.html`);

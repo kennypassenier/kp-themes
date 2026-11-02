@@ -75,6 +75,26 @@ export function importTree(db, root) {
 }
 
 /**
+ * Read the per-demo store files a checkout still holds (a branch made before the move) into the database, replacing
+ * those demos' records, and return the files read; the caller deletes them. The whole-catalogue stores are never
+ * adopted this way: they would overwrite every later verdict.
+ * @param {Db} db @param {string} root
+ */
+export function adoptDemoFiles(db, root) {
+    const read = [];
+    for (const [path, folder, kind] of demoFiles(root)) {
+        const record = readJson(join(root, path));
+        if (kind === 'verdicts') saveDemoVerdicts(db, folder, record);
+        else saveDemoFact(db, /** @type {'decided' | 'update' | 'previous'} */ (kind), folder, record);
+        read.push(path);
+    }
+    return read;
+}
+
+/** The whole-catalogue store files a checkout still holds. @param {string} root */
+export const catalogueFiles = (root) => DOCUMENTS.map((d) => d.file).filter((file) => existsSync(join(root, file)));
+
+/**
  * Every store as the file it used to be: repository path to parsed content.
  * @param {Db} db
  * @returns {Map<string, any>}
