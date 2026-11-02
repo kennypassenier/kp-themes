@@ -78,7 +78,7 @@
         "js/master-detail.js": { "digest": "a7ae68a985fea8a0", "when": "[data-kp-master-detail]" },
         "js/menu-button.js": { "digest": "6c91005493fe4d74", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
-            "digest": "066629178d37e11a",
+            "digest": "def987d6fb47d96a",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/nav-fold.js": { "digest": "991bb59bf6e484b6", "when": "[data-kp-nav-fold]" },
@@ -11712,6 +11712,7 @@
             "modules": "615de2acafcff8ea",
             "families": [
                 "data-kp-arrive",
+                "data-kp-arrive-max",
                 "data-kp-arriving",
                 "data-kp-backspace-removes",
                 "data-kp-close-on-blur",
@@ -11755,7 +11756,8 @@
                 "kp-listbox-choose",
                 "kp-listbox-highlight",
                 "kp-tag",
-                "kp-tag-list"
+                "kp-tag-list",
+                "kp-themes"
             ]
         },
         "data": {
@@ -12770,6 +12772,7 @@
             "families": [
                 "data-kp-align",
                 "data-kp-arrive",
+                "data-kp-arrive-max",
                 "data-kp-arriving",
                 "data-kp-backspace-removes",
                 "data-kp-busy-overlay",
@@ -12939,7 +12942,8 @@
                 "kp-date-open",
                 "kp-remember",
                 "kp-remember-clash",
-                "kp-sr-only"
+                "kp-sr-only",
+                "kp-themes"
             ]
         },
         "datepicker": {
@@ -13011,6 +13015,7 @@
                 "data-kp-announce",
                 "data-kp-armed",
                 "data-kp-arrive",
+                "data-kp-arrive-max",
                 "data-kp-arriving",
                 "data-kp-asked",
                 "data-kp-attention-expanded",
@@ -13414,6 +13419,7 @@
                 "data-kp-active",
                 "data-kp-announce",
                 "data-kp-arrive",
+                "data-kp-arrive-max",
                 "data-kp-arriving",
                 "data-kp-autosize",
                 "data-kp-autosize-capped",
@@ -13633,6 +13639,7 @@
                 "kp-slider-input",
                 "kp-soft",
                 "kp-sr-only",
+                "kp-themes",
                 "kp-time",
                 "kp-time-change",
                 "kp-time-retry"
@@ -14167,6 +14174,7 @@
                 "data-kp-against",
                 "data-kp-armed",
                 "data-kp-arrive",
+                "data-kp-arrive-max",
                 "data-kp-arriving",
                 "data-kp-channel",
                 "data-kp-close-delay",
@@ -14400,6 +14408,7 @@
                 "data-kp-ago-verb",
                 "data-kp-armed",
                 "data-kp-arrive",
+                "data-kp-arrive-max",
                 "data-kp-arriving",
                 "data-kp-close-delay",
                 "data-kp-close-on-escape",
@@ -15078,6 +15087,7 @@
                 "data-kp-anchored",
                 "data-kp-anchors",
                 "data-kp-arrive",
+                "data-kp-arrive-max",
                 "data-kp-arriving",
                 "data-kp-aside-closable",
                 "data-kp-aside-fold-at",
@@ -15193,6 +15203,7 @@
                 "kp-split",
                 "kp-sr-only",
                 "kp-stateplate",
+                "kp-themes",
                 "kp-tree",
                 "kp-tree-expand",
                 "kp-tree-select",
@@ -15259,6 +15270,7 @@
             "modules": "b0d41c0ee229fd8f",
             "families": [
                 "data-kp-arrive",
+                "data-kp-arrive-max",
                 "data-kp-arriving",
                 "data-kp-closing",
                 "data-kp-date-input",
@@ -15304,6 +15316,7 @@
                 "data-kp-wizard-status",
                 "data-kp-year",
                 "kp-sr-only",
+                "kp-themes",
                 "kp-upload",
                 "kp-upload-file",
                 "kp-upload-reject",

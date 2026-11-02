@@ -5,6 +5,8 @@ export type SizeOptions = import('./fold-size.js').SizeOptions;
 export declare class BoxSize extends Controller {
     /** Which arrivals play when no `data-kp-arrive` says otherwise. */
     fallback: "all" | "new" | "none";
+    /** How many elements of one batch arrive, unless a region's `data-kp-arrive-max` says otherwise. */
+    arriveMax: number;
     /** The attributes that carry a row's stable id, the page's own first. */
     keys: string[];
     /** The height the box was last seen to settle at. */
@@ -76,4 +78,4 @@ export declare class BoxSize extends Controller {
  * @param {SizeOptions} [options]
  * @returns {() => void}
  */
-export declare function easeSize(box: HTMLElement, { arrive: fallback, arriveKeys }?: SizeOptions): () => void;
+export declare function easeSize(box: HTMLElement, { arrive: fallback, arriveKeys, arriveMax }?: SizeOptions): () => void;

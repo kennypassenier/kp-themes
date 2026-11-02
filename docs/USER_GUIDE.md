@@ -625,7 +625,10 @@ new height, growing and shrinking alike. `js/motion.js` does it, and
 stack, upload or combobox list, tree, wizard or field is; the React `Dialog`
 attaches it itself. Every speed comes from the theme's dialog entrance: a
 close takes two thirds of it, a resize four fifths, on the entrance's curve,
-capped at `--kp-close-max` (600ms) and `--kp-size-max` (480ms).
+capped at `--kp-close-max` (600ms) and `--kp-size-max` (480ms). A drawer is
+the exception: people dismiss it all day, so it leaves in `--kp-drawer-close-time`
+(default 180ms, set on the root or on one drawer, scaled by `--kp-motion-scale`)
+whatever its theme's entrance takes; it still opens the theme's way.
 `--kp-motion-scale` on the root plays all of it slower or faster at once.
 
 Any other box opts in with one attribute:
@@ -689,6 +692,16 @@ instead of one time for all. Without it every part plays as one, as before.
 A live view that redraws its rows on every refresh marks the box
 `data-kp-arrive="none"`; otherwise every refresh replays every row's
 arrival (found on the homelab dashboard, 2026-10-04).
+
+Only the first 12 elements added in one batch arrive; the rest appear at once.
+A Markdown preview of a long note adds hundreds of blocks in one go, and an
+entrance on each cost one frame of 0.5 to 1 s (measured in Firefox with 600
+paragraphs: 590 ms and 1186 animations, against 38 ms and 24 after the cap).
+`data-kp-arrive-max="30"` on a region changes the number for everything under
+it (`all` lifts the cap, `0` stops every arrival there), and
+`attachMotion(root, { arriveMax })` or `easeSize(box, { arriveMax })` sets it
+for the whole root or box. Content that never needs an entrance at all
+(rendered text, a long list) says `data-kp-arrive="none"` on its region.
 
 `data-kp-arrive="new"` is the finer choice for a live view whose rows carry a
 stable id: a row added back under the key of a row that left in the same

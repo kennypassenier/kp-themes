@@ -39,6 +39,7 @@ export const CONTROLLER_PART_FILES_2B = [
     'js/logviewer/rows.js',
     'js/logviewer/state.js',
     'js/master-detail/base.js',
+    'js/motion/arrive-cap.js',
     'js/motion/arrive.js',
     'js/motion/attach.js',
     'js/motion/box-size.js',

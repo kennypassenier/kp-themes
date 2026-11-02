@@ -37,9 +37,9 @@ export declare class MotionRoot extends Controller {
  * keep the old boxes' watchers alive; one moved within the page stays.
  *
  * @param {ParentNode} [root]
- * @param {SizeOptions & { size?: string }} [options] `size`: more boxes to ease, as a selector, beside the package's own and `[data-kp-size-motion]` (a consumer's cards and panels, without marking each one); `arrive` and `arriveKeys` as for easeSize()
+ * @param {SizeOptions & { size?: string }} [options] `size`: more boxes to ease, as a selector, beside the package's own and `[data-kp-size-motion]` (a consumer's cards and panels, without marking each one); `arrive`, `arriveKeys` and `arriveMax` as for easeSize()
  * @returns {() => void} detach
  */
-export declare function attachMotion(root?: ParentNode, { size, arrive, arriveKeys }?: SizeOptions & {
+export declare function attachMotion(root?: ParentNode, { size, arrive, arriveKeys, arriveMax }?: SizeOptions & {
     size?: string;
 }): () => void;

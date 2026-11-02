@@ -35,7 +35,7 @@ the selectors and their order are identical, which is what
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
 | `dist/kp-themes.css` | 4418.3 kB | 2347.5 kB | 47% |
 | `dist/kp-themes-base.css` | 1512.2 kB | 757.7 kB | 50% |
-| `dist/kp-themes.js` | 3940.2 kB | 2087.9 kB | 47% |
+| `dist/kp-themes.js` | 3941.9 kB | 2088.8 kB | 47% |
 
 The loose stylesheets together weigh **4471.4 kB** authored and
 **2379.3 kB** minified, 47% less. A page loading one theme's
@@ -48,11 +48,11 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 
 | Entry | Files it loads before it runs | Minified |
 | ----- | ----------------------------: | -------: |
-| `dist/js/auto.js` | 20 | 264.9 kB |
+| `dist/js/auto.js` | 20 | 265.7 kB |
 | `dist/js/lazy-register.js` | 6 | 85.9 kB |
 | `dist/js/core.js` | 4 | 81.1 kB |
-| `dist/js/index.js` | 169 | 2030.9 kB |
-| the whole folder | 313 | 2149.4 kB |
+| `dist/js/index.js` | 169 | 2031.7 kB |
+| the whole folder | 313 | 2150.2 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

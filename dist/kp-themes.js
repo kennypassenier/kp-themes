@@ -6273,7 +6273,15 @@ function themeMotion(scope = document.documentElement) {
     size: Math.min(open4 * SIZE_SHARE, msOf(root, "--kp-size-max", 480)) * scale
   };
 }
-var CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced;
+function closeTime(dialog) {
+  const { close } = themeMotion(dialog);
+  if (close <= 0 || !dialog.classList.contains("kp-drawer")) return close;
+  const named = registerTime(dialog, "--kp-drawer-close-time");
+  if (named !== null) return named;
+  const scale = parseFloat(getComputedStyle(dialog.ownerDocument.documentElement).getPropertyValue("--kp-motion-scale")) || 1;
+  return DRAWER_CLOSE_MS * scale;
+}
+var CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, DRAWER_CLOSE_MS;
 var init_timing = __esm({
   "js/motion/timing.js"() {
     "use strict";
@@ -6298,6 +6306,7 @@ var init_timing = __esm({
       reducedNow = event.matches;
     });
     reduced = () => reducedNow || isCalm();
+    DRAWER_CLOSE_MS = 180;
   }
 });
 
@@ -6404,7 +6413,7 @@ async function closeDialog(dialog, returnValue) {
   const close = () => nativeClose?.call(dialog, returnValue);
   if (!dialog.open || closing.has(dialog)) return;
   if (!dialog.dispatchEvent(new CustomEvent(DIALOG_CLOSE_REQUEST_EVENT, { cancelable: true, detail: { returnValue } }))) return;
-  const { close: duration2 } = themeMotion(dialog);
+  const duration2 = closeTime(dialog);
   const kept = entrances.get(dialog) ?? [];
   if (duration2 <= 0) return void close();
   closing.add(dialog);
@@ -7712,11 +7721,39 @@ var init_repaint = __esm({
   }
 });
 
+// js/motion/arrive-cap.js
+function arriveMaxOf(el16, fallback2) {
+  const raw = el16.closest(`[${ARRIVE_MAX_ATTRIBUTE}]`)?.getAttribute(ARRIVE_MAX_ATTRIBUTE)?.trim();
+  if (raw === void 0 || raw === "") return fallback2;
+  if (raw === "all") return Infinity;
+  const n = Number(raw);
+  if (Number.isInteger(n) && n >= 0) return n;
+  console.warn(`kp-themes: ${ARRIVE_MAX_ATTRIBUTE}="${raw}" is not a whole number or "all"; using ${fallback2}.`);
+  return fallback2;
+}
+function arriveBudget(fallback2) {
+  const left = /* @__PURE__ */ new Map();
+  return (el16) => {
+    const region = el16.closest(`[${ARRIVE_MAX_ATTRIBUTE}]`);
+    const rest = left.get(region) ?? arriveMaxOf(el16, fallback2);
+    left.set(region, rest - 1);
+    return rest > 0;
+  };
+}
+var ARRIVE_MAX, ARRIVE_MAX_ATTRIBUTE;
+var init_arrive_cap = __esm({
+  "js/motion/arrive-cap.js"() {
+    "use strict";
+    ARRIVE_MAX = 12;
+    ARRIVE_MAX_ATTRIBUTE = "data-kp-arrive-max";
+  }
+});
+
 // js/motion/box-size.js
-function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
+function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [], arriveMax = ARRIVE_MAX } = {}) {
   if (controllerOf(box, BoxSize)) return () => {
   };
-  const control = attachOne(box, BoxSize, { arrive: fallback2, arriveKeys });
+  const control = attachOne(box, BoxSize, { arrive: fallback2, arriveKeys, arriveMax });
   return () => control?.destroy();
 }
 var FOLD_TICK_HOLD_MS, SAME_PX, BoxSize;
@@ -7727,6 +7764,7 @@ var init_box_size = __esm({
     init_state();
     init_arrive();
     init_constants();
+    init_arrive_cap();
     init_switching();
     init_timing();
     init_size();
@@ -7739,6 +7777,7 @@ var init_box_size = __esm({
       constructor(box, options = {}) {
         super(box, options);
         this.fallback = options.arrive ?? "all";
+        this.arriveMax = options.arriveMax ?? ARRIVE_MAX;
         this.keys = [...options.arriveKeys ?? [], ...ARRIVE_KEYS];
         this.last = 0;
         this.running = null;
@@ -7877,19 +7916,20 @@ var init_box_size = __esm({
       arriveAll(records, motion) {
         let repainted = null;
         const { hiddenBefore, moved } = batchOf(records);
+        const mayArrive = arriveBudget(this.arriveMax);
         for (const record of records) {
           const mode2 = this.modeOf(record.target);
           if (mode2 === "none") continue;
           const target = record.target;
           if (record.type === "attributes" && target instanceof HTMLElement && !target.hidden && hiddenBefore.get(target)) {
             hiddenBefore.delete(target);
-            arrive(target, motion);
+            if (mayArrive(target)) arrive(target, motion);
           }
           if (record.type !== "childList") continue;
           for (const node of record.addedNodes) {
             if (!(node instanceof HTMLElement) || moved.has(node) || node.hasAttribute("data-kp-ghost")) continue;
             if (mode2 === "new" && (repainted ??= repaintedIn(records, { keys: this.keys })).has(node)) continue;
-            arrive(node, motion);
+            if (mayArrive(node)) arrive(node, motion);
           }
         }
       }
@@ -8082,12 +8122,12 @@ var init_fold_control = __esm({
 });
 
 // js/motion/attach.js
-function attachMotion(root = document, { size: size2 = "", arrive: arrive3 = "all", arriveKeys = [] } = {}) {
+function attachMotion(root = document, { size: size2 = "", arrive: arrive3 = "all", arriveKeys = [], arriveMax = ARRIVE_MAX } = {}) {
   const motion = new MotionRoot(
     /** @type {HTMLElement} */
     /** @type {unknown} */
     root,
-    { size: size2, arrive: arrive3, arriveKeys }
+    { size: size2, arrive: arrive3, arriveKeys, arriveMax }
   );
   motion.connect();
   return () => motion.destroy();
@@ -8098,6 +8138,7 @@ var init_attach = __esm({
     "use strict";
     init_controller();
     init_constants();
+    init_arrive_cap();
     init_dialog_close();
     init_box_size();
     init_fold_control();
@@ -8107,7 +8148,7 @@ var init_attach = __esm({
       constructor(root, options = {}) {
         super(root, options);
         this.sizeSelector = options.size?.trim() ? `${SIZE_SELECTOR}, ${options.size}` : SIZE_SELECTOR;
-        this.sizeOptions = { arrive: options.arrive ?? "all", arriveKeys: options.arriveKeys ?? [] };
+        this.sizeOptions = { arrive: options.arrive ?? "all", arriveKeys: options.arriveKeys ?? [], arriveMax: options.arriveMax ?? ARRIVE_MAX };
         this.detaches = /* @__PURE__ */ new Map();
         this.sweeping = false;
       }

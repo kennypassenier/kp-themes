@@ -18,7 +18,7 @@ export declare const opensAsReversedClose: (el: Element) => boolean;
 /**
  * Open `dialog` as its close played backwards [research/open-reverse]:
  * closeDialog() plays each kept entrance with `direction: 'reverse'` in
- * themeMotion().close; this replaces the register's entrance with the same
+ * themeMotion().close (a drawer closes faster, closeTime(), and still opens in that time); this replaces the register's entrance with the same
  * keyframes on the same curve, forwards, in that same time, and the
  * backdrop's fade turned around, so frame t of the opening is frame
  * (close - t) of the close. Only in a theme that asks for it.

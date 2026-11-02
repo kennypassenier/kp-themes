@@ -27,3 +27,13 @@ export declare function themeMotion(scope?: Element): {
     close: number;
     size: number;
 };
+/** How long a drawer takes to leave when the page names no `--kp-drawer-close-time`, in ms. */
+export declare const DRAWER_CLOSE_MS = 180;
+/**
+ * How long `dialog` takes to leave, in ms. A drawer is dismissed all day, so it leaves in its own short time
+ * (`--kp-drawer-close-time`, default 180 ms, set on the drawer or the root) instead of its theme's reversed
+ * entrance, which runs up to `--kp-close-max`; every other dialog keeps that. Reduced motion leaves at once.
+ * @param {HTMLElement} dialog
+ * @returns {number}
+ */
+export declare function closeTime(dialog: HTMLElement): number;
