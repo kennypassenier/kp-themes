@@ -146,6 +146,19 @@
         opacity: 1;
     }
 
+    /* A bar with a menu open rides one layer above the other bars [navdrop-1102]: every `.kp-nav-wrap` is a layer of
+     * its own (`--kp-z-nav`), so with two bars stacked the later one painted over the first bar's open dropdown (the
+     * last entry of a four-entry menu out of reach at 1280px, measured in Firefox with elementFromPoint). Only the bar
+     * that shows a menu moves, for as long as the menu shows, a close that plays included; the menu itself, its place
+     * and its hover and focus behaviour are untouched. */
+    .kp-nav-wrap:has(
+            .kp-nav__links
+                > li:is(:hover, :focus-within, [data-kp-nav-menu-open], [data-kp-nav-closing], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu
+        ) {
+        z-index: calc(var(--kp-z-nav, 30) + 1);
+    }
+
     @media (prefers-reduced-motion: no-preference) {
         .kp-nav__menu {
             transition:

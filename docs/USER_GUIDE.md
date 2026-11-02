@@ -4064,6 +4064,10 @@ instead. Nothing to add to your markup. The React NavBar calls the same
 `placeNavMenu(item)` from its items; a page that opens a dropdown some other
 way can call it too. Without script the panel keeps its start edge.
 
+With two bars stacked, the bar that shows a dropdown (hover, focus within,
+`data-kp-nav-menu-open`) rides one layer above the other bars (`--kp-z-nav` + 1)
+for as long as it shows, so a later bar never paints over it [navdrop-1102].
+
 ### A mega menu [scope-48]
 
 One bar item can open a wide panel of grouped links, for a site with more
