@@ -1,0 +1,49 @@
+/* research/kyugaps-1102: a stage frame's own page. Everything with a kp- class is the package; pg- is this page's frame. */
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+}
+
+/* kyu's topic page: its head (the topic, one sentence, Help on the same grid row) over the dead letters card. */
+.pg-stage {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+}
+
+.pg-stage__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-stage__head h2 {
+    margin: 0;
+}
+
+.pg-stage__head p {
+    margin: var(--kp-space-xs, 0.25rem) 0 0;
+    color: var(--muted-foreground);
+}
+
+@media (max-width: 40rem) {
+    .pg-stage {
+        padding: var(--kp-space-md, 1rem);
+    }
+
+    .pg-stage__head {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+    }
+}
+
+/* kyu's payload column breaks a long payload anywhere (its own kt-col-payload rule), so a phone card never cuts it. */
+.pg-stage td code {
+    overflow-wrap: anywhere;
+    white-space: normal;
+}

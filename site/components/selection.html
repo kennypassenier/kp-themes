@@ -402,6 +402,7 @@ bar.addEventListener(<span class="kp-code__string">'kp-selection-action'</span>,
                             <tr><td><code>data-kp-selection-open</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-selection-reasons</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-selection-result</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-selection-room</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-selection-state</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-selection-take</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-selection-titled</code></td><td>read, written</td></tr>
@@ -431,6 +432,7 @@ bar.addEventListener(<span class="kp-code__string">'kp-selection-action'</span>,
                             <tr><td><code>--kp-rule-ease</code></td><td><code>linear</code></td></tr>
                             <tr><td><code>--kp-rule-time</code></td><td><code>400ms</code></td></tr>
                             <tr><td><code>--kp-selected</code></td><td><code>color-mix(in oklab, var(--primary) 9%, transparent)</code></td></tr>
+                            <tr><td><code>--kp-selection-clip-margin</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-selection-digits</code></td><td><code>2</code></td></tr>
                             <tr><td><code>--kp-selection-height</code></td><td><code>3.5rem</code></td></tr>
                             <tr><td><code>--kp-selection-max</code></td><td><code>64rem</code></td></tr>
@@ -466,6 +468,7 @@ bar.addEventListener(<span class="kp-code__string">'kp-selection-action'</span>,
                             <tr><td><code>setSelectionBusy / setSelectionResult / setSelectionRules</code></td><td>While an action runs the buttons stop answering and the count gives way to the words; a result names how many were done and how many refused, and why; a rule is a function by the action’s id that answers the reason or nothing.</td></tr>
                             <tr><td><code>data-kp-selection-for</code></td><td>The ids of the tables or lists it serves, space separated; the nearest by default.</td></tr>
                             <tr><td><code>data-kp-placement</code></td><td>`sticky-top` (default), `inline` or `floating-bottom`.</td></tr>
+                            <tr><td><code>data-kp-selection-room</code></td><td>The room an empty bar keeps: `hold` (default) its height, so the list never jumps; `fold` none, opening at the theme’s rule time with the first tick (inline and sticky-top; a floating bar holds none either way).</td></tr>
                             <tr><td><code>data-kp-selection-names</code></td><td>`names` (default) or `count`.</td></tr>
                             <tr><td><code>data-kp-selection-max</code></td><td>How many names show before “+N more”; 6.</td></tr>
                             <tr><td><code>setSelectionProgress</code></td><td>`setSelectionProgress(bar, { done, total })` between `setSelectionBusy` and the end: the busy words are followed by “3 of 7 done”; the end (`setSelectionBusy(bar, '')` or `setSelectionResult`) takes it away. A screen reader hears every quarter, not every row.</td></tr>

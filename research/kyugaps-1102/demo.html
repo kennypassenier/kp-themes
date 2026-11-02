@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kyugaps-1102" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kyu: the selection bar's empty room and the tour on a tall part</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>kyu: the selection bar's empty room and the tour on a tall part</h1>
+                <p class="cat-intro">
+                    Two things kyu ran into on its topic page. The selection bar kept an empty band above the dead letters while nothing
+                    was ticked: a new option folds it away, and you pick which is the default. The tour card on a part taller than the
+                    window stood out of reach above it: it now stays in the window, nothing to choose. Formal only.
+                </p>
+                <p>Each section says under <b>Expected</b> what you should see and what each control does. State puts every window of the section in that state; Width shows them at a phone&rsquo;s 390 px.</p>
+            </header>
+
+        <section id="selection-room" data-review-item="selection-room" data-review-topic="selection" data-review-topic-title="The selection bar" data-review-components="selection-room" data-review-motion="none" data-review-title="Selection bar: no empty room while nothing is ticked" data-review-choices='[{"id":"selection-room-default","label":"The room of an empty bar","default":"hold","options":[{"value":"hold","label":"<b>Hold</b>: the room stays (now)"},{"value":"fold","label":"<b>Fold</b>: no room until a tick"}]}]' aria-labelledby="h-selection-room">
+            <header class="pg-intro"><h2 id="h-selection-room">Dead letters of orders.created</h2><p>kyu&rsquo;s dead letters card, with the selection bar over its six dead letters.</p></header>
+            <div class="pg-changed"><p><b>What is asked</b> (kyu 34): kyu&rsquo;s dead letters card kept an empty band of 72 px (86 px on a phone) above its table while nothing was ticked: the selection bar holds its room so the table never jumps. New option <code>data-kp-selection-room="fold"</code>: the empty bar takes no room, and the first tick opens it. Holding the room stays the default unless you pick Fold.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Nothing ticked</b>: in <b>Hold</b> a blank band of 72 px stands between the card&rsquo;s sentence and the table. In <b>Fold</b> the table sits right under the sentence, with the usual 8 px gap of the card.</li><li><b>Two ticked</b>: both show the bar with &ldquo;2 selected&rdquo;, the two names, Requeue, Delete and Untick all. In Fold the room opens from 0 to 72 px in the theme&rsquo;s rule time (formal: 400 ms, even speed) while the bar is ruled open from its left edge, and the table moves down with it; in Hold only the bar is ruled open.</li><li>Press <b>Nothing ticked</b> again: in Fold the bar is ruled closed and the room closes with it, the exact reverse. <b>Phone</b>: the same, the bar 86 px with the count on its own row.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the bar&rsquo;s blue start edge and hairline frame, ruled open at an even speed. Check that in Fold nothing of the empty bar is left (no line, no gap) and that the table never overlaps the opening bar.</p></div>
+            <div data-review-controls data-review-controls-for="selection-room-component"><div role="group" aria-label="State"><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="none" data-target="selection-room-component" aria-pressed="true">Nothing ticked</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="two" data-target="selection-room-component" aria-pressed="false">Two ticked</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="selection-room-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="selection-room-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="selection-room-component" class="pg-component" data-pg-width="full">
+        <div class="pg-pair"><div class="pg-frame" data-pg-frame="hold" data-pg-default><p class="pg-frame__name"><span><b>Hold</b>, as approved</span> <span class="kp-badge pg-frame__default">Default</span></p><iframe class="pg-stage-frame" id="pg-room-hold" title="Dead letters, the bar holds its room" data-pg-src="stage.html?scene=dead&amp;v=hold&amp;state=none" data-pg-scene="dead" data-pg-state="none" loading="lazy"></iframe></div><div class="pg-frame" data-pg-frame="fold"><p class="pg-frame__name"><span><b>Fold</b>, the option</span> <span class="kp-badge pg-frame__default">Default</span></p><iframe class="pg-stage-frame" id="pg-room-fold" title="Dead letters, the bar folds while empty" data-pg-src="stage.html?scene=dead&amp;v=fold&amp;state=none" data-pg-scene="dead" data-pg-state="none" loading="lazy"></iframe></div></div>
+            </div>
+        </section>
+
+        <section id="tour-tall" data-review-item="tour-tall" data-review-topic="tour" data-review-topic-title="The tour" data-review-components="tour-tall" data-review-motion="none" data-review-title="Tour card on a part taller than the window" aria-labelledby="h-tour-tall">
+            <header class="pg-intro"><h2 id="h-tour-tall">Dead letters on a busy day</h2><p>kyu&rsquo;s topic page with thirty dead letters, so the card is taller than the window, and the tour standing on the whole card.</p></header>
+            <div class="pg-changed"><p><b>What is asked</b> (kyu 33): kyu&rsquo;s tour step on the dead letters card put its card above the card&rsquo;s top, out of the window (top &minus;124 px), because the card is taller than the window; kyu pointed the step at the heading instead. The tour card now takes the other side when its own side has no room, and lies over the part, 16 px inside the window, when neither side has room. A fault fix: nothing to choose.</p></div>
+            <div class="pg-expected"><p><b>Expected:</b></p><ul><li><b>Tour on the dead letters</b>: the card is ringed and the page around it dimmed; the tour card (&ldquo;Dead letters&rdquo;, 1 of 1, Done) stands 16 px under the window&rsquo;s top edge, over the top of the ringed card, fully readable, with nothing of it cut off.</li><li>Scroll the frame: the tour card stays inside the window and follows the part; it never leaves the top or the bottom edge. Esc or Done ends the tour. <b>Closed</b>: no tour.</li><li><b>Phone</b>: the same, the tour card the window&rsquo;s width less 16 px on either side.</li></ul></div>
+            <div data-review-look><p data-for="formal">Formal: the tour card on its popover plate with the focus-coloured ring round the part. Check that the card is wholly in the window and that its text never touches its edges.</p></div>
+            <div data-review-controls data-review-controls-for="tour-tall-component"><div role="group" aria-label="State"><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="tour" data-target="tour-tall-component" aria-pressed="true">Tour on the dead letters</button><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="closed" data-target="tour-tall-component" aria-pressed="false">Closed</button></div><div role="group" aria-label="Width"><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="full" data-target="tour-tall-component" aria-pressed="true">Full width</button><button type="button" class="kp-button kp-button--sm" data-pg="width" data-value="phone" data-target="tour-tall-component" aria-pressed="false">Phone, 390 px</button></div></div>
+            <div id="tour-tall-component" class="pg-component" data-pg-width="full">
+        <iframe class="pg-stage-frame" id="pg-tour" title="kyu&rsquo;s topic page with the tour on the dead letters" data-pg-src="stage.html?scene=tour&amp;v=fixed&amp;state=tour" data-pg-scene="tour" data-pg-state="tour" loading="lazy"></iframe>
+            </div>
+        </section>
+        </main>
+        <script type="application/json" data-review-round>
+            {"round":"kyugaps-1102-fc306a6b-803f-4bdd-ad6e-b69038a45157","received":[]}
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

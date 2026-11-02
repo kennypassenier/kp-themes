@@ -1,0 +1,28 @@
+/* @part: datatable: A selection bar that holds no room while nothing is ticked */
+    /* A selection bar that holds no room while nothing is ticked [kyugaps-1102; kyu 34]. `data-kp-selection-room="fold"`
+     * (`hold` is the default: the bar keeps its height so the list never jumps) folds an inline or sticky-top bar to 0 px
+     * with no margin while it is empty; ticking a row opens its room at the theme's rule time and ease, together with the
+     * panel's rule along its start edge, and unticking the last row closes both the same way backwards. The room is a
+     * track from 0 to the panel's height; the host clips what the track does not yet show, with a margin for focus rings
+     * (`--kp-selection-clip-margin`, 0.25rem). A floating-bottom bar holds no room anyway and is left as it is. */
+    .kp-selection[data-kp-selection-room='fold']:not([data-kp-placement='floating-bottom']) {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr);
+        min-block-size: 0;
+        overflow: clip;
+        overflow-clip-margin: var(--kp-selection-clip-margin, 0.25rem);
+        transition:
+            grid-template-rows var(--kp-rule-time, 400ms) var(--kp-rule-ease, linear),
+            margin-block var(--kp-rule-time, 400ms) var(--kp-rule-ease, linear);
+    }
+
+    .kp-selection[data-kp-selection-room='fold'][data-kp-selection-state='empty']:not([data-kp-placement='floating-bottom']) {
+        grid-template-rows: minmax(0, 0fr);
+        margin-block: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-selection[data-kp-selection-room='fold'] {
+            transition: none;
+        }
+    }

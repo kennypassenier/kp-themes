@@ -2052,7 +2052,10 @@ helpTourButton.addEventListener('click', () => {
   returns `{ end, goto }`.
 - The card (`.kp-tour`) is a non-modal dialog, so the page stays usable. It
   sits 12 px under its part, or over it when the part is in the lower half
-  of the window, never on it; 16 px inside the window's edges (on a phone
+  of the window, never on it; when that side has no room it takes the other
+  side, and a part taller than the window (a whole message body) has the card
+  lying over it, 16 px inside the window, so the card is never out of reach
+  [kyugaps-1102]; 16 px inside the window's edges (on a phone
   the window's width less those two gutters, `--kp-tour-width`); and it
   follows its part when the page scrolls. When the part is inside an open
   modal dialog, the card goes into that dialog.
@@ -3591,6 +3594,19 @@ The handle: `reload()`. React: `load` with the same request (column keys
 instead of indices), `rows` then left out, `debounceMs` 300 by default, and
 `apiRef.current.reload()`; `totalRows` still serves a table whose page you
 fetch yourself.
+
+### The room of an empty selection bar
+
+```html
+<div class="kp-selection" data-kp-selection data-kp-selection-for="messages" data-kp-placement="inline" data-kp-selection-room="fold">…</div>
+```
+
+A selection bar keeps its height (56 px and its margins, 72 px in all in formal) while nothing is ticked, so the list
+under it never jumps: `data-kp-selection-room="hold"`, the default. `fold` gives that room up: the empty bar takes 0 px
+and no margin, and the first tick opens it at the theme's rule time and ease (`--kp-rule-time`, `--kp-rule-ease`)
+together with the panel's rule, the list moving down with it; unticking the last row closes it the same way backwards.
+For a page where a bar is rarely used and its empty room would be a gap. A floating-bottom bar holds no room either
+way. `attachSelectionBars(root, { room: 'fold' })` writes the attribute [kyugaps-1102].
 
 ### Editing a value in its cell
 

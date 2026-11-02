@@ -27,7 +27,10 @@ export declare const tourStepsOnPage: <S extends TourStep>(steps: readonly S[], 
 /**
  * Where the card goes: centred on its target, kept `gutter` px inside the
  * window, and `gap` px under the target, or over it when the target's middle
- * is in the lower half of the window. Not rounded: a target at a fractional
+ * is in the lower half of the window. When that side has no room the card
+ * takes the other side; when neither side has room (a target taller than the
+ * window) it lies over the target, kept `gutter` px inside the window, so it
+ * is never out of reach [kyugaps-1102]. Not rounded: a target at a fractional
  * position keeps the card exactly `gap` px from it.
  * @param {{ top: number, bottom: number, left: number, width: number, height: number }} target the target's box in the window
  * @param {{ width: number, height: number }} card

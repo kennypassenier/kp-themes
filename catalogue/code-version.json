@@ -109,7 +109,7 @@
         "js/runs.js": { "digest": "2e552dd656dad61f", "when": "[data-kp-runs]" },
         "js/segmented-menu.js": { "digest": "b7bd3a845059dd98", "when": ".kp-segmented__menu" },
         "js/segmented.js": { "digest": "a7f09dbb3e2a25f9", "when": "[data-kp-segmented]" },
-        "js/selection-bar.js": { "digest": "ff4a84166a242a2c", "when": "[data-kp-selection]" },
+        "js/selection-bar.js": { "digest": "565c1f3b23e53c46", "when": "[data-kp-selection]" },
         "js/sentence.js": { "digest": "0c9a0472084b1b72", "when": "[data-kp-sentence]" },
         "js/sequencer.js": { "digest": "8d32c635ac292c71", "when": "[data-kp-sequencer]" },
         "js/settled.js": {
@@ -8029,6 +8029,7 @@
         "||@media (prefers-reduced-motion: reduce)||.kp-question__bar": "730827a61a86cca6",
         "||@media (prefers-reduced-motion: reduce)||.kp-question__ring": "730827a61a86cca6",
         "||@media (prefers-reduced-motion: reduce)||.kp-refresh__count[data-kp-run]": "969a2977b119e071",
+        "||@media (prefers-reduced-motion: reduce)||.kp-selection[data-kp-selection-room='fold']": "d249823c3a99a9b6",
         "||@media (prefers-reduced-motion: reduce)||.kp-selection__panel": "8e168145f11606b4",
         "||@media (prefers-reduced-motion: reduce)||.kp-swatches__swatch": "f44706edd573870f",
         "||@media (prefers-reduced-motion: reduce)||.kp-tag[data-kp-usual-flash]": "269393663c57d27a",
@@ -10417,6 +10418,8 @@
         "||||.kp-selection": "e028667c64c7f557",
         "||||.kp-selection[data-kp-placement='floating-bottom']": "4b39ab2ff4a43157",
         "||||.kp-selection[data-kp-placement='sticky-top']": "66de02050e2188b3",
+        "||||.kp-selection[data-kp-selection-room='fold']:not([data-kp-placement='floating-bottom'])": "dc0b154f08b4ea35",
+        "||||.kp-selection[data-kp-selection-room='fold'][data-kp-selection-state='empty']:not([data-kp-placement='floating-bottom'])": "cf5c1ab14f73a8e7",
         "||||.kp-selection__actions": "2699ea65e9916b1c",
         "||||.kp-selection__busy": "c106ecd9044e9c64",
         "||||.kp-selection__clear": "d6f9a3efa03f469a",
@@ -12405,6 +12408,7 @@
                 "data-kp-selection-open",
                 "data-kp-selection-reasons",
                 "data-kp-selection-result",
+                "data-kp-selection-room",
                 "data-kp-selection-state",
                 "data-kp-selection-take",
                 "data-kp-selection-titled",
@@ -14416,7 +14420,7 @@
             ]
         },
         "overlays": {
-            "modules": "82151c857b2d70c3",
+            "modules": "527c3d3df05eb3d0",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",

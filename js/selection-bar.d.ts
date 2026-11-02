@@ -6,6 +6,10 @@ export type SelectionItem = {
 };
 export type SelectionOptions = {
     placement?: 'sticky-top' | 'inline' | 'floating-bottom';
+    /**
+     * the room an empty bar keeps: `hold` (default) its height, `fold` none
+     */
+    room?: 'hold' | 'fold';
     names?: 'names' | 'count';
     maxNames?: number;
     matching?: number;
@@ -14,6 +18,7 @@ export type SelectionOptions = {
 /**
  * @typedef {object} SelectionOptions
  * @property {'sticky-top' | 'inline' | 'floating-bottom'} [placement]
+ * @property {'hold' | 'fold'} [room] the room an empty bar keeps: `hold` (default) its height, `fold` none
  * @property {'names' | 'count'} [names]
  * @property {number} [maxNames]
  * @property {number} [matching]

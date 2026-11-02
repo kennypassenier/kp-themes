@@ -544,6 +544,22 @@
             },
             "fingerprint": "5eacebed10679adf",
             "update": null
+        },
+        "research/kyugaps-1102/demo.html": {
+            "facts": {
+                "id": "kyugaps-1102",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Two things kyu ran into on its topic page. The selection bar kept an empty band above the dead letters while nothing was ticked: a new option folds it away, and you pick which is the default. The tour card on a part taller than the window stood out of reach above it: it now stays in the window, nothing to choose. Formal only.",
+                "sections": [
+                    { "item": "selection-room", "themes": null, "topic": "selection", "mode": null },
+                    { "item": "tour-tall", "themes": null, "topic": "tour", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            {\"round\":\"kyugaps-1102-fc306a6b-803f-4bdd-ad6e-b69038a45157\",\"received\":[]}\n        "
+            },
+            "fingerprint": "f4b5a5c22f07e993",
+            "update": null
         }
     },
     "decided": {

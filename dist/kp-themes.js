@@ -40209,6 +40209,7 @@ var init_controller36 = __esm({
         const placement = options.placement ?? bar.getAttribute("data-kp-placement") ?? "sticky-top";
         bar.setAttribute("data-kp-placement", ["inline", "floating-bottom"].includes(placement) ? placement : "sticky-top");
         if (options.names) bar.setAttribute("data-kp-selection-names", options.names);
+        if (options.room) bar.setAttribute("data-kp-selection-room", options.room === "fold" ? "fold" : "hold");
         if (options.maxNames) bar.setAttribute("data-kp-selection-max", String(options.maxNames));
         this.memory.matchingTotal = Number(options.matching ?? bar.getAttribute("data-kp-select-matching")) || 0;
         this.memory.sources = sourcesOf(bar);
@@ -100672,8 +100673,18 @@ function shouldStartTour({ search = "", remembered = false, automated = false })
 var tourStepsOnPage = (steps2, find2) => steps2.filter((step) => !!find2(step));
 function tourCardPlace(target, card, view, { gutter = TOUR_GUTTER, gap = TOUR_GAP } = {}) {
   const left = Math.max(gutter, Math.min(view.width - card.width - gutter, target.left + target.width / 2 - card.width / 2));
-  const top = target.top + target.height / 2 > view.height / 2 ? target.top - gap - card.height : target.bottom + gap;
-  return { left, top };
+  return { left, top: tourCardTop(target, card, view, gutter, gap) };
+}
+function tourCardTop(target, card, view, gutter, gap) {
+  const above = target.top - gap - card.height;
+  const below = target.bottom + gap;
+  const fitsAbove = above >= gutter;
+  const fitsBelow = below + card.height <= view.height - gutter;
+  const prefersAbove = target.top + target.height / 2 > view.height / 2;
+  if (prefersAbove ? fitsAbove : fitsBelow) return prefersAbove ? above : below;
+  if (prefersAbove ? fitsBelow : fitsAbove) return prefersAbove ? below : above;
+  const highest = Math.max(gutter, view.height - card.height - gutter);
+  return Math.max(gutter, Math.min(highest, prefersAbove ? above : below));
 }
 var isShown2 = (el16) => !!el16 && el16.isConnected && el16.getClientRects().length > 0;
 function resolveTarget(step, doc) {

@@ -18,7 +18,7 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 37.1 kB | 19.0 kB | 49% |
 | `css/blueprint-register.css` | 261.1 kB | 140.2 kB | 46% |
 | `css/brutalism-register.css` | 254.4 kB | 144.7 kB | 43% |
-| `css/components.css` | 1337.4 kB | 652.8 kB | 51% |
+| `css/components.css` | 1338.9 kB | 653.4 kB | 51% |
 | `css/cyberpunk-register.css` | 321.3 kB | 185.6 kB | 42% |
 | `css/dark-register.css` | 229.9 kB | 114.7 kB | 50% |
 | `css/deco-register.css` | 259.1 kB | 149.9 kB | 42% |
@@ -33,12 +33,12 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 141.2 kB | 87.1 kB | 38% |
 | `css/titanium-register.css` | 221.5 kB | 121.1 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 4422.9 kB | 2348.5 kB | 47% |
-| `dist/kp-themes-base.css` | 1516.9 kB | 758.7 kB | 50% |
-| `dist/kp-themes.js` | 3961.6 kB | 2099.7 kB | 47% |
+| `dist/kp-themes.css` | 4424.4 kB | 2349.1 kB | 47% |
+| `dist/kp-themes-base.css` | 1518.4 kB | 759.3 kB | 50% |
+| `dist/kp-themes.js` | 3962.3 kB | 2100.0 kB | 47% |
 
-The loose stylesheets together weigh **4476.1 kB** authored and
-**2380.3 kB** minified, 47% less. A page loading one theme's
+The loose stylesheets together weigh **4477.6 kB** authored and
+**2380.9 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 **The base and the split bundle** [load-1102]. `dist/kp-themes-base.min.css` is the bundle without
@@ -51,8 +51,8 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/auto.js` | 20 | 267.0 kB |
 | `dist/js/lazy-register.js` | 6 | 86.2 kB |
 | `dist/js/core.js` | 4 | 81.4 kB |
-| `dist/js/index.js` | 169 | 2042.3 kB |
-| the whole folder | 313 | 2160.9 kB |
+| `dist/js/index.js` | 169 | 2042.5 kB |
+| the whole folder | 313 | 2161.1 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

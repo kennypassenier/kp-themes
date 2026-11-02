@@ -66,6 +66,7 @@
         "command-palette/command-that-link-looks.css",
         "datatable/base.css",
         "datatable/room-next-digit-99.css",
+        "datatable/selection-fold.css",
         "datatable/a-header-that-stays-whenever.css",
         "datatable/row-reorder-column-drag.css",
         "datatable/a-column-that-cannot-be.css",

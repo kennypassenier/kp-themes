@@ -80,6 +80,7 @@ bar.addEventListener('kp-selection-action', (event) => {
             { name: 'setSelectionBusy / setSelectionResult / setSelectionRules', what: 'While an action runs the buttons stop answering and the count gives way to the words; a result names how many were done and how many refused, and why; a rule is a function by the action’s id that answers the reason or nothing.' },
             { name: 'data-kp-selection-for', what: 'The ids of the tables or lists it serves, space separated; the nearest by default.' },
             { name: 'data-kp-placement', what: '`sticky-top` (default), `inline` or `floating-bottom`.' },
+            { name: 'data-kp-selection-room', what: 'The room an empty bar keeps: `hold` (default) its height, so the list never jumps; `fold` none, opening at the theme’s rule time with the first tick (inline and sticky-top; a floating bar holds none either way).' },
             { name: 'data-kp-selection-names', what: '`names` (default) or `count`.' },
             { name: 'data-kp-selection-max', what: 'How many names show before “+N more”; 6.' },
             { name: 'setSelectionProgress', what: '`setSelectionProgress(bar, { done, total })` between `setSelectionBusy` and the end: the busy words are followed by “3 of 7 done”; the end (`setSelectionBusy(bar, \'\')` or `setSelectionResult`) takes it away. A screen reader hears every quarter, not every row.' },
