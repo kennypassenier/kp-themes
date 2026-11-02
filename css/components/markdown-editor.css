@@ -52,7 +52,10 @@
         font-family: var(--theme-font-display, inherit);
     }
 
+    /* A flex item that may not shrink [habits3-1102]: in a register whose tool button has padding of its own (dark, cyberpunk,
+     * synthwave, brutalism) the icon's 1.125rem was the first thing the row gave up, down to 0 px wide. */
     .kp-md-editor__icon {
+        flex: none;
         inline-size: 1.125rem;
         block-size: 1.125rem;
     }

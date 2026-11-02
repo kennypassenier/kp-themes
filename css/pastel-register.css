@@ -500,6 +500,12 @@
         font-size: 0.92rem;
     }
 
+    /* The time field's list button stands inside the box, so the text stops short of it; the register's side padding above
+       had taken that room back and typed text ran under the button [habits3-1102]. */
+    [data-theme='pastel'] .kp-time:not(.kp-time--inline) .kp-time__input.kp-field__input {
+        padding-inline-end: 2.5rem;
+    }
+
     /* A field's focus is the dashed line alone, as every control's (the
        signature layer, G15). */
 

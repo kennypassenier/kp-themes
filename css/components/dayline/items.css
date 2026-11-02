@@ -15,7 +15,6 @@
         inline-size: calc(100% / var(--kp-dayline-lanes, 1) - 2px);
         margin-block: 1px;
         margin-inline-start: calc(100% * var(--kp-dayline-lane, 0) / var(--kp-dayline-lanes, 1));
-        overflow: hidden;
         border: 1px solid var(--border);
         border-inline-start: 3px solid var(--kp-dayline-tone);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
@@ -108,6 +107,9 @@
         box-sizing: border-box;
         min-inline-size: 0;
         block-size: 100%;
+        /* The words are clipped here, not on the block [habits3-1102]: the block's clip cut the handle's focus ring in every
+         * register (the ring stands outside the handle, or inside a box-shadow that reaches past it). */
+        overflow: hidden;
         margin: 0;
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem);
         border: 0;

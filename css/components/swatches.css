@@ -25,7 +25,11 @@
         grid-template-columns: repeat(auto-fill, var(--kp-swatch-size));
         gap: var(--kp-swatches-gap);
         box-sizing: border-box;
-        inline-size: min(100%, calc(var(--kp-swatches-columns, 6) * (var(--kp-swatch-size) + var(--kp-swatches-gap)) - var(--kp-swatches-gap) + 9px));
+        /* Its own width, held to the picker's: `min(100%, …)` had nothing to resolve against inside a max-content parent (a
+         * `.kp-popover--panel`) and the auto-fill fell to one column; a percentage max-size is ignored while the parent is sized from
+         * its content, so the panel takes the row's width; the 8px are the grid's own negative margins, and a narrower definite parent still wins [habits3-1102]. */
+        inline-size: calc(var(--kp-swatches-columns, 6) * (var(--kp-swatch-size) + var(--kp-swatches-gap)) - var(--kp-swatches-gap) + 9px);
+        max-inline-size: calc(100% + 8px);
         padding: 4px;
         margin: -4px;
     }

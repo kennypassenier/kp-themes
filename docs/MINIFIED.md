@@ -21,28 +21,28 @@ the selectors and their order are identical, which is what
 | ---- | -------: | -------: | ----: |
 | `css/_rules.css` | 37.1 kB | 19.0 kB | 49% |
 | `css/blueprint-register.css` | 261.1 kB | 140.1 kB | 46% |
-| `css/brutalism-register.css` | 254.4 kB | 144.6 kB | 43% |
-| `css/components.css` | 1361.6 kB | 662.6 kB | 51% |
+| `css/brutalism-register.css` | 254.8 kB | 144.7 kB | 43% |
+| `css/components.css` | 1363.0 kB | 662.7 kB | 51% |
 | `css/cyberpunk-register.css` | 321.3 kB | 185.6 kB | 42% |
 | `css/dark-register.css` | 229.9 kB | 114.6 kB | 50% |
-| `css/deco-register.css` | 259.1 kB | 149.9 kB | 42% |
+| `css/deco-register.css` | 259.4 kB | 150.0 kB | 42% |
 | `css/fonts.css` | 16.6 kB | 12.0 kB | 28% |
 | `css/forest-register.css` | 244.4 kB | 126.9 kB | 48% |
 | `css/formal-register.css` | 193.4 kB | 99.1 kB | 49% |
 | `css/layout.css` | 13.0 kB | 2.5 kB | 81% |
 | `css/nostromo-register.css` | 250.0 kB | 139.3 kB | 44% |
-| `css/pastel-register.css` | 241.0 kB | 127.4 kB | 47% |
+| `css/pastel-register.css` | 241.3 kB | 127.5 kB | 47% |
 | `css/solstice-register.css` | 191.5 kB | 113.1 kB | 41% |
-| `css/synthwave-register.css` | 255.0 kB | 140.0 kB | 45% |
+| `css/synthwave-register.css` | 255.3 kB | 140.1 kB | 45% |
 | `css/themes.css` | 141.2 kB | 87.0 kB | 38% |
 | `css/titanium-register.css` | 221.6 kB | 121.1 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 46% |
-| `dist/kp-themes.css` | 4447.4 kB | 2358.4 kB | 47% |
-| `dist/kp-themes-base.css` | 1541.1 kB | 768.5 kB | 50% |
+| `dist/kp-themes.css` | 4450.1 kB | 2359.0 kB | 47% |
+| `dist/kp-themes-base.css` | 1542.5 kB | 768.7 kB | 50% |
 | `dist/kp-themes.js` | 4001.7 kB | 2119.0 kB | 47% |
 
-The loose stylesheets together weigh **4500.5 kB** authored and
-**2389.4 kB** minified, 47% less. A page loading one theme's
+The loose stylesheets together weigh **4503.3 kB** authored and
+**2389.9 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 **The base and the split bundle** [load-1102]. `dist/kp-themes-base.min.css` is the bundle without

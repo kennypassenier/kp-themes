@@ -22,6 +22,12 @@
         caret-color: var(--accent);
     }
 
+    /* The time field's list button stands inside the box, so the text stops short of it; the register's side padding above
+       had taken that room back and typed text ran under the button [habits3-1102]. */
+    [data-theme='synthwave'] .kp-time:not(.kp-time--inline) .kp-time__input.kp-field__input {
+        padding-inline-end: 2.5rem;
+    }
+
     /* The same two tubes round the field [G14, DI2]: it is a part like any
        other, so its ring is the button's. */
     [data-theme='synthwave'] .kp-field__input:focus-visible {

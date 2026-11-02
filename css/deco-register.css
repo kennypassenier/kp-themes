@@ -573,6 +573,12 @@
         padding-inline: 0.7rem;
     }
 
+    /* The time field's list button stands inside the box, so the text stops short of it; the register's side padding above
+       had taken that room back and typed text ran under the button [habits3-1102]. */
+    [data-theme='deco'] .kp-time:not(.kp-time--inline) .kp-time__input.kp-field__input {
+        padding-inline-end: 2.5rem;
+    }
+
     /* The field and the combobox take their height from the package
        [scope-80]; the search box and the palette keep their own. */
     [data-theme='deco'] .kp-datatable__search,

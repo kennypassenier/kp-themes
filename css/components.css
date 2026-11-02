@@ -13428,7 +13428,6 @@
         inline-size: calc(100% / var(--kp-dayline-lanes, 1) - 2px);
         margin-block: 1px;
         margin-inline-start: calc(100% * var(--kp-dayline-lane, 0) / var(--kp-dayline-lanes, 1));
-        overflow: hidden;
         border: 1px solid var(--border);
         border-inline-start: 3px solid var(--kp-dayline-tone);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
@@ -13521,6 +13520,9 @@
         box-sizing: border-box;
         min-inline-size: 0;
         block-size: 100%;
+        /* The words are clipped here, not on the block [habits3-1102]: the block's clip cut the handle's focus ring in every
+         * register (the ring stands outside the handle, or inside a box-shadow that reaches past it). */
+        overflow: hidden;
         margin: 0;
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem);
         border: 0;
@@ -13884,7 +13886,11 @@
         grid-template-columns: repeat(auto-fill, var(--kp-swatch-size));
         gap: var(--kp-swatches-gap);
         box-sizing: border-box;
-        inline-size: min(100%, calc(var(--kp-swatches-columns, 6) * (var(--kp-swatch-size) + var(--kp-swatches-gap)) - var(--kp-swatches-gap) + 9px));
+        /* Its own width, held to the picker's: `min(100%, …)` had nothing to resolve against inside a max-content parent (a
+         * `.kp-popover--panel`) and the auto-fill fell to one column; a percentage max-size is ignored while the parent is sized from
+         * its content, so the panel takes the row's width; the 8px are the grid's own negative margins, and a narrower definite parent still wins [habits3-1102]. */
+        inline-size: calc(var(--kp-swatches-columns, 6) * (var(--kp-swatch-size) + var(--kp-swatches-gap)) - var(--kp-swatches-gap) + 9px);
+        max-inline-size: calc(100% + 8px);
         padding: 4px;
         margin: -4px;
     }
@@ -17637,7 +17643,10 @@
         font-family: var(--theme-font-display, inherit);
     }
 
+    /* A flex item that may not shrink [habits3-1102]: in a register whose tool button has padding of its own (dark, cyberpunk,
+     * synthwave, brutalism) the icon's 1.125rem was the first thing the row gave up, down to 0 px wide. */
     .kp-md-editor__icon {
+        flex: none;
         inline-size: 1.125rem;
         block-size: 1.125rem;
     }
@@ -32909,6 +32918,13 @@
         padding-inline-end: 2.5rem;
         font-variant-numeric: tabular-nums;
         letter-spacing: 0.02em;
+    }
+
+    /* The button is drawn inside the box on purpose (the field is one control and its list button its last 2.25rem), and the text
+     * stops short of it. The room is kept above a register's own `padding` on `.kp-field__input` (brutalism, deco, synthwave and
+     * pastel set 11 to 14 px there, which put typed text under the button) [habits3-1102]. */
+    .kp-time:not(.kp-time--inline) .kp-time__input.kp-field__input {
+        padding-inline-end: 2.5rem;
     }
 
     .kp-time__toggle {

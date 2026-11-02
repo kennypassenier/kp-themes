@@ -27,6 +27,13 @@
         letter-spacing: 0.02em;
     }
 
+    /* The button is drawn inside the box on purpose (the field is one control and its list button its last 2.25rem), and the text
+     * stops short of it. The room is kept above a register's own `padding` on `.kp-field__input` (brutalism, deco, synthwave and
+     * pastel set 11 to 14 px there, which put typed text under the button) [habits3-1102]. */
+    .kp-time:not(.kp-time--inline) .kp-time__input.kp-field__input {
+        padding-inline-end: 2.5rem;
+    }
+
     .kp-time__toggle {
         position: absolute;
         inset-block: 1px;
