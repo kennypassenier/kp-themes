@@ -102,9 +102,14 @@ const SIDEWAYS_EXCEPTIONS = {
 // started failing at 42 pages whenever the machine was busy, which reads
 // as a defect in whatever milestone happened to be building. Standing
 // rule 8a: that is a name, not weather — the budget was never scaled to
-// the work. These tests now ask for one second per page plus ten, so the
-// budget grows with the corpus instead of being outgrown by it.
-const CORPUS_BUDGET_MS = 10_000 + DESCRIPTORS.length * 1_000;
+// the work. These tests now ask for a budget per page plus ten seconds, so the
+// budget grows with the corpus instead of being outgrown by it. A page is
+// about 0.9 s to load alone since the split (its entry fetches every module
+// file, about 1200), so one second per page left 23 s over on an idle machine
+// and the 12.4.0 release suite, 25% of the cores busy, timed out at 171 s in
+// page.goto of code-field; three seconds per page is a ceiling, not a pace
+// [rel-1240 triage].
+const CORPUS_BUDGET_MS = 10_000 + DESCRIPTORS.length * 3_000;
 
 test('no documentation page scrolls sideways at 360px [DI11]', { tag: ['@component:site'] }, async ({ page }) => {
     test.setTimeout(CORPUS_BUDGET_MS);

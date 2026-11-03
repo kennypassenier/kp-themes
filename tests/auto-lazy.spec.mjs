@@ -67,7 +67,16 @@ const EAGER = `import { languageReady, registerDictionary } from './strings/runt
 );
 if (!EAGER.includes('extra0(root)')) throw new Error('the eager entry no longer ends its attach list with attachGrids(root)');
 /** js/effects.js as 6.1.0 shipped it, one module with every hook in it [scope-117]. */
-const EFFECTS_EAGER = readFileSync(new URL('fixtures/effects-eager.txt', import.meta.url), 'utf8');
+const EFFECTS_EAGER_6_1_0 = readFileSync(new URL('fixtures/effects-eager.txt', import.meta.url), 'utf8');
+// An aria-hidden headline reveal gets no label of its own: the React DecipherText labels its outer element
+// (CHANGELOG, "an aria-hidden headline reveal gets no second label" [rel-1230]). The frozen 6.1.0 copy still labels
+// every headline, so it takes the same guard as js/effects/headline-run.js [rel-1240 triage].
+const LABEL_LINE = "if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', text);";
+const EFFECTS_EAGER = EFFECTS_EAGER_6_1_0.replace(
+    LABEL_LINE,
+    "if (!el.hasAttribute('aria-label') && el.getAttribute('aria-hidden') !== 'true') el.setAttribute('aria-label', text);",
+);
+if (EFFECTS_EAGER === EFFECTS_EAGER_6_1_0) throw new Error('the eager effects copy no longer labels headlines with its own line');
 
 /** Every page under these folders that loads js/auto.js. */
 const ALL_PAGES = ['tests/fixtures', 'examples', 'catalogue', 'site/components']
@@ -315,7 +324,11 @@ for (const path of PAGES) {
             const withoutClock = (/** @type {string[]} */ lines) =>
                 lines
                     .filter((line) => !line.includes('data-kp-ago-voice'))
-                    .map((line) => line.replace(/ data-kp-stale=(?=\s|$)/, '').replace(/(aria-label=now, )\d{1,2}:\d{2}/, '$1HH:MM'));
+                    .map((line) => line.replace(/ data-kp-stale=(?=\s|$)/, '').replace(/(aria-label=now, )\d{1,2}:\d{2}/, '$1HH:MM'))
+                    // The gantt demo's runs are laid from the clock (`now - 3 h` and so on), so their times name the
+                    // minute each page was read in, and the two reads can straddle a minute change: 10:45 against
+                    // 10:46 across 5 runs in the 12.4.0 release suite, green on rerun [rel-1240 triage].
+                    .map((line) => (line.includes('kp-gantt__run') ? line.replace(/\b\d{1,2}:\d{2}\b/g, 'HH:MM') : line));
             const eagerLines = withoutClock(withoutCard(whole));
             const lazyLines = withoutClock(withoutCard(lazy));
 

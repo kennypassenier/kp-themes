@@ -163,16 +163,23 @@ test.describe('the cyberpunk data stream divider [scope-96]', { tag: ['@theme:cy
                 expect(await page.evaluate(() => devicePixelRatio)).toBeCloseTo(ratio, 2);
                 // Every animation parked at an arbitrary moment, so a moving
                 // tile is read at a fractional offset.
-                await page.evaluate(() => {
-                    for (const animation of document.getAnimations()) {
-                        animation.pause();
-                        animation.currentTime = 1337;
-                    }
-                });
+                // Parked after the scroll, per seam: scrolling a seam into view starts the reveals that wait for it, and
+                // an animation started after a single early park ran on, so under a busy machine the photograph caught
+                // a column mid-motion (x=111, 16 rows at 997 px in the 12.4.0 release suite, green on every rerun)
+                // [rel-1240 triage].
+                const park = () =>
+                    page.evaluate(async () => {
+                        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                        for (const animation of document.getAnimations()) {
+                            animation.pause();
+                            animation.currentTime = 1337;
+                        }
+                    });
                 const found = [];
                 for (const [name, selector] of SEAMS) {
                     const locator = page.locator(selector);
                     await locator.scrollIntoViewIfNeeded();
+                    await park();
                     const cssWidth = (await locator.boundingBox())?.width ?? 0;
                     const png = (await locator.screenshot({ scale: 'device', animations: 'allow' })).toString('base64');
                     const result = await page.evaluate(async (src) => {
