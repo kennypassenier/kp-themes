@@ -39382,6 +39382,14 @@
             min-inline-size: var(--kp-touch-target, 2.75rem);
         }
 
+        /* The skip link shows on focus at 40 px: it stands 44 px high, its words centred [touch-1103; HTTPSwitchboard 03/11]. */
+        html .kp-skip-link {
+            display: inline-flex;
+            align-items: center;
+            box-sizing: border-box;
+            min-block-size: var(--kp-touch-target, 2.75rem);
+        }
+
         html .kp-icon-button,
         html .kp-sidenav__launcher > :is(button, .kp-icon-button) {
             inline-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
@@ -39539,6 +39547,13 @@
         z-index: 1;
         padding-block: var(--kp-uptime-touch-room, 0.75rem);
         margin-block: calc(-1 * var(--kp-uptime-touch-room, 0.75rem));
+    }
+
+    [data-kp-touch] .kp-skip-link {
+        display: inline-flex;
+        align-items: center;
+        box-sizing: border-box;
+        min-block-size: var(--kp-touch-target, 2.75rem);
     }
 
     /* The buttons' own floor (touch-target.css) follows `data-kp-touch` too, the bar's search trigger with them. */
@@ -39742,7 +39757,11 @@
      * --kp-touch-hit-outline. Applies under `(pointer: coarse)` and under `data-kp-touch`.
      * Not here, because they change the layout under touch and wait on the open "touch-dense" decision: the stacked
      * switches (their rows sit 35 px apart), a one-line growing textarea (a field cannot carry a pseudo-element, so it needs
-     * a taller box) and a calendar that keeps 44 px columns in a narrow card. */
+     * a taller box) and a calendar that keeps 44 px columns in a narrow card.
+     * A share bar's segments join them [touch-1103; HTTPSwitchboard 03/11] (the skip link takes a 44 px floor in touch-target.css
+     * instead: cyberpunk cuts it with a clip-path that would clip an area): a segment (8-20 px high) grows its area upward and
+     * downward only, because its neighbours are in a row (a segment 13 px wide stays 13 px wide: the documented "dense parts
+     * stay under 44 px" limit). The title above and the legend below take no press, so the area stands over them. */
     @media (pointer: coarse) {
         /* A tag's remove button, the bar's brand and a reorder list's handle: the look stays, the finger gets the area. */
         html :is(.kp-tag__remove, .kp-nav__brand, .kp-reorder [data-kp-handle]) {
@@ -39766,6 +39785,16 @@
 
         html :is(.kp-tag__remove:disabled, .kp-reorder [data-kp-handle]:disabled)::after {
             content: none;
+        }
+
+        /* A share bar's segment: taller area only, a row of segments has no room sideways. */
+        html .kp-stackbar__seg::after {
+            content: '';
+            position: absolute;
+            inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+            inset-inline: 0;
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
         }
     }
 
@@ -39792,6 +39821,16 @@
 
     [data-kp-touch] :is(.kp-tag__remove:disabled, .kp-reorder [data-kp-handle]:disabled)::after {
         content: none;
+    }
+
+    /* A share bar's segment: taller area only, a row of segments has no room sideways. */
+    [data-kp-touch] .kp-stackbar__seg::after {
+        content: '';
+        position: absolute;
+        inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+        inset-inline: 0;
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
     }
 }
 @layer kp.layout {
@@ -48301,6 +48340,31 @@
         background: var(--kp-cp4-scan), var(--muted);
         box-shadow: inset 0 0 0 1px var(--border);
         clip-path: var(--kp-cp4-cut);
+    }
+    /* A segment's touch area (touch-hit-small.css) reaches 22 px past the bar: the cut, with the same diagonal, gives it that room [touch-1103]. */
+    @media (pointer: coarse) {
+        [data-theme='cyberpunk'] .kp-stackbar__bar {
+            --kp-sig-slack: calc(var(--kp-touch-target, 2.75rem) / 2);
+            clip-path: polygon(
+                calc(-1 * var(--kp-sig-slack)) calc(-1 * var(--kp-sig-slack)),
+                calc(100% + var(--kp-sig-slack)) calc(-1 * var(--kp-sig-slack)),
+                calc(100% + var(--kp-sig-slack)) calc(100% - var(--kp-cp4-n) - var(--kp-sig-slack)),
+                calc(100% - var(--kp-cp4-n) - var(--kp-sig-slack)) calc(100% + var(--kp-sig-slack)),
+                calc(-1 * var(--kp-sig-slack)) calc(100% + var(--kp-sig-slack))
+            );
+        }
+    }
+    [data-kp-touch][data-theme='cyberpunk'] .kp-stackbar__bar,
+    [data-kp-touch] [data-theme='cyberpunk'] .kp-stackbar__bar,
+    [data-theme='cyberpunk'] [data-kp-touch] .kp-stackbar__bar {
+        --kp-sig-slack: calc(var(--kp-touch-target, 2.75rem) / 2);
+        clip-path: polygon(
+            calc(-1 * var(--kp-sig-slack)) calc(-1 * var(--kp-sig-slack)),
+            calc(100% + var(--kp-sig-slack)) calc(-1 * var(--kp-sig-slack)),
+            calc(100% + var(--kp-sig-slack)) calc(100% - var(--kp-cp4-n) - var(--kp-sig-slack)),
+            calc(100% - var(--kp-cp4-n) - var(--kp-sig-slack)) calc(100% + var(--kp-sig-slack)),
+            calc(-1 * var(--kp-sig-slack)) calc(100% + var(--kp-sig-slack))
+        );
     }
     [data-theme='cyberpunk'] .kp-stackbar__seg {
         border-radius: 0;
@@ -66381,13 +66445,24 @@
         background: var(--kp-sig-ti-weave), var(--muted);
         box-shadow: var(--kp-ti-pocket);
         clip-path: polygon(
-            calc(var(--kp-sig-ti-c) + 8px) -8px,
-            calc(100% + 8px) -8px,
-            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
-            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
-            -8px calc(100% + 8px),
-            -8px calc(var(--kp-sig-ti-c) + 8px)
+            calc(var(--kp-sig-ti-c) + var(--kp-sig-ti-slack, 8px)) calc(-1 * var(--kp-sig-ti-slack, 8px)),
+            calc(100% + var(--kp-sig-ti-slack, 8px)) calc(-1 * var(--kp-sig-ti-slack, 8px)),
+            calc(100% + var(--kp-sig-ti-slack, 8px)) calc(100% - var(--kp-sig-ti-c) - var(--kp-sig-ti-slack, 8px)),
+            calc(100% - var(--kp-sig-ti-c) - var(--kp-sig-ti-slack, 8px)) calc(100% + var(--kp-sig-ti-slack, 8px)),
+            calc(-1 * var(--kp-sig-ti-slack, 8px)) calc(100% + var(--kp-sig-ti-slack, 8px)),
+            calc(-1 * var(--kp-sig-ti-slack, 8px)) calc(var(--kp-sig-ti-c) + var(--kp-sig-ti-slack, 8px))
         );
+    }
+    /* A segment's touch area (touch-hit-small.css) reaches 22 px past the bar: the cut gives it that room [touch-1103]. */
+    @media (pointer: coarse) {
+        [data-theme='titanium'] .kp-stackbar__bar {
+            --kp-sig-ti-slack: max(8px, calc(var(--kp-touch-target, 2.75rem) / 2));
+        }
+    }
+    [data-kp-touch][data-theme='titanium'] .kp-stackbar__bar,
+    [data-kp-touch] [data-theme='titanium'] .kp-stackbar__bar,
+    [data-theme='titanium'] [data-kp-touch] .kp-stackbar__bar {
+        --kp-sig-ti-slack: max(8px, calc(var(--kp-touch-target, 2.75rem) / 2));
     }
     [data-theme='titanium'] .kp-stackbar[aria-busy='true'] .kp-stackbar__bar {
         background: var(--card);
@@ -66437,13 +66512,24 @@
         background: var(--kp-sig-ti-weave), var(--card);
         box-shadow: var(--kp-tool-edge);
         clip-path: polygon(
-            calc(var(--kp-sig-ti-c) + 8px) -8px,
-            calc(100% + 8px) -8px,
-            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
-            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
-            -8px calc(100% + 8px),
-            -8px calc(var(--kp-sig-ti-c) + 8px)
+            calc(var(--kp-sig-ti-c) + var(--kp-sig-ti-slack, 8px)) calc(-1 * var(--kp-sig-ti-slack, 8px)),
+            calc(100% + var(--kp-sig-ti-slack, 8px)) calc(-1 * var(--kp-sig-ti-slack, 8px)),
+            calc(100% + var(--kp-sig-ti-slack, 8px)) calc(100% - var(--kp-sig-ti-c) - var(--kp-sig-ti-slack, 8px)),
+            calc(100% - var(--kp-sig-ti-c) - var(--kp-sig-ti-slack, 8px)) calc(100% + var(--kp-sig-ti-slack, 8px)),
+            calc(-1 * var(--kp-sig-ti-slack, 8px)) calc(100% + var(--kp-sig-ti-slack, 8px)),
+            calc(-1 * var(--kp-sig-ti-slack, 8px)) calc(var(--kp-sig-ti-c) + var(--kp-sig-ti-slack, 8px))
         );
+    }
+    /* A segment's touch area (touch-hit-small.css) reaches 22 px past the bar: the cut gives it that room [touch-1103]. */
+    @media (pointer: coarse) {
+        [data-theme='titanium'] .kp-stackbar__bar {
+            --kp-sig-ti-slack: max(8px, calc(var(--kp-touch-target, 2.75rem) / 2));
+        }
+    }
+    [data-kp-touch][data-theme='titanium'] .kp-stackbar__bar,
+    [data-kp-touch] [data-theme='titanium'] .kp-stackbar__bar,
+    [data-theme='titanium'] [data-kp-touch] .kp-stackbar__bar {
+        --kp-sig-ti-slack: max(8px, calc(var(--kp-touch-target, 2.75rem) / 2));
     }
     [data-theme='titanium'] .kp-stackbar[data-kp-state='error'] .kp-stackbar__note {
         box-shadow: inset 0 3px 0 var(--destructive);
@@ -103485,7 +103571,25 @@
             linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 100% / 10% 45% repeat-x,
             var(--muted);
         box-shadow: inset 0 0 0 1px var(--border);
-        clip-path: polygon(0.25rem 0, 100% 0, 100% calc(100% - 0.25rem), calc(100% - 0.25rem) 100%, 0 100%, 0 0.25rem);
+        clip-path: polygon(
+            calc(0.25rem + var(--kp-sig-slack, 0px)) calc(-1 * var(--kp-sig-slack, 0px)),
+            calc(100% + var(--kp-sig-slack, 0px)) calc(-1 * var(--kp-sig-slack, 0px)),
+            calc(100% + var(--kp-sig-slack, 0px)) calc(100% - 0.25rem - var(--kp-sig-slack, 0px)),
+            calc(100% - 0.25rem - var(--kp-sig-slack, 0px)) calc(100% + var(--kp-sig-slack, 0px)),
+            calc(-1 * var(--kp-sig-slack, 0px)) calc(100% + var(--kp-sig-slack, 0px)),
+            calc(-1 * var(--kp-sig-slack, 0px)) calc(0.25rem + var(--kp-sig-slack, 0px))
+        );
+    }
+    /* A segment's touch area (touch-hit-small.css) reaches 22 px past the bar: the cut gives it that room [touch-1103]. */
+    @media (pointer: coarse) {
+        [data-theme='dark'] .kp-stackbar__bar {
+            --kp-sig-slack: calc(var(--kp-touch-target, 2.75rem) / 2);
+        }
+    }
+    [data-kp-touch][data-theme='dark'] .kp-stackbar__bar,
+    [data-kp-touch] [data-theme='dark'] .kp-stackbar__bar,
+    [data-theme='dark'] [data-kp-touch] .kp-stackbar__bar {
+        --kp-sig-slack: calc(var(--kp-touch-target, 2.75rem) / 2);
     }
     [data-theme='dark'] .kp-stackbar__seg {
         border-radius: 0;

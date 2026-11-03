@@ -150,6 +150,13 @@
         margin-block: calc(-1 * var(--kp-uptime-touch-room, 0.75rem));
     }
 
+    [data-kp-touch] .kp-skip-link {
+        display: inline-flex;
+        align-items: center;
+        box-sizing: border-box;
+        min-block-size: var(--kp-touch-target, 2.75rem);
+    }
+
     /* The buttons' own floor (touch-target.css) follows `data-kp-touch` too, the bar's search trigger with them. */
     [data-kp-touch] :is(.kp-button, .kp-icon-button, .kp-nav__toggle, .kp-sidenav__toggle, .kp-nav__search-trigger):is(*, .kp-button--sm, .kp-button--lg) {
         min-block-size: var(--kp-touch-target, 2.75rem);

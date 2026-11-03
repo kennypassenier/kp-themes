@@ -9,7 +9,11 @@
      * --kp-touch-hit-outline. Applies under `(pointer: coarse)` and under `data-kp-touch`.
      * Not here, because they change the layout under touch and wait on the open "touch-dense" decision: the stacked
      * switches (their rows sit 35 px apart), a one-line growing textarea (a field cannot carry a pseudo-element, so it needs
-     * a taller box) and a calendar that keeps 44 px columns in a narrow card. */
+     * a taller box) and a calendar that keeps 44 px columns in a narrow card.
+     * A share bar's segments join them [touch-1103; HTTPSwitchboard 03/11] (the skip link takes a 44 px floor in touch-target.css
+     * instead: cyberpunk cuts it with a clip-path that would clip an area): a segment (8-20 px high) grows its area upward and
+     * downward only, because its neighbours are in a row (a segment 13 px wide stays 13 px wide: the documented "dense parts
+     * stay under 44 px" limit). The title above and the legend below take no press, so the area stands over them. */
     @media (pointer: coarse) {
         /* A tag's remove button, the bar's brand and a reorder list's handle: the look stays, the finger gets the area. */
         html :is(.kp-tag__remove, .kp-nav__brand, .kp-reorder [data-kp-handle]) {
@@ -33,6 +37,16 @@
 
         html :is(.kp-tag__remove:disabled, .kp-reorder [data-kp-handle]:disabled)::after {
             content: none;
+        }
+
+        /* A share bar's segment: taller area only, a row of segments has no room sideways. */
+        html .kp-stackbar__seg::after {
+            content: '';
+            position: absolute;
+            inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+            inset-inline: 0;
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
         }
     }
 
@@ -59,5 +73,15 @@
 
     [data-kp-touch] :is(.kp-tag__remove:disabled, .kp-reorder [data-kp-handle]:disabled)::after {
         content: none;
+    }
+
+    /* A share bar's segment: taller area only, a row of segments has no room sideways. */
+    [data-kp-touch] .kp-stackbar__seg::after {
+        content: '';
+        position: absolute;
+        inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+        inset-inline: 0;
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
     }
 }

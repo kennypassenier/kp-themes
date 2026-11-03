@@ -13,6 +13,14 @@
             min-inline-size: var(--kp-touch-target, 2.75rem);
         }
 
+        /* The skip link shows on focus at 40 px: it stands 44 px high, its words centred [touch-1103; HTTPSwitchboard 03/11]. */
+        html .kp-skip-link {
+            display: inline-flex;
+            align-items: center;
+            box-sizing: border-box;
+            min-block-size: var(--kp-touch-target, 2.75rem);
+        }
+
         html .kp-icon-button,
         html .kp-sidenav__launcher > :is(button, .kp-icon-button) {
             inline-size: max(2.25rem, var(--kp-touch-target, 2.75rem));

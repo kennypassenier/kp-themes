@@ -21,13 +21,24 @@
         background: var(--kp-sig-ti-weave), var(--muted);
         box-shadow: var(--kp-ti-pocket);
         clip-path: polygon(
-            calc(var(--kp-sig-ti-c) + 8px) -8px,
-            calc(100% + 8px) -8px,
-            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
-            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
-            -8px calc(100% + 8px),
-            -8px calc(var(--kp-sig-ti-c) + 8px)
+            calc(var(--kp-sig-ti-c) + var(--kp-sig-ti-slack, 8px)) calc(-1 * var(--kp-sig-ti-slack, 8px)),
+            calc(100% + var(--kp-sig-ti-slack, 8px)) calc(-1 * var(--kp-sig-ti-slack, 8px)),
+            calc(100% + var(--kp-sig-ti-slack, 8px)) calc(100% - var(--kp-sig-ti-c) - var(--kp-sig-ti-slack, 8px)),
+            calc(100% - var(--kp-sig-ti-c) - var(--kp-sig-ti-slack, 8px)) calc(100% + var(--kp-sig-ti-slack, 8px)),
+            calc(-1 * var(--kp-sig-ti-slack, 8px)) calc(100% + var(--kp-sig-ti-slack, 8px)),
+            calc(-1 * var(--kp-sig-ti-slack, 8px)) calc(var(--kp-sig-ti-c) + var(--kp-sig-ti-slack, 8px))
         );
+    }
+    /* A segment's touch area (touch-hit-small.css) reaches 22 px past the bar: the cut gives it that room [touch-1103]. */
+    @media (pointer: coarse) {
+        [data-theme='titanium'] .kp-stackbar__bar {
+            --kp-sig-ti-slack: max(8px, calc(var(--kp-touch-target, 2.75rem) / 2));
+        }
+    }
+    [data-kp-touch][data-theme='titanium'] .kp-stackbar__bar,
+    [data-kp-touch] [data-theme='titanium'] .kp-stackbar__bar,
+    [data-theme='titanium'] [data-kp-touch] .kp-stackbar__bar {
+        --kp-sig-ti-slack: max(8px, calc(var(--kp-touch-target, 2.75rem) / 2));
     }
     [data-theme='titanium'] .kp-stackbar[aria-busy='true'] .kp-stackbar__bar {
         background: var(--card);
@@ -77,13 +88,24 @@
         background: var(--kp-sig-ti-weave), var(--card);
         box-shadow: var(--kp-tool-edge);
         clip-path: polygon(
-            calc(var(--kp-sig-ti-c) + 8px) -8px,
-            calc(100% + 8px) -8px,
-            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
-            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
-            -8px calc(100% + 8px),
-            -8px calc(var(--kp-sig-ti-c) + 8px)
+            calc(var(--kp-sig-ti-c) + var(--kp-sig-ti-slack, 8px)) calc(-1 * var(--kp-sig-ti-slack, 8px)),
+            calc(100% + var(--kp-sig-ti-slack, 8px)) calc(-1 * var(--kp-sig-ti-slack, 8px)),
+            calc(100% + var(--kp-sig-ti-slack, 8px)) calc(100% - var(--kp-sig-ti-c) - var(--kp-sig-ti-slack, 8px)),
+            calc(100% - var(--kp-sig-ti-c) - var(--kp-sig-ti-slack, 8px)) calc(100% + var(--kp-sig-ti-slack, 8px)),
+            calc(-1 * var(--kp-sig-ti-slack, 8px)) calc(100% + var(--kp-sig-ti-slack, 8px)),
+            calc(-1 * var(--kp-sig-ti-slack, 8px)) calc(var(--kp-sig-ti-c) + var(--kp-sig-ti-slack, 8px))
         );
+    }
+    /* A segment's touch area (touch-hit-small.css) reaches 22 px past the bar: the cut gives it that room [touch-1103]. */
+    @media (pointer: coarse) {
+        [data-theme='titanium'] .kp-stackbar__bar {
+            --kp-sig-ti-slack: max(8px, calc(var(--kp-touch-target, 2.75rem) / 2));
+        }
+    }
+    [data-kp-touch][data-theme='titanium'] .kp-stackbar__bar,
+    [data-kp-touch] [data-theme='titanium'] .kp-stackbar__bar,
+    [data-theme='titanium'] [data-kp-touch] .kp-stackbar__bar {
+        --kp-sig-ti-slack: max(8px, calc(var(--kp-touch-target, 2.75rem) / 2));
     }
     [data-theme='titanium'] .kp-stackbar[data-kp-state='error'] .kp-stackbar__note {
         box-shadow: inset 0 3px 0 var(--destructive);
