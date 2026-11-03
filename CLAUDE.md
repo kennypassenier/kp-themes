@@ -45,5 +45,10 @@ result and, if needed, a short explanation of it. Instructions that push the mod
 thinking can be declined by the safeguards (`reasoning_extraction`).
 
 The hook `.claude/hooks/release-tests.sh` blocks `npm run test:tags`, `test:browser`, `test:firefox`,
-`test:release`, `verify` and a bare `playwright test` (not `test:tags -- --dry-run`) unless Kenny has created the file
-`.claude/release-go` (his go for a release). Never create that file yourself.
+`test:release`, `verify` and a bare `playwright test` (not `test:tags -- --dry-run`) unless an ACTIVE release go is recorded in
+the project database (`node gates/release-go.mjs record|status|list`; table
+`release_gos`, Kenny's go for a release). A go is active while its version is
+greater than the latest release tag (`git describe`) and not tagged yet; the tag
+spends it. An unreadable database blocks. The old file `.claude/release-go` is
+accepted for now (deprecation note on stderr), removed after 12.6.0. Never
+record a go or create that file yourself.

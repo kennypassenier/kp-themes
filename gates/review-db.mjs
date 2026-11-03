@@ -28,7 +28,7 @@ import { ROOT } from './db/config.mjs';
 
 const TABLES = [
     'verdicts', 'review_notes', 'pixel_checks', 'hash_readings', 'round_state', 'demos', 'demo_rounds',
-    'demo_round_pairs', 'demo_reopened', 'demo_decided', 'demo_updates', 'demo_previous', 'store_meta',
+    'demo_round_pairs', 'demo_reopened', 'demo_decided', 'demo_updates', 'demo_previous', 'store_meta', 'release_gos',
 ];
 
 /** @param {string[]} args @param {string} name */

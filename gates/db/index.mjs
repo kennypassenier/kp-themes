@@ -11,3 +11,4 @@ export { loadNotes, loadRegister, saveNotes, saveRegister } from './register-sto
 export { loadHashReadings, loadPixelChecks, loadRound, saveHashReadings, savePixelChecks, saveRound } from './checks-store.mjs';
 export { PAIR_LISTS, addRound, ensureDemo, loadDemoVerdicts, receivedPages, saveDemoVerdicts, verdictDemos } from './demo-store.mjs';
 export { FACTS, deleteDemoFact, loadDemoFact, loadDemoFacts, saveDemoFact } from './demo-facts-store.mjs';
+export { listGos, recordGo } from './release-go-store.mjs';

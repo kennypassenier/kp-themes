@@ -141,4 +141,16 @@ CREATE TABLE demo_previous (
 ) STRICT;
 `,
     },
+    {
+        version: 2,
+        name: 'release gos recorded in the database',
+        sql: `
+CREATE TABLE release_gos (
+    version TEXT PRIMARY KEY CHECK (version GLOB '[0-9]*.[0-9]*.[0-9]*'),
+    given_at TEXT NOT NULL,
+    given_by TEXT NOT NULL,
+    source TEXT NOT NULL
+) STRICT;
+`,
+    },
 ];

@@ -30,8 +30,14 @@ while building, not even a tagged subset; the suite runs once, after his go for
 a release. The gates in the commit hook and the screenshot check inside
 `scripts/release.sh` stay. Running test code any other way (a shim or script
 that executes a spec's body) is a test run too, and a brief to a helper never
-permits one; without `.claude/release-go` a measuring script is the most a
-helper may run [fix-118].
+permits one; without an active release go a measuring script is the most a
+helper may run [fix-118]. Kenny's go is a row in the project database
+(`release_gos`, written by `node gates/release-go.mjs record <version> --by Kenny
+--source "<form item and answer>"`); it is active while its version is greater
+than the latest release tag and not tagged yet, and spends itself when
+`v<version>` exists (`node gates/release-go.mjs status` shows it). Never record
+one yourself. The old git-ignored file `.claude/release-go` is still accepted
+during a transition and is deleted after the 12.6.0 release.
 
 **Chromium is off in the test suite** (Kenny, 2026-10-03: "doe ook het chrome
 gedeelte tijdelijk weg, tot ik het terugwil"): `playwright.config.mjs` runs
@@ -68,7 +74,7 @@ never a silent deviation. This project follows
 | review site: <https://kennypassenier.github.io/kp-themes/review/> | the catalogue and the research demos, published                                                                   | Claude pushes `main` whenever it asks Kenny to look [scope-67], and links only `catalogue/agenda.html` (Agenda), the one page he starts from since 2026-10-13; before changing a demo for its next round, run `node research/_review/snapshot.mjs <topic>` so its Previous version shows the round he judged |
 
 Every command in this table that runs a browser test (`test:tags`, `test:release`, `test:browser`,
-`verify`) is blocked for Claude until Kenny creates `.claude/release-go`; `test:tags -- --dry-run`
+`verify`) is blocked for Claude until Kenny's go is recorded (`node gates/release-go.mjs status`); `test:tags -- --dry-run`
 and `npm run gates` are not.
 
 No CI runs on commits; `scripts/release.sh X.Y.Z` builds a release on this

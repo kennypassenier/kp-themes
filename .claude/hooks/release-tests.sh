@@ -6,13 +6,16 @@
 # the command; exit 2 blocks it and feeds stderr back to Claude. Parse
 # failures fail OPEN, so a broken hook never bricks work.
 #
-# Kenny's go is the file `.claude/release-go` (git-ignored). While it exists
-# the commands pass; he removes it when the release is done.
+# Kenny's go is a row in the project database (table release_gos, written by
+# `node gates/release-go.mjs record`). It is ACTIVE while its version is greater
+# than the latest release tag and not tagged yet; once `v<version>` exists it is
+# spent by itself. An unreadable database BLOCKS (it never fails open).
+# Transition: the old git-ignored file `.claude/release-go` is still accepted,
+# with a deprecation note on stderr; it is deleted after the 12.6.0 release.
 set -u
 
 payload=$(cat) || exit 0
 project_dir="${CLAUDE_PROJECT_DIR:-$PWD}"
-[ -e "$project_dir/.claude/release-go" ] && exit 0
 
 hit=$(printf '%s' "$payload" | python3 -c '
 import json, re, sys
@@ -50,9 +53,26 @@ for seg in re.split(r"\|\||&&|;|\||\n", out):
 ' 2>/dev/null) || exit 0
 
 [ -z "$hit" ] && exit 0
+
+# The database decides. cli exit: 0 active, 3 no active go, anything else = unreadable.
+cli_out=$(node "$project_dir/gates/release-go.mjs" status 2>&1); cli=$?
+if [ "$cli" -eq 0 ]; then exit 0; fi
+if [ -e "$project_dir/.claude/release-go" ]; then
+  echo "release-tests: DEPRECATED: allowed by the old file .claude/release-go; the go now lives in the database (node gates/release-go.mjs record)." >&2
+  exit 0
+fi
+if [ "$cli" -ne 3 ]; then
+  {
+    echo "BLOCKED: '$hit' needs a release go, but the release-go database cannot be read, so the hook does not guess."
+    echo "$cli_out"
+    echo "Fix: node gates/review-db.mjs migrate (schema), or check data/kp-themes.sqlite and git."
+  } >&2
+  exit 2
+fi
 {
   echo "BLOCKED: '$hit' runs the browser suite, and the suite runs only after Kenny's go for a release."
-  echo "Kenny gives the go by creating the file .claude/release-go. Do not create it yourself."
+  echo "$cli_out"
+  echo "Kenny's go is recorded with: node gates/release-go.mjs record <version> --by Kenny --source \"<form item and answer>\". Do not record it yourself."
   echo "Until then use 'npm run gates' (seconds), which is not blocked."
 } >&2
 exit 2
