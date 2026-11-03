@@ -227,14 +227,26 @@ const widen = (card) =>
         for (const p of el.querySelectorAll('p')) /** @type {HTMLElement} */ (p).style.inlineSize = '';
     });
 
+const CARD = '#dossier [data-cat-effect="armed"] .kp-card';
+
+/**
+ * Bring the armed card into view, looking it up at the moment of the scroll. The catalogue stamps an effect
+ * block again when blocks arrive (catalogue/demos.js `stampEffect` replaces the block's copy), so the card
+ * can be a new element between a locator resolving it and its stability wait ending: `scrollIntoViewIfNeeded`
+ * then fails with "Element is not attached to the DOM" (12.6.0 release suite, green alone 3 times).
+ * @param {import('@playwright/test').Page} page
+ */
+const scrollCardIntoView = (page) =>
+    page.evaluate((selector) => document.querySelector(selector)?.scrollIntoView({ block: 'nearest', inline: 'nearest' }), CARD);
+
 /** @param {import('@playwright/test').Page} page @param {string} theme */
 async function setTheme(page, theme) {
     await page.evaluate((name) => import('/js/theme-core.js').then((m) => m.applyTheme(name)), theme);
     await waitForJudging(page);
     await page.waitForFunction((name) => document.documentElement.getAttribute('data-theme') === name, theme);
-    const card = page.locator('#dossier [data-cat-effect="armed"] .kp-card');
+    const card = page.locator(CARD);
     await expect(card).toBeVisible();
-    await card.scrollIntoViewIfNeeded();
+    await scrollCardIntoView(page);
     await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
     return card;
 }
@@ -345,7 +357,7 @@ for (const theme of sweepThemes()) {
             const readAll = async (where) => {
                 // The card is laid out again and the page has painted a
                 // frame before anything is measured.
-                await card.scrollIntoViewIfNeeded();
+                await scrollCardIntoView(page);
                 await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
                 for (let i = 0; i < 3; i++) {
                     const { line, fault } = judge(theme, await measureMark(card, i));
