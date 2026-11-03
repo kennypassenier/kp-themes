@@ -137,7 +137,7 @@
         "js/toggle.js": { "digest": "51e547f7c4a417b9", "when": "[data-kp-toggle]" },
         "js/toolbar.js": { "digest": "a89e8b2c4fc81573", "when": "[data-kp-toolbar]" },
         "js/transfer.js": { "digest": "299493b3bb8d006d", "when": "[data-kp-transfer]" },
-        "js/unsaved.js": { "digest": "451f496ed4e90eed", "when": "[data-kp-unsaved]" },
+        "js/unsaved.js": { "digest": "933e05a086150c8d", "when": "[data-kp-unsaved]" },
         "js/upload.js": { "digest": "baad2c21b9a42867", "when": "[data-kp-upload]" },
         "js/uptime.js": { "digest": "b4ce907c9a414a93", "when": "[data-kp-uptime]" },
         "js/usual-picker.js": { "digest": "6ef2ad616d96e7ea", "when": "[data-kp-usual]" },
@@ -7731,12 +7731,20 @@
         "||@container kp-page-header (max-width: 40rem) § @container kp-page-header (min-width: 20rem)||.kp-menu-button)))": "7d8a34ba2f20feae",
         "||@container kp-page-header (max-width: 40rem)||.kp-button": "33cf1eec347b4ab9",
         "||@container kp-page-header (max-width: 40rem)||.kp-button--primary": "c057080c16e80ee9",
-        "||@container kp-page-header (max-width: 40rem)||.kp-menu": "3527b9075eee3693",
+        "||@container kp-page-header (max-width: 40rem)||.kp-menu": "70747e9f675c765b",
         "||@container kp-page-header (max-width: 40rem)||.kp-menu-button": "83d52fff3d784c1c",
         "||@container kp-page-header (max-width: 40rem)||.kp-menu-button)": "955ac1e50a7add58",
         "||@container kp-page-header (max-width: 40rem)||.kp-menu-button)))": "ffb5814ccd39312a",
         "||@container kp-page-header (max-width: 40rem)||.kp-page-header__actions": "a7a213e1fa9c01a1",
         "||@container kp-page-header (max-width: 40rem)||.kp-page-header__inner": "fcae75ee83768229",
+        "||@container kp-page-header (max-width: 40rem)||.kp-unsaved:not([data-kp-docked])": "6a08cdd9c794d941",
+        "||@container kp-page-header (max-width: 40rem)||.kp-unsaved__actions": "cc2e058772e60ffe",
+        "||@container kp-page-header (max-width: 40rem)||.kp-unsaved__bar": "1ea725a4f23d5cd7",
+        "||@container kp-page-header (max-width: 40rem)||.kp-unsaved__count": "dcaaaff203975a71",
+        "||@container kp-page-header (max-width: 40rem)||.kp-unsaved__count)": "5fff85dbf2e6d8f1",
+        "||@container kp-page-header (max-width: 40rem)||.kp-unsaved__discard": "4a00b4a9e87a62f7",
+        "||@container kp-page-header (max-width: 40rem)||.kp-unsaved__more": "574d41ed21d6695e",
+        "||@container kp-page-header (max-width: 40rem)||.kp-unsaved__save": "60e013391b68ac3f",
         "||@container kp-page-header (max-width: 40rem)||[role='menu'])": "8e58c43c05072c48",
         "||@container kp-page-header (max-width: 40rem)||button": "3c152481e80b5ce9",
         "||@container kp-page-header (min-width: 40.0625rem)||.kp-page-header__actions": "abf54ba3c180e9fa",
@@ -11054,13 +11062,13 @@
         "||||.kp-undo__spinner": "ad28b4ee748e0f64",
         "||||.kp-undo__text": "6a4e044bceaa37ec",
         "||||.kp-unsaved": "9f684908f8935363",
-        "||||.kp-unsaved[data-kp-docked='container']": "531d9738fa2e1a1d",
+        "||||.kp-unsaved[data-kp-docked='container']": "31b112adcba331a3",
         "||||.kp-unsaved__actions": "56e2ebc9270d71c2",
         "||||.kp-unsaved__alert": "05da9d8cfdd36df6",
         "||||.kp-unsaved__alert-list": "a58fd809e7c135de",
         "||||.kp-unsaved__alert-title": "414fa800b1ce9999",
         "||||.kp-unsaved__arrow": "a56df9ae992507b3",
-        "||||.kp-unsaved__bar": "4ab29a6b32eb779f",
+        "||||.kp-unsaved__bar": "a4a1db9fda535c75",
         "||||.kp-unsaved__bar[data-kp-compact]": "60e8d81ce8bb5dbe",
         "||||.kp-unsaved__bar[data-kp-compact])": "c028ae2f1f203ecf",
         "||||.kp-unsaved__count": "25e59d2be9263b59",
@@ -11082,7 +11090,7 @@
         "||||.kp-unsaved__panel-head": "5a20c1e5eee4635f",
         "||||.kp-unsaved__panel-title": "5038f1ff24615662",
         "||||.kp-unsaved__panel[hidden]": "590dc7c2dd853c9a",
-        "||||.kp-unsaved__problem": "100bfd5f6f84b472",
+        "||||.kp-unsaved__problem": "6d7ab1fb2afc8603",
         "||||.kp-unsaved__problem[hidden]": "590dc7c2dd853c9a",
         "||||.kp-unsaved__revert": "35a6f7dac20aff5b",
         "||||.kp-unsaved__save": "50911978be536eb5",
@@ -11807,7 +11815,7 @@
             ]
         },
         "data": {
-            "modules": "013e297e9c580889",
+            "modules": "ab660e567f5375cd",
             "families": [
                 "data-kp-activation",
                 "data-kp-active",
@@ -12353,6 +12361,7 @@
                 "data-kp-refusal",
                 "data-kp-refuse-look",
                 "data-kp-refused",
+                "data-kp-region-guard",
                 "data-kp-remember",
                 "data-kp-rename",
                 "data-kp-reorder",
@@ -13042,7 +13051,7 @@
             ]
         },
         "feedback": {
-            "modules": "3b370e7b044ad5e1",
+            "modules": "12927b6ec76c56d6",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -13242,6 +13251,7 @@
                 "data-kp-reason-off",
                 "data-kp-refusal",
                 "data-kp-refused-word",
+                "data-kp-region-guard",
                 "data-kp-reload",
                 "data-kp-reload-target",
                 "data-kp-remedy-label",
@@ -14235,7 +14245,7 @@
             ]
         },
         "navigation": {
-            "modules": "cf2760a1fb908300",
+            "modules": "49388228dc510748",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14337,6 +14347,7 @@
                 "data-kp-orientation",
                 "data-kp-paused",
                 "data-kp-popover-overflowing",
+                "data-kp-region-guard",
                 "data-kp-remember",
                 "data-kp-remember-hold",
                 "data-kp-resizing",
@@ -14470,7 +14481,7 @@
             ]
         },
         "overlays": {
-            "modules": "e9a833fdc69b9e0b",
+            "modules": "75c95c7c5a5d1086",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14554,6 +14565,7 @@
                 "data-kp-popover-overflowing",
                 "data-kp-quiet",
                 "data-kp-read",
+                "data-kp-region-guard",
                 "data-kp-remember",
                 "data-kp-reorder",
                 "data-kp-resizing",

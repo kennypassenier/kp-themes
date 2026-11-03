@@ -8,7 +8,7 @@
  * and its place in the header keeps its size. Where there is less than 30rem for it Discard goes behind a More menu
  * (`data-kp-compact`). Saving shows the theme's spinner in Save; refused changes are an alert above the bar.
  * Knobs [KT6]: --kp-unsaved-gap (--kp-space-sm), --kp-unsaved-dock-width (40rem), --kp-unsaved-panel-width (26rem),
- * --kp-unsaved-dock-offset (--kp-space-md, the bar's distance from the screen's foot), --kp-unsaved-count-min (7rem) and
+ * --kp-unsaved-dock-offset (--kp-space-md, the bar's distance from the screen's foot; a bottom tab bar's height, --kp-tabbar-height, is added by itself), --kp-unsaved-count-min (7rem) and
  * --kp-unsaved-save-min (9rem), the least widths of the chip and of Save, so the header does not shift as the count grows. */
     .kp-unsaved {
         position: relative;
@@ -149,3 +149,53 @@
         inset-inline-end: 0;
     }
 
+    /* Compact by the room, not only by the content [medicine-cabinet a11y 35]: in a `.kp-page-header` (a container of its own) up to 40rem
+ * wide, at 640 px or 200% text zoom, the bar folds the way `data-kp-compact` folds it, without waiting for the script to measure. */
+    @container kp-page-header (max-width: 40rem) {
+        .kp-unsaved:not([data-kp-docked]) > .kp-unsaved__bar .kp-unsaved__discard {
+            display: none;
+        }
+
+        .kp-unsaved:not([data-kp-docked]) {
+            display: grid;
+            inline-size: 100%;
+        }
+
+        .kp-unsaved:not([data-kp-docked]) > .kp-unsaved__bar {
+            flex-wrap: wrap;
+            justify-self: stretch;
+            justify-content: flex-start;
+        }
+
+        .kp-unsaved:not([data-kp-docked]) > .kp-unsaved__bar > :is(.kp-unsaved__none, .kp-unsaved__count) {
+            flex: 1 1 100%;
+            min-inline-size: 0;
+            text-align: start;
+        }
+
+        .kp-unsaved:not([data-kp-docked]) > .kp-unsaved__bar > .kp-unsaved__count {
+            flex: 0 0 auto;
+        }
+
+        .kp-unsaved:not([data-kp-docked]) > .kp-unsaved__bar > .kp-unsaved__actions {
+            flex: 1 1 100%;
+        }
+
+        .kp-unsaved:not([data-kp-docked]) > .kp-unsaved__bar > .kp-unsaved__actions {
+            min-inline-size: 0;
+        }
+
+        .kp-unsaved:not([data-kp-docked]) > .kp-unsaved__bar .kp-unsaved__save {
+            flex: 1 1 auto;
+            min-inline-size: 0;
+            white-space: normal;
+        }
+
+        .kp-unsaved:not([data-kp-docked]) > .kp-unsaved__bar .kp-unsaved__more {
+            display: inline-flex;
+        }
+
+        .kp-unsaved:not([data-kp-docked]) > .kp-unsaved__bar .kp-unsaved__more > .kp-menu {
+            inset-inline-end: 0;
+        }
+    }

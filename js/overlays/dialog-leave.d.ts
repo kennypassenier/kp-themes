@@ -2,8 +2,8 @@
 export declare const DIALOG_LEAVE_EVENT = "kp-dialog-guard-leave";
 /**
  * Start the leave guard.
- * @param {() => HTMLDialogElement | null} held the open guarded dialog whose form changed, if any
- * @param {(dialog: HTMLDialogElement, go: () => void) => void} ask asks the package's question, runs `go` on Discard
+ * @param {() => HTMLElement | null} held the open guarded dialog or visible guarded region whose form changed, if any
+ * @param {(box: HTMLElement, go: () => void) => void} ask asks the package's question, runs `go` on Discard
  * @returns {() => void} detach
  */
-export declare function attachDialogLeave(held: () => HTMLDialogElement | null, ask: (dialog: HTMLDialogElement, go: () => void) => void): () => void;
+export declare function attachDialogLeave(held: () => HTMLElement | null, ask: (box: HTMLElement, go: () => void) => void): () => void;

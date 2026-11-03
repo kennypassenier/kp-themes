@@ -561,7 +561,17 @@ dialog or on any element round it (`<html>` for the whole page)
   held too while the form is changed [habits-1102]: the browser's own
   prompt for the first two, the same "Discard your changes?" for Back
   (Discard replays the move). The cancelable `kp-dialog-guard-leave`
-  (`{ dialog, delta }`, on the dialog) lets a router ask itself.
+  (`{ dialog, region, delta }`, on the dialog) lets a router ask itself.
+- `data-kp-region-guard` [habits-1103]: the same hold for an editor that is
+  not a dialog, a page's editor or a side panel (`off` turns it off). While
+  that box is visible and its form changed (same reading as the dialog guard),
+  a reload and a closed tab get the browser's prompt, and Back asks "Discard
+  your changes?" (Discard replays the move). The cancelable
+  `kp-dialog-guard-leave` fires on the region first, for a router that asks
+  itself. `whenRegionFree(region, go)` runs an app's own Close or route change
+  the guarded way, `markRegionSaved(region)` and `regionChanged(region)` mirror
+  the dialog calls; a submit inside counts as saved. Window listeners start
+  with `attachDialogGuards()` (once, `attachDialogs` does it).
 
 Both channels also say whether an overlay's box scrolls: `attachScrollbars`
 (in `attachAll`, and inside the React `Dialog`, `DropdownMenu` and
@@ -3007,7 +3017,7 @@ Discard puts every value back and offers Undo for `data-kp-undo-ms` (6000, 0 for
 before a link leaves the page (`kp-unsaved-leave`, cancelable, then the package's confirmation). `data-kp-keep="session"` keeps the changes through a reload
 (never `[type=password], [data-kp-secret]`, or what `data-kp-keep-exclude` names) and says so in a toast. `data-kp-placement` is `header+sticky` (default), `header` or
 `sticky-bottom`; for a page that scrolls inside a box use `data-kp-dock="container"` and `data-kp-scroll-root="#box"`. The words are `unsaved…`.
-Knobs: `--kp-unsaved-dock-width`, `--kp-unsaved-dock-offset`, `--kp-unsaved-save-min`.
+Knobs: `--kp-unsaved-dock-width`, `--kp-unsaved-dock-offset` (the bottom tab bar's `--kp-tabbar-height` is added by itself; no need to put it in the offset), `--kp-unsaved-save-min`. In a `.kp-page-header` up to 40rem wide the bar folds (Discard behind More) by that container's width as well as by the script's measure.
 ### Pictures, documents, links and text [kpadopt6-media]
 
 A growing text box, link anchors, a gallery, a document preview, a map of what is used by what and lists that print well. Each is an opt-in attribute or a script call; nothing that exists changes.

@@ -17,8 +17,11 @@ export declare function buildParts(doc: Document, s: import('../strings.js').Str
     problem: HTMLElement;
     live: HTMLElement;
 };
+/** Set a node's text only when it differs, so a press that lands mid-update keeps its node. @param {Node} node @param {string} text */
+export declare function setText(node: Node, text: string): void;
 /**
- * The Save button's content: its words, and the spinner layer while the page saves.
+ * The Save button's content: its words, and the spinner layer while the page saves. The nodes stay, only their text and
+ * the spinner layer change, so the press that blurred a field (mousedown) still ends on the same node (click) [medicine-cabinet 31].
  * @param {Document} doc @param {HTMLElement} save @param {string} label @param {boolean} saving
  */
 export declare function paintSaveButton(doc: Document, save: HTMLElement, label: string, saving: boolean): void;

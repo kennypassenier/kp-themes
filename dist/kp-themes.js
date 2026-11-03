@@ -137,12 +137,12 @@ function watchOptions(element, attributes, onChange) {
   const view = element.ownerDocument.defaultView;
   if (view === null || typeof view.MutationObserver !== "function") return () => void 0;
   const watcher = new view.MutationObserver((records) => {
-    const before2 = /* @__PURE__ */ new Map();
+    const before3 = /* @__PURE__ */ new Map();
     for (const record of records) {
       const name = record.attributeName;
-      if (name !== null && !before2.has(name)) before2.set(name, record.oldValue);
+      if (name !== null && !before3.has(name)) before3.set(name, record.oldValue);
     }
-    const changed3 = [...before2].filter(([name, was]) => element.getAttribute(name) !== was).map(([name]) => name);
+    const changed3 = [...before3].filter(([name, was]) => element.getAttribute(name) !== was).map(([name]) => name);
     if (changed3.length > 0) onChange(changed3);
   });
   watcher.observe(element, { attributes: true, attributeOldValue: true, attributeFilter: [...attributes] });
@@ -1011,7 +1011,7 @@ var init_table_heat = __esm({
       tableEdit: (column, key, value) => `${column} of ${key}: ${value}. Edit`,
       tableEditField: (column, key) => `${column} of ${key}`,
       tableEditing: (column, key) => `Editing ${column} of ${key}. Press Enter to save, or Escape to cancel.`,
-      tableEdited: (key, column, before2, after) => `${key}: ${column} changed from ${before2} to ${after}.`,
+      tableEdited: (key, column, before3, after) => `${key}: ${column} changed from ${before3} to ${after}.`,
       tableEditUndone: (key, column, value) => `Undone: ${key} ${column} is ${value} again.`,
       tableEditCancelled: "Edit cancelled; nothing changed.",
       tableEditRequired: "A value is required.",
@@ -1698,8 +1698,8 @@ var init_uses_unsaved_compare = __esm({
       // The compare slider [kpadopt4-ideas].
       compareBefore: "Before",
       compareAfter: "After",
-      compareSlider: (before2, after) => `Divider between ${before2} and ${after}`,
-      compareValue: (percent, before2, after) => `${percent}% ${before2}, ${100 - percent}% ${after}`,
+      compareSlider: (before3, after) => `Divider between ${before3} and ${after}`,
+      compareValue: (percent, before3, after) => `${percent}% ${before3}, ${100 - percent}% ${after}`,
       compareFailed: "This image could not be loaded.",
       compareRetry: "Retry",
       compareLoading: "Loading the images\u2026",
@@ -2993,9 +2993,9 @@ function getQuantity(root) {
   const kept = root.getAttribute("data-kp-quantity-value");
   if (kept !== null && kept !== "") return Number(kept);
   const input = inputOf(root);
-  const read2 = input ? parseQuantity(input.value) : NaN;
+  const read = input ? parseQuantity(input.value) : NaN;
   const rules = rulesOf(root);
-  return settleQuantity(Number.isFinite(read2) ? read2 : Number.isFinite(rules.min) ? rules.min : 0, rules);
+  return settleQuantity(Number.isFinite(read) ? read : Number.isFinite(rules.min) ? rules.min : 0, rules);
 }
 var inputOf, isDisabled, unitFor;
 var init_read = __esm({
@@ -3326,6 +3326,60 @@ var init_constants2 = __esm({
   }
 });
 
+// js/overlays/dialog-leave.js
+function attachDialogLeave(held2, ask3) {
+  let lastDelta = -1;
+  let undoing = false;
+  let replaying = false;
+  const onUnload = (event) => {
+    if (!held2()) return;
+    event.preventDefault();
+    event.returnValue = "";
+  };
+  const onEntry = (event) => {
+    const from = (
+      /** @type {{ from?: { index: number } }} */
+      event.from
+    );
+    const now = window.navigation?.currentEntry;
+    if (!undoing && !replaying && from && now) lastDelta = now.index - from.index;
+  };
+  const onPop = (event) => {
+    if (undoing) {
+      undoing = false;
+      event.stopImmediatePropagation();
+      return;
+    }
+    const box = replaying ? null : held2();
+    replaying = false;
+    if (!box) return;
+    const delta = lastDelta || -1;
+    if (!box.dispatchEvent(new CustomEvent(DIALOG_LEAVE_EVENT, { bubbles: true, cancelable: true, detail: { dialog: box, region: box, delta } }))) return;
+    event.stopImmediatePropagation();
+    undoing = true;
+    window.history.go(-delta);
+    ask3(box, () => {
+      replaying = true;
+      window.history.go(delta);
+    });
+  };
+  window.addEventListener("beforeunload", onUnload);
+  window.addEventListener("popstate", onPop, true);
+  window.navigation?.addEventListener("currententrychange", onEntry);
+  return () => {
+    window.removeEventListener("beforeunload", onUnload);
+    window.removeEventListener("popstate", onPop, true);
+    window.navigation?.removeEventListener("currententrychange", onEntry);
+  };
+}
+var DIALOG_LEAVE_EVENT;
+var init_dialog_leave = __esm({
+  "js/overlays/dialog-leave.js"() {
+    "use strict";
+    DIALOG_LEAVE_EVENT = "kp-dialog-guard-leave";
+  }
+});
+
 // js/components/type-confirm.js
 function typeConfirmMatches(typed, name, { anyCase = false } = {}) {
   const a = typed.trim();
@@ -3368,11 +3422,11 @@ function buildTypeConfirm(doc, { name, id: fieldId, fieldName, anyCase = false, 
   const label2 = doc.createElement("label");
   label2.className = "kp-field__label kp-type-confirm__label";
   label2.htmlFor = inputId;
-  const [before2, after = ""] = s2.typeConfirmLabel("\0").split("\0");
+  const [before3, after = ""] = s2.typeConfirmLabel("\0").split("\0");
   const code = doc.createElement("code");
   code.className = "kp-type-confirm__name";
   code.textContent = name;
-  label2.append(before2, code, after);
+  label2.append(before3, code, after);
   const input = doc.createElement("input");
   input.type = "text";
   input.className = "kp-field__input kp-type-confirm__input";
@@ -3682,6 +3736,26 @@ var init_confirm_dialog = __esm({
   }
 });
 
+// js/overlays/discard-question.js
+function openDiscardQuestion(anchor, { onAccept, onCancel: onCancel3 }) {
+  const s2 = getStrings();
+  return openConfirmation(anchor, {
+    phrase: s2.dialogGuardTitle,
+    description: s2.dialogGuardText,
+    acceptLabel: s2.dialogGuardDiscard,
+    strings: { confirmCancel: s2.dialogGuardKeep },
+    onAccept,
+    onCancel: onCancel3
+  });
+}
+var init_discard_question = __esm({
+  "js/overlays/discard-question.js"() {
+    "use strict";
+    init_confirm_dialog();
+    init_strings();
+  }
+});
+
 // js/quantity/build.js
 function ensureInput(root) {
   let input = inputOf(root);
@@ -3977,20 +4051,20 @@ var init_controller2 = __esm({
       typing() {
         const input = inputOf(this.host);
         if (!input) return;
-        const read2 = parseQuantity(input.value);
-        if (input.value.trim() === "" || !Number.isFinite(read2)) input.setAttribute("aria-invalid", "true");
+        const read = parseQuantity(input.value);
+        if (input.value.trim() === "" || !Number.isFinite(read)) input.setAttribute("aria-invalid", "true");
         else {
           input.removeAttribute("aria-invalid");
-          markButtons(this.host, read2);
+          markButtons(this.host, read);
         }
       }
       /** Take what is typed: change to it, or put the last value back. */
       commit() {
         const input = inputOf(this.host);
         if (!input) return;
-        const read2 = parseQuantity(input.value);
-        if (!Number.isFinite(read2)) paint(this.host, getQuantity(this.host));
-        else change(this.host, read2, "typed");
+        const read = parseQuantity(input.value);
+        if (!Number.isFinite(read)) paint(this.host, getQuantity(this.host));
+        else change(this.host, read, "typed");
       }
     };
   }
@@ -6022,61 +6096,7 @@ var init_values2 = __esm({
   }
 });
 
-// js/overlays/dialog-leave.js
-function attachDialogLeave(held2, ask2) {
-  let lastDelta = -1;
-  let undoing = false;
-  let replaying = false;
-  const onUnload = (event) => {
-    if (!held2()) return;
-    event.preventDefault();
-    event.returnValue = "";
-  };
-  const onEntry = (event) => {
-    const from = (
-      /** @type {{ from?: { index: number } }} */
-      event.from
-    );
-    const now = window.navigation?.currentEntry;
-    if (!undoing && !replaying && from && now) lastDelta = now.index - from.index;
-  };
-  const onPop = (event) => {
-    if (undoing) {
-      undoing = false;
-      event.stopImmediatePropagation();
-      return;
-    }
-    const dialog = replaying ? null : held2();
-    replaying = false;
-    if (!dialog) return;
-    const delta = lastDelta || -1;
-    if (!dialog.dispatchEvent(new CustomEvent(DIALOG_LEAVE_EVENT, { bubbles: true, cancelable: true, detail: { dialog, delta } }))) return;
-    event.stopImmediatePropagation();
-    undoing = true;
-    window.history.go(-delta);
-    ask2(dialog, () => {
-      replaying = true;
-      window.history.go(delta);
-    });
-  };
-  window.addEventListener("beforeunload", onUnload);
-  window.addEventListener("popstate", onPop, true);
-  window.navigation?.addEventListener("currententrychange", onEntry);
-  return () => {
-    window.removeEventListener("beforeunload", onUnload);
-    window.removeEventListener("popstate", onPop, true);
-    window.navigation?.removeEventListener("currententrychange", onEntry);
-  };
-}
-var DIALOG_LEAVE_EVENT;
-var init_dialog_leave = __esm({
-  "js/overlays/dialog-leave.js"() {
-    "use strict";
-    DIALOG_LEAVE_EVENT = "kp-dialog-guard-leave";
-  }
-});
-
-// js/overlays/dialog-guard.js
+// js/overlays/guard-fields.js
 function valueOf(control) {
   if (control instanceof HTMLSelectElement && control.multiple) return [...control.selectedOptions].map((o) => o.value).join("\n");
   if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement) return readValue(control);
@@ -6087,10 +6107,10 @@ function valueOf(control) {
     control
   );
 }
-function read(dialog) {
+function readForm(box) {
   const seen = /* @__PURE__ */ new Set();
   const out = [];
-  for (const el16 of dialog.querySelectorAll(FIELDS2)) {
+  for (const el16 of box.querySelectorAll(FIELDS2)) {
     if (el16.closest("[data-kp-untracked], .kp-confirm--inline")) continue;
     const control = widgetOf(el16) ?? el16;
     if (seen.has(control)) continue;
@@ -6099,66 +6119,144 @@ function read(dialog) {
   }
   return JSON.stringify(out);
 }
+var FIELDS2;
+var init_guard_fields = __esm({
+  "js/overlays/guard-fields.js"() {
+    "use strict";
+    init_values2();
+    init_widgets();
+    FIELDS2 = 'input:not([type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="file"]), select, textarea, [role="switch"], [role="checkbox"], [role="radio"], [contenteditable="true"]';
+  }
+});
+
+// js/overlays/region-guard.js
+function regionChanged(region) {
+  const was = before.get(region);
+  return was !== void 0 && was !== readForm(region);
+}
+function markRegionSaved(region) {
+  before.set(region, readForm(region));
+}
+function forgetRegionEdits(region) {
+  before.delete(region);
+  released.delete(region);
+}
+function heldRegion() {
+  for (const region of document.querySelectorAll(REGION_GUARD)) {
+    if (region instanceof HTMLElement && region.getClientRects().length > 0 && !released.has(region) && regionChanged(region)) return region;
+  }
+  return null;
+}
+function ask(region, go) {
+  if (asking.has(region)) return;
+  asking.add(region);
+  const focused2 = document.activeElement;
+  const opened = openDiscardQuestion(focused2 instanceof HTMLElement && region.contains(focused2) ? focused2 : region, {
+    onAccept: () => {
+      asking.delete(region);
+      released.add(region);
+      go();
+    },
+    onCancel: () => asking.delete(region)
+  });
+  if (!opened.open) asking.delete(region);
+}
+function whenRegionFree(region, go) {
+  if (!region.matches(REGION_GUARD) || released.has(region) || !regionChanged(region)) {
+    go();
+    return true;
+  }
+  ask(region, go);
+  return false;
+}
+function regionLeave(region, go) {
+  ask(region, go);
+}
+function onEdit(event) {
+  const region = event.target instanceof Element ? event.target.closest(REGION_GUARD) : null;
+  if (!region) return;
+  if (released.has(region)) forgetRegionEdits(region);
+  if (!before.has(region)) before.set(region, readForm(region));
+}
+function onSubmit(event) {
+  const region = event.target instanceof Element ? event.target.closest(REGION_GUARD) : null;
+  if (region) markRegionSaved(region);
+}
+var REGION_GUARD, before, asking, released, REGION_LISTENERS;
+var init_region_guard = __esm({
+  "js/overlays/region-guard.js"() {
+    "use strict";
+    init_discard_question();
+    init_guard_fields();
+    REGION_GUARD = '[data-kp-region-guard]:not([data-kp-region-guard="off"], dialog)';
+    before = /* @__PURE__ */ new WeakMap();
+    asking = /* @__PURE__ */ new WeakSet();
+    released = /* @__PURE__ */ new WeakSet();
+    REGION_LISTENERS = [
+      ["pointerdown", onEdit],
+      ["keydown", onEdit],
+      ["beforeinput", onEdit],
+      ["submit", onSubmit]
+    ];
+  }
+});
+
+// js/overlays/dialog-guard.js
 function dialogChanged(dialog) {
-  const was = before.get(dialog);
-  return was !== void 0 && was !== read(dialog);
+  const was = before2.get(dialog);
+  return was !== void 0 && was !== readForm(dialog);
 }
 function markDialogSaved(dialog) {
-  before.set(dialog, read(dialog));
+  before2.set(dialog, readForm(dialog));
 }
 function forgetDialogEdits(dialog) {
-  before.delete(dialog);
-  released.delete(dialog);
+  before2.delete(dialog);
+  released2.delete(dialog);
 }
 function holds(dialog, value) {
-  if (!dialog.matches(DIALOG_GUARD) || released.has(dialog) || dialog.hasAttribute("data-kp-confirm-replaced")) return false;
+  if (!dialog.matches(DIALOG_GUARD) || released2.has(dialog) || dialog.hasAttribute("data-kp-confirm-replaced")) return false;
   return WAYS_OUT.has(value ?? "") && dialogChanged(dialog);
 }
 function anchorIn(dialog) {
   const focused2 = document.activeElement;
   return focused2 instanceof HTMLElement && dialog.contains(focused2) ? focused2 : dialog;
 }
-function ask(dialog, go, from) {
-  const s2 = getStrings();
-  asking.add(dialog);
+function ask2(dialog, go, from) {
+  asking2.add(dialog);
   const anchor = from instanceof HTMLElement && from.getClientRects().length > 0 ? from : anchorIn(dialog);
-  const opened = openConfirmation(anchor, {
-    phrase: s2.dialogGuardTitle,
-    description: s2.dialogGuardText,
-    acceptLabel: s2.dialogGuardDiscard,
-    strings: { confirmCancel: s2.dialogGuardKeep },
+  const opened = openDiscardQuestion(anchor, {
     onAccept: () => {
-      asking.delete(dialog);
-      released.add(dialog);
+      asking2.delete(dialog);
+      released2.add(dialog);
       go();
     },
-    onCancel: () => asking.delete(dialog)
+    onCancel: () => asking2.delete(dialog)
   });
-  if (!opened.open) asking.delete(dialog);
+  if (!opened.open) asking2.delete(dialog);
 }
 function whenDialogFree(dialog, go, { value, from = null } = {}) {
-  if (asking.has(dialog)) return false;
+  if (asking2.has(dialog)) return false;
   if (!holds(dialog, value)) {
     go();
     return true;
   }
-  ask(dialog, go, from);
+  ask2(dialog, go, from);
   return false;
 }
 function requestDialogClose(dialog, value, from = null) {
   return whenDialogFree(dialog, () => dialog.close(value), { value, from });
 }
-function onEdit(event) {
+function onEdit2(event) {
   const dialog = event.target instanceof Element ? event.target.closest(DIALOG_GUARD) : null;
-  if (dialog instanceof HTMLDialogElement && dialog.open && !before.has(dialog)) before.set(dialog, read(dialog));
+  if (dialog instanceof HTMLDialogElement && dialog.open && !before2.has(dialog)) before2.set(dialog, readForm(dialog));
 }
 function onCancel(event) {
   const dialog = event.target;
   if (!(dialog instanceof HTMLDialogElement) || dialog.hasAttribute("data-kp-confirm-replaced")) return;
-  if (!asking.has(dialog) && !holds(dialog, "")) return;
+  if (!asking2.has(dialog) && !holds(dialog, "")) return;
   event.preventDefault();
   event.stopImmediatePropagation();
-  if (!asking.has(dialog)) ask(dialog, () => dialog.close(""), document.activeElement);
+  if (!asking2.has(dialog)) ask2(dialog, () => dialog.close(""), document.activeElement);
 }
 function onRequest(event) {
   const dialog = event.target;
@@ -6167,12 +6265,12 @@ function onRequest(event) {
     /** @type {CustomEvent<{ returnValue?: string }>} */
     event.detail?.returnValue
   );
-  if (asking.has(dialog)) return void event.preventDefault();
+  if (asking2.has(dialog)) return void event.preventDefault();
   if (!holds(dialog, value)) return;
   event.preventDefault();
-  ask(dialog, () => dialog.close(value), document.activeElement);
+  ask2(dialog, () => dialog.close(value), document.activeElement);
 }
-function onSubmit(event) {
+function onSubmit2(event) {
   const dialog = event.target instanceof Element ? event.target.closest(DIALOG_GUARD) : null;
   if (dialog instanceof HTMLDialogElement) markDialogSaved(dialog);
 }
@@ -6182,48 +6280,53 @@ function onClose(event) {
 }
 function heldDialog() {
   for (const dialog of document.querySelectorAll(DIALOG_GUARD)) {
-    if (dialog instanceof HTMLDialogElement && dialog.open && !released.has(dialog) && dialogChanged(dialog)) return dialog;
+    if (dialog instanceof HTMLDialogElement && dialog.open && !released2.has(dialog) && dialogChanged(dialog)) return dialog;
   }
   return null;
 }
 function attachDialogGuards() {
   if (attached++ === 0) {
-    for (const [type, listener] of LISTENERS) window.addEventListener(type, listener, true);
-    stopLeave = attachDialogLeave(heldDialog, (dialog, go) => void whenDialogFree(dialog, go));
+    for (const [type, listener] of [...LISTENERS, ...REGION_LISTENERS]) window.addEventListener(type, listener, true);
+    stopLeave = attachDialogLeave(
+      () => heldDialog() ?? heldRegion(),
+      (box, go) => box instanceof HTMLDialogElement ? void whenDialogFree(box, go) : regionLeave(
+        /** @type {HTMLElement} */
+        box,
+        go
+      )
+    );
   }
   let done = false;
   return () => {
     if (done) return;
     done = true;
     if (--attached > 0) return;
-    for (const [type, listener] of LISTENERS) window.removeEventListener(type, listener, true);
+    for (const [type, listener] of [...LISTENERS, ...REGION_LISTENERS]) window.removeEventListener(type, listener, true);
     stopLeave?.();
     stopLeave = null;
   };
 }
-var DIALOG_GUARD, FIELDS2, WAYS_OUT, before, asking, released, LISTENERS, attached, stopLeave;
+var DIALOG_GUARD, WAYS_OUT, before2, asking2, released2, LISTENERS, attached, stopLeave;
 var init_dialog_guard = __esm({
   "js/overlays/dialog-guard.js"() {
     "use strict";
-    init_confirm_dialog();
-    init_strings();
-    init_values2();
-    init_widgets();
     init_constants2();
     init_dialog_leave();
+    init_discard_question();
+    init_guard_fields();
+    init_region_guard();
     DIALOG_GUARD = 'dialog[data-kp-dialog-guard]:not([data-kp-dialog-guard="off"])';
-    FIELDS2 = 'input:not([type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="file"]), select, textarea, [role="switch"], [role="checkbox"], [role="radio"], [contenteditable="true"]';
     WAYS_OUT = /* @__PURE__ */ new Set(["", "cancel"]);
-    before = /* @__PURE__ */ new WeakMap();
-    asking = /* @__PURE__ */ new WeakSet();
-    released = /* @__PURE__ */ new WeakSet();
+    before2 = /* @__PURE__ */ new WeakMap();
+    asking2 = /* @__PURE__ */ new WeakSet();
+    released2 = /* @__PURE__ */ new WeakSet();
     LISTENERS = [
-      ["pointerdown", onEdit],
-      ["keydown", onEdit],
-      ["beforeinput", onEdit],
+      ["pointerdown", onEdit2],
+      ["keydown", onEdit2],
+      ["beforeinput", onEdit2],
       ["cancel", onCancel],
       [DIALOG_CLOSE_REQUEST_EVENT, onRequest],
-      ["submit", onSubmit],
+      ["submit", onSubmit2],
       ["close", onClose]
     ];
     attached = 0;
@@ -6452,10 +6555,10 @@ var init_timing = __esm({
 });
 
 // js/motion/keyframes.js
-function withCustomProperties(read2, own) {
+function withCustomProperties(read, own) {
   const customs = own.filter((frame3) => Object.keys(frame3).some((key) => key.startsWith("--")));
-  if (customs.length === 0) return read2;
-  const frames = read2.map((frame3) => ({ ...frame3 }));
+  if (customs.length === 0) return read;
+  const frames = read.map((frame3) => ({ ...frame3 }));
   const at = (frame3) => Number(frame3.computedOffset ?? frame3.offset);
   for (
     const custom of
@@ -6476,11 +6579,11 @@ function withCustomProperties(read2, own) {
   return frames;
 }
 function keyframesOf(effect) {
-  const read2 = effect.getKeyframes();
+  const read = effect.getKeyframes();
   try {
-    return withCustomProperties(read2, new KeyframeEffect(effect).getKeyframes());
+    return withCustomProperties(read, new KeyframeEffect(effect).getKeyframes());
   } catch {
-    return read2;
+    return read;
   }
 }
 function lineOf(effect) {
@@ -6974,8 +7077,8 @@ function asOf(root, present2, attach) {
       /** @type {const} */
       ["querySelectorAll", "querySelector"]
     ) {
-      const before2 = own[name];
-      if (before2) Object.defineProperty(root, name, before2);
+      const before3 = own[name];
+      if (before3) Object.defineProperty(root, name, before3);
       else delete /** @type {any} */
       root[name];
     }
@@ -7216,13 +7319,13 @@ function exitsOf(actor, lines4) {
 function arriveAsReversedLeave(el16) {
   if (el16 instanceof HTMLTableRowElement || !el16.isConnected) return false;
   const { size: size2, ease } = themeMotion(el16);
-  const before2 = getComputedStyle(el16).animationName;
+  const before3 = getComputedStyle(el16).animationName;
   const beforeSig = animationSignature(el16);
   const rest = pseudoNames(el16);
   el16.setAttribute("data-kp-leaving", "");
   const style = getComputedStyle(el16);
   const ownName = style.animationName;
-  if (!ownName || ownName === "none" || ownName === before2 && animationSignature(el16) === beforeSig) {
+  if (!ownName || ownName === "none" || ownName === before3 && animationSignature(el16) === beforeSig) {
     el16.removeAttribute("data-kp-leaving");
     return false;
   }
@@ -7424,13 +7527,13 @@ function arrivalOf(el16) {
   el16.setAttribute("data-kp-arriving", "");
   const style = getComputedStyle(el16);
   const own = style.animationName && style.animationName !== "none";
-  const read2 = own ? {
+  const read = own ? {
     name: style.animationName.split(",")[0].trim(),
     duration: firstMs(style.animationDuration),
     ease: style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim()
   } : null;
   if (!had) el16.removeAttribute("data-kp-arriving");
-  if (read2 && read2.duration > 0) return read2;
+  if (read && read.duration > 0) return read;
   const toast2 = arrival(el16);
   if (!toast2) return null;
   const [name, duration2, ...ease] = toast2.split(" ");
@@ -7490,7 +7593,7 @@ function foldReflows(el16, from, to) {
   if (!("width" in from)) return false;
   const chain = [];
   for (let up = el16.parentElement; up && up !== document.body && chain.length < 6; up = up.parentElement) chain.push(up);
-  const before2 = chain.map((n) => n.getBoundingClientRect().height);
+  const before3 = chain.map((n) => n.getBoundingClientRect().height);
   const dashed = (k) => k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
   const keys = Object.keys(to).map(dashed);
   const kept = keys.map((k) => el16.style.getPropertyValue(k));
@@ -7498,7 +7601,7 @@ function foldReflows(el16, from, to) {
   keys.forEach((k, i) => el16.style.setProperty(k, values[i], "important"));
   const after = chain.map((n) => n.getBoundingClientRect().height);
   keys.forEach((k, i) => kept[i] ? el16.style.setProperty(k, kept[i]) : el16.style.removeProperty(k));
-  return after.some((h2, i) => Math.abs(h2 - before2[i]) >= 1);
+  return after.some((h2, i) => Math.abs(h2 - before3[i]) >= 1);
 }
 var init_fold = __esm({
   "js/motion/fold.js"() {
@@ -7514,10 +7617,10 @@ var init_fold = __esm({
 async function playClose(el16) {
   stopClose(el16);
   if (reduced() || !el16.isConnected) return true;
-  const before2 = getComputedStyle(el16).animationName;
+  const before3 = getComputedStyle(el16).animationName;
   el16.setAttribute(CLOSING_ATTRIBUTE, "");
   const now = getComputedStyle(el16).animationName;
-  const own = Boolean(now) && now !== "none" && now !== before2;
+  const own = Boolean(now) && now !== "none" && now !== before3;
   let stopped = false;
   const me = (
     /** @type {any} */
@@ -7568,11 +7671,11 @@ function closePopoverWithGhost(event) {
     const name = getComputedStyle(el16, pseudo).animationName;
     return Boolean(name) && name !== "none";
   });
-  const before2 = getComputedStyle(el16).animationName;
+  const before3 = getComputedStyle(el16).animationName;
   el16.setAttribute(CLOSING_ATTRIBUTE, "");
   const leaveOwn = getComputedStyle(el16).animationName;
   el16.removeAttribute(CLOSING_ATTRIBUTE);
-  if (!animated && (!leaveOwn || leaveOwn === "none" || leaveOwn === before2)) return;
+  if (!animated && (!leaveOwn || leaveOwn === "none" || leaveOwn === before3)) return;
   const box = el16.getBoundingClientRect();
   if (box.width === 0 && box.height === 0) return;
   const sized = getComputedStyle(el16);
@@ -7688,7 +7791,7 @@ async function leaveOne(el16, hide2, exited, count4 = 1) {
   };
   entering.get(el16)?.();
   if (!el16.isConnected || el16.hasAttribute("data-kp-leaving")) return exited();
-  const before2 = getComputedStyle(el16).animationName;
+  const before3 = getComputedStyle(el16).animationName;
   const beforeSig = animationSignature(el16);
   const rest = pseudoNames(el16);
   const arrival2 = arrivalOf(el16);
@@ -7700,14 +7803,14 @@ async function leaveOne(el16, hide2, exited, count4 = 1) {
   el16.setAttribute("data-kp-leaving", "");
   const style = getComputedStyle(el16);
   const ownName = style.animationName;
-  const turned = ownName && ownName !== "none" && ownName === before2 && animationSignature(el16) !== beforeSig;
+  const turned = ownName && ownName !== "none" && ownName === before3 && animationSignature(el16) !== beforeSig;
   if (turned) {
     el16.setAttribute(REVERSING_ATTRIBUTE, "reset");
     getComputedStyle(el16).animationName;
     el16.removeAttribute(REVERSING_ATTRIBUTE);
     getComputedStyle(el16).animationName;
   }
-  const own = ownName && ownName !== "none" && (ownName !== before2 || turned) ? { duration: firstMs(style.animationDuration) } : null;
+  const own = ownName && ownName !== "none" && (ownName !== before3 || turned) ? { duration: firstMs(style.animationDuration) } : null;
   const running = [];
   const lasts = own ? own.duration : arrival2?.duration ?? 0;
   const fold2 = style.getPropertyValue("--kp-leave-fold").trim();
@@ -8312,8 +8415,8 @@ var init_attach = __esm({
       }
       /** @param {Element} el @param {() => void} detach */
       keep(el16, detach) {
-        const before2 = this.detaches.get(el16);
-        this.detaches.set(el16, before2 ? () => (before2(), detach()) : detach);
+        const before3 = this.detaches.get(el16);
+        this.detaches.set(el16, before3 ? () => (before3(), detach()) : detach);
       }
       /** Wire what is under `scope`, `scope` itself included. @param {ParentNode} scope */
       scan(scope) {
@@ -8998,26 +9101,26 @@ var init_tooltips = __esm({
        * losing what it held. The anchor names itself for anchor positioning, as the React channel does.
        */
       describe() {
-        const { host: anchor, tooltip, trigger, before: before2 } = this;
+        const { host: anchor, tooltip, trigger, before: before3 } = this;
         if (!tooltip.id) tooltip.id = `kp-tooltip-${this.count}-${Math.random().toString(36).slice(2, 8)}`;
-        const ids2 = (before2.describedby ?? "").split(/\s+/).filter(Boolean);
+        const ids2 = (before3.describedby ?? "").split(/\s+/).filter(Boolean);
         if (!ids2.includes(tooltip.id)) trigger.setAttribute("aria-describedby", [...ids2, tooltip.id].join(" "));
-        if (before2.anchorName === "") anchor.style.setProperty("anchor-name", `--${tooltip.id}`);
-        if (before2.positionAnchor === "") tooltip.style.setProperty("position-anchor", before2.anchorName || `--${tooltip.id}`);
+        if (before3.anchorName === "") anchor.style.setProperty("anchor-name", `--${tooltip.id}`);
+        if (before3.positionAnchor === "") tooltip.style.setProperty("position-anchor", before3.anchorName || `--${tooltip.id}`);
       }
       /** Put back the attributes, the styles and the hidden state attach found. */
       restore() {
-        const { host: anchor, tooltip, trigger, before: before2 } = this;
+        const { host: anchor, tooltip, trigger, before: before3 } = this;
         clearTimeout(this.timer);
         this.going = false;
         stopReversing(tooltip);
         if (this.promoted) demote(tooltip);
-        tooltip.hidden = before2.hidden;
-        if (before2.id === null) tooltip.removeAttribute("id");
-        if (before2.describedby === null) trigger.removeAttribute("aria-describedby");
-        else trigger.setAttribute("aria-describedby", before2.describedby);
-        if (before2.anchorName === "") anchor.style.removeProperty("anchor-name");
-        if (before2.positionAnchor === "") tooltip.style.removeProperty("position-anchor");
+        tooltip.hidden = before3.hidden;
+        if (before3.id === null) tooltip.removeAttribute("id");
+        if (before3.describedby === null) trigger.removeAttribute("aria-describedby");
+        else trigger.setAttribute("aria-describedby", before3.describedby);
+        if (before3.anchorName === "") anchor.style.removeProperty("anchor-name");
+        if (before3.positionAnchor === "") tooltip.style.removeProperty("position-anchor");
         delete anchor.dataset.kpTooltipAttached;
       }
       /** @param {boolean} open */
@@ -9247,6 +9350,7 @@ __export(overlays_exports, {
   DIALOG_GUARD: () => DIALOG_GUARD,
   DIALOG_OPEN_EVENT: () => DIALOG_OPEN_EVENT,
   DISMISS_OWNED: () => DISMISS_OWNED,
+  REGION_GUARD: () => REGION_GUARD,
   SCROLL_BOXES: () => SCROLL_BOXES,
   SCROLL_OVERFLOW: () => SCROLL_OVERFLOW,
   TABS_OVERFLOW: () => TABS_OVERFLOW,
@@ -9267,9 +9371,12 @@ __export(overlays_exports, {
   closeLabel: () => closeLabel,
   dialogChanged: () => dialogChanged,
   forgetDialogEdits: () => forgetDialogEdits,
+  forgetRegionEdits: () => forgetRegionEdits,
   markDialogSaved: () => markDialogSaved,
+  markRegionSaved: () => markRegionSaved,
   openAtTop: () => openAtTop,
   openDialog: () => openDialog,
+  regionChanged: () => regionChanged,
   requestDialogClose: () => requestDialogClose,
   revealTab: () => revealTab,
   selectTab: () => selectTab,
@@ -9278,7 +9385,8 @@ __export(overlays_exports, {
   toastRegion: () => toastRegion,
   watchScrollbar: () => watchScrollbar,
   watchTabOverflow: () => watchTabOverflow,
-  whenDialogFree: () => whenDialogFree
+  whenDialogFree: () => whenDialogFree,
+  whenRegionFree: () => whenRegionFree
 });
 var init_overlays = __esm({
   "js/overlays.js"() {
@@ -9286,6 +9394,7 @@ var init_overlays = __esm({
     init_constants2();
     init_dialogs();
     init_dialog_guard();
+    init_region_guard();
     init_tabs();
     init_tab_row();
     init_toast();
@@ -9935,9 +10044,9 @@ var init_notes = __esm({
        * @param {import('../strings.js').Strings} s
        * @param {() => void} paint called when the fold opens or closes
        */
-      constructor(gate, before2, s2, paint12) {
+      constructor(gate, before3, s2, paint12) {
         this.gate = gate;
-        this.before = before2;
+        this.before = before3;
         this.s = s2;
         this.paint = paint12;
         this.fold = null;
@@ -10439,9 +10548,9 @@ function syncTile(tile, { announce: announce8 = false } = {}) {
   const busy = tile.getAttribute("aria-busy") === "true";
   if (busy) showBusy(tile);
   else hideBusy(tile);
-  const before2 = synced.get(tile);
+  const before3 = synced.get(tile);
   synced.set(tile, busy);
-  if (announce8 && before2 !== void 0 && before2 !== busy) {
+  if (announce8 && before3 !== void 0 && before3 !== busy) {
     tile.dispatchEvent(new CustomEvent(ACTION_BUSY_EVENT, { bubbles: true, detail: { tile, busy } }));
   }
 }
@@ -15225,9 +15334,9 @@ var init_board = __esm({
       }
       /** @param {KeyboardEvent} event */
       onKey(event) {
-        const before2 = this.pending;
+        const before3 = this.pending;
         this.handleKey(event);
-        if (this.pending !== before2) this.announcePending();
+        if (this.pending !== before3) this.announcePending();
       }
       /** Drop the chord and its cap. */
       clearChord() {
@@ -15672,9 +15781,9 @@ var init_marks = __esm({
         if (!el16.id) el16.id = id;
         el16.setAttribute("data-kp-anchored", kind);
         const button6 = this.makeMark(el16, kind);
-        const before2 = (el16.getAttribute("data-kp-anchor-position") ?? this.host.getAttribute("data-kp-anchor-position") ?? (kind === "row" ? "before" : "after")) === "before";
+        const before3 = (el16.getAttribute("data-kp-anchor-position") ?? this.host.getAttribute("data-kp-anchor-position") ?? (kind === "row" ? "before" : "after")) === "before";
         const into = kind === "row" && el16.matches('tr, [role="row"]') ? el16.querySelector('th, td, [role="cell"], [role="gridcell"], [role="rowheader"]') ?? el16 : el16;
-        if (before2) into.prepend(button6);
+        if (before3) into.prepend(button6);
         else into.append(button6);
         this.marks.set(el16, button6);
       }
@@ -17070,21 +17179,21 @@ function paintWanted(doc, items2, shown6) {
 }
 function placeItems(band, wanted, going) {
   const order = wanted.map((el16, at) => ({ el: el16, at })).sort((a, b) => rank(a.el) - rank(b.el) || a.at - b.at);
-  let before2 = null;
+  let before3 = null;
   for (const { el: el16 } of order) {
     let prev = el16.isConnected && el16.parentElement === band ? el16.previousElementSibling : null;
     while (prev && (!prev.classList.contains("kp-attention__item") || prev.hasAttribute("data-kp-leaving") || going.has(prev)))
       prev = prev.previousElementSibling;
-    const inPlace2 = el16.parentElement === band && prev === before2;
+    const inPlace2 = el16.parentElement === band && prev === before3;
     if (!inPlace2) {
-      if (before2) before2.after(el16);
+      if (before3) before3.after(el16);
       else {
         const first = [...band.children].find((c) => c.classList.contains("kp-attention__item"));
         if (first && first !== el16) first.before(el16);
         else if (!first) band.append(el16);
       }
     }
-    before2 = el16;
+    before3 = el16;
   }
 }
 function setAttention(band, items2) {
@@ -19699,8 +19808,8 @@ function setSegmentedValues(group, values) {
   paint3(group, [...values]);
 }
 function resetTri(group) {
-  const before2 = getSegmentedTri(group);
-  if (before2.include.length + before2.exclude.length === 0) return;
+  const before3 = getSegmentedTri(group);
+  if (before3.include.length + before3.exclude.length === 0) return;
   setSegmentedTri(group, {});
   sayTri(group, getStrings().triCleared);
   group.dispatchEvent(
@@ -19714,8 +19823,8 @@ function resetSegmented(group) {
   enhance(group);
   if (groupDisabled(group)) return;
   if (isTri(group)) return resetTri(group);
-  const before2 = getSegmentedValues(group);
-  if (before2.length === 0 && isMulti(group)) return;
+  const before3 = getSegmentedValues(group);
+  if (before3.length === 0 && isMulti(group)) return;
   paint3(group, []);
   group.dispatchEvent(new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: null, values: [], item: null } }));
 }
@@ -19758,11 +19867,11 @@ function turnTri(group, item, state12) {
     new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf2(item), values: include, include, exclude, state: state12, item } })
   );
 }
-function nextValues(group, item, before2) {
+function nextValues(group, item, before3) {
   const value = valueOf2(item);
-  if (!isMulti(group)) return isOptional(group) && before2.includes(value) ? [] : [value];
+  if (!isMulti(group)) return isOptional(group) && before3.includes(value) ? [] : [value];
   if (isAll(item)) return [];
-  return before2.includes(value) ? before2.filter((v) => v !== value) : [...before2, value];
+  return before3.includes(value) ? before3.filter((v) => v !== value) : [...before3, value];
 }
 function choose(group, item) {
   if (groupDisabled(group) || itemDisabled(item)) return;
@@ -19771,10 +19880,10 @@ function choose(group, item) {
     turnTri(group, item, TRI_STATES[(TRI_STATES.indexOf(triOf(item)) + 1) % TRI_STATES.length]);
     return;
   }
-  const before2 = getSegmentedValues(group);
-  paint3(group, nextValues(group, item, before2));
+  const before3 = getSegmentedValues(group);
+  paint3(group, nextValues(group, item, before3));
   const after = getSegmentedValues(group);
-  const changed3 = after.length !== before2.length || after.some((v, at) => v !== before2[at]);
+  const changed3 = after.length !== before3.length || after.some((v, at) => v !== before3[at]);
   if (!changed3) return;
   group.dispatchEvent(new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf2(item), values: after, item } }));
 }
@@ -20837,8 +20946,8 @@ function applyTheme(theme, { root, darkClass, strict = false, announce: announce
   if (known4 === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next2, "apply", element);
   const previous = asTheme(element.getAttribute(PREVIEW_THEME_ATTRIBUTE) ?? element.getAttribute("data-theme"));
   if (announce8 && previous !== next2) {
-    const ask2 = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next2, previous } });
-    if (!element.dispatchEvent(ask2)) {
+    const ask3 = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next2, previous } });
+    if (!element.dispatchEvent(ask3)) {
       endPreview({ root: element, darkClass });
       return previous ?? DEFAULT_THEME;
     }
@@ -25719,10 +25828,10 @@ function trendAxisRow(host) {
   const doc = host.ownerDocument;
   const from = h(doc, "span", { class: "kp-kpi__chart-from" }, BLANK);
   const to = h(doc, "span", { class: "kp-kpi__chart-to" }, BLANK);
-  const read2 = h(doc, "span", { class: "kp-kpi__chart-read" });
-  read2.hidden = true;
-  const row2 = h(doc, "span", { class: "kp-kpi__chart-axis", "aria-hidden": "true" }, from, to, read2);
-  return { row: row2, from, to, read: read2 };
+  const read = h(doc, "span", { class: "kp-kpi__chart-read" });
+  read.hidden = true;
+  const row2 = h(doc, "span", { class: "kp-kpi__chart-axis", "aria-hidden": "true" }, from, to, read);
+  return { row: row2, from, to, read };
 }
 function trendWords(pts, series, ctx) {
   const step = series?.step ?? (pts.length > 1 ? pts[pts.length - 1][0] - pts[pts.length - 2][0] : void 0);
@@ -29534,9 +29643,9 @@ function edgeScroller(box, onScroll) {
     frame3 = 0;
     const by = Math.round(speed());
     if (!by) return;
-    const before2 = box.scrollTop;
-    box.scrollTop = before2 + by;
-    if (box.scrollTop !== before2) onScroll();
+    const before3 = box.scrollTop;
+    box.scrollTop = before3 + by;
+    if (box.scrollTop !== before3) onScroll();
     frame3 = win?.requestAnimationFrame(tick6) ?? 0;
   };
   return {
@@ -31321,10 +31430,10 @@ var init_secret_base = __esm({
        * @param {string} name what the announcement calls the field
        * @param {(idle: string) => void} settle puts the button's own words back: the ones it had before the copy
        */
-      async copyOut(copy3, read2, name, settle5) {
+      async copyOut(copy3, read, name, settle5) {
         let text = "";
         try {
-          text = await read2();
+          text = await read();
           await navigator.clipboard.writeText(text);
         } catch (error) {
           copy3.dataset.kpCopyFailed = "";
@@ -31375,14 +31484,14 @@ function buildLine2(field2, built) {
   built.push(spoken);
   return { line, words: words3, drain, spoken };
 }
-function actionsOf(field2, before2, built) {
+function actionsOf(field2, before3, built) {
   let actions = (
     /** @type {HTMLElement | null} */
     field2.querySelector(":scope > .kp-secret__actions")
   );
   if (!actions) {
     actions = make8(field2.ownerDocument, "div", "kp-secret__actions");
-    before2.after(actions);
+    before3.after(actions);
     built.push(actions);
   }
   return actions;
@@ -31791,8 +31900,8 @@ var init_secret_display = __esm({
       onCopy(copy3) {
         if (this.disabledWhy() !== void 0) return;
         const name = this.host.getAttribute("aria-label") ?? this.s.secretLabel;
-        const read2 = () => this.state === "shown" ? this.parts.value.textContent ?? "" : this.read("copy");
-        void this.copyOut(copy3, read2, name, (idle) => {
+        const read = () => this.state === "shown" ? this.parts.value.textContent ?? "" : this.read("copy");
+        void this.copyOut(copy3, read, name, (idle) => {
           copy3.textContent = idle;
           delete copy3.dataset.kpCopied;
         });
@@ -33311,8 +33420,8 @@ var init_controller25 = __esm({
     ChipMenu = class extends Controller {
       /** The chip this menu belongs to: the item right before it in the group. */
       get item() {
-        const before2 = this.host.previousElementSibling;
-        return before2 instanceof HTMLElement && before2.matches(SEGMENTED_ITEM) ? before2 : null;
+        const before3 = this.host.previousElementSibling;
+        return before3 instanceof HTMLElement && before3.matches(SEGMENTED_ITEM) ? before3 : null;
       }
       /** The menu button's wrapper (the host) and its button. */
       get menu() {
@@ -34575,10 +34684,10 @@ var init_controller28 = __esm({
         const row2 = check?.closest(".kp-facet");
         if (!check || !row2 || !group.contains(row2)) return;
         if (row2.hasAttribute("data-kp-facet-all")) {
-          const before2 = getFacetValues(group).length;
+          const before3 = getFacetValues(group).length;
           setFacetValues(group, null);
           this.say(getStrings().facetShowingAll);
-          if (before2 !== rowsOf(group).length) this.emit("all");
+          if (before3 !== rowsOf(group).length) this.emit("all");
           return;
         }
         syncGroup(group);
@@ -34984,9 +35093,9 @@ function paintMarks(root) {
   const slots = slotsOf(all);
   for (const el16 of all) {
     const name = el16.getAttribute("data-kp-idmark") ?? "";
-    const before2 = DRAWN2.get(el16);
+    const before3 = DRAWN2.get(el16);
     const want = slots.get(el16);
-    if (before2?.base === baseKey(el16) && (want === void 0 || want === before2.slot) && el16.querySelector(":scope > .kp-idmark__letters")) continue;
+    if (before3?.base === baseKey(el16) && (want === void 0 || want === before3.slot) && el16.querySelector(":scope > .kp-idmark__letters")) continue;
     setIdmark(el16, name, { slot: want });
   }
 }
@@ -35172,16 +35281,16 @@ function enforceContracts(root = document, { disable = true, rules, exempt, log 
   for (const el16 of root.querySelectorAll("[data-kp-contract-error]")) restore(el16);
   const violations = findViolations(root, { rules, exempt });
   for (const v of violations) {
-    const before2 = {};
+    const before3 = {};
     if (disable && v.rule === "DI10" && "disabled" in v.element) {
       const button6 = (
         /** @type {HTMLButtonElement} */
         v.element
       );
-      before2.disabled = button6.disabled;
+      before3.disabled = button6.disabled;
       button6.disabled = true;
     }
-    changed.set(v.element, before2);
+    changed.set(v.element, before3);
     v.element.setAttribute("data-kp-contract-error", v.rule);
     log?.(`[kp-themes ${v.rule}] ${v.message}`, v.element);
     v.element.dispatchEvent(new CustomEvent(VIOLATION_EVENT, { bubbles: true, detail: v }));
@@ -35192,8 +35301,8 @@ function enforceContracts(root = document, { disable = true, rules, exempt, log 
   return Object.assign(detach, { violations });
 }
 function restore(el16) {
-  const before2 = changed.get(el16);
-  if (before2 !== void 0 && "disabled" in el16) el16.disabled = before2.disabled ?? false;
+  const before3 = changed.get(el16);
+  if (before3 !== void 0 && "disabled" in el16) el16.disabled = before3.disabled ?? false;
   changed.delete(el16);
   el16.removeAttribute("data-kp-contract-error");
 }
@@ -36704,8 +36813,8 @@ function groupMessages(messages, minutes) {
   const groups = [];
   for (const message of messages) {
     const run = groups[groups.length - 1];
-    const before2 = run?.[run.length - 1];
-    const joins = before2 !== void 0 && message.dir !== "system" && before2.dir === message.dir && (before2.sender ?? "") === (message.sender ?? "") && dayKey2(before2.at) === dayKey2(message.at) && message.at - before2.at <= minutes * 6e4 && minutes > 0;
+    const before3 = run?.[run.length - 1];
+    const joins = before3 !== void 0 && message.dir !== "system" && before3.dir === message.dir && (before3.sender ?? "") === (message.sender ?? "") && dayKey2(before3.at) === dayKey2(message.at) && message.at - before3.at <= minutes * 6e4 && minutes > 0;
     if (joins) run.push(message);
     else groups.push([message]);
   }
@@ -37133,12 +37242,12 @@ var init_view = __esm({
         if (!body || !button6) return;
         const limit = Number(body.getAttribute("data-kp-fold-lines"));
         const open4 = this.expanded.has(key);
-        const before2 = body.getAttribute("data-kp-fold");
+        const before3 = body.getAttribute("data-kp-fold");
         body.setAttribute("data-kp-fold", "open");
         const style = body.ownerDocument.defaultView?.getComputedStyle(body);
         const lineHeight2 = parseFloat(style?.lineHeight ?? "") || (parseFloat(style?.fontSize ?? "") || FONT_PX) * LINE_EM;
         const lines4 = Math.max(1, Math.round(body.scrollHeight / lineHeight2));
-        body.setAttribute("data-kp-fold", before2 ?? "folded");
+        body.setAttribute("data-kp-fold", before3 ?? "folded");
         if (lines4 <= limit) {
           body.removeAttribute("data-kp-fold");
           button6.hidden = true;
@@ -37162,13 +37271,13 @@ async function copyText3(button6, text) {
     button6.textContent = strings.threadCopyFailed;
     return;
   }
-  const before2 = button6.getAttribute("data-kp-label") ?? button6.textContent ?? "";
-  button6.setAttribute("data-kp-label", before2);
+  const before3 = button6.getAttribute("data-kp-label") ?? button6.textContent ?? "";
+  button6.setAttribute("data-kp-label", before3);
   button6.style.minInlineSize = `${button6.offsetWidth}px`;
   button6.textContent = strings.copied;
   button6.setAttribute("data-kp-copied", "");
   button6.ownerDocument.defaultView?.setTimeout(() => {
-    button6.textContent = before2;
+    button6.textContent = before3;
     button6.removeAttribute("data-kp-copied");
     button6.style.minInlineSize = "";
   }, COPIED_MS2);
@@ -38480,7 +38589,7 @@ function shellWord(doc, word, ctx, out) {
   ctx.expectCommand = keyword && SHELL_OPENS.has(word);
 }
 function shellToken(doc, match, ctx, out) {
-  const before2 = ctx.expectCommand;
+  const before3 = ctx.expectCommand;
   if (match[1] !== void 0) out.push(span4(doc, "kp-code__punct", match[1]));
   else if (match[3] !== void 0) {
     if (match[2]) out.push(doc.createTextNode(match[2]));
@@ -38499,7 +38608,7 @@ function shellToken(doc, match, ctx, out) {
     ctx.expectCommand = false;
   } else if (match[8] !== void 0) {
     out.push(span4(doc, "kp-code__var", match[8]));
-    if (before2) {
+    if (before3) {
       ctx.assigned = true;
       ctx.commandAfter = true;
     }
@@ -39144,31 +39253,31 @@ function setCode(el16, given2) {
 }
 function specFromMarkup(el16) {
   const source = el16.querySelector("code") ?? el16.querySelector("pre");
-  const read2 = (name) => el16.getAttribute(`data-kp-code-${name}`) ?? void 0;
+  const read = (name) => el16.getAttribute(`data-kp-code-${name}`) ?? void 0;
   const cell = el16.classList.contains("kp-code--cell");
   const state12 = (
     /** @type {import('./constants.js').CodeSpec['state']} */
-    read2("state")
+    read("state")
   );
-  const layout3 = read2("layout");
+  const layout3 = read("layout");
   const binaryBytes = Number(el16.getAttribute("data-kp-binary-size"));
   const cut = (el16.getAttribute("data-kp-truncated") ?? "").split("/").map((n) => Number(n));
-  const open4 = read2("open");
+  const open4 = read("open");
   return {
     text: source?.textContent ?? "",
-    title: read2("title"),
-    language: read2("language"),
-    size: Number.isFinite(binaryBytes) && el16.hasAttribute("data-kp-binary-size") ? formatBytes(binaryBytes) : read2("size"),
+    title: read("title"),
+    language: read("language"),
+    size: Number.isFinite(binaryBytes) && el16.hasAttribute("data-kp-binary-size") ? formatBytes(binaryBytes) : read("size"),
     lines: el16.hasAttribute("data-kp-code-lines"),
     wrap: el16.hasAttribute("data-kp-code-wrap") ? true : cell ? void 0 : false,
-    maxLines: read2("max") !== void 0 ? Number(read2("max")) || 0 : cell ? 3 : 0,
+    maxLines: read("max") !== void 0 ? Number(read("max")) || 0 : cell ? 3 : 0,
     layout: layout3 === "raw" ? "raw" : layout3 === "pretty" ? "pretty" : void 0,
     state: state12 ?? (el16.hasAttribute("data-kp-binary-size") ? "binary" : void 0),
     cell,
     open: open4 === "dialog" ? "dialog" : void 0,
     downloadUrl: el16.getAttribute("data-kp-download") ?? void 0,
     copy: el16.getAttribute("data-kp-copy") === "false" ? false : void 0,
-    highlight: ["off", "false"].includes(read2("highlight") ?? "") ? false : void 0,
+    highlight: ["off", "false"].includes(read("highlight") ?? "") ? false : void 0,
     truncated: cut.length === 2 && cut.every((n) => Number.isFinite(n) && n > 0) ? { shown: formatBytes(cut[0]), total: formatBytes(cut[1]) } : void 0
   };
 }
@@ -39862,12 +39971,12 @@ var init_core7 = __esm({
       /** Drop the picks whose row went away (a redraw, a filter that removed it), and mark the rows again. */
       settle() {
         const present2 = new Set(this.allRows().map(keyOf5));
-        const before2 = this.picked.size;
+        const before3 = this.picked.size;
         for (const key of this.picked) if (!present2.has(key)) this.picked.delete(key);
         if (this.anchorKey !== null && !present2.has(this.anchorKey)) this.anchorKey = null;
         if (this.cursorKey !== null && !present2.has(this.cursorKey)) this.cursorKey = null;
         if (this.picked.size === 0) this.host.removeAttribute("data-kp-selecting");
-        if (this.picked.size !== before2) this.commit("refresh");
+        if (this.picked.size !== before3) this.commit("refresh");
         else this.mark();
       }
       /** Move the cursor to a row, or take it away. @param {HTMLElement | null} row */
@@ -40101,11 +40210,11 @@ function readSources(memory) {
     for (const host of hostsOf(source, ROW_PICK)) {
       const picker = rowPick(host);
       if (!picker) continue;
-      const read2 = readPicks(host, picker.keys());
-      for (const key of read2.known) known4.add(key);
-      for (const item of read2.items) if (!items2.has(item.key)) items2.set(item.key, item);
-      shown6 += read2.shown;
-      shownTicked += read2.shownTicked;
+      const read = readPicks(host, picker.keys());
+      for (const key of read.known) known4.add(key);
+      for (const item of read.items) if (!items2.has(item.key)) items2.set(item.key, item);
+      shown6 += read.shown;
+      shownTicked += read.shownTicked;
     }
     for (
       const box of
@@ -40384,22 +40493,22 @@ function untick(memory) {
 }
 function sync(bar, memory) {
   const strings = getStrings();
-  const before2 = memory.items;
+  const before3 = memory.items;
   if (!memory.manual) {
-    const read2 = readSources(memory);
-    const dropped = before2.filter((item) => !read2.known.has(item.key)).length;
-    memory.items = read2.items;
-    memory.known = read2.known;
+    const read = readSources(memory);
+    const dropped = before3.filter((item) => !read.known.has(item.key)).length;
+    memory.items = read.items;
+    memory.known = read.known;
     if (dropped > 0) say5(bar, memory, strings.selectionDropped(dropped));
-    else if (read2.items.length !== before2.length)
-      say5(bar, memory, read2.items.length === 0 ? strings.selectionCleared : strings.selectionCount(read2.items.length));
-    if (memory.matching && (read2.shown === 0 || read2.shownTicked < read2.shown)) {
+    else if (read.items.length !== before3.length)
+      say5(bar, memory, read.items.length === 0 ? strings.selectionCleared : strings.selectionCount(read.items.length));
+    if (memory.matching && (read.shown === 0 || read.shownTicked < read.shown)) {
       memory.matching = false;
       bar.dispatchEvent(new CustomEvent(SELECTION_MATCHING_EVENT, { bubbles: true, detail: { matching: false, total: memory.matchingTotal } }));
     }
   }
   if (memory.items.length === 0) memory.namesOpen = false;
-  const changed3 = before2.length !== memory.items.length || before2.some((item, i) => item.key !== memory.items[i]?.key);
+  const changed3 = before3.length !== memory.items.length || before3.some((item, i) => item.key !== memory.items[i]?.key);
   draw3(bar, memory);
   if (changed3) {
     for (const mark2 of bar.ownerDocument.querySelectorAll("[data-kp-refused]")) {
@@ -40662,12 +40771,12 @@ function setSelectionProgress(bar, progress) {
   if (!memory) return;
   const total = Math.max(0, Math.floor(progress.total));
   const done = Math.min(total, Math.max(0, Math.floor(progress.done)));
-  const before2 = memory.progress;
+  const before3 = memory.progress;
   if (!memory.busy) memory.busy = getStrings().selectionBusy("");
   memory.progress = { done, total };
   const quarter = (n) => total > 0 ? Math.floor(n / total * 4) : 0;
   const live4 = bar.querySelector(":scope > .kp-selection__live");
-  if (live4 && (!before2 || quarter(done) > quarter(before2.done) || done === total)) live4.textContent = getStrings().selectionProgress(done, total);
+  if (live4 && (!before3 || quarter(done) > quarter(before3.done) || done === total)) live4.textContent = getStrings().selectionProgress(done, total);
   draw3(bar, memory);
 }
 function setSelectionResult(bar, result) {
@@ -41273,9 +41382,9 @@ function explainJson(text) {
     } else {
       const position = /position (\d+)/i.exec(raw);
       if (position) {
-        const before2 = text.slice(0, Number(position[1]));
-        line = before2.split("\n").length;
-        column = before2.length - before2.lastIndexOf("\n");
+        const before3 = text.slice(0, Number(position[1]));
+        line = before3.split("\n").length;
+        column = before3.length - before3.lastIndexOf("\n");
       }
     }
     const why = raw.replace(/^JSON\.parse:\s*/i, "").replace(/\s+at line \d+ column \d+( of the JSON data)?/i, "").replace(/\s+in JSON at position \d+( \(line \d+ column \d+\))?/i, "").replace(/\s*\(line \d+ column \d+\)/i, "").replace(/^./, (c) => c.toLowerCase());
@@ -41855,10 +41964,10 @@ var init_controller38 = __esm({
       /** The wheel over the line numbers scrolls the text, as it does over the box [kpadopt5-r3]. @param {WheelEvent} event */
       onGutterWheel(event) {
         const area = this.area;
-        const before2 = area.scrollTop;
+        const before3 = area.scrollTop;
         const lines4 = event.deltaMode === 1 ? event.deltaY * lineHeight(this) : event.deltaMode === 2 ? event.deltaY * area.clientHeight : event.deltaY;
         area.scrollTop += lines4;
-        if (area.scrollTop !== before2) event.preventDefault();
+        if (area.scrollTop !== before3) event.preventDefault();
       }
       /** @param {MutationRecord[]} records */
       onAttributes(records) {
@@ -42558,12 +42667,12 @@ function groupMarkOf(whole2, group, decimal) {
   const groupInText = whole2.match(/\d([\s.,  '])\d{3}(?!\d)/)?.[1];
   return groupInText !== void 0 && groupInText !== decimal ? groupInText : group !== "" && whole2.includes(group) ? group : "";
 }
-function renderer({ before: before2, after, decimals, decimal, groupMark: groupMark2 }) {
+function renderer({ before: before3, after, decimals, decimal, groupMark: groupMark2 }) {
   return (next2) => {
     const [int, frac] = Math.abs(next2).toFixed(decimals).split(".");
     const sign = next2 < 0 && Number(next2.toFixed(decimals)) !== 0 ? "-" : "";
     const body = groupMark2 ? int.replace(/\B(?=(\d{3})+(?!\d))/g, groupMark2) : int;
-    return `${before2}${sign}${body}${decimals ? decimal + frac : ""}${after}`;
+    return `${before3}${sign}${body}${decimals ? decimal + frac : ""}${after}`;
   };
 }
 function parseTick(text, locale) {
@@ -42571,7 +42680,7 @@ function parseTick(text, locale) {
   if (match === null) return null;
   const raw = match[0];
   const whole2 = raw.trimEnd();
-  const before2 = text.slice(0, match.index);
+  const before3 = text.slice(0, match.index);
   const after = raw.slice(whole2.length) + text.slice(match.index + raw.length);
   const { group, decimal } = separators(locale);
   const cut = whole2.lastIndexOf(decimal);
@@ -42580,7 +42689,7 @@ function parseTick(text, locale) {
   const value = Number(cut < 0 ? digits(whole2) : `${digits(whole2.slice(0, cut))}.${digits(whole2.slice(cut + 1))}`);
   if (!Number.isFinite(value)) return null;
   const groupMark2 = groupMarkOf(whole2, group, decimal);
-  return { value, decimals, render: renderer({ before: before2, after, decimals, decimal, groupMark: groupMark2 }) };
+  return { value, decimals, render: renderer({ before: before3, after, decimals, decimal, groupMark: groupMark2 }) };
 }
 function numberNode(el16) {
   const walker = el16.ownerDocument.createTreeWalker(el16, SHOW_TEXT);
@@ -43129,8 +43238,8 @@ async function glideTo(root) {
   const order = state12.items.map((item) => item.id);
   state12.order.forEach((id, at) => {
     if (target.has(id)) return;
-    const before2 = state12.order.slice(0, at).reverse().find((other) => order.includes(other));
-    order.splice(before2 ? order.indexOf(before2) + 1 : 0, 0, id);
+    const before3 = state12.order.slice(0, at).reverse().find((other) => order.includes(other));
+    order.splice(before3 ? order.indexOf(before3) + 1 : 0, 0, id);
   });
   const from = new Map(order.map((id) => [id, state12.shown.get(id) ?? 0]));
   const first = state12.order.length === 0 || [...from.values()].every((w) => w <= 1e-4);
@@ -43831,7 +43940,7 @@ var init_dom6 = __esm({
 // js/focus-steps/resume.js
 function buildResumeAsk() {
   const strings = getStrings();
-  const ask2 = el7("kp-focus-steps__resume");
+  const ask3 = el7("kp-focus-steps__resume");
   const line = el7("kp-focus-steps__resume-text", "span");
   line.textContent = strings.focusResumeAsk;
   const go = (
@@ -43846,8 +43955,8 @@ function buildResumeAsk() {
   );
   again2.type = "button";
   again2.textContent = strings.focusResumeRestart;
-  ask2.append(line, go, again2);
-  return ask2;
+  ask3.append(line, go, again2);
+  return ask3;
 }
 function answering(root) {
   return root.getAttribute("data-kp-focus-mode") === "answer" || stateOf2(root).steps.some((step) => step.answer);
@@ -43899,9 +44008,9 @@ function layTracks(root) {
     }
     track2.order.push(i);
   });
-  const before2 = new Map(state12.tracks.map((t) => [t.key, t.pos]));
+  const before3 = new Map(state12.tracks.map((t) => [t.key, t.pos]));
   state12.tracks = [...found.values()];
-  for (const track2 of state12.tracks) track2.pos = Math.min(track2.order.length - 1, before2.get(track2.key) ?? 0);
+  for (const track2 of state12.tracks) track2.pos = Math.min(track2.order.length - 1, before3.get(track2.key) ?? 0);
   if (!state12.tracks.some((t) => t.key === state12.track)) state12.track = state12.tracks[0]?.key ?? "";
 }
 function timerList(root) {
@@ -44477,9 +44586,9 @@ var init_controller41 = __esm({
       /** An option attribute changed. @param {string[]} names */
       onOptions(names) {
         const s2 = this.strings;
-        const before2 = this.step;
+        const before3 = this.step;
         this.read();
-        if (this.step !== before2 && !this.bare && this.more) {
+        if (this.step !== before3 && !this.bare && this.more) {
           setStateWord(this.more.label, s2.timerAddMinute(this.step));
           this.more.button.title = s2.timerAddMinuteTitle(this.step);
         }
@@ -44977,7 +45086,7 @@ function paint6(root, arrive3) {
   const { steps: steps2, index } = state12;
   const total = steps2.length;
   const step = steps2[index];
-  const asking2 = answering(root);
+  const asking3 = answering(root);
   const onSum = onSummary(root);
   const tracked = tracksOn(root);
   const track2 = tracked ? activeTrack(state12) : void 0;
@@ -44991,30 +45100,30 @@ function paint6(root, arrive3) {
   const timers = tracked ? timerStates(root) : [];
   const blocks = tracked && step && !passed ? blockersOf(state12, index, timers) : [];
   state12.lockKey = blocks.map((b) => b.index).join(",");
-  part2(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : track2 ? strings.focusTrackCount(track2.name, track2.pos + 1, track2.order.length) : asking2 ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
+  part2(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : track2 ? strings.focusTrackCount(track2.name, track2.pos + 1, track2.order.length) : asking3 ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
   const bar = part2(root, "bar");
   const shownTotal = total + (summaryOn(root) ? 1 : 0);
   bar.style.setProperty("--kp-value", String(track2 ? (track2.pos + 1) / track2.order.length : shownTotal ? (index + 1) / shownTotal : 0));
-  const progress = asking2 ? opt(root, "progress", "count") ?? "count" : "count";
+  const progress = asking3 ? opt(root, "progress", "count") ?? "count" : "count";
   bar.hidden = progress !== "count";
   part2(root, "count").hidden = progress === "off";
   const wakeLine = (
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-focus-steps__wake")
   );
-  if (wakeLine) wakeLine.hidden = asking2 && (root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake")) !== "true";
+  if (wakeLine) wakeLine.hidden = asking3 && (root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake")) !== "true";
   const speakButton = (
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-focus-steps__speak")
   );
-  if (speakButton) speakButton.hidden = typeof speechSynthesis === "undefined" || asking2 && opt(root, "speak") !== "true";
+  if (speakButton) speakButton.hidden = typeof speechSynthesis === "undefined" || asking3 && opt(root, "speak") !== "true";
   const holder = part2(root, "step");
   const error = root.getAttribute("data-kp-focus-steps-error");
   holder.replaceChildren();
   holder.removeAttribute("data-kp-focus-steps-kind");
   holder.removeAttribute("data-kp-focus-steps-locked");
   const saveError = root.getAttribute("data-kp-state") === "save-error";
-  if (asking2 || root.getAttribute("data-kp-focus-mode") === "answer") {
+  if (asking3 || root.getAttribute("data-kp-focus-mode") === "answer") {
     if (saveError) {
       holder.append(
         statePlate(document, {
@@ -45123,7 +45232,7 @@ function paint6(root, arrive3) {
   const atStart = track2 ? track2.pos === 0 && !passed : index === 0;
   if (blocked || atStart) prev.setAttribute("aria-disabled", "true");
   else prev.removeAttribute("aria-disabled");
-  prev.hidden = asking2 && opt(root, "back") === "off";
+  prev.hidden = asking3 && opt(root, "back") === "off";
   if (blocked || passed || blocks.length > 0) next2.setAttribute("aria-disabled", "true");
   else next2.removeAttribute("aria-disabled");
   const last = track2 ? passed || track2.pos === track2.order.length - 1 : total > 0 && index === lastIndex(root);
@@ -45131,9 +45240,9 @@ function paint6(root, arrive3) {
     /** @type {HTMLElement} */
     next2.querySelector(".kp-button__text")
   );
-  nextText.textContent = track2 ? last ? passed ? strings.focusDone : strings.focusTrackFinish(track2.name) : strings.focusNext : last ? strings.focusDone : asking2 && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
+  nextText.textContent = track2 ? last ? passed ? strings.focusDone : strings.focusTrackFinish(track2.name) : strings.focusNext : last ? strings.focusDone : asking3 && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
   next2.toggleAttribute("data-kp-focus-steps-last", last);
-  if (asking2 && step?.answer && !blocked) paintAnswerState(root);
+  if (asking3 && step?.answer && !blocked) paintAnswerState(root);
   part2(root, "body").scrollTop = 0;
   if (showLanes) {
     paintLanes(root);
@@ -45389,12 +45498,12 @@ function takeAnswer(root, value, source, extra = {}) {
   const step = state12.steps[state12.index];
   const answer2 = step?.answer;
   if (!answer2) return false;
-  const before2 = new CustomEvent(FOCUS_STEPS_BEFORE_ANSWER_EVENT, {
+  const before3 = new CustomEvent(FOCUS_STEPS_BEFORE_ANSWER_EVENT, {
     bubbles: true,
     cancelable: true,
     detail: { index: state12.index, id: answer2.id, value, source }
   });
-  if (!root.dispatchEvent(before2)) return false;
+  if (!root.dispatchEvent(before3)) return false;
   if (!state12.startedAt) state12.startedAt = Date.now();
   state12.answers[answer2.id] = { value, source };
   delete state12.draft[answer2.id];
@@ -46496,12 +46605,12 @@ function goToStep(root, index) {
   if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
   paint6(root, true);
   const strings = getStrings();
-  const asking2 = answering(root);
-  if (asking2 && hadFocus) part2(root, "step").focus({ preventScroll: true });
+  const asking3 = answering(root);
+  if (asking3 && hadFocus) part2(root, "step").focus({ preventScroll: true });
   const step = state12.steps[to];
   say6(
     root,
-    asking2 ? `${strings.focusQuestionCount(to + 1, state12.steps.length)}. ${step?.text ?? strings.focusSummaryTitle}` : `${strings.focusCount(to + 1, state12.steps.length)}. ${step?.text ?? ""}`
+    asking3 ? `${strings.focusQuestionCount(to + 1, state12.steps.length)}. ${step?.text ?? strings.focusSummaryTitle}` : `${strings.focusCount(to + 1, state12.steps.length)}. ${step?.text ?? ""}`
   );
   remember2(root);
   root.dispatchEvent(
@@ -47234,7 +47343,7 @@ function render(list) {
   const strings = getStrings();
   const items2 = ITEMS.get(list) ?? [];
   const body = part4(list, "body");
-  const before2 = /* @__PURE__ */ new Map();
+  const before3 = /* @__PURE__ */ new Map();
   const rows2 = /* @__PURE__ */ new Map();
   for (
     const row2 of
@@ -47243,13 +47352,13 @@ function render(list) {
   ) {
     const id = row2.getAttribute("data-id") ?? "";
     rows2.set(id, row2);
-    before2.set(id, row2.getBoundingClientRect());
+    before3.set(id, row2.getBoundingClientRect());
   }
   renderGroups(list, body, items2, rows2, strings);
   renderBar(list, items2, strings);
   renderEmpty(list, body, items2.length, strings);
   list.dispatchEvent(new CustomEvent(CHECKLIST_RENDER_EVENT));
-  return before2;
+  return before3;
 }
 function renderGroups(list, body, items2, rows2, strings) {
   const sections = /* @__PURE__ */ new Map();
@@ -47368,7 +47477,7 @@ function renderEmpty(list, body, total, strings) {
   empty.toggleAttribute("data-kp-checklist-failed", error !== null);
   body.append(empty);
 }
-async function glide2(list, before2) {
+async function glide2(list, before3) {
   if (!motionAllowed()) return;
   const { themeMotion: themeMotion2 } = await Promise.resolve().then(() => (init_motion(), motion_exports));
   const { size: size2, ease } = themeMotion2(list);
@@ -47378,7 +47487,7 @@ async function glide2(list, before2) {
     /** @type {NodeListOf<HTMLElement>} */
     list.querySelectorAll(".kp-checklist__item")
   ) {
-    const was = before2.get(row2.getAttribute("data-id") ?? "");
+    const was = before3.get(row2.getAttribute("data-id") ?? "");
     if (!was) continue;
     const dy = was.top - row2.getBoundingClientRect().top;
     if (Math.abs(dy) < GLIDE_MIN_PX) continue;
@@ -48726,9 +48835,9 @@ var init_open2 = __esm({
         const probe = this.doc.createElement("span");
         probe.style.cssText = `position:absolute;visibility:hidden;transition-duration:${time}`;
         this.panel.append(probe);
-        const read2 = parseFloat(getComputedStyle(probe).transitionDuration) * MS_PER_S;
+        const read = parseFloat(getComputedStyle(probe).transitionDuration) * MS_PER_S;
         probe.remove();
-        const leg = Math.max(REFUSE_MIN_MS, Number.isFinite(read2) && read2 > 0 ? read2 : REFUSE_FALLBACK_MS);
+        const leg = Math.max(REFUSE_MIN_MS, Number.isFinite(read) && read > 0 ? read : REFUSE_FALLBACK_MS);
         this.panel.animate({ [property]: ["0px", `calc(-1 * ${travel})`] }, { duration: leg, easing, iterations: 2, direction: "alternate" });
         return leg * 2;
       }
@@ -49368,11 +49477,11 @@ var init_narrow2 = __esm({
       }
       /** Change the mode without the slide: a resize is not an opening. @param {() => void} change */
       still(change2) {
-        const before2 = this.panel.style.transition;
+        const before3 = this.panel.style.transition;
         this.panel.style.transition = "none";
         change2();
         void this.panel.offsetWidth;
-        this.panel.style.transition = before2;
+        this.panel.style.transition = before3;
       }
       applyNarrow() {
         const box = this.panel.parentElement;
@@ -50363,18 +50472,18 @@ var init_core10 = __esm({
       }
       /** Put the markup back as the server wrote it. */
       restore() {
-        const { input, list, tagList, status, before: before2 } = this;
-        if (before2.expanded === null) input.removeAttribute("aria-expanded");
-        else input.setAttribute("aria-expanded", before2.expanded);
-        list.hidden = before2.listHidden;
+        const { input, list, tagList, status, before: before3 } = this;
+        if (before3.expanded === null) input.removeAttribute("aria-expanded");
+        else input.setAttribute("aria-expanded", before3.expanded);
+        list.hidden = before3.listHidden;
         [...list.querySelectorAll(OPTION_SELECTOR)].forEach((o, i) => {
-          o.hidden = before2.hidden[i] ?? false;
+          o.hidden = before3.hidden[i] ?? false;
         });
         if (tagList) {
-          tagList.replaceChildren(...before2.tags);
+          tagList.replaceChildren(...before3.tags);
           tagList.hidden = this.tagsHidden;
         }
-        if (status) status.textContent = before2.status;
+        if (status) status.textContent = before3.status;
         this.unslot();
         if (this.empty !== null && this.empty !== this.serverEmpty) this.empty.remove();
         if (this.serverEmpty !== null) this.serverEmpty.hidden = this.emptyWasHidden;
@@ -50844,15 +50953,15 @@ var init_select_control = __esm({
       }
       /** Take the list away and give the select back its attributes. */
       restore() {
-        const { select: select2, list, labelled, before: before2 } = this;
+        const { select: select2, list, labelled, before: before3 } = this;
         list.remove();
         if (labelled && labelled.id === `${list.id}-label`) labelled.removeAttribute("id");
         for (
           const [name, value] of
           /** @type {const} */
           [
-            ["aria-expanded", before2.expanded],
-            ["aria-controls", before2.controls]
+            ["aria-expanded", before3.expanded],
+            ["aria-controls", before3.controls]
           ]
         ) {
           if (value === null) select2.removeAttribute(name);
@@ -53940,9 +54049,9 @@ var init_views = __esm({
       }
       /** Draw, and say so when the day grid now shows another month. */
       redraw() {
-        const before2 = this.shown;
+        const before3 = this.shown;
         drawPanel(this.ctl);
-        if (this.view === "days" && this.shown !== before2) {
+        if (this.view === "days" && this.shown !== before3) {
           const { picker, cursor } = this.ctl;
           picker.dispatchEvent(new CustomEvent(MONTH_EVENT, { bubbles: true, detail: { year: cursor.getFullYear(), month: cursor.getMonth() } }));
         }
@@ -54084,19 +54193,19 @@ var init_controller49 = __esm({
       }
       /** Put back what the picker changed on its markup. */
       restore() {
-        const { picker, input, open: open4, panel, before: before2 } = this;
+        const { picker, input, open: open4, panel, before: before3 } = this;
         stopClose(panel);
         panel.inert = false;
         this.opening.lower();
         panel.textContent = "";
         panel.style.removeProperty("min-inline-size");
         panel.style.removeProperty("min-block-size");
-        panel.hidden = before2.panelHidden;
-        input.placeholder = before2.placeholder;
-        if (before2.value === void 0) delete input.dataset.kpDateValue;
-        else input.dataset.kpDateValue = before2.value;
-        if (before2.expanded === null) open4.removeAttribute("aria-expanded");
-        else open4.setAttribute("aria-expanded", before2.expanded);
+        panel.hidden = before3.panelHidden;
+        input.placeholder = before3.placeholder;
+        if (before3.value === void 0) delete input.dataset.kpDateValue;
+        else input.dataset.kpDateValue = before3.value;
+        if (before3.expanded === null) open4.removeAttribute("aria-expanded");
+        else open4.setAttribute("aria-expanded", before3.expanded);
         delete picker.dataset.kpDatepickerAttached;
       }
       /** The ISO value as the field's text reads now, without an event. */
@@ -56288,9 +56397,9 @@ var init_filter_editor = __esm({
           ));
           next2 = values.length > 0 ? values : null;
         } else if (kind === "range" || kind === "date") {
-          const read2 = this.readBounds(form2, at, kind);
-          if (read2.refused) return;
-          next2 = read2.value;
+          const read = this.readBounds(form2, at, kind);
+          if (read.refused) return;
+          next2 = read.value;
         }
         if (next2 !== null) this.editorReturn = at;
         this.t.handlers.setFilter(at, next2);
@@ -56303,7 +56412,7 @@ var init_filter_editor = __esm({
        */
       readBounds(form2, at, kind) {
         const s2 = getStrings();
-        const read2 = (bound) => {
+        const read = (bound) => {
           const input = (
             /** @type {HTMLInputElement} */
             form2.querySelector(`[data-kp-filter-bound="${bound}"]`)
@@ -56311,7 +56420,7 @@ var init_filter_editor = __esm({
           const label2 = bound === "from" ? s2.tableFilterFrom(this.t.columns.labelOf(at)) : s2.tableFilterTo(this.t.columns.labelOf(at));
           return { text: input.value, iso: input.dataset.kpDateValue, label: label2 };
         };
-        const result = readFilterBounds(kind, { from: read2("from"), to: read2("to") }, s2, this.t.controls.locale);
+        const result = readFilterBounds(kind, { from: read("from"), to: read("to") }, s2, this.t.controls.locale);
         for (const input of form2.querySelectorAll("[data-kp-filter-bound]")) input.removeAttribute("aria-invalid");
         if (result.error === void 0) return { refused: false, value: result.value };
         const error = (
@@ -56440,7 +56549,7 @@ var init_apply2 = __esm({
               b.value
             ));
           else {
-            const read2 = (bound) => {
+            const read = (bound) => {
               const input = (
                 /** @type {HTMLInputElement | null} */
                 set.querySelector(`[data-kp-filter-bound="${bound}"]`)
@@ -56448,7 +56557,7 @@ var init_apply2 = __esm({
               if (input === null) return "";
               return input.dataset.kpDateInput === void 0 ? input.value : input.dataset.kpDateValue ?? "";
             };
-            value = { from: read2("from"), to: read2("to") };
+            value = { from: read("from"), to: read("to") };
           }
           if (kind !== null && kind !== void 0 && filterActive(kind, value)) this.t.model.filters.set(at, value);
         }
@@ -56684,9 +56793,9 @@ var init_handlers = __esm({
       }
       onPanel() {
         if (this.t.apply.writing) return;
-        const before2 = JSON.stringify([...this.t.model.filters]);
+        const before3 = JSON.stringify([...this.t.model.filters]);
         this.t.apply.readControls();
-        if (JSON.stringify([...this.t.model.filters]) === before2) return;
+        if (JSON.stringify([...this.t.model.filters]) === before3) return;
         this.t.pills.renderPills();
         this.t.apply.applyFilter();
       }
@@ -57299,8 +57408,8 @@ var init_edit_field = __esm({
         const event = new CustomEvent(EDIT_EVENT, { bubbles: true, cancelable: true, detail });
         this.t.wrap.dispatchEvent(event);
         if (event.defaultPrevented && refused2 === null) refused2 = s2.tableEditInvalid;
-        const onEdit2 = this.t.settings.onEdit;
-        if (onEdit2 !== void 0) waits.push(Promise.resolve().then(() => onEdit2(detail)));
+        const onEdit3 = this.t.settings.onEdit;
+        if (onEdit3 !== void 0) waits.push(Promise.resolve().then(() => onEdit3(detail)));
         if (refused2 === null && waits.length > 0) {
           try {
             for (const answer2 of await Promise.all(waits)) {
@@ -58370,7 +58479,7 @@ function attachDataTables(root = document, {
   detail: detailFn,
   load: loadFn,
   rowKey: rowKeyFn,
-  onEdit: onEdit2,
+  onEdit: onEdit3,
   expandGlyph = "\u25B8",
   collapseGlyph = "\u25BE",
   gridPageRows = GRID_PAGE_ROWS,
@@ -58394,7 +58503,7 @@ function attachDataTables(root = document, {
     detailFn,
     loadFn,
     rowKeyFn,
-    onEdit: onEdit2,
+    onEdit: onEdit3,
     expandGlyph,
     collapseGlyph,
     gridPageRows,
@@ -58479,7 +58588,7 @@ var init_layout_hooks = __esm({
         const box = host.querySelector(".kp-table-wrap") ?? host;
         const view = host.ownerDocument.defaultView;
         if (!view || typeof ResizeObserver === "undefined") return;
-        const read2 = () => {
+        const read = () => {
           const rem2 = Number.parseFloat(view.getComputedStyle(host.ownerDocument.documentElement).fontSize) || 16;
           const wide = box.getBoundingClientRect().width >= thresholdPx(host.getAttribute("data-kp-cards-at"), rem2);
           if (host.hasAttribute(IDLE_ATTRIBUTE) === wide) return;
@@ -58489,10 +58598,10 @@ var init_layout_hooks = __esm({
             [host, box]
           ));
         };
-        this.observe(new ResizeObserver(read2)).observe(box);
-        this.observe(new MutationObserver(read2)).observe(host, { attributes: true, attributeFilter: ["data-kp-cards-at"] });
+        this.observe(new ResizeObserver(read)).observe(box);
+        this.observe(new MutationObserver(read)).observe(host, { attributes: true, attributeFilter: ["data-kp-cards-at"] });
         this.own(() => host.removeAttribute(IDLE_ATTRIBUTE));
-        read2();
+        read();
       }
     };
     ActionColumn = class extends Controller {
@@ -59559,8 +59668,8 @@ var init_controller51 = __esm({
           button6.closest("li, [data-kp-upload-file]")
         );
         if (item === null || item.hasAttribute("data-kp-leaving")) return;
-        const ask2 = new CustomEvent(REMOVE_EVENT, { bubbles: true, cancelable: true, detail: { file: this.rows.get(item), item } });
-        if (!item.dispatchEvent(ask2)) return;
+        const ask3 = new CustomEvent(REMOVE_EVENT, { bubbles: true, cancelable: true, detail: { file: this.rows.get(item), item } });
+        if (!item.dispatchEvent(ask3)) return;
         this.rows.delete(item);
         if (leavesState(item)) {
           item.inert = true;
@@ -59824,23 +59933,23 @@ var init_view2 = __esm({
       }
       /** Put the steps, labels and buttons back as the snapshot had them. */
       restore() {
-        const before2 = this.before;
-        if (before2 === null) return;
+        const before3 = this.before;
+        if (before3 === null) return;
         const { back, next: next2, status } = this;
         this.steps.forEach((step, i) => {
-          step.hidden = before2.hidden[i] ?? false;
-          putBack(step, "tabindex", before2.tabindex[i]);
+          step.hidden = before3.hidden[i] ?? false;
+          putBack(step, "tabindex", before3.tabindex[i]);
         });
         this.labels.forEach((label2, i) => {
-          const state12 = before2.labelState[i];
+          const state12 = before3.labelState[i];
           if (state12 === null || state12 === void 0) delete label2.dataset.state;
           else label2.dataset.state = state12;
-          putBack(label2, "aria-current", before2.labelCurrent[i]);
-          putBack(label2, "tabindex", before2.labelTab[i]);
+          putBack(label2, "aria-current", before3.labelCurrent[i]);
+          putBack(label2, "tabindex", before3.labelTab[i]);
         });
-        if (back !== null) back.disabled = before2.back;
-        if (next2 !== null) next2.textContent = before2.next;
-        if (status !== null) status.textContent = before2.status;
+        if (back !== null) back.disabled = before3.back;
+        if (next2 !== null) next2.textContent = before3.next;
+        if (status !== null) status.textContent = before3.status;
       }
     };
   }
@@ -59885,8 +59994,8 @@ var init_controller52 = __esm({
         if (to < 0 || to >= steps2.length || to === at) return false;
         const direction = to > at ? "forward" : "back";
         if (direction === "forward" && this.gate && !stepIsValid(steps2[at])) return false;
-        const ask2 = new CustomEvent(BEFORE_STEP_EVENT, { bubbles: true, cancelable: true, detail: { from: at, to, direction } });
-        if (!this.host.dispatchEvent(ask2)) return false;
+        const ask3 = new CustomEvent(BEFORE_STEP_EVENT, { bubbles: true, cancelable: true, detail: { from: at, to, direction } });
+        if (!this.host.dispatchEvent(ask3)) return false;
         const { beforeStep } = (
           /** @type {import('../wizard.js').WizardOptions} */
           this.options
@@ -60800,8 +60909,8 @@ function drawAxis(doc, columns2, { every, picked, loading: loading2 }) {
   const heads = make16(doc, "div", "kp-heat__cells", { role: "none" });
   const open4 = columns2.map((c, i) => c.minor === void 0 ? i : -1).filter((i) => i >= 0);
   const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
-  const before2 = open4[open4.length - 2];
-  if (every > 1 && before2 !== void 0 && before2 === open4[open4.length - 1] - 1) named.delete(before2);
+  const before3 = open4[open4.length - 2];
+  if (every > 1 && before3 !== void 0 && before3 === open4[open4.length - 1] - 1) named.delete(before3);
   const made6 = columns2.map((c, i) => column(c.key, loading2 && !c.label ? "" : c.label, c.minor ?? !named.has(i)));
   columns2.forEach((c, i) => c.full && made6[i].setAttribute("data-kp-full", c.full));
   placeAxis(made6);
@@ -60971,8 +61080,8 @@ var init_legend2 = __esm({
 function pagerOf(el16) {
   const kept = PAGERS.get(el16);
   if (kept?.isConnected) return kept;
-  const before2 = el16.previousElementSibling;
-  return before2 instanceof HTMLElement && before2.matches(".kp-heat__pager") ? before2 : null;
+  const before3 = el16.previousElementSibling;
+  return before3 instanceof HTMLElement && before3.matches(".kp-heat__pager") ? before3 : null;
 }
 function heatOffset(el16) {
   const n = Number(el16.getAttribute("data-kp-heat-offset"));
@@ -63494,8 +63603,8 @@ var init_units = __esm({
 });
 
 // js/sequencer/links.js
-function changedIds(before2, after) {
-  const was = new Map(before2.map((i) => [i.id, i]));
+function changedIds(before3, after) {
+  const was = new Map(before3.map((i) => [i.id, i]));
   return after.filter((i) => {
     const b = was.get(i.id);
     return !b || b.lane !== i.lane || Math.abs(b.start - i.start) > EPS || Math.abs(b.duration - i.duration) > EPS || (b.with ?? null) !== (i.with ?? null);
@@ -64279,8 +64388,8 @@ function placeLabels(c) {
       const prev = row2[i - 1];
       const next2 = row2[i + 1];
       const after = (next2 ? next2.start * perUnit : width) - right - 8;
-      const before2 = left - Math.max(prev ? (prev.start + prev.duration) * perUnit : 0, claimed) - 8;
-      const side = fits ? null : after >= need ? "after" : before2 >= need ? "before" : "none";
+      const before3 = left - Math.max(prev ? (prev.start + prev.duration) * perUnit : 0, claimed) - 8;
+      const side = fits ? null : after >= need ? "after" : before3 >= need ? "before" : "none";
       if (side === "after") claimed = right + 4 + need + 4;
       let out = c.outsides.get(item.id);
       if (side === null || side === "none") {
@@ -64296,7 +64405,7 @@ function placeLabels(c) {
         out.textContent = item.label;
         out.dataset.kpSide = side;
         out.dataset.kpState = "ok";
-        setProp(out, "--kp-g-label-room", px2(side === "after" ? after : before2));
+        setProp(out, "--kp-g-label-room", px2(side === "after" ? after : before3));
         setProp(out, "--kp-g-s", String(item.start));
         setProp(out, "--kp-g-e", String(round(item.start + item.duration)));
         setProp(out, "--kp-tl-top", bar.style.getPropertyValue("--kp-tl-top"));
@@ -64457,8 +64566,8 @@ function drawDraft(c, list, ids2, refit = false) {
     const item = list.find((i) => i.id === id);
     const bar = c.bars.get(id);
     if (!item || !bar) continue;
-    const before2 = c.items.find((i) => i.id === id);
-    place4(c, bar, item, before2 && before2.lane === item.lane ? c.rows.rows.get(id) ?? 0 : 0);
+    const before3 = c.items.find((i) => i.id === id);
+    place4(c, bar, item, before3 && before3.lane === item.lane ? c.rows.rows.get(id) ?? 0 : 0);
     const out = c.outsides.get(id);
     if (out) out.hidden = true;
     bar.removeAttribute("data-kp-label");
@@ -64521,10 +64630,10 @@ function refuse(c, id, plan) {
 function setZoom(c, zoom, anchorX) {
   const next2 = sequencerClampZoom(zoom);
   if (next2 === c.zoom) return false;
-  const before2 = c.layer.getBoundingClientRect();
+  const before3 = c.layer.getBoundingClientRect();
   const seen = c.scroll.getBoundingClientRect();
-  const ax = anchorX ?? Math.max(before2.left, seen.left) + (Math.min(before2.right, seen.right) - Math.max(before2.left, seen.left)) / 2;
-  const frac = before2.width ? Math.min(1, Math.max(0, (ax - before2.left) / before2.width)) : 0;
+  const ax = anchorX ?? Math.max(before3.left, seen.left) + (Math.min(before3.right, seen.right) - Math.max(before3.left, seen.left)) / 2;
+  const frac = before3.width ? Math.min(1, Math.max(0, (ax - before3.left) / before3.width)) : 0;
   c.zoom = next2;
   c.body.style.setProperty("--kp-tl-zoom", String(next2));
   const after = c.layer.getBoundingClientRect();
@@ -65305,13 +65414,13 @@ function axisStep(span6, room, gap = 72) {
   return GANTT_STEPS.find((step) => span6 / step <= most) ?? /** @type {number} */
   GANTT_STEPS[GANTT_STEPS.length - 1];
 }
-function packRows(runs2, before2 = /* @__PURE__ */ new Map(), pad2 = 0, fixed = []) {
+function packRows(runs2, before3 = /* @__PURE__ */ new Map(), pad2 = 0, fixed = []) {
   const sorted = [...runs2].sort((a, b) => a.s - b.s);
   const rows2 = fixed.length > 0 ? [fixed.map((f) => ({ s: f.s, e: f.e }))] : [];
   const given2 = /* @__PURE__ */ new Map();
   const free2 = (row2, run) => (rows2[row2] ?? []).every((other) => run.s >= other.e + pad2 || (run.e ?? Infinity) + pad2 <= other.s);
   for (const run of sorted) {
-    const wanted = before2.get(run.id);
+    const wanted = before3.get(run.id);
     let row2 = wanted !== void 0 && free2(wanted, run) ? wanted : -1;
     if (row2 < 0) {
       row2 = 0;
@@ -65704,9 +65813,9 @@ function placeLabels2(c) {
             }
           }
           const after = next2 - from - OUTSIDE_GAP_PX;
-          const before2 = upTo - floor - OUTSIDE_GAP_PX;
+          const before3 = upTo - floor - OUTSIDE_GAP_PX;
           if (after >= wanted) [place5, roomPx, shift] = ["after", after, from - (right + start)];
-          else if (before2 >= wanted) [place5, roomPx, shift] = ["before", before2, left - 4 - upTo];
+          else if (before3 >= wanted) [place5, roomPx, shift] = ["before", before3, left - 4 - upTo];
           else place5 = "none";
           if (place5 === "after") taken = from + Math.min(wanted, roomPx) + OUTSIDE_GAP_PX;
           else taken = Math.max(taken, right);
@@ -66006,10 +66115,10 @@ function waysOf(b, s2) {
   }
   const wide = need - BAR_PAD_PX + OUTSIDE_PAD_PX;
   const after = { l: reach3 + SIDE_GAP_PX, r: reach3 + SIDE_GAP_PX + wide };
-  const before2 = { l: left - SIDE_GAP_PX - wide, r: left - SIDE_GAP_PX };
+  const before3 = { l: left - SIDE_GAP_PX - wide, r: left - SIDE_GAP_PX };
   const ways = [];
   if (!open4 && after.r <= s2.room && !onNow(s2.nowX, after)) ways.push({ side: "after", x: after.l, take: { l: left, r: after.r }, inset: 0 });
-  if (before2.l >= 0 && !onNow(s2.nowX, before2)) ways.push({ side: "before", x: before2.l, take: { l: before2.l, r: reach3 }, inset: 0 });
+  if (before3.l >= 0 && !onNow(s2.nowX, before3)) ways.push({ side: "before", x: before3.l, take: { l: before3.l, r: reach3 }, inset: 0 });
   return ways;
 }
 function lineUnder(b, s2) {
@@ -66152,7 +66261,7 @@ function syncTicks2(c, w) {
   }
   if (c.days) {
     const room2 = c.axis.clientWidth;
-    let before2 = -Infinity;
+    let before3 = -Infinity;
     for (const id of [...c.ticks.keys()].sort((a, b) => a - b)) {
       const label2 = (
         /** @type {{ label: HTMLElement }} */
@@ -66162,10 +66271,10 @@ function syncTicks2(c, w) {
       const width = label2.offsetWidth;
       const edge = label2.tagName === "BUTTON" && x + width > room2;
       const start = edge ? room2 - width : x;
-      const crowded = edge && start < before2 + 6;
+      const crowded = edge && start < before3 + 6;
       label2.toggleAttribute("data-kp-gantt-edge", edge);
       label2.toggleAttribute("data-kp-gantt-crowded", crowded);
-      if (!crowded) before2 = start + width;
+      if (!crowded) before3 = start + width;
     }
   }
   syncDays(c);
@@ -66205,7 +66314,7 @@ function syncDays(c) {
 function edgeTicks(c, w) {
   const room = c.axis.clientWidth;
   if (!room) return;
-  let before2 = -Infinity;
+  let before3 = -Infinity;
   for (const t of [...c.ticks.keys()].sort((a, b) => a - b)) {
     const parts2 = (
       /** @type {{ label: HTMLElement }} */
@@ -66217,9 +66326,9 @@ function edgeTicks(c, w) {
     const edge = room - at < width + 2;
     parts2.label.toggleAttribute("data-kp-gantt-edge", edge);
     const start = edge ? at - width : at;
-    const crowded = edge && start < before2 + 4;
+    const crowded = edge && start < before3 + 4;
     parts2.label.toggleAttribute("data-kp-gantt-crowded", crowded);
-    if (!crowded) before2 = start + width;
+    if (!crowded) before3 = start + width;
   }
 }
 var init_axis = __esm({
@@ -66482,8 +66591,8 @@ function paint9(c) {
     if (run.series) bar.dataset.kpSeries = String(run.series);
     else delete bar.dataset.kpSeries;
     live4.add(run.id);
-    const before3 = c.states.get(run.id);
-    if (before3 && before3 !== run.state) c.announcer.textContent = s2.ganttAnnounce(run.label, stateWord3(c, run.state));
+    const before4 = c.states.get(run.id);
+    if (before4 && before4 !== run.state) c.announcer.textContent = s2.ganttAnnounce(run.label, stateWord3(c, run.state));
     c.states.set(run.id, run.state);
     const item = { run, s: rel(c, startMs), e: endRaw == null ? null : rel(c, Math.max(endRaw, startMs)), bar, row: 0 };
     const plannedMs = run.state === "running" && run.plannedEnd != null ? toMs2(run.plannedEnd) : Number.NaN;
@@ -66524,7 +66633,7 @@ function paint9(c) {
     list.push({ s: at - markHalf, e: at + markHalf });
     marksOf.set(point2.lane, list);
   }
-  const before2 = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
+  const before3 = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
   const fit2 = isFit(c);
   const unmeasured = fit2 && c.el.isConnected && [...c.bars.values()].some((bar) => !bar.isConnected);
   const old = new Map(c.lanes.map((l) => [l.lane.id, l]));
@@ -66536,7 +66645,7 @@ function paint9(c) {
         const e = b.e ?? HELD.get(b) ?? null;
         return { id: b.run.id, s: b.s, e: e == null ? null : Math.max(e, b.s + reach3) };
       }),
-      before2,
+      before3,
       pad2,
       marksOf.get(id) ?? []
     );
@@ -69478,14 +69587,14 @@ var init_block = __esm({
        */
       restorer(pre, code) {
         const el16 = this.host;
-        const before2 = { pre: pre.className, code: code.innerHTML, tabIndex: pre.getAttribute("tabindex"), role: pre.getAttribute("role") };
+        const before3 = { pre: pre.className, code: code.innerHTML, tabIndex: pre.getAttribute("tabindex"), role: pre.getAttribute("role") };
         return () => {
           this.head?.remove();
           this.where?.remove();
-          pre.className = before2.pre;
-          code.innerHTML = before2.code;
-          if (before2.tabIndex === null) pre.removeAttribute("tabindex");
-          if (before2.role === null) pre.removeAttribute("role");
+          pre.className = before3.pre;
+          code.innerHTML = before3.code;
+          if (before3.tabIndex === null) pre.removeAttribute("tabindex");
+          if (before3.role === null) pre.removeAttribute("role");
           pre.removeAttribute("aria-labelledby");
           el16.removeAttribute("role");
           el16.removeAttribute("aria-labelledby");
@@ -70692,13 +70801,13 @@ var init_controller62 = __esm({
       }
       connect() {
         const el16 = this.host;
-        const { before: before2, after } = this;
+        const { before: before3, after } = this;
         const { labelBefore, labelAfter, divider, handle, wait } = this.parts;
         el16.classList.add("kp-compare");
-        before2.classList.add("kp-compare__pane", "kp-compare__pane--before");
+        before3.classList.add("kp-compare__pane", "kp-compare__pane--before");
         after.classList.add("kp-compare__pane", "kp-compare__pane--after");
         if (el16.dataset.kpCompareRatio) el16.style.setProperty("--kp-compare-ratio", el16.dataset.kpCompareRatio);
-        const live4 = Boolean(before2.querySelector(INTERACTIVE) || after.querySelector(INTERACTIVE));
+        const live4 = Boolean(before3.querySelector(INTERACTIVE) || after.querySelector(INTERACTIVE));
         el16.dataset.kpCompareDrag = el16.dataset.kpCompareDrag ?? (live4 ? "handle" : "anywhere");
         el16.append(labelBefore, labelAfter, divider, wait);
         this.own(() => {
@@ -70902,12 +71011,12 @@ var init_lede = __esm({
         const lede = this.host;
         const heading = headingOf(lede);
         if (!heading) return;
-        const before2 = heading.getAttribute("aria-describedby");
-        const ids2 = (before2 ?? "").split(/\s+/).filter(Boolean);
+        const before3 = heading.getAttribute("aria-describedby");
+        const ids2 = (before3 ?? "").split(/\s+/).filter(Boolean);
         if (!ids2.includes(lede.id)) heading.setAttribute("aria-describedby", [...ids2, lede.id].join(" "));
         this.own(() => {
-          if (before2 === null) heading.removeAttribute("aria-describedby");
-          else heading.setAttribute("aria-describedby", before2);
+          if (before3 === null) heading.removeAttribute("aria-describedby");
+          else heading.setAttribute("aria-describedby", before3);
         });
       }
       /** The fold and the link are drawn from the two attributes, and drawn again when either changes [live-options-1019]. */
@@ -71231,17 +71340,17 @@ var init_each = __esm({
         const shown6 = this.shownAlerts();
         const wanted = list.map((p) => paintAlert2(shown6.get(p.key), p, host.ownerDocument, remedyLabel, host));
         for (const [key, el16] of shown6) if (!list.some((p) => p.key === key)) void leave(el16).then(() => el16.remove());
-        let before2 = (
+        let before3 = (
           /** @type {Element | null} */
           null
         );
         for (const el16 of wanted) {
-          const inPlace2 = el16.parentElement === host && (before2 ? el16.previousElementSibling === before2 : host.firstElementChild === el16);
+          const inPlace2 = el16.parentElement === host && (before3 ? el16.previousElementSibling === before3 : host.firstElementChild === el16);
           if (!inPlace2) {
-            if (before2) before2.after(el16);
+            if (before3) before3.after(el16);
             else host.prepend(el16);
           }
-          before2 = el16;
+          before3 = el16;
         }
       }
     };
@@ -73616,9 +73725,9 @@ var init_build12 = __esm({
 
 // js/code-field/values.js
 function caretPosition(text, offset) {
-  const before2 = text.slice(0, Math.max(0, offset));
-  const line = before2.split("\n").length;
-  return { line, column: before2.length - before2.lastIndexOf("\n") };
+  const before3 = text.slice(0, Math.max(0, offset));
+  const line = before3.split("\n").length;
+  return { line, column: before3.length - before3.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
 var init_values39 = __esm({
@@ -73791,14 +73900,14 @@ var init_problem = __esm({
         return strings.codeFieldErrorPlain(problem.message);
       }
       /** Whether the problem is another than `before`. @param {CodeFieldProblem | null} before */
-      changed(before2) {
+      changed(before3) {
         const now = this.problem;
-        return before2?.message !== now?.message || before2?.line !== now?.line || before2?.column !== now?.column || before2 === null !== (now === null);
+        return before3?.message !== now?.message || before3?.line !== now?.line || before3?.column !== now?.column || before3 === null !== (now === null);
       }
       /** Mark the problem the page found; `null` takes it back. @param {number | null} line @param {number | null} [column] @param {string} [message] */
       setError(line, column = null, message = "") {
         const { area, ui } = this;
-        const before2 = this.problem;
+        const before3 = this.problem;
         if (line === null && !message) this.problem = null;
         else this.problem = { line, column: column ?? null, message };
         this.errorLine = this.problem?.line ?? 0;
@@ -73817,7 +73926,7 @@ var init_problem = __esm({
         }
         this.field?.classList.toggle("kp-field--invalid", broken);
         this.drawGutter();
-        if (this.changed(before2)) {
+        if (this.changed(before3)) {
           const { problem } = this;
           area.dispatchEvent(
             new CustomEvent(CODE_FIELD_STATE_EVENT, {
@@ -73981,9 +74090,9 @@ var init_controller66 = __esm({
       /** The gutter's wheel scrolls the text. @param {WheelEvent} event */
       onGutterWheel(event) {
         const { area } = this;
-        const before2 = area.scrollTop;
+        const before3 = area.scrollTop;
         area.scrollTop += event.deltaMode === 1 ? event.deltaY * this.lineHeight() : event.deltaMode === 2 ? event.deltaY * area.clientHeight : event.deltaY;
-        if (area.scrollTop !== before2) event.preventDefault();
+        if (area.scrollTop !== before3) event.preventDefault();
       }
       /** @param {KeyboardEvent} event */
       onKey(event) {
@@ -76813,24 +76922,24 @@ var init_model8 = __esm({
 });
 
 // js/notices/row.js
-function markButton(doc, t, key, read2) {
+function markButton(doc, t, key, read) {
   const mine = (
     /** @type {HTMLButtonElement} */
     make28(doc, "button", "kp-button kp-button--sm kp-button--ghost kp-notices__mark-read")
   );
   const face = make28(doc, "span", "kp-notices__mark-face");
-  face.style.setProperty("--kp-notices-sizer", JSON.stringify(read2 ? t.noticesMarkRead : t.noticesMarkUnread));
-  face.append(make28(doc, "span", "kp-notices__mark-label", read2 ? t.noticesMarkUnread : t.noticesMarkRead));
+  face.style.setProperty("--kp-notices-sizer", JSON.stringify(read ? t.noticesMarkRead : t.noticesMarkUnread));
+  face.append(make28(doc, "span", "kp-notices__mark-label", read ? t.noticesMarkUnread : t.noticesMarkRead));
   mine.append(face);
   mine.type = "button";
   mine.setAttribute("data-kp-notice-read", key);
   return mine;
 }
-function noticeRow(doc, t, n, read2, readOnly = false) {
+function noticeRow(doc, t, n, read, readOnly = false) {
   const li = make28(doc, "li", "kp-notices__item");
   li.setAttribute("data-kp-key", n.key);
   li.setAttribute("data-kp-severity", n.severity);
-  li.toggleAttribute("data-kp-unread", !read2);
+  li.toggleAttribute("data-kp-unread", !read);
   li.tabIndex = 0;
   const mark2 = make28(doc, "span", "kp-notices__mark", n.severity === "info" ? "i" : "!");
   mark2.setAttribute("aria-hidden", "true");
@@ -76844,7 +76953,7 @@ function noticeRow(doc, t, n, read2, readOnly = false) {
   if (n.consequence) text.append(make28(doc, "span", "kp-notices__consequence", n.consequence));
   if (n.remedy) text.append(make28(doc, "span", "kp-notices__remedy", n.remedy));
   const actions = make28(doc, "div", "kp-notices__actions");
-  if (!readOnly) actions.append(markButton(doc, t, n.key, read2));
+  if (!readOnly) actions.append(markButton(doc, t, n.key, read));
   if (n.fix) {
     const fix = (
       /** @type {HTMLButtonElement} */
@@ -78760,9 +78869,9 @@ function paintTail(m, typed) {
   const already = near2.find((item) => picked.has(item.value));
   if (already) head.push(row2("kp-usual__already", s2.usualAlreadyPicked(already.label), false));
   for (const item of near2.filter((one) => !picked.has(one.value) && !one.el.hasAttribute("aria-disabled"))) {
-    const ask2 = row2("kp-usual__near", s2.usualDidYouMean(item.label), true);
-    ask2.dataset.kpNearValue = item.value;
-    head.push(ask2);
+    const ask3 = row2("kp-usual__near", s2.usualDidYouMean(item.label), true);
+    ask3.dataset.kpNearValue = item.value;
+    head.push(ask3);
     item.el.hidden = true;
   }
   if (head.length) m.list.prepend(...head);
@@ -79952,9 +80061,9 @@ var init_handle3 = __esm({
        * Wait for the app's answer when it asked to (`detail.wait(promise)`): busy until it settles, back to the old states if it is refused.
        * @param {Promise<unknown> | null} wait @param {Map<HTMLElement, PressedState>} plan @param {Map<HTMLElement, PressedState>} before
        */
-      awaitAnswer(wait, plan, before2) {
+      awaitAnswer(wait, plan, before3) {
         if (!wait) return;
-        this.pending = { plan, before: before2 };
+        this.pending = { plan, before: before3 };
         this.setBusy(true);
         Promise.resolve(wait).then(
           () => this.done(),
@@ -80108,7 +80217,7 @@ var init_controller75 = __esm({
         const plan = planFor(member, forceClear);
         if (plan.size === 0) return;
         const g = toggleGroup(member);
-        const before2 = new Map([...plan.keys()].map((m) => [m, stateOf5(m)]));
+        const before3 = new Map([...plan.keys()].map((m) => [m, stateOf5(m)]));
         const nextState = plan.get(member) ?? stateOf5(member);
         const after = () => g ? [...new Set(g.members.filter((m) => (plan.get(m) ?? stateOf5(m)) === "true" && !m.hasAttribute("data-kp-toggle-all")).map(toggleKey))] : nextState === "true" ? [toggleKey(member)] : [];
         let wait = null;
@@ -80127,7 +80236,7 @@ var init_controller75 = __esm({
         this.settle(plan);
         this.sayState(nextState);
         member.dispatchEvent(new CustomEvent(TOGGLE_CHANGED_EVENT, { bubbles: true, detail: { button: member, pressed: nextState === "true", group: g?.name ?? null, pressedKeys: after(), source: "press" } }));
-        this.awaitAnswer(wait, plan, before2);
+        this.awaitAnswer(wait, plan, before3);
       }
       /** @param {PressedState} nextState */
       sayState(nextState) {
@@ -81775,9 +81884,9 @@ var init_drawing3 = __esm({
       begin() {
         const { card, data } = this;
         this.kind = frame2(card);
-        const before2 = DRAWN5.get(card);
-        this.drawn = before2?.drawn ?? {};
-        this.star = before2 && before2.data === data ? before2.star : data.starred ?? before2?.star ?? false;
+        const before3 = DRAWN5.get(card);
+        this.drawn = before3?.drawn ?? {};
+        this.star = before3 && before3.data === data ? before3.star : data.starred ?? before3?.star ?? false;
         DRAWN5.set(card, { data, drawn: this.drawn, star: this.star });
         card.setAttribute("data-kp-row-key", data.key);
         card.setAttribute("data-kp-entity-key", data.key);
@@ -82538,17 +82647,23 @@ function buildParts6(doc, s2, id) {
   live4.setAttribute("aria-live", "polite");
   return { ...buildBar4(doc, s2, id), problem, live: live4, ...buildPanel2(doc, s2, id) };
 }
+function setText3(node, text) {
+  if (node.textContent !== text) node.textContent = text;
+}
 function paintSaveButton(doc, save2, label2, saving) {
-  save2.replaceChildren();
-  const text = make32(doc, "span", "kp-button__text");
-  text.textContent = label2;
-  save2.append(text);
-  if (saving) {
-    const layer = make32(doc, "span", "kp-button__busy");
-    layer.setAttribute("aria-hidden", "true");
-    layer.append(make32(doc, "span", "kp-spinner"));
-    save2.append(layer);
+  let text = save2.querySelector(":scope > .kp-button__text");
+  if (!text) {
+    text = make32(doc, "span", "kp-button__text");
+    save2.prepend(text);
   }
+  setText3(text, label2);
+  const layer = save2.querySelector(":scope > .kp-button__busy");
+  if (saving && !layer) {
+    const added2 = make32(doc, "span", "kp-button__busy");
+    added2.setAttribute("aria-hidden", "true");
+    added2.append(make32(doc, "span", "kp-spinner"));
+    save2.append(added2);
+  } else if (!saving && layer) layer.remove();
   save2.toggleAttribute("data-kp-busy", saving);
   save2.toggleAttribute("aria-busy", saving);
 }
@@ -82618,8 +82733,8 @@ function paintState3(ctl, n, dirty) {
   bar.dataset.kpState = state12;
   none.hidden = dirty;
   chip.hidden = !dirty;
-  chip.textContent = s2.unsavedCount(n);
-  headTitle.textContent = s2.unsavedCount(n);
+  setText3(chip, s2.unsavedCount(n));
+  setText3(headTitle, s2.unsavedCount(n));
 }
 function paintButtons(ctl, n, dirty) {
   const { s: s2, saving } = ctl;
@@ -82716,11 +82831,11 @@ function quietly(ctl, write2) {
 }
 function discardChanges(ctl) {
   if (ctl.saving) return;
-  const before2 = ctl.tracker.changes();
-  if (before2.length === 0) return;
+  const before3 = ctl.tracker.changes();
+  if (before3.length === 0) return;
   ctl.undoStack = [];
   quietly(ctl, () => {
-    for (const ch of before2) {
+    for (const ch of before3) {
       for (const c of ctl.tracker.controlsOf(ch.row)) {
         const was = ctl.tracker.baseline.get(c);
         if (was !== void 0 && readValue(c) !== was) {
@@ -82733,9 +82848,9 @@ function discardChanges(ctl) {
   });
   clearProblem(ctl);
   paintBar(ctl);
-  ctl.el.dispatchEvent(new CustomEvent(UNSAVED_DISCARD_EVENT, { bubbles: true, detail: { changes: before2 } }));
-  ctl.live.textContent = ctl.s.unsavedDropped(before2.length);
-  if (ctl.settings.undoMs > 0) offerUndo(ctl, before2.length);
+  ctl.el.dispatchEvent(new CustomEvent(UNSAVED_DISCARD_EVENT, { bubbles: true, detail: { changes: before3 } }));
+  ctl.live.textContent = ctl.s.unsavedDropped(before3.length);
+  if (ctl.settings.undoMs > 0) offerUndo(ctl, before3.length);
 }
 function offerUndo(ctl, count4) {
   const { s: s2 } = ctl;
@@ -83058,6 +83173,7 @@ var init_keeper = __esm({
       keep() {
         if (!this.keepOn) return;
         const { settings, tracker } = this.ctl;
+        if (tracker.baseline.size === 0) return;
         try {
           const kept = (
             /** @type {Record<string, string>} */
@@ -83926,8 +84042,8 @@ function readArea(c) {
   });
   return { c, engine: engine2, lh, chrome, rows: rows2, cap: cap2, job };
 }
-function stageArea(read2) {
-  if (read2.job) stageFit(read2.job);
+function stageArea(read) {
+  if (read.job) stageFit(read.job);
 }
 function planArea({ c, engine: engine2, lh, chrome, rows: rows2, cap: cap2, job }) {
   if (!job || engine2 === "loading") {
@@ -83969,14 +84085,14 @@ function announce5(c, detail) {
   if (detail) c.area.dispatchEvent(new CustomEvent(AUTOSIZE_EVENT, { bubbles: true, detail }));
 }
 function measureArea(c) {
-  const read2 = readArea(c);
-  stageArea(read2);
-  announce5(c, writeArea(c, planArea(read2)));
+  const read = readArea(c);
+  stageArea(read);
+  announce5(c, writeArea(c, planArea(read)));
 }
 function measureAreas(list) {
   const reads = list.map((c) => readArea(c));
-  for (const read2 of reads) stageArea(read2);
-  const plans = reads.map((read2) => planArea(read2));
+  for (const read of reads) stageArea(read);
+  const plans = reads.map((read) => planArea(read));
   const details = list.map((c, i) => writeArea(
     c,
     /** @type {AreaPlan} */
@@ -87007,13 +87123,13 @@ function reach2(c, show) {
   }
 }
 function wordsBefore(field2) {
-  const before2 = [];
-  for (let n = field2.previousSibling; n && before2.length < NAME_WORDS; n = n.previousSibling) {
+  const before3 = [];
+  for (let n = field2.previousSibling; n && before3.length < NAME_WORDS; n = n.previousSibling) {
     if (n.nodeType !== Node.TEXT_NODE) break;
     const words3 = (n.textContent ?? "").trim().split(/\s+/).filter(Boolean);
-    before2.unshift(...words3.reverse().slice(0, NAME_WORDS - before2.length).reverse());
+    before3.unshift(...words3.reverse().slice(0, NAME_WORDS - before3.length).reverse());
   }
-  return before2;
+  return before3;
 }
 var SENTENCE, SENTENCE_EVENT, LINES, CONTROLS3, tidy, COMPUTED_NONE, NAME_WORDS, isButton;
 var init_fields2 = __esm({
@@ -87995,8 +88111,8 @@ function runMoment(ms, zone = CHART_TIME_ZONE, locale) {
   const day2 = dayNames("short", locale)[new Date(Date.UTC(w.year, w.month - 1, w.day)).getUTCDay()] ?? "";
   return `${day2} ${two6(w.day)}/${two6(w.month)}/${w.year} ${two6(w.hour)}:${two6(w.minute)}`;
 }
-function clockShift(before2, after, zone = CHART_TIME_ZONE) {
-  return (zoneOffset2(after, zone) - zoneOffset2(before2, zone)) / MINUTE_S4;
+function clockShift(before3, after, zone = CHART_TIME_ZONE) {
+  return (zoneOffset2(after, zone) - zoneOffset2(before3, zone)) / MINUTE_S4;
 }
 var two6;
 var init_time3 = __esm({
@@ -88092,27 +88208,27 @@ var init_rows9 = __esm({
     init_time3();
     RunsRows = class extends RunsCore {
       /** The marks of a run: the clock turning before it, and the app's own conflict. @param {import('./core.js').Run} run @param {number | undefined} before */
-      marksOf(run, before2) {
-        const shift = clockShift(before2 ?? this.read.now(), run.at, this.read.zone);
+      marksOf(run, before3) {
+        const shift = clockShift(before3 ?? this.read.now(), run.at, this.read.zone);
         const marks = [];
         if (shift !== 0) marks.push(this.s.runsClockChange(shift));
         if (run.conflict) marks.push(run.conflict);
         return marks;
       }
       /** One row. @param {import('./core.js').Run} run @param {number} index @param {number | undefined} before */
-      row(run, index, before2) {
-        const { doc, s: s2, read: read2 } = this;
+      row(run, index, before3) {
+        const { doc, s: s2, read } = this;
         const li = doc.createElement("li");
         li.className = "kp-runs__row";
         const time = doc.createElement("time");
         time.className = "kp-runs__when";
         time.dateTime = new Date(run.at).toISOString();
-        time.textContent = runMoment(run.at, read2.zone, this.host.lang || void 0);
+        time.textContent = runMoment(run.at, read.zone, this.host.lang || void 0);
         li.append(time);
-        if (read2.relative) {
+        if (read.relative) {
           const rel2 = doc.createElement("span");
           rel2.className = "kp-runs__rel";
-          rel2.textContent = runsRelative(run.at, read2.now(), s2);
+          rel2.textContent = runsRelative(run.at, read.now(), s2);
           li.append(rel2);
         }
         if (run.note) {
@@ -88121,7 +88237,7 @@ var init_rows9 = __esm({
           note2.textContent = run.note;
           li.append(note2);
         }
-        const marks = read2.warn ? this.marksOf(run, before2) : [];
+        const marks = read.warn ? this.marksOf(run, before3) : [];
         if (marks.length) {
           const flag = doc.createElement("span");
           flag.className = "kp-badge kp-badge--warning kp-runs__flag";
@@ -88822,14 +88938,14 @@ var init_controller86 = __esm({
         this.host.dispatchEvent(new CustomEvent(SNOOZE_EVENT, { bubbles: true, detail: { until: new Date(ms).toISOString(), choice: key } }));
       }
       onApply() {
-        const read2 = this.readPanel();
-        if ("ms" in read2) {
+        const read = this.readPanel();
+        if ("ms" in read) {
           void this.closePanel();
-          return this.choose(read2.ms, "pick");
+          return this.choose(read.ms, "pick");
         }
-        this.p.error.textContent = read2.words.join(" ");
-        this.markBad(read2.bad);
-        read2.bad[0]?.focus();
+        this.p.error.textContent = read.words.join(" ");
+        this.markBad(read.bad);
+        read.bad[0]?.focus();
       }
       /** Esc closes the panel (unless the calendar in it is open); Enter in the time applies. @param {KeyboardEvent} event */
       onKey(event) {
@@ -89113,12 +89229,12 @@ function trackRows(editor) {
   };
   const undo = [];
   let writing = false;
-  const onEdit2 = (event) => {
+  const onEdit3 = (event) => {
     if (!(event.type === TRACK_EVENT && event.target === host) && !writing) track(editor, true);
   };
   for (const type of EDITS) {
-    host.addEventListener(type, onEdit2);
-    undo.push(() => host.removeEventListener(type, onEdit2));
+    host.addEventListener(type, onEdit3);
+    undo.push(() => host.removeEventListener(type, onEdit3));
   }
   undo.push(
     onTrackWrite(host, (value) => {
@@ -89128,9 +89244,9 @@ function trackRows(editor) {
   );
   const late = new MutationObserver((records) => {
     if (writing || !records.some((r) => r.target !== host)) return;
-    const before2 = host.getAttribute(TRACK_VALUE);
+    const before3 = host.getAttribute(TRACK_VALUE);
     const { value, text } = readRows(editor);
-    setTrackValue(host, value, { text, announce: value !== before2 });
+    setTrackValue(host, value, { text, announce: value !== before3 });
   });
   late.observe(host, { subtree: true, attributes: true, attributeFilter: [TRACK_VALUE, TRACK_TEXT] });
   undo.push(() => late.disconnect());
@@ -90267,13 +90383,13 @@ function setGraphData(el16, data) {
   g.data = data;
   g.state = data.nodes.length ? "ready" : "empty";
   const ids2 = new Set(data.nodes.map((n) => n.id));
-  const before2 = g.selected.size;
+  const before3 = g.selected.size;
   const detailBefore = g.detail;
   for (const id of [...g.selected]) if (!ids2.has(id)) g.selected.delete(id);
   if (g.hover && !ids2.has(g.hover)) g.hover = null;
   if (g.detail && !ids2.has(g.detail)) g.detail = null;
   drawGraph(g);
-  if (g.selected.size !== before2 || g.detail !== detailBefore) graphChanged(g);
+  if (g.selected.size !== before3 || g.detail !== detailBefore) graphChanged(g);
 }
 function setGraphState(el16, state12, words3 = "", { text = "", art = null } = {}) {
   const g = graphs.get(el16);
@@ -91771,8 +91887,8 @@ async function takeAll(list) {
   const st = stateOf6(list);
   const viewer = st.viewer;
   if (!viewer) return;
-  const before2 = getChecklistItems(list);
-  const open4 = before2.filter((i) => byOf(i).length === 0 && !i.claim?.locked);
+  const before3 = getChecklistItems(list);
+  const open4 = before3.filter((i) => byOf(i).length === 0 && !i.claim?.locked);
   if (open4.length === 0) return;
   const by = (i) => open4.includes(i) ? [viewer] : byOf(i);
   let waiting2 = null;
@@ -91782,7 +91898,7 @@ async function takeAll(list) {
     person: viewer,
     by: [viewer],
     previousBy: [],
-    items: before2,
+    items: before3,
     ids: open4.map((i) => i.id),
     settle: (a) => void (waiting2 = a)
   };
@@ -91797,7 +91913,7 @@ async function takeAll(list) {
   }
   setChecklistItems(
     list,
-    before2.map((i) => ({ ...i, claim: { ...i.claim, by: by(i) } }))
+    before3.map((i) => ({ ...i, claim: { ...i.claim, by: by(i) } }))
   );
   say12(list, s2.claimTookAll(open4.length));
   const ms = Number(attr10(list, "undo-ms", String(CLAIM_UNDO_MS)));
@@ -91805,7 +91921,7 @@ async function takeAll(list) {
     undoToast(s2.claimTookAll(open4.length), {
       mode: "revert",
       ms,
-      undo: () => setChecklistItems(list, before2)
+      undo: () => setChecklistItems(list, before3)
     });
 }
 async function copyGaps(list) {
@@ -92765,8 +92881,8 @@ function setAvailabilityAnswer(root, person, column, answer2) {
     const target = st.spec.sets[st.unit];
     if (target) target.answers = structuredClone(st.set.answers);
   }
-  const before2 = new Set(availabilityBest(root));
-  void before2;
+  const before3 = new Set(availabilityBest(root));
+  void before3;
   render4(root);
 }
 function ensureParts(root) {
@@ -96103,12 +96219,12 @@ function matchWords(root) {
 function collect(root, reset = false) {
   const st = stateOf10(root);
   const log = logOf(root);
-  const before2 = reset ? null : st.matches[st.at] ?? null;
+  const before3 = reset ? null : st.matches[st.at] ?? null;
   st.matches = queryOf(root) === "" ? [] : (
     /** @type {HTMLElement[]} */
     [...log.querySelectorAll(".kp-log__line:not([hidden]) mark.kp-log__match")]
   );
-  st.at = before2 ? st.matches.indexOf(before2) : -1;
+  st.at = before3 ? st.matches.indexOf(before3) : -1;
   for (const mark2 of log.querySelectorAll("mark[data-kp-current]")) mark2.removeAttribute("data-kp-current");
   if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
 }
@@ -96754,10 +96870,10 @@ function foldContext(lines4, keep = DIFF_CONTEXT, min = DIFF_FOLD_MIN) {
     }
     let j = i;
     while (j < n && lines4[j].kind === "same") j += 1;
-    const before2 = i === 0 ? 0 : keep;
+    const before3 = i === 0 ? 0 : keep;
     const after = j === n ? 0 : keep;
-    if (j - i - before2 - after >= min) {
-      const from = i + before2;
+    if (j - i - before3 - after >= min) {
+      const from = i + before3;
       const to = j - after;
       if (from > start) out.push({ kind: "lines", from: start, lines: lines4.slice(start, from) });
       out.push({ kind: "fold", from, lines: lines4.slice(from, to) });
@@ -98829,10 +98945,10 @@ var init_quantity_checklist_focus2 = __esm({
   "js/strings/nl/quantity-checklist-focus.js"() {
     "use strict";
     verbLast = (head, verb) => {
-      const before2 = String(head).trim();
+      const before3 = String(head).trim();
       const word = String(verb);
-      if (before2 === "") return word.charAt(0).toUpperCase() + word.slice(1);
-      return `${before2} ${word.charAt(0).toLowerCase()}${word.slice(1)}`;
+      if (before3 === "") return word.charAt(0).toUpperCase() + word.slice(1);
+      return `${before3} ${word.charAt(0).toLowerCase()}${word.slice(1)}`;
     };
     NL_QUANTITY_CHECKLIST_FOCUS = {
       quantityLess: (label2) => label2 ? `${label2}, minder` : "Minder",
@@ -99689,7 +99805,7 @@ var init_table_heat2 = __esm({
       tableEdit: (column, key, value) => `${column} van ${key}: ${value}. Bewerken`,
       tableEditField: (column, key) => `${column} van ${key}`,
       tableEditing: (column, key) => `${column} van ${key} bewerken. Druk op Enter om te bewaren, of Escape om te annuleren.`,
-      tableEdited: (key, column, before2, after) => `${key}: ${column} gewijzigd van ${before2} naar ${after}.`,
+      tableEdited: (key, column, before3, after) => `${key}: ${column} gewijzigd van ${before3} naar ${after}.`,
       tableEditUndone: (key, column, value) => `Ongedaan gemaakt: ${key} ${column} is weer ${value}.`,
       tableEditCancelled: "Bewerken geannuleerd; er is niets veranderd.",
       tableEditRequired: "Een waarde is verplicht.",
@@ -99823,8 +99939,8 @@ var init_uses_unsaved_compare2 = __esm({
       unsavedLeaveStay: "Blijven",
       compareBefore: "Voor",
       compareAfter: "Na",
-      compareSlider: (before2, after) => `Scheidingslijn tussen ${before2} en ${after}`,
-      compareValue: (percent, before2, after) => `${percent}% ${before2}, ${100 - percent}% ${after}`,
+      compareSlider: (before3, after) => `Scheidingslijn tussen ${before3} en ${after}`,
+      compareValue: (percent, before3, after) => `${percent}% ${before3}, ${100 - percent}% ${after}`,
       compareFailed: "Deze afbeelding kon niet geladen worden.",
       compareRetry: "Opnieuw proberen",
       compareLoading: "De afbeeldingen laden\u2026",
@@ -100219,7 +100335,7 @@ function registerSnippet({ key, attribute, effects, pattern = REGISTER_PATTERN_D
     fallback2
   ))
     throw new RangeError(`kp-themes: the register fallback "${fallback2}" is not a theme`);
-  const [before2, ...rest] = pattern.split("{theme}");
+  const [before3, ...rest] = pattern.split("{theme}");
   const after = rest.join("{theme}");
   const arm = effects ? `
     d.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : "";
@@ -100231,7 +100347,7 @@ function registerSnippet({ key, attribute, effects, pattern = REGISTER_PATTERN_D
     } catch (e) {}${arm}
     var n = d.getAttribute(${jsString(attribute)});
     if (${JSON.stringify(names).replace(/</g, "\\u003c")}.indexOf(n) < 0) n = ${jsString(fallback2)};
-    document.write('<link rel="stylesheet" href="' + ${jsString(attributeText(before2))} + n + ${jsString(attributeText(after))} + '" data-kp-register="' + n + '" blocking="render">');
+    document.write('<link rel="stylesheet" href="' + ${jsString(attributeText(before3))} + n + ${jsString(attributeText(after))} + '" data-kp-register="' + n + '" blocking="render">');
 })();`;
 }
 var NO_FLASH_SNIPPET = noFlashSnippet();
@@ -100825,8 +100941,8 @@ function prefixLines(value, start, end, kind) {
   const text = lines4.map((line) => off ? line.replace(has, "") : `${line.replace(ANY_MARKER, "$1")}`.replace(/^(\s*)/, `$1${add}`)).join("\n");
   return { from, to, text, select: lines4.length === 1 && start === end ? caretAfter(from, text, start - from, value.slice(from, to)) : [from, from + text.length] };
 }
-function caretAfter(from, text, into, before2) {
-  const at = Math.max(0, Math.min(text.length, into + text.length - before2.length));
+function caretAfter(from, text, into, before3) {
+  const at = Math.max(0, Math.min(text.length, into + text.length - before3.length));
   return [from + at, from + at];
 }
 function link(value, start, end, placeholder) {
@@ -101525,18 +101641,18 @@ var updatePlays = (idea) => idea !== "";
 
 // js/update/mark.js
 function markUpdating(host, idea, timing, { inline: inline2 = false } = {}) {
-  const before2 = {};
-  for (const name of UPDATE_STYLE) before2[name] = host.style.getPropertyValue(name);
+  const before3 = {};
+  for (const name of UPDATE_STYLE) before3[name] = host.style.getPropertyValue(name);
   if (inline2) host.style.setProperty("display", "inline-block");
   host.style.setProperty("--kp-update-duration", `${timing.duration}ms`);
   host.style.setProperty("--kp-update-ease", timing.ease);
   host.setAttribute(UPDATING_ATTRIBUTE, idea);
-  return before2;
+  return before3;
 }
-function unmarkUpdating(host, before2) {
+function unmarkUpdating(host, before3) {
   host.removeAttribute(UPDATING_ATTRIBUTE);
   for (const name of UPDATE_STYLE) {
-    if (before2[name]) host.style.setProperty(name, before2[name]);
+    if (before3[name]) host.style.setProperty(name, before3[name]);
     else host.style.removeProperty(name);
   }
 }
@@ -101611,14 +101727,14 @@ var UpdateBatch = class {
    * @param {UpdateJob[]} jobs
    */
   readAll(jobs) {
-    const read2 = jobs.map((job) => {
+    const read = jobs.map((job) => {
       const idea = updateIdea(getComputedStyle(job.el).getPropertyValue(UPDATE_PROPERTY));
       const inline2 = idea !== "" && getComputedStyle(job.host).display === "inline";
       return { job, idea, inline: inline2 };
     });
     const timings = /* @__PURE__ */ new Map();
-    const plays = read2.filter((r) => updatePlays(r.idea)).map((r) => ({ ...r, timing: this.timingOf(timings, r.job.host) }));
-    for (const r of read2) if (!updatePlays(r.idea)) r.job.resolve(0);
+    const plays = read.filter((r) => updatePlays(r.idea)).map((r) => ({ ...r, timing: this.timingOf(timings, r.job.host) }));
+    for (const r of read) if (!updatePlays(r.idea)) r.job.resolve(0);
     return plays;
   }
   /**
@@ -101816,11 +101932,11 @@ var TourCore = class extends Controller {
     if (!updatePlays(idea)) return;
     const timing = updateTiming(card);
     void view.getComputedStyle(card).animationName;
-    const before2 = markUpdating(card, idea, timing);
+    const before3 = markUpdating(card, idea, timing);
     const done = view.setTimeout(() => this.unmarkStep(), timing.duration || STEP_MARK_FALLBACK_MS);
     this.unmarkStep = () => {
       view.clearTimeout(done);
-      unmarkUpdating(card, before2);
+      unmarkUpdating(card, before3);
       this.unmarkStep = () => {
       };
     };
@@ -102654,6 +102770,7 @@ export {
   REFRESH_DEFAULT,
   REFRESH_EVENT,
   REFRESH_INTERVAL_EVENT,
+  REGION_GUARD,
   REGISTER_ATTRIBUTE,
   REGISTER_ERROR_EVENT,
   REGISTER_LOAD_EVENT,
@@ -103309,6 +103426,7 @@ export {
   footprint_exports as footprintExports,
   forgetClaims,
   forgetDialogEdits,
+  forgetRegionEdits,
   forgetRememberedExcept,
   forgetTour,
   form,
@@ -103422,6 +103540,7 @@ export {
   logviewer_exports as logviewerExports,
   luminance,
   markDialogSaved,
+  markRegionSaved,
   markUnsavedClean,
   markUpdating,
   markdown_editor_exports as markdownEditorExports,
@@ -103574,6 +103693,7 @@ export {
   refreshDone,
   refreshMarkdownPreview,
   refreshOf,
+  regionChanged,
   registerDictionary,
   registerHref,
   registerLink,
@@ -104009,6 +104129,7 @@ export {
   wheelAngles,
   wheel_exports as wheelExports,
   whenDialogFree,
+  whenRegionFree,
   withCustomProperties,
   withoutOvershoot,
   wizard,
