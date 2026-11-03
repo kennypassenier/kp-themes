@@ -39,7 +39,7 @@ the selectors and their order are identical, which is what
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 46% |
 | `dist/kp-themes.css` | 4453.6 kB | 2360.6 kB | 47% |
 | `dist/kp-themes-base.css` | 1545.9 kB | 770.3 kB | 50% |
-| `dist/kp-themes.js` | 4009.5 kB | 2122.7 kB | 47% |
+| `dist/kp-themes.js` | 4009.6 kB | 2122.8 kB | 47% |
 
 The loose stylesheets together weigh **4506.7 kB** authored and
 **2391.6 kB** minified, 47% less. A page loading one theme's
@@ -62,11 +62,11 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/art.js` | 4 | 17.2 kB |
 | `dist/js/attention.js` | 8 | 125.5 kB |
 | `dist/js/auto.js` | 24 | 269.5 kB |
-| `dist/js/auto-refresh.js` | 24 | 189.6 kB |
+| `dist/js/auto-refresh.js` | 24 | 189.8 kB |
 | `dist/js/autosize.js` | 7 | 98.4 kB |
 | `dist/js/availability.js` | 30 | 331.2 kB |
 | `dist/js/barcell.js` | 6 | 87.0 kB |
-| `dist/js/board.js` | 15 | 168.8 kB |
+| `dist/js/board.js` | 15 | 168.9 kB |
 | `dist/js/bullets.js` | 10 | 111.4 kB |
 | `dist/js/busy-card.js` | 4 | 4.9 kB |
 | `dist/js/calendar.js` | 11 | 164.0 kB |
@@ -75,9 +75,9 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/card-state.js` | 6 | 85.8 kB |
 | `dist/js/chart.js` | 9 | 148.5 kB |
 | `dist/js/checklist.js` | 9 | 96.0 kB |
-| `dist/js/chip-filter.js` | 22 | 168.0 kB |
-| `dist/js/claim.js` | 32 | 300.5 kB |
-| `dist/js/code.js` | 24 | 189.3 kB |
+| `dist/js/chip-filter.js` | 22 | 168.1 kB |
+| `dist/js/claim.js` | 32 | 300.6 kB |
+| `dist/js/code.js` | 24 | 189.4 kB |
 | `dist/js/code-field.js` | 7 | 100.2 kB |
 | `dist/js/colorpicker.js` | 6 | 82.2 kB |
 | `dist/js/combobox.js` | 10 | 102.3 kB |
@@ -85,14 +85,14 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/compare.js` | 6 | 88.0 kB |
 | `dist/js/components.js` | 6 | 105.6 kB |
 | `dist/js/connection.js` | 9 | 131.4 kB |
-| `dist/js/console.js` | 36 | 337.2 kB |
-| `dist/js/context-menu.js` | 13 | 142.0 kB |
+| `dist/js/console.js` | 36 | 337.3 kB |
+| `dist/js/context-menu.js` | 13 | 142.1 kB |
 | `dist/js/contrast.js` | 3 | 1.7 kB |
 | `dist/js/core.js` | 5 | 81.9 kB |
 | `dist/js/countdown.js` | 8 | 116.7 kB |
-| `dist/js/datatable.js` | 27 | 309.1 kB |
+| `dist/js/datatable.js` | 27 | 309.2 kB |
 | `dist/js/date-nav.js` | 14 | 185.1 kB |
-| `dist/js/dated-options.js` | 30 | 293.6 kB |
+| `dist/js/dated-options.js` | 30 | 293.7 kB |
 | `dist/js/datepicker.js` | 10 | 140.0 kB |
 | `dist/js/dayline.js` | 10 | 103.7 kB |
 | `dist/js/deplist.js` | 23 | 232.3 kB |
@@ -100,7 +100,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/diff.js` | 21 | 225.1 kB |
 | `dist/js/docpreview.js` | 24 | 242.3 kB |
 | `dist/js/effects.js` | 4 | 39.5 kB |
-| `dist/js/entity-card.js` | 31 | 286.4 kB |
+| `dist/js/entity-card.js` | 31 | 286.6 kB |
 | `dist/js/facets.js` | 5 | 84.0 kB |
 | `dist/js/feed.js` | 10 | 119.1 kB |
 | `dist/js/flash.js` | 18 | 203.3 kB |
@@ -126,13 +126,13 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/live-options.js` | 3 | 0.8 kB |
 | `dist/js/loading-pieces.js` | 4 | 8.6 kB |
 | `dist/js/log.js` | 4 | 2.0 kB |
-| `dist/js/logviewer.js` | 33 | 283.4 kB |
+| `dist/js/logviewer.js` | 33 | 283.5 kB |
 | `dist/js/markdown.js` | 4 | 82.1 kB |
 | `dist/js/markdown-editor.js` | 7 | 94.2 kB |
 | `dist/js/master-detail.js` | 12 | 141.8 kB |
-| `dist/js/menu-button.js` | 13 | 136.2 kB |
+| `dist/js/menu-button.js` | 13 | 136.4 kB |
 | `dist/js/motion.js` | 7 | 119.1 kB |
-| `dist/js/nav-fold.js` | 14 | 146.0 kB |
+| `dist/js/nav-fold.js` | 14 | 146.2 kB |
 | `dist/js/newpill.js` | 6 | 86.5 kB |
 | `dist/js/no-flash.js` | 4 | 2.9 kB |
 | `dist/js/notices.js` | 21 | 221.8 kB |
@@ -151,29 +151,29 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/qr.js` | 22 | 242.7 kB |
 | `dist/js/quantity.js` | 8 | 89.3 kB |
 | `dist/js/question-card.js` | 9 | 137.0 kB |
-| `dist/js/quiet-hours.js` | 29 | 248.9 kB |
+| `dist/js/quiet-hours.js` | 29 | 249.0 kB |
 | `dist/js/quote.js` | 25 | 264.7 kB |
-| `dist/js/range.js` | 26 | 255.7 kB |
+| `dist/js/range.js` | 26 | 255.8 kB |
 | `dist/js/rating.js` | 21 | 242.7 kB |
 | `dist/js/reason.js` | 17 | 197.1 kB |
 | `dist/js/registry.js` | 3 | 1.0 kB |
 | `dist/js/remember.js` | 5 | 84.6 kB |
-| `dist/js/request-inspector.js` | 27 | 212.8 kB |
+| `dist/js/request-inspector.js` | 27 | 212.9 kB |
 | `dist/js/row-editor.js` | 20 | 208.3 kB |
 | `dist/js/row-pick.js` | 6 | 85.6 kB |
 | `dist/js/row-select.js` | 7 | 88.9 kB |
 | `dist/js/row-undo.js` | 21 | 231.1 kB |
-| `dist/js/runs.js` | 27 | 252.7 kB |
-| `dist/js/segmented.js` | 19 | 160.8 kB |
-| `dist/js/segmented-menu.js` | 14 | 142.1 kB |
+| `dist/js/runs.js` | 27 | 252.8 kB |
+| `dist/js/segmented.js` | 19 | 160.9 kB |
+| `dist/js/segmented-menu.js` | 14 | 142.2 kB |
 | `dist/js/selection-bar.js` | 9 | 110.7 kB |
-| `dist/js/sentence.js` | 23 | 181.1 kB |
+| `dist/js/sentence.js` | 23 | 181.2 kB |
 | `dist/js/sequencer.js` | 8 | 119.6 kB |
 | `dist/js/settled.js` | 6 | 80.7 kB |
 | `dist/js/shortcuts.js` | 5 | 89.6 kB |
 | `dist/js/sidenav.js` | 9 | 160.0 kB |
 | `dist/js/slider.js` | 7 | 99.8 kB |
-| `dist/js/snooze.js` | 32 | 292.7 kB |
+| `dist/js/snooze.js` | 32 | 292.8 kB |
 | `dist/js/stackbar.js` | 11 | 145.5 kB |
 | `dist/js/state-plate.js` | 4 | 78.2 kB |
 | `dist/js/statusrow.js` | 25 | 267.3 kB |
@@ -185,7 +185,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/swipe.js` | 6 | 82.5 kB |
 | `dist/js/tabbar.js` | 5 | 86.7 kB |
 | `dist/js/tables.js` | 5 | 79.2 kB |
-| `dist/js/task-row.js` | 14 | 139.3 kB |
+| `dist/js/task-row.js` | 14 | 139.4 kB |
 | `dist/js/thread.js` | 10 | 120.1 kB |
 | `dist/js/tick.js` | 6 | 85.0 kB |
 | `dist/js/tiles.js` | 8 | 129.3 kB |
@@ -198,20 +198,20 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/track-value.js` | 3 | 1.8 kB |
 | `dist/js/transfer.js` | 12 | 141.3 kB |
 | `dist/js/undo-toast.js` | 20 | 228.5 kB |
-| `dist/js/unsaved.js` | 25 | 250.1 kB |
+| `dist/js/unsaved.js` | 25 | 250.2 kB |
 | `dist/js/update.js` | 11 | 156.7 kB |
 | `dist/js/upload.js` | 9 | 127.7 kB |
 | `dist/js/uptime.js` | 13 | 150.0 kB |
 | `dist/js/uses-map.js` | 6 | 95.2 kB |
-| `dist/js/usual-picker.js` | 34 | 321.3 kB |
+| `dist/js/usual-picker.js` | 34 | 321.4 kB |
 | `dist/js/version-delta.js` | 5 | 86.2 kB |
 | `dist/js/viewer.js` | 22 | 225.9 kB |
 | `dist/js/week.js` | 14 | 184.3 kB |
-| `dist/js/weekdays.js` | 21 | 171.6 kB |
+| `dist/js/weekdays.js` | 21 | 171.7 kB |
 | `dist/js/wheel.js` | 8 | 99.9 kB |
 | `dist/js/wizard.js` | 7 | 93.8 kB |
-| `dist/js/index.js` | 183 | 2044.5 kB |
-| the whole folder | 352 | 2169.9 kB |
+| `dist/js/index.js` | 183 | 2044.7 kB |
+| the whole folder | 352 | 2170.0 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

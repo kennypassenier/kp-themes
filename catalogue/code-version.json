@@ -76,7 +76,7 @@
         "js/log.js": { "digest": "a4be314cde32f0ef", "when": "[data-kp-source]" },
         "js/logviewer.js": { "digest": "e06a7ba52573eb82", "when": "[data-kp-logviewer]" },
         "js/master-detail.js": { "digest": "a7ae68a985fea8a0", "when": "[data-kp-master-detail]" },
-        "js/menu-button.js": { "digest": "80be557c1c0e264e", "when": "[data-kp-menu-button]" },
+        "js/menu-button.js": { "digest": "8bf41c889b36b750", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
             "digest": "cce297d541c95dec",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"

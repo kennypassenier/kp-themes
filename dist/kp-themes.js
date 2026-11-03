@@ -18295,7 +18295,8 @@ function menuEntry(doc, item) {
   el16.title = item.disabled ?? item.hint ?? "";
   if (item.value) el16.dataset.kpValue = item.value;
   for (const [name, value] of Object.entries(item.attrs ?? {})) {
-    if (value == null) el16.removeAttribute(name);
+    if (name.toLowerCase() === "style") console.error(`kp-themes setMenu: attrs.style is not set (CSP); set el.style after the menu draws.`);
+    else if (value == null) el16.removeAttribute(name);
     else el16.setAttribute(name, value);
   }
   return el16;
