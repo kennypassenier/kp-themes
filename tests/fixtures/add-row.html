@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Add row: date column, labels, announcement, Enter in a select [kit1-1103]</title>
+        <link rel="stylesheet" href="/css/fonts.css" />
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+    </head>
+    <body>
+        <!-- Kitchen's /log shape: a table of four narrow columns (date, meal, dish, actions), the add row over it with a date
+             picker under the first. The grid is 1000 px wide so the date column is as narrow as Kitchen's (about 159 px). -->
+        <main style="inline-size: 1000px">
+            <form class="kp-addrow" id="row" data-kp-addrow data-kp-addrow-for="log" data-kp-form novalidate aria-label="Add a line" data-test="row">
+                <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                <input type="hidden" name="id" value="42" />
+                <div class="kp-addrow__cells">
+                    <div class="kp-field kp-addrow__cell" data-kp-addrow-column="date">
+                        <label class="kp-field__label" for="new-date">Day</label>
+                        <div class="kp-datepicker" data-kp-datepicker lang="en-GB" data-test="picker">
+                            <input class="kp-field__input" id="new-date" name="date" type="text" inputmode="numeric" data-kp-date-input aria-label="Day" />
+                            <button type="button" class="kp-button" data-kp-date-open aria-label="Open calendar"><span aria-hidden="true">&#9638;</span></button>
+                            <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+                        </div>
+                        <span class="kp-field__error" data-kp-field-error hidden></span>
+                    </div>
+                    <div class="kp-field kp-addrow__cell" data-kp-addrow-column="meal">
+                        <label class="kp-field__label" for="new-meal">Meal</label>
+                        <select class="kp-field__input" id="new-meal" name="meal" data-test="meal"><option>Breakfast</option><option selected>Dinner</option></select>
+                        <span class="kp-field__error" data-kp-field-error hidden></span>
+                    </div>
+                    <div class="kp-field kp-addrow__cell" data-kp-addrow-column="dish">
+                        <label class="kp-field__label" for="new-dish">Dish</label>
+                        <input class="kp-field__input" id="new-dish" name="dish" autocomplete="off" />
+                        <span class="kp-field__error" data-kp-field-error hidden></span>
+                    </div>
+                    <div class="kp-addrow__submit"><button type="submit" class="kp-button kp-button--primary" data-kp-submit>Add</button></div>
+                </div>
+            </form>
+            <div class="kp-datatable" id="log" data-kp-datatable data-kp-cards data-kp-page-sizes="none" data-kp-filter-ui="none">
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <caption class="kp-sr-only">Log</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" data-kp-field="date" style="inline-size: 159px">Day</th>
+                                <th scope="col" data-kp-field="meal" style="inline-size: 159px">Meal</th>
+                                <th scope="col" data-kp-field="dish">Dish</th>
+                                <th scope="col" data-kp-field="actions"><span class="kp-sr-only">Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>01/11/2026</td><td>Dinner</td><td>Pasta</td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

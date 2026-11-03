@@ -18,6 +18,10 @@
 //     </div>
 //   </form>
 //
+// Opt-in knobs on the row: `data-kp-addrow-labels="show"` keeps the labels shown over their fields when the row is not stacked
+// (Kitchen's date, meal and dish columns want their words over the fields); `data-kp-addrow-name="dish"` names the field whose
+// value the "Added x" status says, where the first filled value would be an id or a date.
+//
 // Each cell stands under the column `data-kp-addrow-column` names (its id, `data-kp-field`, else its words, or its number), as
 // wide as the column, and follows it when the table is resized, scrolled sideways or a column is hidden; the column words name
 // the fields, so the labels are for screen readers only. The Add button stands under `data-kp-addrow-submit-column`, else the
@@ -49,7 +53,7 @@ import { attachAll } from './controller.js';
 import { AddRow } from './add-row/controller.js';
 import { ADD_ROW } from './add-row/constants.js';
 
-export { ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, ADD_EVENT, ADDED_EVENT, STACKED } from './add-row/constants.js';
+export { ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, ADD_ROW_LABELS, ADD_ROW_NAME, ADD_EVENT, ADDED_EVENT, STACKED } from './add-row/constants.js';
 export { valuesOf, sayRefusal } from './add-row/submit.js';
 export { columnNumber } from './add-row/layout.js';
 

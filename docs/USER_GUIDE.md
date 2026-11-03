@@ -286,8 +286,8 @@ weakest to strongest:
 3. your own `setStrings()`, which always wins and survives a change of language.
 
 A change of `lang` or `data-kp-lang` on `<html>` is followed at once (a `MutationObserver` on the root), and
-`document` hears `kp-strings-change` with `detail.language`. Words a part has already drawn stay as they are; what is
-drawn next (a toast, a confirmation, a redraw) speaks the new language.
+`document` hears `kp-strings-change` with `detail.language`. `setStrings()` fires the same event. Words a part has already drawn stay as they are, except the folding bar's More
+button, which writes its words again on the event; what is drawn next (a toast, a confirmation, a redraw) speaks the new language.
 
 ```js
 import { setLanguage, getLanguage, languageReady, registerDictionary } from '@kp-soft/themes/js/strings';
@@ -2342,6 +2342,21 @@ Knobs: `--kp-formgrid-gap` (between rows, the md step), `--kp-formgrid-column-ga
 moved to the form grid yet already lines up inside one list. The check that holds every review demo to this is
 `research/_review/measure-align.mjs`, run by `measure-gaps.mjs`; it also flags a label block that hangs under its row
 (B2) and a form, settings or key-value row that stacks its action or a fact's value under its label on one left edge (H).
+
+### The add row's labels and its announcement [kit1-1103]
+
+`data-kp-addrow` is the form that adds one line over a data table (`js/add-row.js`; the markup is in the file's header).
+Two opt-in attributes on the row, both off by default:
+
+- `data-kp-addrow-labels="show"` keeps each field's label shown over its field while the row stands under the table's
+  columns. By default the labels are for screen readers only (the column words name the fields); a stacked row always
+  shows them. The Add button then stands on the fields' line.
+- `data-kp-addrow-name="dish"` names the field whose value the status says after an add ("Added Pasta pesto"). By default
+  it says the first filled value, which is an id or a date when a hidden id or a date field comes first; an empty or
+  unknown name falls back to that default.
+
+A date picker (`.kp-datepicker`) in a cell gives way to the column: its input has no minimum width there and the calendar
+button stays beside it, so a 159 px column holds a 139 px picker instead of one 252 px wide.
 
 ## Rows, cards and choices [kpadopt4-rows]
 

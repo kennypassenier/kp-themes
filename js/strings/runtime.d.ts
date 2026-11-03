@@ -1,4 +1,7 @@
 export type Strings = import('./types.js').Strings;
+/** @typedef {import('./types.js').Strings} Strings */
+/** Fired on `document` when the strings parts draw their words from changed: a language switch, a dictionary swap, `setStrings()`. */
+export declare const STRINGS_CHANGE_EVENT = "kp-strings-change";
 export type DictionarySource = Partial<Strings> | (() => Promise<Partial<Strings>>);
 /**
  * Replace some or all of the strings, for the framework-free channel and

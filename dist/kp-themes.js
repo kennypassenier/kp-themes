@@ -2713,7 +2713,9 @@ var init_defaults = __esm({
 // js/strings/runtime.js
 function setStrings(next2) {
   fromApp = { ...fromApp, ...next2 };
-  return publish();
+  const strings = publish();
+  announce();
+  return strings;
 }
 function publish() {
   current = Object.freeze({ ...DEFAULT_STRINGS, ...published, ...fromApp });
@@ -2774,7 +2776,7 @@ function follow(retry = true) {
 }
 function announce() {
   if (typeof document === "undefined") return;
-  document.dispatchEvent(new CustomEvent("kp-strings-change", { detail: { language } }));
+  document.dispatchEvent(new CustomEvent(STRINGS_CHANGE_EVENT, { detail: { language } }));
 }
 function watchRoot() {
   if (observer !== null || typeof MutationObserver === "undefined" || typeof document === "undefined") return;
@@ -2820,11 +2822,12 @@ function getStrings() {
 function resolveStrings(overrides) {
   return overrides === void 0 ? current : { ...current, ...overrides };
 }
-var current, fromApp, dictionaries, loading, failed, published, chosen, language, ready, observer, normaliseTag, CIPHER;
+var STRINGS_CHANGE_EVENT, current, fromApp, dictionaries, loading, failed, published, chosen, language, ready, observer, normaliseTag, CIPHER;
 var init_runtime = __esm({
   "js/strings/runtime.js"() {
     "use strict";
     init_defaults();
+    STRINGS_CHANGE_EVENT = "kp-strings-change";
     current = DEFAULT_STRINGS;
     fromApp = {};
     dictionaries = /* @__PURE__ */ new Map();
@@ -3033,6 +3036,7 @@ var init_values = __esm({
 var strings_exports = {};
 __export(strings_exports, {
   DEFAULT_STRINGS: () => DEFAULT_STRINGS,
+  STRINGS_CHANGE_EVENT: () => STRINGS_CHANGE_EVENT,
   applyStringProperties: () => applyStringProperties,
   getLanguage: () => getLanguage,
   getLanguageDictionary: () => getLanguageDictionary,
@@ -11297,7 +11301,7 @@ var init_constants5 = __esm({
 });
 
 // js/add-row/constants.js
-var ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, STACKED, FOLD_AT_REM, CELL, SUBMIT_CELL, REFUSAL, ADD_EVENT, ADDED_EVENT;
+var ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, ADD_ROW_LABELS, ADD_ROW_NAME, STACKED, FOLD_AT_REM, CELL, SUBMIT_CELL, REFUSAL, ADD_EVENT, ADDED_EVENT;
 var init_constants6 = __esm({
   "js/add-row/constants.js"() {
     "use strict";
@@ -11305,6 +11309,8 @@ var init_constants6 = __esm({
     ADD_ROW_FOR = "data-kp-addrow-for";
     ADD_ROW_COLUMN = "data-kp-addrow-column";
     ADD_ROW_SUBMIT_COLUMN = "data-kp-addrow-submit-column";
+    ADD_ROW_LABELS = "data-kp-addrow-labels";
+    ADD_ROW_NAME = "data-kp-addrow-name";
     STACKED = "data-kp-addrow-stacked";
     FOLD_AT_REM = 30;
     CELL = ".kp-addrow__cell";
@@ -11921,6 +11927,13 @@ function refusalIn(answer2) {
   );
   return null;
 }
+function announcedName(row2, values) {
+  const filled2 = (v) => typeof v === "string" && v.trim() !== "";
+  const named = values[row2.getAttribute(ADD_ROW_NAME) ?? ""];
+  const pick2 = Array.isArray(named) ? named.find(filled2) : named;
+  const first = filled2(pick2) ? pick2 : Object.values(values).find(filled2);
+  return typeof first === "string" ? first : "";
+}
 function added(row2, values) {
   row2.reset();
   form(row2)?.clear();
@@ -11928,8 +11941,7 @@ function added(row2, values) {
   row2.dispatchEvent(new CustomEvent(DONE_EVENT, { bubbles: true }));
   row2.querySelector('input:not([type="hidden"]), select, textarea')?.focus();
   const live4 = row2.querySelector(".kp-addrow__live");
-  const first = Object.values(values).find((v) => typeof v === "string" && v.trim() !== "");
-  if (live4) live4.textContent = getStrings().addRowAdded(typeof first === "string" ? first : "");
+  if (live4) live4.textContent = getStrings().addRowAdded(announcedName(row2, values));
   row2.dispatchEvent(new CustomEvent(ADDED_EVENT, { bubbles: true, detail: { values } }));
 }
 function refused(row2, why) {
@@ -12074,6 +12086,8 @@ __export(add_row_exports, {
   ADD_ROW: () => ADD_ROW,
   ADD_ROW_COLUMN: () => ADD_ROW_COLUMN,
   ADD_ROW_FOR: () => ADD_ROW_FOR,
+  ADD_ROW_LABELS: () => ADD_ROW_LABELS,
+  ADD_ROW_NAME: () => ADD_ROW_NAME,
   ADD_ROW_SUBMIT_COLUMN: () => ADD_ROW_SUBMIT_COLUMN,
   STACKED: () => STACKED,
   attachAddRows: () => attachAddRows,
@@ -26602,6 +26616,7 @@ var init_controller13 = __esm({
   "js/nav-fold/controller.js"() {
     "use strict";
     init_menu_button();
+    init_strings();
     init_core3();
     NavFold = class extends NavFoldCore {
       connect() {
@@ -26615,12 +26630,19 @@ var init_controller13 = __esm({
           /** @type {MouseEvent} */
           event
         ), true);
+        this.listen(doc, STRINGS_CHANGE_EVENT, () => this.rewrite());
         this.watchSizes();
         this.watchList();
         doc.fonts?.ready.then(() => {
           if (!this.destroyed) this.fit();
         });
         this.listen(view, "resize", () => this.fit());
+        this.fit();
+      }
+      /** The words changed: write the label and names again, and draw the menu again (its groups carry words too). */
+      rewrite() {
+        this.writeWords();
+        this.signature = "";
         this.fit();
       }
       /** Takes the More item and the marks the bar added off it again. */
@@ -102506,6 +102528,8 @@ export {
   ADD_ROW,
   ADD_ROW_COLUMN,
   ADD_ROW_FOR,
+  ADD_ROW_LABELS,
+  ADD_ROW_NAME,
   ADD_ROW_SUBMIT_COLUMN,
   AGO,
   ALARM_CLOSE_EVENT,
@@ -103114,6 +103138,7 @@ export {
   STEP_ID_ATTRIBUTE,
   STEP_STATES,
   STORAGE_KEY,
+  STRINGS_CHANGE_EVENT,
   REORDER_EVENT2 as STRUCTURE_REORDER_EVENT,
   SURFACES,
   SWATCHES,

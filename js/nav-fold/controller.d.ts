@@ -1,6 +1,8 @@
 import { NavFoldCore } from './core.js';
 export declare class NavFold extends NavFoldCore {
     connect(): void;
+    /** The words changed: write the label and names again, and draw the menu again (its groups carry words too). */
+    rewrite(): void;
     /** Takes the More item and the marks the bar added off it again. */
     unfold(): void;
     /** Fit again when the list, an item or the More item changes size. */

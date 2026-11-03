@@ -679,6 +679,8 @@ aria-label="Checked on submit only"
                             <tr><td><code>data-kp-addrow</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-addrow-column</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-addrow-for</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-addrow-labels</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-addrow-name</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-addrow-refusal</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-addrow-stacked</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-addrow-submit-column</code></td><td>written</td></tr>
@@ -840,6 +842,8 @@ aria-label="Checked on submit only"
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>.kp-field__error: role and icon</code></td><td>showError gives the message `role=&quot;status&quot;` (unless it has one), so it is said once as it appears [forms-1102]. With `data-kp-error-icon` on the message or an element round it (`&lt;html&gt;` for an app), and in every add row, it starts with a round “!” on the destructive plate, the words on a hanging indent.</td></tr>
                             <tr><td><code>data-kp-addrow</code></td><td>The add row [forms-1102] (js/add-row.js): a kit form that adds one line. Over a data table (`data-kp-addrow-for`) each `.kp-addrow__cell` stands under the column `data-kp-addrow-column` names, the Add button (`.kp-addrow__submit`) under `data-kp-addrow-submit-column` or the last free column; under the table’s cards it stacks (`data-kp-addrow-stacked`). In a form grid `.kp-addrow--line` is one line: name and unit in the control track, Add in the actions track, the refusal under them. `kp-addrow-add` `{ values, data, waitUntil }`, then `kp-addrow-added`; a refusal is said in `[data-kp-addrow-refusal]`.</td></tr>
+                            <tr><td><code>data-kp-addrow-labels</code></td><td>On the add row, `show`: the field labels stay shown over their fields when the row is not stacked [kit1-1103]. Default: the labels are for screen readers only, the table’s column words naming the fields. The Add button drops to the fields’ line.</td></tr>
+                            <tr><td><code>data-kp-addrow-name</code></td><td>On the add row: the name of the field whose value names the line in the “Added x” status [kit1-1103]. Default (or an empty value): the first filled value, which may be an id or a date.</td></tr>
                             <tr><td><code>.kp-form</code></td><td>The column: fields stacked with one distance between them.</td></tr>
                             <tr><td><code>.kp-form__summary</code></td><td>The error summary. It is a focus target rather than a banner, because a message that appears above the fold is invisible to someone whose focus is at the bottom.</td></tr>
                             <tr><td><code>.kp-form__summary-title</code></td><td>The line that says what the summary is, in words, above the list of failing fields.</td></tr>

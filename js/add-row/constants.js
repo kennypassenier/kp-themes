@@ -8,6 +8,10 @@ export const ADD_ROW_FOR = 'data-kp-addrow-for';
 export const ADD_ROW_COLUMN = 'data-kp-addrow-column';
 /** On the row: the column the Add button stands under (default: the last column that holds no field, else a track of its own). */
 export const ADD_ROW_SUBMIT_COLUMN = 'data-kp-addrow-submit-column';
+/** On the row, `show`: the field labels stay shown over their fields when the row is not stacked (default: for screen readers only). */
+export const ADD_ROW_LABELS = 'data-kp-addrow-labels';
+/** On the row: the name of the field whose value names the line in the "Added x" announcement (default: the first filled value). */
+export const ADD_ROW_NAME = 'data-kp-addrow-name';
 /** Written on the row while its fields stand under each other (the table shows cards, or the row is narrower than the fold). */
 export const STACKED = 'data-kp-addrow-stacked';
 /** The width of its own under which a line in a form grid stacks; a table's row stacks with the table's cards. */

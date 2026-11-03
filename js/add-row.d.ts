@@ -1,4 +1,4 @@
-export { ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, ADD_EVENT, ADDED_EVENT, STACKED } from './add-row/constants.js';
+export { ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, ADD_ROW_LABELS, ADD_ROW_NAME, ADD_EVENT, ADDED_EVENT, STACKED } from './add-row/constants.js';
 export { valuesOf, sayRefusal } from './add-row/submit.js';
 export { columnNumber } from './add-row/layout.js';
 /**

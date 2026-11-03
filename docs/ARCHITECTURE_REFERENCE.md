@@ -55,6 +55,8 @@ js/realm.js          an element check that holds│
 js/boot-guard.js     one runtime boots per      │
                      page; a second one         │
                      refuses, one error         │
+js/by-id.js          an id lookup that returns  │
+                     null for an empty id       │
 js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │

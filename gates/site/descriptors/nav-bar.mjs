@@ -7,6 +7,7 @@ export const navBarDescriptor = {
         group: 'Navigation',
         classes: ['kp-nav', 'kp-nav-wrap', 'kp-tabbar'],
         exports: ['NavBar'],
+        aliases: ['strings-change'],
         intro: 'The bar across the top of an application: a brand, a row of links, and room at the end for whatever the page keeps there. The current page is marked by weight and by a thicker underline, not by colour alone.',
         whenToUse:
             'For the handful of places every page of an application can reach. Not for a deep hierarchy — that is a sidebar with a tree, or a breadcrumb saying where you are. Not for actions: a bar of buttons pretending to be navigation confuses the browser’s own history.',
@@ -147,6 +148,7 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: 'data-kp-nav-hint', what: 'On a link or its list item: the one-line hint under its entry in the More menu (the rich menu\u2019s shape) [parts-1102].' },
             { name: 'a menu button in the bar', what: 'A list item that holds the package\u2019s `.kp-menu-button` with a `kp-nav__link kp-nav__disclosure` button is one of the bar\u2019s links [parts-1102; Medicine Cabinet 28]: the caret turns while open, the rich menu (groups, a label over a one-line hint per entry) hangs under it from its start edge, and `aria-current="true"` on the button marks it current while the page shown is one of its entries. In a folding bar give it `data-kp-nav-keep`.' },
             { name: 'kp-nav-fold', what: 'Fired on the nav, bubbling, when the folded set changes: `{ folded, items }`. `planFold()` is the arithmetic on its own, `foldNav()` folds one bar.' },
+            { name: 'kp-strings-change', what: 'Heard on `document` (fired by a language switch, a dictionary swap and `setStrings()`, `STRINGS_CHANGE_EVENT` in `js/strings`): a folding bar writes its More words (label, counter words, menu name) again and redraws its menu [kit1-1103].' },
             { name: 'fold marks', what: 'Written by the script: `data-kp-nav-fold-ready` once the bar is fitted, `data-kp-nav-folding` while anything is folded, `data-kp-nav-folded` on each folded item, `data-kp-nav-more-current` when the current page is behind More (and `aria-current` on its button) and `data-kp-nav-more-alert` when a `.kp-badge` count is (a dot on the button, announced).' },
             { name: '--kp-nav-more-dot', what: 'The colour of the dot on the More button when a count is behind it. A list item with a dropdown or a mega menu becomes a named group in the More menu: its heading, then its links.' },
             { name: 'navMore / navMoreMenu / navMoreAlert / navMoreUnavailable', what: 'The More button’s words in the dictionary: its label, the menu’s name, the alert announcement and the entry of a link that cannot be followed.' },

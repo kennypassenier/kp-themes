@@ -162,7 +162,7 @@ export { AcceptFollows, FOLLOWS, MINIMUM, VERB, acceptState, amountMakesSense, a
 export { ACK_EVENT, ACK_GATE, ACK_RETRY_EVENT, ackGate, attachAckGates, setAckNotes } from '../../js/ack-gate.js';
 export { ACTION_BUSY_EVENT, ACTION_SIZES, ACTION_TILE, attachActionTiles, setActionBusy, setActionSize } from '../../js/action-tiles.js';
 export { ACTION_LIST, ROW_ACTIONS, ROW_KEYS, attachActionColumns, attachRowKeys, fitActionColumns, mergeRoles, removeRow, rowRoles, setRowBusy } from '../../js/actions.js';
-export { ADDED_EVENT, ADD_EVENT, ADD_ROW, ADD_ROW_COLUMN, ADD_ROW_FOR, ADD_ROW_SUBMIT_COLUMN, STACKED, attachAddRows, columnNumber, sayRefusal, valuesOf } from '../../js/add-row.js';
+export { ADDED_EVENT, ADD_EVENT, ADD_ROW, ADD_ROW_COLUMN, ADD_ROW_FOR, ADD_ROW_LABELS, ADD_ROW_NAME, ADD_ROW_SUBMIT_COLUMN, STACKED, attachAddRows, columnNumber, sayRefusal, valuesOf } from '../../js/add-row.js';
 export { ALARM_CLOSE_EVENT, ALARM_OPEN_EVENT, ALARM_SECONDS, attachAlarms, buildAlarm, glyphCells, noiseGlyph, showAlarm, writeCountdown } from '../../js/alarm.js';
 export { ANCHOR, ANCHORS, ANCHOR_COPIED_MS, ANCHOR_COPY_EVENT, ANCHOR_HIT_MS, ANCHOR_MISSING_EVENT, ANCHOR_QUIET_MS, ANCHOR_REVEAL_EVENT, ANCHOR_WAIT_MS, anchorSlug, attachAnchors, refreshAnchors, uniqueAnchorId } from '../../js/anchors.js';
 export { ART, ART_KINDS, ART_SETS, attachArt, drawArt } from '../../js/art.js';
@@ -282,7 +282,7 @@ export { hostStatePlate, statePlate } from '../../js/state-plate.js';
 export { CALM_STATUS_STATES, STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_PAUSE_EVENT, STATUS_RESUME_EVENT, STATUS_RETRY_EVENT, STATUS_STATES, STATUS_UNDO_EVENT, attachStatusLists, buildStatusList, countStatus, setStatus, setTodayState, settleToday } from '../../js/statusrow.js';
 export { STEPLIST_EVENT, STEPLIST_SELECTOR, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from '../../js/steplist.js';
 export { NL_KEPT_ENGLISH, NL_STRINGS } from '../../js/strings-nl.js';
-export { DEFAULT_STRINGS, applyStringProperties, getLanguage, getLanguageDictionary, getStrings, languageReady, registerDictionary, resolveStrings, setLanguage, setStrings, stringProperties } from '../../js/strings.js';
+export { DEFAULT_STRINGS, STRINGS_CHANGE_EVENT, applyStringProperties, getLanguage, getLanguageDictionary, getStrings, languageReady, registerDictionary, resolveStrings, setLanguage, setStrings, stringProperties } from '../../js/strings.js';
 export { SPLIT_EVENT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, attachStructure, structure, visibleItems } from '../../js/structure.js';
 export { SWATCHES, SWATCH_CHANGE_EVENT, attachSwatches, getSwatchValue, setSwatches } from '../../js/swatches.js';
 export { SWIPE, SWIPE_EVENT, attachSwipes } from '../../js/swipe.js';

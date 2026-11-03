@@ -39,7 +39,7 @@
         padding-inline: var(--kp-table-cell-inline, 0.625rem);
     }
 
-    .kp-addrow:not([data-kp-addrow-stacked]) .kp-addrow__cell > .kp-field__label {
+    .kp-addrow:not([data-kp-addrow-stacked], [data-kp-addrow-labels='show']) .kp-addrow__cell > .kp-field__label {
         position: absolute;
         inline-size: 1px;
         block-size: 1px;
@@ -60,8 +60,28 @@
         box-sizing: border-box;
     }
 
+    /* A date picker in a cell fits the cell [kit1-1103 K2]: its input's text-field width (about 12rem) and the button, on
+     * one line, were 252 px in a 159 px column and ran 103 px over the next field. The input gives way (no minimum, no
+     * basis) and the button stays beside it; the calendar panel is out of the flow, so it never widens the cell. */
+    .kp-addrow :is(.kp-addrow__cell, .kp-addrow__fields > .kp-field) > .kp-datepicker {
+        flex-wrap: nowrap;
+        min-inline-size: 0;
+    }
+
+    .kp-addrow :is(.kp-addrow__cell, .kp-addrow__fields > .kp-field) > .kp-datepicker > .kp-field__input {
+        flex: 1 1 0;
+        min-inline-size: 0;
+    }
+
     .kp-addrow__submit {
         display: grid;
+    }
+
+    /* `data-kp-addrow-labels="show"` [kit1-1103 K3]: the labels stay shown over their fields when the row is not stacked (the
+     * default says them to screen readers only, the table's column words naming the fields). The Add button drops to the
+     * fields' line. */
+    .kp-addrow[data-kp-addrow-labels='show']:not([data-kp-addrow-stacked]) .kp-addrow__cells > .kp-addrow__submit {
+        align-self: end;
     }
 
     .kp-addrow__submit > .kp-button {
@@ -108,7 +128,7 @@
         box-sizing: border-box;
     }
 
-    .kp-addrow--line .kp-addrow__fields > .kp-field > .kp-field__label {
+    .kp-addrow--line:not([data-kp-addrow-labels='show']) .kp-addrow__fields > .kp-field > .kp-field__label {
         position: absolute;
         inline-size: 1px;
         block-size: 1px;

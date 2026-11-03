@@ -121,3 +121,4 @@ card; and the sentence that the toasts and the back-to-top control rise by the t
 example `script`, run live and printed under the markup. Not on a page, because it is a catalogue block and not a components-page line: the tab bar's
 own block in the review catalogue, still listed in `catalogue/coverage.json`. The pass of 2026-10-15 brought the date picker's `data-kp-date-format`,
 the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; the pass of 2026-10-14 every line before them.)
+- kit1-1103 (2026-11-03), site/components/form.html: add row options `data-kp-addrow-labels="show"` and `data-kp-addrow-name`, a date picker inside an add row cell; nav-bar.html: the More words after `setStrings()`.

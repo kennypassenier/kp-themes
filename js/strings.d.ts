@@ -1,4 +1,4 @@
 export { DEFAULT_STRINGS } from './strings/defaults.js';
-export { setStrings, stringProperties, applyStringProperties, getStrings, getLanguageDictionary, resolveStrings, registerDictionary, setLanguage, getLanguage, languageReady, } from './strings/runtime.js';
+export { setStrings, stringProperties, applyStringProperties, getStrings, getLanguageDictionary, resolveStrings, registerDictionary, setLanguage, getLanguage, languageReady, STRINGS_CHANGE_EVENT, } from './strings/runtime.js';
 export type Strings = import('./strings/types.js').Strings;
 /** @typedef {import('./strings/types.js').Strings} Strings */
