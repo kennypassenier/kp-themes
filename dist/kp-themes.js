@@ -3996,6 +3996,21 @@ var init_controller2 = __esm({
   }
 });
 
+// js/realm.js
+function isHtmlElement(value) {
+  if (value === null || typeof value !== "object") return false;
+  const own = (
+    /** @type {Node} */
+    value.ownerDocument?.defaultView?.HTMLElement
+  );
+  return typeof own === "function" ? value instanceof own : value instanceof HTMLElement;
+}
+var init_realm = __esm({
+  "js/realm.js"() {
+    "use strict";
+  }
+});
+
 // js/quantity.js
 var quantity_exports = {};
 __export(quantity_exports, {
@@ -4013,7 +4028,7 @@ __export(quantity_exports, {
   settleQuantity: () => settleQuantity
 });
 function setQuantity(root, value) {
-  if (!(root instanceof HTMLElement)) return;
+  if (!isHtmlElement(root)) return;
   paint(root, settleQuantity(value, rulesOf(root)), document.activeElement === inputOf(root));
 }
 function attachQuantities(scope = document) {
@@ -4028,6 +4043,7 @@ var init_quantity = __esm({
     init_math();
     init_paint();
     init_read();
+    init_realm();
     init_values();
     init_math();
     init_read();
@@ -5711,7 +5727,7 @@ var init_controller3 = __esm({
 
 // js/timefield/api.js
 function setTime(root, value, { fire: fire2 = false } = {}) {
-  if (!(root instanceof HTMLElement)) return;
+  if (!isHtmlElement(root)) return;
   const field2 = fieldFor(root);
   field2.setInvalid("");
   field2.write(value, { silent: !fire2 });
@@ -5738,6 +5754,7 @@ var init_api = __esm({
     init_controller3();
     init_field();
     init_state2();
+    init_realm();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
   }
 });
@@ -43120,7 +43137,7 @@ async function glideTo(root) {
   state12.glide = requestAnimationFrame(frame3);
 }
 function setWheelItems(root, items2) {
-  if (!(root instanceof HTMLElement)) return;
+  if (!isHtmlElement(root)) return;
   build3(root);
   const state12 = stateOf(root);
   if (state12.spinning) {
@@ -43142,7 +43159,7 @@ function setWheelItems(root, items2) {
   }
 }
 function setWheelState(root, kind, message) {
-  if (!(root instanceof HTMLElement)) return;
+  if (!isHtmlElement(root)) return;
   build3(root);
   const state12 = stateOf(root);
   root.setAttribute("data-kp-state", kind);
@@ -43196,7 +43213,7 @@ async function turnDisc(root, { from, to, duration: duration2, short }) {
   } else disc.style.rotate = `${to}deg`;
 }
 async function spinWheel(root, { random = Math.random, duration: duration2 } = {}) {
-  if (!(root instanceof HTMLElement)) return null;
+  if (!isHtmlElement(root)) return null;
   const state12 = stateOf(root);
   if (state12.spinning || state12.items.length < 2 || root.hasAttribute("aria-busy") || root.hasAttribute("data-kp-wheel-error") || root.hasAttribute(WHEEL_LOCKED)) return null;
   const avoid = root.getAttribute("data-kp-wheel-repeat") === "true" ? null : state12.last;
@@ -43242,6 +43259,7 @@ var init_spin = __esm({
     init_strings();
     init_draw7();
     init_state14();
+    init_realm();
     reduced4 = () => !motionAllowed();
   }
 });
@@ -46027,7 +46045,7 @@ function sync2(list) {
   }
 }
 function setTimersState(list, state12, message) {
-  if (!(list instanceof HTMLElement)) return;
+  if (!isHtmlElement(list)) return;
   list.setAttribute("data-kp-state", state12);
   if (state12 === "error") list.setAttribute("data-kp-timers-error", message ?? getStrings().timersFailed);
   else list.removeAttribute("data-kp-timers-error");
@@ -46112,6 +46130,7 @@ var init_sync4 = __esm({
     init_model3();
     init_sound();
     init_state16();
+    init_realm();
     BUSY = /* @__PURE__ */ new WeakMap();
     PLATE = /* @__PURE__ */ new WeakMap();
   }
@@ -46435,7 +46454,7 @@ var init_timer = __esm({
 
 // js/focus-steps/api.js
 function goToStep(root, index) {
-  if (!(root instanceof HTMLElement)) return false;
+  if (!isHtmlElement(root)) return false;
   if (tracksOn(root)) return trackGo(root, index);
   const state12 = stateOf2(root);
   const to = Math.max(0, Math.min(lastIndex(root), index));
@@ -46476,7 +46495,7 @@ function getStepsPassed(root) {
   };
 }
 function setFocusSteps(root, steps2, { start = 0 } = {}) {
-  if (!(root instanceof HTMLElement)) return;
+  if (!isHtmlElement(root)) return;
   build4(root);
   const state12 = stateOf2(root);
   state12.steps = steps2.map((step) => ({ ...step }));
@@ -46497,7 +46516,7 @@ function setFocusSteps(root, steps2, { start = 0 } = {}) {
   if (start === 0) startResume(root);
 }
 function setFocusStepsState(root, kind, message) {
-  if (!(root instanceof HTMLElement)) return;
+  if (!isHtmlElement(root)) return;
   build4(root);
   const state12 = stateOf2(root);
   root.setAttribute("data-kp-state", kind);
@@ -46536,9 +46555,10 @@ var init_api14 = __esm({
     init_flow();
     init_memory();
     init_constants28();
+    init_realm();
     getStepIndex = (root) => stateOf2(root).index;
     getSteps = (root) => stateOf2(root).steps.map((step) => ({ ...step }));
-    typing = (target) => target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+    typing = (target) => isHtmlElement(target) && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
   }
 });
 
@@ -47356,7 +47376,7 @@ var init_render2 = __esm({
 
 // js/checklist/api.js
 function setChecklistItems(list, items2) {
-  if (!(list instanceof HTMLElement)) return;
+  if (!isHtmlElement(list)) return;
   ITEMS.set(
     list,
     items2.map((item) => ({ ...item, checked: Boolean(item.checked) }))
@@ -47364,14 +47384,14 @@ function setChecklistItems(list, items2) {
   render(list);
 }
 function setChecklistChecked(list, id, checked) {
-  if (!(list instanceof HTMLElement)) return;
+  if (!isHtmlElement(list)) return;
   const item = (ITEMS.get(list) ?? []).find((i) => i.id === id);
   if (!item) return;
   item.checked = checked;
   void glide2(list, render(list));
 }
 function setChecklistState(list, state12, message) {
-  if (!(list instanceof HTMLElement)) return;
+  if (!isHtmlElement(list)) return;
   list.setAttribute("data-kp-state", state12);
   if (state12 === "error") list.setAttribute("data-kp-checklist-error", message ?? getStrings().checklistFailed);
   else list.removeAttribute("data-kp-checklist-error");
@@ -47418,6 +47438,7 @@ var init_api15 = __esm({
     init_parts5();
     init_render2();
     init_state17();
+    init_realm();
     emit2 = (list, type, detail) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { ...detail, items: getChecklistItems(list) } }));
   }
 });
@@ -77888,7 +77909,7 @@ function setRating(element, value) {
   paint11(m);
 }
 function setRatingState(element, next2) {
-  if (!(element instanceof HTMLElement)) return;
+  if (!isHtmlElement(element)) return;
   if (next2 === "ready") element.removeAttribute("data-kp-state");
   else element.setAttribute("data-kp-state", next2);
 }
@@ -77929,6 +77950,7 @@ var init_api21 = __esm({
     init_commit();
     init_math4();
     init_paint10();
+    init_realm();
     attachRatings = (root = document, options = {}) => attachAll(root, RATING, RatingController, options);
   }
 });
@@ -86862,7 +86884,7 @@ function fieldText(field2) {
 function sentenceSummary(element) {
   const walk = (node) => {
     if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? "";
-    if (!(node instanceof HTMLElement) || node.hidden) return "";
+    if (!isHtmlElement(node) || node.hidden) return "";
     if (node.classList.contains("kp-sentence__field")) return ` ${fieldText(node)} `;
     if (node.hasAttribute("data-kp-sentence-computed")) return ` ${computedText(node)} `;
     if (node.classList.contains("kp-sr-only") || node.matches("script, style, [data-kp-sentence-skip]")) return "";
@@ -86897,7 +86919,7 @@ function setSentenceWhy(element, text) {
   line.hidden = !text;
 }
 function setSentenceFieldState(field2, state12) {
-  if (!(field2 instanceof HTMLElement)) return;
+  if (!isHtmlElement(field2)) return;
   const doc = field2.ownerDocument;
   const old = field2.querySelector(":scope > .kp-sentence__skeleton");
   if (state12 === "loading") {
@@ -86913,7 +86935,7 @@ function setSentenceFieldState(field2, state12) {
     skeleton2.append(bar);
     field2.append(skeleton2);
     for (const c of field2.querySelectorAll(CONTROLS3)) {
-      if (c instanceof HTMLElement && !c.hasAttribute("disabled")) {
+      if (isHtmlElement(c) && !c.hasAttribute("disabled")) {
         c.setAttribute("disabled", "");
         c.setAttribute("data-kp-was-enabled", "");
       }
@@ -86969,6 +86991,7 @@ var init_fields2 = __esm({
     "use strict";
     init_strings();
     init_weekdays();
+    init_realm();
     SENTENCE = "[data-kp-sentence]";
     SENTENCE_EVENT = "kp-sentence-change";
     LINES = /* @__PURE__ */ new WeakMap();
@@ -87017,7 +87040,7 @@ var init_controller83 = __esm({
           element: el16,
           line: this.line,
           summary: () => sentenceSummary(el16),
-          refresh: () => this.refresh(),
+          refresh: () => this.resync(),
           compute: (name, fn) => this.setCompute(name, fn)
         };
       }
@@ -87148,6 +87171,12 @@ var init_controller83 = __esm({
           }
           return null;
         }
+      }
+      /** What the page's `refresh()` does: refresh, then rewrite the summary region quietly, as attach does (no event, no pause) [last-1103]. */
+      resync() {
+        this.refresh();
+        const summary2 = sentenceSummary(this.host);
+        if (this.live.textContent !== summary2) this.live.textContent = summary2;
       }
       refresh() {
         this.phrases();
@@ -91676,12 +91705,12 @@ var init_decorate = __esm({
 
 // js/claim/api.js
 function setClaimViewer(list, viewer) {
-  if (!(list instanceof HTMLElement)) return;
+  if (!isHtmlElement(list)) return;
   stateOf6(list).viewer = viewer ? claimPeople(viewer)[0] : null;
   decorate(list);
 }
 function setClaimPeople(list, people2) {
-  if (!(list instanceof HTMLElement)) return;
+  if (!isHtmlElement(list)) return;
   stateOf6(list).people = claimPeople(people2);
   decorate(list);
 }
@@ -91689,7 +91718,7 @@ function claimFilter(list) {
   return stateOf6(list).filter;
 }
 function setClaim(list, id, claim) {
-  if (!(list instanceof HTMLElement)) return;
+  if (!isHtmlElement(list)) return;
   setChecklistItems(
     list,
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...claim, by: claimPeople(claim.by) } } : i)
@@ -91701,6 +91730,7 @@ var init_api26 = __esm({
     init_checklist();
     init_decorate();
     init_model10();
+    init_realm();
   }
 });
 
@@ -92674,7 +92704,7 @@ var init_paint12 = __esm({
 
 // js/availability/api.js
 function setAvailability(root, spec) {
-  if (!(root instanceof HTMLElement)) return;
+  if (!isHtmlElement(root)) return;
   ensureParts(root);
   const old = STATE3.get(root);
   const unit2 = spec.unit ?? old?.unit ?? "range";
@@ -92771,6 +92801,7 @@ var init_api27 = __esm({
     init_facts();
     init_cell();
     init_paint12();
+    init_realm();
   }
 });
 
@@ -94381,7 +94412,7 @@ var init_render7 = __esm({
 
 // js/qr/actions.js
 function setQr(root, spec) {
-  if (!(root instanceof HTMLElement)) return;
+  if (!isHtmlElement(root)) return;
   const st = stateOf8(root);
   st.spec = { ...st.spec, ...spec };
   if (spec.value !== void 0) root.setAttribute("data-kp-qr-value", spec.value);
@@ -94461,6 +94492,7 @@ var init_actions7 = __esm({
     init_strings();
     init_render7();
     init_state28();
+    init_realm();
     REVOKE_AFTER_MS = 1e3;
     PNG_SCALE = 4;
   }
@@ -97244,7 +97276,7 @@ var init_render8 = __esm({
 
 // js/diff/actions.js
 function setDiff(root, spec) {
-  if (!(root instanceof HTMLElement)) return;
+  if (!isHtmlElement(root)) return;
   const st = stateOf11(root);
   const next2 = Array.isArray(spec) ? { files: spec } : spec;
   st.spec = { ...st.spec, ...next2 };
@@ -97258,7 +97290,7 @@ function fileOf(root, path) {
   const st = stateOf11(root);
   const file = st.files.find((candidate) => candidate.path === path);
   const section = [...root.querySelectorAll(".kp-diffview__file")].find((node) => node.getAttribute("data-kp-diff-path") === path);
-  return file && section instanceof HTMLElement ? { file, section } : null;
+  return file && isHtmlElement(section) ? { file, section } : null;
 }
 function toggleFile(root, path, open4, announce8 = true) {
   const found = fileOf(root, path);
@@ -97308,6 +97340,7 @@ var init_actions8 = __esm({
     init_model13();
     init_read9();
     init_render8();
+    init_realm();
   }
 });
 

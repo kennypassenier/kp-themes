@@ -542,6 +542,7 @@
         { "path": "js/auto.js", "all": "attaches every module on every fixture page" },
         { "path": "js/auto/*.js", "all": "attaches every module on every fixture page" },
         { "path": "js/controller.js", "all": "the controller base every component class extends [closure-pattern B]" },
+        { "path": "js/realm.js", "all": "the realm-safe element check every set* call uses [last-1103]" },
         { "path": "js/as-of.js", "all": "every late module and every effects hook attaches through it [scope-117]" },
         { "path": "index.js", "tags": ["@component:bundle", "@sweep"] },
 

@@ -10,7 +10,7 @@ export type SentenceHandle = {
      */
     summary: () => string;
     /**
-     * show and hide the phrases, work the computed fields out again and place the fields
+     * show and hide the phrases, work the computed fields out again, place the fields and rewrite the spoken summary quietly (no announcement, like attach)
      */
     refresh: () => void;
     /**
@@ -24,7 +24,7 @@ export type ComputedFn = (values: Record<string, string | null>, element: Elemen
  * @property {HTMLElement} element
  * @property {HTMLElement} line the line under the sentence
  * @property {() => string} summary the sentence in words
- * @property {() => void} refresh show and hide the phrases, work the computed fields out again and place the fields
+ * @property {() => void} refresh show and hide the phrases, work the computed fields out again, place the fields and rewrite the spoken summary quietly (no announcement, like attach)
  * @property {(name: string, fn: ComputedFn | null) => void} compute set (or with null, drop) the function behind a computed field
  */
 /**

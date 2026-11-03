@@ -43,6 +43,8 @@ export declare class Sentence extends Controller {
     compute(): void;
     /** One computed function; one that throws is reported once and its field shows the dash. @param {string} name @param {ComputedFn} fn @param {Record<string, string | null>} values */
     run(name: string, fn: ComputedFn, values: Record<string, string | null>): string | number | null | undefined;
+    /** What the page's `refresh()` does: refresh, then rewrite the summary region quietly, as attach does (no event, no pause) [last-1103]. */
+    resync(): void;
     refresh(): void;
     /** @param {string} name @param {ComputedFn | null} fn */
     setCompute(name: string, fn: ComputedFn | null): void;

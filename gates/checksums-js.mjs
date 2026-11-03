@@ -73,6 +73,7 @@ export const JS_FILES = [
     'js/lede.js',
     'js/footprint.js',
     'js/controller.js',
+    'js/realm.js',
     'js/live-options.js',
     'js/live-say.js',
     'js/problems.js',
