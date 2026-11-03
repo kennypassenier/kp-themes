@@ -39,7 +39,7 @@ the selectors and their order are identical, which is what
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 46% |
 | `dist/kp-themes.css` | 4453.6 kB | 2360.6 kB | 47% |
 | `dist/kp-themes-base.css` | 1545.9 kB | 770.3 kB | 50% |
-| `dist/kp-themes.js` | 4008.6 kB | 2122.3 kB | 47% |
+| `dist/kp-themes.js` | 4009.5 kB | 2122.7 kB | 47% |
 
 The loose stylesheets together weigh **4506.7 kB** authored and
 **2391.6 kB** minified, 47% less. A page loading one theme's
@@ -61,7 +61,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/anchors.js` | 6 | 91.2 kB |
 | `dist/js/art.js` | 4 | 17.2 kB |
 | `dist/js/attention.js` | 8 | 125.5 kB |
-| `dist/js/auto.js` | 24 | 269.3 kB |
+| `dist/js/auto.js` | 24 | 269.5 kB |
 | `dist/js/auto-refresh.js` | 24 | 189.6 kB |
 | `dist/js/autosize.js` | 7 | 98.4 kB |
 | `dist/js/availability.js` | 30 | 331.2 kB |
@@ -124,7 +124,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/lede.js` | 6 | 81.7 kB |
 | `dist/js/listbox.js` | 5 | 6.9 kB |
 | `dist/js/live-options.js` | 3 | 0.8 kB |
-| `dist/js/loading-pieces.js` | 4 | 8.5 kB |
+| `dist/js/loading-pieces.js` | 4 | 8.6 kB |
 | `dist/js/log.js` | 4 | 2.0 kB |
 | `dist/js/logviewer.js` | 33 | 283.4 kB |
 | `dist/js/markdown.js` | 4 | 82.1 kB |
@@ -142,7 +142,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/passkeys.js` | 10 | 130.8 kB |
 | `dist/js/path-trace.js` | 23 | 230.3 kB |
 | `dist/js/patterns.js` | 19 | 219.7 kB |
-| `dist/js/picker.js` | 7 | 90.0 kB |
+| `dist/js/picker.js` | 7 | 90.2 kB |
 | `dist/js/pipeline.js` | 7 | 92.4 kB |
 | `dist/js/popover-form.js` | 10 | 132.8 kB |
 | `dist/js/print.js` | 6 | 86.5 kB |
@@ -210,8 +210,8 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/weekdays.js` | 21 | 171.6 kB |
 | `dist/js/wheel.js` | 8 | 99.9 kB |
 | `dist/js/wizard.js` | 7 | 93.8 kB |
-| `dist/js/index.js` | 183 | 2044.2 kB |
-| the whole folder | 352 | 2169.5 kB |
+| `dist/js/index.js` | 183 | 2044.5 kB |
+| the whole folder | 352 | 2169.9 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

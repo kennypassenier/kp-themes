@@ -21242,6 +21242,14 @@ function nameTrigger(picker, theme) {
   if (current2) current2.textContent = name;
   trigger.setAttribute("aria-label", `${trigger.dataset.kpThemeLabel ?? ""}: ${name}`);
 }
+function anchorMenu(picker) {
+  const popover = picker.closest("[popover]");
+  if (!(popover instanceof HTMLElement) || !popover.id) return;
+  const trigger = popover.closest(".kp-theme-menu")?.querySelector(`[popovertarget="${CSS.escape(popover.id)}"]`);
+  if (!(trigger instanceof HTMLElement)) return;
+  trigger.style.setProperty("anchor-name", `--${popover.id}`);
+  popover.style.setProperty("position-anchor", `--${popover.id}`);
+}
 var ThemePicker;
 var init_controller9 = __esm({
   "js/theme-picker/controller.js"() {
@@ -21253,6 +21261,7 @@ var init_controller9 = __esm({
     ThemePicker = class extends PickerPreview {
       connect() {
         const picker = this.host;
+        anchorMenu(picker);
         picker.dataset.kpThemeAttached = "1";
         this.own(() => {
           delete picker.dataset.kpThemeAttached;
@@ -21359,16 +21368,16 @@ function themeMenuMarkup({
   const safeId = escapeHtml(id);
   const safeLabel = escapeHtml(label2);
   const classes = `kp-theme-menu ${escapeHtml(className)}`.trim();
-  return `<span class="${classes}">` + (trigger === "label" ? labelTrigger(safeId, label2, current2, themes, labels) : iconTrigger(safeId, safeLabel, icon)) + `<div popover="auto" id="${safeId}" class="kp-popover" style="position-anchor: --${safeId}"><ul class="kp-menu" data-kp-theme-picker aria-label="${safeLabel}">${themeOptionsMarkup({ themes, labels, grouped, groupLabels })}</ul></div></span>`;
+  return `<span class="${classes}">` + (trigger === "label" ? labelTrigger(safeId, label2, current2, themes, labels) : iconTrigger(safeId, safeLabel, icon)) + `<div popover="auto" id="${safeId}" class="kp-popover"><ul class="kp-menu" data-kp-theme-picker aria-label="${safeLabel}">${themeOptionsMarkup({ themes, labels, grouped, groupLabels })}</ul></div></span>`;
 }
 function iconTrigger(safeId, safeLabel, icon) {
-  return `<button type="button" class="kp-icon-button" popovertarget="${safeId}" aria-label="${safeLabel}" style="anchor-name: --${safeId}">${icon}</button>`;
+  return `<button type="button" class="kp-icon-button" popovertarget="${safeId}" aria-label="${safeLabel}">${icon}</button>`;
 }
 function labelTrigger(safeId, label2, current2, themes = THEMES, labels = {}) {
   const worn = current2 ?? (typeof document === "undefined" ? void 0 : document.documentElement.dataset.theme);
   const record = themes.find((t) => t.name === worn) ?? themes[0];
   const name = record ? labels[record.name] ?? record.label : "";
-  return `<button type="button" class="kp-button" data-kp-theme-trigger="label" data-kp-theme-label="${escapeHtml(label2)}" popovertarget="${safeId}" aria-label="${escapeHtml(`${label2}: ${name}`)}" style="anchor-name: --${safeId}"><span class="kp-theme-menu__current">${escapeHtml(name)}</span><span aria-hidden="true">\u25BE</span></button>`;
+  return `<button type="button" class="kp-button" data-kp-theme-trigger="label" data-kp-theme-label="${escapeHtml(label2)}" popovertarget="${safeId}" aria-label="${escapeHtml(`${label2}: ${name}`)}"><span class="kp-theme-menu__current">${escapeHtml(name)}</span><span aria-hidden="true">\u25BE</span></button>`;
 }
 var THEME_MENU_ICON;
 var init_markup = __esm({
@@ -89571,7 +89580,10 @@ var init_instance3 = __esm({
         /** @type {SVGElement} */
         doc.createElementNS(SVG_NS6, tag)
       );
-      for (const [name, value] of Object.entries(attrs)) el16.setAttribute(name, String(value));
+      for (const [name, value] of Object.entries(attrs)) {
+        if (name === "style") el16.style.cssText = String(value);
+        else el16.setAttribute(name, String(value));
+      }
       return el16;
     };
     graphs = /* @__PURE__ */ new WeakMap();
@@ -90056,7 +90068,7 @@ function drawEdges(doc, data, at, base) {
       "data-kp-kind": e.kind,
       "data-kp-style": kind?.style ?? "solid"
     });
-    if (kind?.colour) path.setAttribute("style", `--kp-graph-edge-colour: ${kind.colour}`);
+    if (kind?.colour) path.style.setProperty("--kp-graph-edge-colour", kind.colour);
     const title = svgEl(doc, "title");
     title.textContent = `${name(e.from)} \u2192 ${name(e.to)}: ${e.detail || kind?.label || e.kind}`;
     path.append(title);
@@ -90081,7 +90093,7 @@ function drawEdges(doc, data, at, base) {
         "data-kp-style": kind?.style ?? "solid",
         "aria-hidden": "true"
       });
-      if (kind?.colour) head.setAttribute("style", `--kp-graph-edge-colour: ${kind.colour}`);
+      if (kind?.colour) head.style.setProperty("--kp-graph-edge-colour", kind.colour);
       edges2.append(head);
     }
   });
@@ -90112,7 +90124,7 @@ function drawNodes(g, world, { data, at, base, hub, wraps }) {
       "aria-pressed": String(g.selected.has(id)),
       "aria-label": `${n.label}, ${n.description}`
     });
-    if (!n.external) node.setAttribute("style", `--kp-graph-hue: ${n.hue ?? Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360)}`);
+    if (!n.external) node.style.setProperty("--kp-graph-hue", String(n.hue ?? Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360)));
     if (n.colour) node.style.setProperty("--kp-graph-node-colour", n.colour);
     const title = svgEl(doc, "title");
     title.textContent = `${n.label}: ${n.description}`;
@@ -90158,7 +90170,7 @@ function drawLegend(g, doc, data) {
       button6.setAttribute("aria-pressed", String(!g.hidden.has(k.kind)));
       const sample = svgEl(doc, "svg", { class: "kp-graph__sample", viewBox: "0 0 24 8", "aria-hidden": "true" });
       const line = svgEl(doc, "line", { x1: 1, y1: 4, x2: 23, y2: 4, "data-kp-style": k.style });
-      line.setAttribute("style", `--kp-graph-edge-colour: ${k.colour}`);
+      line.style.setProperty("--kp-graph-edge-colour", k.colour);
       sample.append(line);
       button6.append(sample, make37(doc, "span", "", k.label));
       li.append(button6);
@@ -91113,9 +91125,12 @@ function boxOf3(el16) {
   return { W, H, foot, rtl, at: (x, w = 0) => rtl ? W - x - w : x };
 }
 function spinner() {
-  const pom = (k, lag, face = false) => `<i class="${face ? "kp-pieces__head" : "kp-pieces__pom"}" style="--k: ${k}; --lag: ${lag}"></i>`;
-  const poms = SHAPE.spinnerLags.map((l, k) => pom(k, `${l}em`)).join("");
-  return { html: `<span class="kp-pieces__orbit">${poms}${pom(SHAPE.spinnerLags.length, "0em", true)}</span>`, q: 0 };
+  const pom = (k, lag, face = false) => ({
+    cls: face ? "kp-pieces__head" : "kp-pieces__pom",
+    css: { "--k": `${k}`, "--lag": lag }
+  });
+  const poms = SHAPE.spinnerLags.map((l, k) => pom(k, `${l}em`));
+  return { pieces: [...poms, pom(SHAPE.spinnerLags.length, "0em", true)], q: 0, orbit: true };
 }
 function row(el16, { W, H, at }) {
   const inset = el16.classList.contains("kp-progressbar__track") ? SHAPE.trackInset : 0;
@@ -91124,35 +91139,45 @@ function row(el16, { W, H, at }) {
   const step = h2 * SHAPE.rowStep;
   const reserve2 = el16.classList.contains("kp-heat__cells") ? h2 * SHAPE.gridReserve : 0;
   const n = Math.max(SHAPE.minCount, Math.floor((w - h2 * SHAPE.rowHeadRoom - reserve2) / step));
-  let html = "";
+  const pieces = [];
   for (let k = 0; k < n; k++)
-    html += `<i class="kp-pieces__bead" style="left: ${px4(at(inset + k * step, h2))}; top: ${px4(inset)}; --s: ${px4(h2)}; --k: ${k}"></i>`;
+    pieces.push({ cls: "kp-pieces__bead", css: { left: px4(at(inset + k * step, h2)), top: px4(inset), "--s": px4(h2), "--k": `${k}` } });
   const head = h2 * SHAPE.rowHead;
   const left = px4(at(inset + n * step - h2 * SHAPE.rowHeadBack, head * SHAPE.rowHeadSpan));
-  html += `<i class="kp-pieces__head kp-pieces__head--line" style="left: ${left}; top: ${px4(inset - h2 * SHAPE.rowHeadRaise)}; --s: ${px4(head)}; --k: ${n}"></i>`;
-  return { html, q: h2 };
+  pieces.push({
+    cls: "kp-pieces__head kp-pieces__head--line",
+    css: { left, top: px4(inset - h2 * SHAPE.rowHeadRaise), "--s": px4(head), "--k": `${n}` }
+  });
+  return { pieces, q: h2 };
 }
 function day(el16, { W, H, foot, at }) {
   const q = SHAPE.unit;
   const cx = W / 2;
   const spread = q * SHAPE.dayLegSpread;
-  let html = `<i class="kp-pieces__leg" style="left: ${px4(cx - spread)}; top: ${px4(foot)}"></i><i class="kp-pieces__leg kp-pieces__leg--b" style="left: ${px4(cx + spread)}; top: ${px4(foot)}"></i>`;
+  const pieces = [
+    { cls: "kp-pieces__leg", css: { left: px4(cx - spread), top: px4(foot) } },
+    { cls: "kp-pieces__leg kp-pieces__leg--b", css: { left: px4(cx + spread), top: px4(foot) } }
+  ];
   const next2 = el16.closest('td, [role="gridcell"]')?.nextElementSibling?.querySelector(".kp-calendar__day");
   const last = !next2 || kindOf3(next2) !== "day";
-  if (last) html += `<i class="kp-pieces__head kp-pieces__head--day" style="left: ${px4(at(W + q * SHAPE.dayHeadOut, q * SHAPE.dayHeadSpan))}; top: ${px4(H / 2)}"></i>`;
-  return { html, q };
+  if (last)
+    pieces.push({
+      cls: "kp-pieces__head kp-pieces__head--day",
+      css: { left: px4(at(W + q * SHAPE.dayHeadOut, q * SHAPE.dayHeadSpan)), top: px4(H / 2) }
+    });
+  return { pieces, q };
 }
 function plate(el16, { W, foot, rtl, at }) {
   const q = SHAPE.unit;
   const r = cornerOf(el16);
   const reach3 = W - 2 * r;
   const n = Math.max(SHAPE.minCount, Math.floor(reach3 / (q * SHAPE.plateLegSpan)));
-  let html = "";
+  const pieces = [];
   for (let k = 0; k < n; k++)
-    html += `<i class="kp-pieces__leg" style="left: ${px4(at(r + (k + 0.5) * reach3 / n))}; top: ${px4(foot)}; --k: ${k}"></i>`;
+    pieces.push({ cls: "kp-pieces__leg", css: { left: px4(at(r + (k + 0.5) * reach3 / n)), top: px4(foot), "--k": `${k}` } });
   const inset = r * SHAPE.plateHeadInset;
-  html += `<i class="kp-pieces__head kp-pieces__head--lead" style="left: ${px4(rtl ? inset : W - inset)}; top: ${px4(inset)}"></i>`;
-  return { html, q };
+  pieces.push({ cls: "kp-pieces__head kp-pieces__head--lead", css: { left: px4(rtl ? inset : W - inset), top: px4(inset) } });
+  return { pieces, q };
 }
 function caterpillar(el16, kind) {
   const box = boxOf3(el16);
@@ -91192,6 +91217,18 @@ function staggerDay(el16) {
   const index = cell && cell.parentElement ? [...cell.parentElement.children].indexOf(cell) : 0;
   el16.style.setProperty("--kp-pieces-d", `${Math.max(0, index) * SHAPE.dayStagger}ms`);
 }
+function buildPieces(doc, pieces, orbit) {
+  const out = doc.createDocumentFragment();
+  const holder = orbit ? out.appendChild(doc.createElement("span")) : out;
+  if (orbit) holder.className = "kp-pieces__orbit";
+  for (const { cls, css } of pieces) {
+    const piece = doc.createElement("i");
+    piece.className = cls;
+    for (const [name, value] of Object.entries(css)) piece.style.setProperty(name, value);
+    holder.appendChild(piece);
+  }
+  return out;
+}
 function dress3(el16) {
   const kind = kindOf3(el16);
   const name = kind ? piecesOf(el16) : "";
@@ -91203,11 +91240,11 @@ function dress3(el16) {
   const size2 = `${name} ${kind} ${el16.clientWidth}x${el16.clientHeight}`;
   if (measured.get(el16) === size2 && el16.querySelector(":scope > .kp-pieces")) return true;
   for (const old of el16.querySelectorAll(":scope > .kp-pieces")) old.remove();
-  const { html, q } = draw6(el16, kind);
+  const { pieces, q, orbit } = draw6(el16, kind);
   const box = document.createElement("span");
   box.className = `kp-pieces kp-pieces--${kind}`;
   box.setAttribute("aria-hidden", "true");
-  box.innerHTML = html;
+  box.append(buildPieces(el16.ownerDocument, pieces, orbit));
   el16.append(box);
   if (q) el16.style.setProperty("--kp-pieces-q", px4(q));
   if (kind === "day") staggerDay(el16);

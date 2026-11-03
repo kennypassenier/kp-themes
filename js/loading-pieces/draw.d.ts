@@ -1,7 +1,13 @@
 import { PIECE_CARRIERS } from './values.js';
+export type PieceCss = Record<string, string>;
+export type Piece = {
+    cls: string;
+    css: PieceCss;
+};
 export type PieceDraw = {
-    html: string;
+    pieces: Piece[];
     q: number;
+    orbit?: boolean;
 };
 export type PieceBox = {
     W: number;
@@ -10,7 +16,9 @@ export type PieceBox = {
     rtl: boolean;
     at: (x: number, w?: number) => number;
 };
-/** @typedef {{ html: string, q: number }} PieceDraw */
+/** @typedef {Record<string, string>} PieceCss  custom properties and left/top, set through CSSOM [csp-1103] */
+/** @typedef {{ cls: string, css: PieceCss }} Piece */
+/** @typedef {{ pieces: Piece[], q: number, orbit?: boolean }} PieceDraw */
 /** @typedef {{ W: number, H: number, foot: number, rtl: boolean, at: (x: number, w?: number) => number }} PieceBox */
 /** @param {number} v */
 export declare const px: (v: number) => string;
