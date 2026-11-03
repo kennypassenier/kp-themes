@@ -124,7 +124,8 @@ export function copyableExports(pkg, { follow = true } = {}) {
         // is a file a consumer copies exactly like a stylesheet, and the
         // critic showed this gate REFUSED font files as written.
         if (!/^(css|js|dist|fonts)\//.test(path)) continue;
-        if (!/\.(css|js|woff2)$/.test(path)) continue;
+        // dist/VERSION is the bare version a copying server reports [ver-1103].
+        if (!/\.(css|js|woff2)$/.test(path) && path !== 'dist/VERSION') continue;
         found.add(path);
     }
     if (follow) for (const path of [...found]) reachableFrom(path, found);

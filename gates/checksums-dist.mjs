@@ -25,6 +25,7 @@ export const DIST_FILES = [
     'dist/kp-themes.min.css',
     'dist/kp-themes.min.js',
     'dist/kp-themes.min.js.map',
+    'dist/VERSION',
 ];
 
 // The stylesheets' source maps, opt-in [maps-1102]: no stylesheet names its map, and SHA256SUMS.maps lists them.

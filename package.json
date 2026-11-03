@@ -52,6 +52,7 @@
         "./css/register/min": "./dist/css/cyberpunk-register.min.css",
         "./themes/*": "./themes/*",
         "./package.json": "./package.json",
+        "./dist/VERSION": "./dist/VERSION",
         "./js/auto": "./js/auto.js",
         "./js/core": {
             "types": "./js/theme-core.d.ts",

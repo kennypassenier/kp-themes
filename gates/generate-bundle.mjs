@@ -194,6 +194,8 @@ const files = [
     { name: 'kp-themes.css', content: css() },
     { name: 'kp-themes.js', content: await js() },
     { name: 'kp-themes.d.ts', content: types() },
+    // The bare version, for a server that copies dist/ and wants to report what it serves [ver-1103; Habits 03/11].
+    { name: 'VERSION', content: `${version}\n` },
     ...split,
     { name: '../gates/checksums-split.mjs', content: splitManifest(split) },
 ];
