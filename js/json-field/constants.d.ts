@@ -60,3 +60,7 @@ export type JsonFieldHandle = {
  * @property {() => boolean} minify
  * @property {() => unknown} value the parsed value, or `undefined`
  */
+/** On the textarea: the key that formats the JSON (a key spec, js/key-spec.js; `none` for no key). */
+export declare const JSON_FORMAT_KEY_ATTRIBUTE = "data-kp-json-format-key";
+/** The key that formats the JSON when the textarea names none. */
+export declare const JSON_FORMAT_KEY = "Mod+Shift+F";

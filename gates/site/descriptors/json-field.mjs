@@ -40,6 +40,7 @@ export const jsonFieldDescriptor = {
             { name: 'data-kp-json', what: '`strict` (default: text that is not JSON blocks the form) or `allow-text` (it may be sent, and the line says so). Decided per field.' },
             { name: 'data-kp-json-check', what: '`input` (default, debounced 300 ms) or `blur`.' },
             { name: 'data-kp-json-format', what: '`button` (default: Format and Minify beside the field), `on-blur` or `off`.' },
+            { name: 'data-kp-json-format-key', what: 'The key that formats the JSON, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `Mod+Shift+F`.' },
             { name: 'data-kp-json-indent', what: '`2` (default), `4` or `tab`.' },
             { name: 'data-kp-json-gutter', what: 'On by default; `false` takes the line numbers away.' },
             { name: 'data-kp-json-wrap', what: 'Long lines wrap and the gutter follows; by default they scroll inside the field.' },

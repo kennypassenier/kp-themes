@@ -17,7 +17,7 @@ export declare class UsualPickerInput extends Controller {
     onChange(event: Event): void;
     /** A name typed that is already picked: its tag lights up and the status line says so; the text stays. @param {UsualItem} item */
     already(item: UsualItem): void;
-    /** Alt U jumps to the first usual choice; Enter on a typed name selects, asks, refuses or adds. @param {KeyboardEvent} event */
+    /** The usual key (default Alt U, `data-kp-usual-key`) jumps to the first usual choice; Enter on a typed name selects, asks, refuses or adds. @param {KeyboardEvent} event */
     onKey(event: KeyboardEvent): void;
     /**
      * Identical after case, accents and spaces: never a second one, whatever the guard is set to.

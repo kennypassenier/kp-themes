@@ -103,6 +103,9 @@ draw('ready');
             { name: 'data-kp-toast-new', what: '`none`, `severe` (default: a new critical notice also toasts) or `all`.' },
             { name: 'data-kp-inbox-href', what: 'Where the Inbox link goes; it also fires `kp-notices-open-inbox`.' },
             { name: 'data-kp-keys', what: '`off` leaves the keys alone: g then i opens the Inbox, m marks the focused notice read.' },
+            { name: 'data-kp-notices-read-key', what: 'The key that marks the focused notice read, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `m`.' },
+            { name: 'data-kp-notices-go-key', what: 'The first key of the Inbox chord, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `g`.' },
+            { name: 'data-kp-notices-inbox-key', what: 'The second key of the Inbox chord, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `i`.' },
             { name: 'states', what: '`ready`, `loading` (the counter holds its place), `empty` (“Nothing waiting”), `error` (Retry; the counter says “?”) and `quiet` (a moon, “Quiet until 09:00”, End quiet).' },
         ],
         accessibility: [

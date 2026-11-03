@@ -50,6 +50,8 @@ export declare class GraphPan {
     onClickCapture(event: MouseEvent): void;
     /** @param {WheelEvent} event */
     onWheel(event: WheelEvent): void;
+    /** Whether this keydown is the graph's key for an action. @param {KeyboardEvent} event @param {string} attribute @param {string} fallback */
+    is(event: KeyboardEvent, attribute: string, fallback: string): boolean;
     /** The keys of a zoomed picture: + - 0 and Shift+arrows; true when the key was one of them. @param {KeyboardEvent} event */
     zoomKey(event: KeyboardEvent): boolean;
 }

@@ -1,15 +1,25 @@
 // The keys of an add row: Ctrl+Enter (Cmd+Enter) adds the line from any field, and `data-kp-addrow-enter="submit"` lets a plain
-// Enter on a closed select add it too [enter-1103].
+// Enter on a closed select add it too [enter-1103]. The adding key is `data-kp-addrow-submit-key` (a key spec, default
+// `Mod+Enter`, `none` for no key) or the `submitKey` option of `configureAddRow` [keys-1103].
 
 import { selectHandles } from '../combobox/handle.js';
-import { ADD_ROW_ENTER, ENTER_SUBMIT } from './constants.js';
+import { matchesKeySpec, resolveKeySpec } from '../key-spec.js';
+import { ADD_ROW_ENTER, ADD_ROW_SUBMIT_KEY_ATTRIBUTE, ADD_ROW_SUBMIT_KEY, ENTER_SUBMIT } from './constants.js';
 
 /** The fields a key can be pressed in; a button keeps its own Enter. */
 const FIELD = 'input, select, textarea';
 
-/** @param {KeyboardEvent} event @returns {boolean} a Ctrl+Enter or Cmd+Enter, which may be neither Alt nor Shift */
-function isModifiedEnter(event) {
-    return event.key === 'Enter' && (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey;
+/** The page's JS default for the adding key; the row's attribute wins over it. @type {string | false | undefined} */
+let submitKeyOption;
+
+/** @param {{ submitKey?: string | false }} options a key spec for the adding key, or `false` for none */
+export function configureAddRow(options) {
+    submitKeyOption = options.submitKey;
+}
+
+/** @param {HTMLFormElement} row @param {KeyboardEvent} event @returns {boolean} the row's adding key (default Mod+Enter) */
+function isSubmitKey(row, event) {
+    return matchesKeySpec(event, resolveKeySpec(row, ADD_ROW_SUBMIT_KEY_ATTRIBUTE, undefined, submitKeyOption ?? ADD_ROW_SUBMIT_KEY));
 }
 
 /**
@@ -29,10 +39,10 @@ function isEnterOnClosedSelect(row, event, field) {
  * @returns {boolean} whether the key was taken
  */
 export function addFromKey(row, event) {
-    if (event.isComposing || event.defaultPrevented || event.key !== 'Enter') return false;
+    if (event.isComposing || event.defaultPrevented) return false;
     const field = event.target instanceof Element ? event.target.closest(FIELD) : null;
     if (!field || !row.contains(field)) return false;
-    if (!isModifiedEnter(event) && !isEnterOnClosedSelect(row, event, field)) return false;
+    if (!isSubmitKey(row, event) && !isEnterOnClosedSelect(row, event, field)) return false;
     event.preventDefault();
     event.stopPropagation();
     const button = /** @type {HTMLButtonElement | null} */ (row.querySelector('button[type="submit"], input[type="submit"]'));

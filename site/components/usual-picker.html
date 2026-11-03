@@ -461,6 +461,7 @@ picker.addEventListener(USUAL_ADD_EVENT, (event) =&gt; say(USUAL_ADD_EVENT, { la
                             <tr><td><code>data-kp-usual</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-usual-add-button</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-usual-flash</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-usual-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-usual-label</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-usual-max</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-usual-ready</code></td><td>written</td></tr>
@@ -516,6 +517,7 @@ picker.addEventListener(USUAL_ADD_EVENT, (event) =&gt; say(USUAL_ADD_EVENT, { la
                             <tr><td><code>data-kp-usual and data-kp-usual-source</code></td><td>The band: a comma list, a JSON array, or `{ value, uses }` with the source `counts` (ranked by uses, ties alphabetical; `given` is the default).</td></tr>
                             <tr><td><code>data-kp-usual-max, data-kp-usual-label and data-kp-usual-while-typing</code></td><td>The band holds 1 to 7 (5); its heading (“Usual”); `first` (matching usual items still lead while typing, the default) or `hide`.</td></tr>
                             <tr><td><code>data-kp-order</code></td><td>`alphabetical` (the default) or `given` for the list under the band.</td></tr>
+                            <tr><td><code>data-kp-usual-key</code></td><td>The key that jumps from the empty field to the first usual choice, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `Alt+U`.</td></tr>
                             <tr><td><code>data-kp-pinned</code></td><td>JSON `[{ &quot;value&quot;, &quot;label&quot; }]`: “Nothing to log” and “Not sure” stand first and are never usual.</td></tr>
                             <tr><td><code>data-kp-all</code></td><td>`open` or `fold` (the default for more than 12 items): the band and “Show all 38”.</td></tr>
                             <tr><td><code>data-kp-multiple and data-kp-preselect</code></td><td>Tag mode; `usual` pre-ticks the band (`none` is the default: a stock picker never answers for a person).</td></tr>

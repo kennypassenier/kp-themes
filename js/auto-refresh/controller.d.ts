@@ -10,7 +10,7 @@ export declare class RefreshController extends RefreshBase {
     onCustomSubmit(event: SubmitEvent): void;
     /** Escape closes the custom form and gives the focus back to the chooser. @param {KeyboardEvent} event */
     onCustomKey(event: KeyboardEvent): void;
-    /** The R key refreshes now, except inside a field. @param {KeyboardEvent} event */
+    /** The refresh key (default R, `data-kp-refresh-key`) refreshes now, except inside a field. @param {KeyboardEvent} event */
     onKey(event: KeyboardEvent): void;
     /** Hidden: stop. Visible again: refresh once if one was due, else wait out the rest. */
     onVisible(): void;

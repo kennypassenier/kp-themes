@@ -130,3 +130,52 @@ test.describe('the add row keys [enter-1103]', () => {
         expect(await page.locator('#new-meal').inputValue()).toBe('Breakfast');
     });
 });
+
+test.describe('the add row key is an option [keys-1103]', () => {
+    /** Lines added by `press` once the row carries `submitKey` (null: the attribute is absent). @param {import('@playwright/test').Page} page @param {string | null} submitKey @param {string} press @param {string} [focus] */
+    async function added(page, submitKey, press, focus = '#new-meal') {
+        await openRow(page);
+        await page.evaluate((key) => {
+            window.__added = 0;
+            const row = document.querySelector('#row');
+            row.addEventListener('kp-addrow-added', () => window.__added++);
+            if (key !== null) row.setAttribute('data-kp-addrow-submit-key', key);
+        }, submitKey);
+        await page.locator('#new-dish').fill('Pasta pesto');
+        // A closed select: a text field's own Enter adds the line whatever the key option says (the form's implicit submission).
+        await page.locator(focus).focus();
+        await page.keyboard.press(press);
+        await page.waitForTimeout(200);
+        return page.evaluate(() => window.__added);
+    }
+
+    test('the default is Mod+Enter: Ctrl+Enter adds one line', { tag: ['@component:field'] }, async ({ page }) => {
+        expect(await added(page, null, 'Control+Enter')).toBe(1);
+    });
+
+    test('data-kp-addrow-submit-key="Alt+Enter" moves the key: Alt+Enter adds, Ctrl+Enter no longer does', { tag: ['@component:field'] }, async ({ page }) => {
+        expect(await added(page, 'Alt+Enter', 'Alt+Enter')).toBe(1);
+        expect(await added(page, 'Alt+Enter', 'Control+Enter')).toBe(0);
+    });
+
+    test('data-kp-addrow-submit-key="none" switches the key off', { tag: ['@component:field'] }, async ({ page }) => {
+        expect(await added(page, 'none', 'Control+Enter')).toBe(0);
+        expect(await added(page, 'none', 'Meta+Enter')).toBe(0);
+    });
+
+    test('the key spec reads Mod, alternatives and none, and keeps an unnamed modifier up', { tag: ['@component:field'] }, async ({ page }) => {
+        await page.goto(ROW_FIXTURE);
+        const out = await page.evaluate(async () => {
+            const { parseKeySpec, matchesKeySpec } = await import('/js/key-spec.js');
+            const ev = (init) => new KeyboardEvent('keydown', init);
+            return {
+                modZ: matchesKeySpec(ev({ key: 'z', metaKey: true }), parseKeySpec('Mod+Z')),
+                modZShift: matchesKeySpec(ev({ key: 'z', ctrlKey: true, shiftKey: true }), parseKeySpec('Mod+Z')),
+                plus: matchesKeySpec(ev({ key: '=' }), parseKeySpec('+ or =')),
+                none: parseKeySpec('none').length,
+                bare: matchesKeySpec(ev({ key: 'j', ctrlKey: true }), parseKeySpec('j')),
+            };
+        });
+        expect(out).toEqual({ modZ: true, modZShift: false, plus: true, none: 0, bare: false });
+    });
+});

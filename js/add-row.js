@@ -22,7 +22,8 @@
 // (Kitchen's date, meal and dish columns want their words over the fields); `data-kp-addrow-name="dish"` names the field whose
 // value the "Added x" status says, where the first filled value would be an id or a date.
 //
-// Keys: Ctrl+Enter (Cmd+Enter) adds the line from any field of the row, a select and an open list included; plain Enter keeps
+// Keys: Ctrl+Enter (Cmd+Enter; `data-kp-addrow-submit-key="Mod+Enter"`, any key spec, `none` for no key, or
+// `configureAddRow({ submitKey })`) adds the line from any field of the row, a select and an open list included; plain Enter keeps
 // its meaning everywhere. `data-kp-addrow-enter="submit"` also lets a plain Enter on a CLOSED select add the line (the list then
 // opens with Space, Alt+Down, the arrows or typing; an open list still picks its option with Enter) [enter-1103].
 //
@@ -56,8 +57,9 @@
 import { attachAll } from './controller.js';
 import { AddRow } from './add-row/controller.js';
 import { ADD_ROW } from './add-row/constants.js';
+export { configureAddRow } from './add-row/keys.js';
 
-export { ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, ADD_ROW_LABELS, ADD_ROW_NAME, ADD_EVENT, ADDED_EVENT, STACKED } from './add-row/constants.js';
+export { ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, ADD_ROW_LABELS, ADD_ROW_NAME, ADD_ROW_SUBMIT_KEY_ATTRIBUTE, ADD_ROW_SUBMIT_KEY, ADD_EVENT, ADDED_EVENT, STACKED } from './add-row/constants.js';
 export { valuesOf, sayRefusal } from './add-row/submit.js';
 export { columnNumber } from './add-row/layout.js';
 

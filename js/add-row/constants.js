@@ -16,6 +16,10 @@ export const ADD_ROW_NAME = 'data-kp-addrow-name';
 export const ADD_ROW_ENTER = 'data-kp-addrow-enter';
 /** The value of `data-kp-addrow-enter` that adds the line. */
 export const ENTER_SUBMIT = 'submit';
+/** On the row: the key that adds the line from any field (a key spec, js/key-spec.js; `none` for no key). */
+export const ADD_ROW_SUBMIT_KEY_ATTRIBUTE = 'data-kp-addrow-submit-key';
+/** The key that adds the line when the row names none: Ctrl or Command with Enter. */
+export const ADD_ROW_SUBMIT_KEY = 'Mod+Enter';
 /** Written on the row while its fields stand under each other (the table shows cards, or the row is narrower than the fold). */
 export const STACKED = 'data-kp-addrow-stacked';
 /** The width of its own under which a line in a form grid stacks; a table's row stacks with the table's cards. */

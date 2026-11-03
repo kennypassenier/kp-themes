@@ -18,6 +18,14 @@ export declare class RowSelectCore extends Controller {
     owned(): boolean;
     useArrows(): boolean;
     useAllKey(): boolean;
+    /** The key a page named for an action, else the default [keys-1103]. @param {string} attribute @param {string} fallback */
+    keySpec(attribute: string, fallback: string): import("../key-spec.js").KeySpec;
+    /** Whether this keydown is the next, previous or tick key. @param {KeyboardEvent} event @param {'next' | 'prev' | 'tick'} which */
+    pressed(event: KeyboardEvent, which: 'next' | 'prev' | 'tick'): boolean;
+    /** The select-all spec: the attribute's keys, the default for an empty or `true` one, none for `false`, `off` or `none`. */
+    allSpec(): import("../key-spec.js").KeySpec;
+    /** Whether this is the select-all key (`all`) or its Shift twin (`clear`). @param {KeyboardEvent} event @returns {'all' | 'clear' | null} */
+    allPressed(event: KeyboardEvent): 'all' | 'clear' | null;
     scrollTo(): "center" | "nearest";
     /** Put the voice in the element. */
     mountVoice(): void;

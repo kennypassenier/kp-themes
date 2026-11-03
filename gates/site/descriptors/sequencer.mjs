@@ -77,6 +77,8 @@ failed.addEventListener('kp-sequencer-retry', () => setSequencerState(failed, 'e
         variants: [
             { name: 'data-kp-sequencer-unit', what: 'What `start` and `duration` are counted in: `second`, `minute` (default), `hour`, `day` or `week` (short forms `s`, `min`, `h`, `d`, `w` too). Read again when it changes.' },
             { name: 'data-kp-sequencer-snap', what: 'The step, in the unit, that every move and resize snaps to (1). Edges of other items pull a dragged edge within 8 px as well.' },
+            { name: 'data-kp-sequencer-link-key', what: 'The key that starts a link from the focused bar, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `L`, either case.' },
+            { name: 'data-kp-sequencer-unlink-key', what: 'The key that removes the focused bar’s links, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `U`, either case.' },
             { name: 'data-kp-sequencer-snap-items', what: '`off` leaves out the pull to other items’ edges and keeps the step alone.' },
             { name: 'data-kp-sequencer-overlap', what: '`refuse` (default: an edit that would overlap in a lane does not happen, and `kp-sequencer-refuse` says why), `push` (the items in the way, with what runs alongside them, move later) or `allow` (items overlap and take rows of their lane).' },
             { name: 'data-kp-sequencer-lanes', what: '`fixed` keeps every item in its lane; the default lets an item change lane, by pointer or with Alt and the up and down arrows.' },

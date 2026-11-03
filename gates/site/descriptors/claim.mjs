@@ -119,6 +119,8 @@ list.addEventListener('kp-claim-retry', () => {
             { name: 'data-kp-claim-mode', what: '`claim` (default, a button on each row) or `assign` (a person menu).' },
             { name: 'data-kp-claim-gap', what: '`loud` (default) or `quiet`.' },
             { name: 'data-kp-claim-gap-sort', what: '`keep` (default) or `top`.' },
+            { name: 'data-kp-claim-take-key', what: 'The key that takes or lets go of the focused row, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `c`.' },
+            { name: 'data-kp-claim-gaps-key', what: 'The key that shows only the rows nobody took, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `Shift+C`.' },
             { name: 'data-kp-claim-person', what: '`both` (default), `name` or `idmark`.' },
             { name: 'data-kp-claim-max', what: 'How many people may bring one item (0, no cap).' },
             { name: 'data-kp-claim-count', what: '`both` (default), `bar`, `group` or `none`.' },

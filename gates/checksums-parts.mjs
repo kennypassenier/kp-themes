@@ -87,6 +87,7 @@ export const PART_FILES = [
     'js/request-inspector/format.js',
     'js/request-inspector/list.js',
     'js/request-inspector/request.js',
+    'js/row-select/constants.js',
     'js/row-select/controller.js',
     'js/row-select/core.js',
     'js/row-select/rows.js',

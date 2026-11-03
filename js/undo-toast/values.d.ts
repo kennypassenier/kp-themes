@@ -4,6 +4,8 @@ export declare const UNDO_TOAST = "kp-toast--undo";
 export declare const UNDO_TOAST_EVENT = "kp-undo-toast";
 /** How long the toast says "Restored" [ms]. */
 export declare const UNDO_RESTORED_MS = 1500;
+/** The key that undoes the newest toast when the page names none (a key spec, js/key-spec.js; `none` or `false` for no key). */
+export declare const UNDO_KEY = "Mod+Z";
 /** How many toasts stand at once. */
 export declare const UNDO_MAX = 3;
 /** Milliseconds in a second, for the seconds the clock says. */

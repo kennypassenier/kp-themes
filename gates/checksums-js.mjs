@@ -164,6 +164,7 @@ export const JS_FILES = [
     'js/accept-follows-words.js',
     'js/toolbar.js',
     'js/keys.js',
+    'js/key-spec.js',
     'js/heat.js',
     'js/barcell.js',
     'js/remember.js',

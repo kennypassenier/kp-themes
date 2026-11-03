@@ -1,31 +1,23 @@
-/** The tools, in order: the dictionary word of each, its key with Mod (none for three), and its picture. */
+/** The tools, in order: the dictionary word of each (its key, for three of them, is in js/markdown-editor/constants.js). */
 export declare const TOOLS: readonly [{
     readonly id: 'bold';
     readonly word: 'mdBold';
-    readonly key: 'B';
 }, {
     readonly id: 'italic';
     readonly word: 'mdItalic';
-    readonly key: 'I';
 }, {
     readonly id: 'heading';
     readonly word: 'mdHeading';
-    readonly key: '';
 }, {
     readonly id: 'list';
     readonly word: 'mdList';
-    readonly key: '';
 }, {
     readonly id: 'task';
     readonly word: 'mdChecklist';
-    readonly key: '';
 }, {
     readonly id: 'link';
     readonly word: 'mdLink';
-    readonly key: 'K';
 }];
-/** The words a person reads for the modifier key. */
-export declare const modName: () => "Ctrl" | "⌘";
 /**
  * The toolbar for a text area.
  * @param {HTMLTextAreaElement} area @param {import('../strings.js').Strings} strings

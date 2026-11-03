@@ -159,6 +159,7 @@ gate examples-wired node gates/check-examples-wired.mjs || exit 1
 gate inline-styles node gates/check-inline-styles.mjs || exit 1
 gate markup-styles node gates/check-markup-styles.mjs || exit 1
 gate get-element-by-id node gates/check-get-element-by-id.mjs || exit 1
+gate key-literals node gates/check-key-literals.mjs || exit 1
 gate bundle-exports node gates/check-bundle-exports.mjs || exit 1
 gate bundle-facades node gates/check-bundle-facades.mjs || exit 1
 

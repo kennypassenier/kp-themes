@@ -620,6 +620,7 @@ document.addEventListener(<span class="kp-code__string">'kp-combobox-change'</sp
                             <tr><td><code>data-kp-segmented-all</code></td><td>prose, read, written</td></tr>
                             <tr><td><code>data-kp-segmented-collapse</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-segmented-cols</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-segmented-exclude-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-field</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-segmented-fit</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-fold</code></td><td>written</td></tr>
@@ -627,6 +628,7 @@ document.addEventListener(<span class="kp-code__string">'kp-combobox-change'</sp
                             <tr><td><code>data-kp-segmented-folded</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-for</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-glide</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-segmented-include-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-measure</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-more</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-narrow</code></td><td>written</td></tr>
@@ -742,6 +744,8 @@ document.addEventListener(<span class="kp-code__string">'kp-combobox-change'</sp
                             <tr><td><code>.kp-segmented__menu</code></td><td>A chip’s own ⋯ menu [forms-1102] (js/segmented-menu.js): a `kp-menu-button` right after its chip in a chip group; chip and ⋯ read as one pill split by a hair line. It is a tab stop only beside the chip that is; ContextMenu or Shift+F10 on the chip opens it, F2 renames. An entry with `data-kp-segmented-rename` turns the chip into a field (`data-kp-segmented-renaming` on the chip meanwhile): Enter saves through the cancelable `kp-segmented-rename` `{ value, label, previous, item, waitUntil }`, a refusal is said under the field, Escape cancels; `kp-segmented-renamed` after.</td></tr>
                             <tr><td><code>data-kp-track-value (on a group)</code></td><td>A chip group that the unsaved-changes bar counts [forms-1102]: with the attribute on it (empty), the group keeps it as the JSON list of the values on, with the labels in `data-kp-track-text`, and paints what Discard or Undo write back.</td></tr>
                             <tr><td><code>data-kp-segmented=&quot;tri&quot;</code></td><td>The three-way chip group, used with `.kp-segmented--chips`. Each chip carries `data-kp-segmented-tri=&quot;include|exclude&quot;`, absent for either way (`TRI_ATTRIBUTE`, `TRI_STATES`), and the parts `.kp-segmented__tag` (the visible word, the default look), `.kp-segmented__mark` (the ring of `data-kp-segmented-tri-look=&quot;mark&quot;`), `__state` (the word a screen reader hears after the name, “Chicken, required”), `__summary` and `__live`.</td></tr>
+                            <tr><td><code>data-kp-segmented-include-key</code></td><td>On a three-way group: the keys that set the focused chip to include, a key spec (`Mod+B`, `Alt+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `+ or =`.</td></tr>
+                            <tr><td><code>data-kp-segmented-exclude-key</code></td><td>On a three-way group: the key that sets the focused chip to exclude, a key spec (`Mod+B`, `Alt+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `-`.</td></tr>
                             <tr><td><code>data-kp-segmented-tri-look</code></td><td>The look of a three-way group: `word` (default since 2026-11-01) writes the state after the label as a small word, “either”, “want” or “not” (`data-kp-segmented-tags`, JSON `any` / `include` / `exclude`, else the dictionary); `mark` keeps the ring mark. Switches at runtime.</td></tr>
                             <tr><td><code>getSegmentedTri / setSegmentedTri</code></td><td>Read `{ include, exclude }`, or set both lists without an event. `SegmentedItem.state` is the state a chip is given in `setSegmentedItems`.</td></tr>
                             <tr><td><code>data-kp-segmented-more</code></td><td>Written by the script on a scrolling track, never by you: `start`, `end` or both name the sides that have more segments out of sight, so the stylesheet fades only those edges (`MORE_ATTRIBUTE` in js/segmented.js; `OVERFLOW_ATTRIBUTE` is the overflow mark).</td></tr>

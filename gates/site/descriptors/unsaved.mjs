@@ -80,6 +80,7 @@ input.dispatchEvent(new Event('input', { bubbles: true }));
             { name: 'data-kp-dock', what: '`viewport` (default) or `container`, with `data-kp-scroll-root`.' },
             { name: 'data-kp-track', what: '`auto` (default) marks the rows as they are edited; `app` leaves it to the page.' },
             { name: 'data-kp-warn-leave', what: '`both` (default), `browser`, `app` or `off`.' },
+            { name: 'data-kp-unsaved-save-key', what: 'The key that saves the changes, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `Mod+S`.' },
             { name: 'data-kp-keep', what: '`session` (default) keeps the changes through a reload; `off`.' },
             { name: 'data-kp-undo-ms', what: 'How long Undo is offered after Discard; 6000, 0 for none.' },
             { name: 'data-kp-save-label', what: 'The Save words, `{n}` for the count.' },

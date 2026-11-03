@@ -98,6 +98,7 @@ picker.addEventListener(USUAL_ADD_EVENT, (event) => say(USUAL_ADD_EVENT, { label
             { name: 'data-kp-usual and data-kp-usual-source', what: 'The band: a comma list, a JSON array, or `{ value, uses }` with the source `counts` (ranked by uses, ties alphabetical; `given` is the default).' },
             { name: 'data-kp-usual-max, data-kp-usual-label and data-kp-usual-while-typing', what: 'The band holds 1 to 7 (5); its heading (“Usual”); `first` (matching usual items still lead while typing, the default) or `hide`.' },
             { name: 'data-kp-order', what: '`alphabetical` (the default) or `given` for the list under the band.' },
+            { name: 'data-kp-usual-key', what: 'The key that jumps from the empty field to the first usual choice, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `Alt+U`.' },
             { name: 'data-kp-pinned', what: 'JSON `[{ "value", "label" }]`: “Nothing to log” and “Not sure” stand first and are never usual.' },
             { name: 'data-kp-all', what: '`open` or `fold` (the default for more than 12 items): the band and “Show all 38”.' },
             { name: 'data-kp-multiple and data-kp-preselect', what: 'Tag mode; `usual` pre-ticks the band (`none` is the default: a stock picker never answers for a person).' },

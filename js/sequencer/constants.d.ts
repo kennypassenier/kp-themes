@@ -30,3 +30,11 @@ export declare const REACH_PX = 8;
 export declare const DRAG_PX = 4;
 /** The room, as a share of the plan, the window keeps after the last item. */
 export declare const HEADROOM = 0.2;
+/** On the sequencer: the key that starts a link from the focused bar (a key spec, js/key-spec.js; `none` for no key). */
+export declare const SEQUENCER_LINK_KEY_ATTRIBUTE = "data-kp-sequencer-link-key";
+/** The key that starts a link when the sequencer names none; either case counts. */
+export declare const SEQUENCER_LINK_KEY = "L";
+/** On the sequencer: the key that removes the focused bar's links. */
+export declare const SEQUENCER_UNLINK_KEY_ATTRIBUTE = "data-kp-sequencer-unlink-key";
+/** The key that removes the focused bar's links when the sequencer names none; either case counts. */
+export declare const SEQUENCER_UNLINK_KEY = "U";

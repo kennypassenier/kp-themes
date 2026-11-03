@@ -8,3 +8,15 @@ export declare const GRAPH_RETRY_EVENT = "kp-graph-retry";
 export declare const GRAPH_DETAIL_EVENT = "kp-graph-detail";
 /** The attributes that are the graph's options; a change to one redraws [graph-1020]. */
 export declare const GRAPH_OPTION_ATTRIBUTES: string[];
+/** On the graph: the key that zooms in (a key spec, js/key-spec.js; `none` for no key; the `or` list gives several keys). */
+export declare const GRAPH_ZOOM_IN_KEY_ATTRIBUTE = "data-kp-zoom-in-key";
+/** The keys that zoom in when the graph names none (`=` is the unshifted key of `+` on a US layout). */
+export declare const GRAPH_ZOOM_IN_KEY = "+ or =";
+/** On the graph: the key that zooms out. */
+export declare const GRAPH_ZOOM_OUT_KEY_ATTRIBUTE = "data-kp-zoom-out-key";
+/** The keys that zoom out when the graph names none (`_` is the shifted key of `-`). */
+export declare const GRAPH_ZOOM_OUT_KEY = "- or _";
+/** On the graph: the key that resets the zoom. */
+export declare const GRAPH_ZOOM_RESET_KEY_ATTRIBUTE = "data-kp-zoom-reset-key";
+/** The key that resets the zoom when the graph names none. */
+export declare const GRAPH_ZOOM_RESET_KEY = "0";

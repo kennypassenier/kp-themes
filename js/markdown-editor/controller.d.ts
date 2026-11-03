@@ -40,7 +40,7 @@ export declare class MarkdownEditor extends Controller {
     show(view: 'write' | 'preview'): void;
     /** @param {KeyboardEvent} event */
     onBarKey(event: KeyboardEvent): void;
-    /** Mod+B, Mod+I, Mod+K, and Enter in a list. @param {KeyboardEvent} event */
+    /** The tools' keys (default Mod+B, Mod+I, Mod+K; `data-kp-md-bold-key` …) and Enter in a list. @param {KeyboardEvent} event */
     onKey(event: KeyboardEvent): void;
     /** A box ticked in the preview: its line in the text changes, heard by the page as `input`. @param {CustomEvent} event */
     onTick(event: CustomEvent): void;

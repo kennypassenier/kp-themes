@@ -468,6 +468,7 @@ list.addEventListener(<span class="kp-code__string">'kp-claim-retry'</span>, () 
                             <tr><td><code>data-kp-claim-filter</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-claim-gap</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-claim-gap-sort</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-claim-gaps-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-claim-keys</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-claim-loading</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-claim-loud</code></td><td>written</td></tr>
@@ -478,6 +479,7 @@ list.addEventListener(<span class="kp-code__string">'kp-claim-retry'</span>, () 
                             <tr><td><code>data-kp-claim-refused</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-claim-self-label</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-claim-take-all</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-claim-take-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-claim-undo-ms</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-claim-viewer</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-claim-viewer-name</code></td><td>read</td></tr>
@@ -532,6 +534,8 @@ list.addEventListener(<span class="kp-code__string">'kp-claim-retry'</span>, () 
                             <tr><td><code>data-kp-claim-mode</code></td><td>`claim` (default, a button on each row) or `assign` (a person menu).</td></tr>
                             <tr><td><code>data-kp-claim-gap</code></td><td>`loud` (default) or `quiet`.</td></tr>
                             <tr><td><code>data-kp-claim-gap-sort</code></td><td>`keep` (default) or `top`.</td></tr>
+                            <tr><td><code>data-kp-claim-take-key</code></td><td>The key that takes or lets go of the focused row, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `c`.</td></tr>
+                            <tr><td><code>data-kp-claim-gaps-key</code></td><td>The key that shows only the rows nobody took, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `Shift+C`.</td></tr>
                             <tr><td><code>data-kp-claim-person</code></td><td>`both` (default), `name` or `idmark`.</td></tr>
                             <tr><td><code>data-kp-claim-max</code></td><td>How many people may bring one item (0, no cap).</td></tr>
                             <tr><td><code>data-kp-claim-count</code></td><td>`both` (default), `bar`, `group` or `none`.</td></tr>

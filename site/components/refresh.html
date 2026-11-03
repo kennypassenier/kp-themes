@@ -369,7 +369,7 @@ control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (eve
                             <tr><td><code>data-kp-refresh</code></td><td>selector, read</td></tr>
                             <tr><td><code>data-kp-refresh-choices</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh-hover</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-refresh-key</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-refresh-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-refresh-label</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh-line</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh-mode</code></td><td>read</td></tr>
@@ -427,6 +427,7 @@ control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (eve
                             <tr><td><code>data-kp-refresh</code></td><td>The seconds the page opens with; 30 by default, 0 opens paused.</td></tr>
                             <tr><td><code>data-kp-refresh-choices</code></td><td>The seconds offered, `0,15,30,60,300` by default (0 is paused). “Other…” takes any whole number of seconds.</td></tr>
                             <tr><td><code>data-kp-refresh-mode</code></td><td>`event` (default: the app fetches), `page` (reload the page) or `region` (fetch the same URL and swap only the region).</td></tr>
+                            <tr><td><code>data-kp-refresh-key</code></td><td>The key that refreshes now, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `R`, either case; `off` still turns it off.</td></tr>
                             <tr><td><code>data-kp-refresh-region</code></td><td>The selector of the element swapped in `region` mode; focus and scroll stay.</td></tr>
                             <tr><td><code>data-kp-look</code></td><td>`segmented` (default) or `menu`.</td></tr>
                             <tr><td><code>data-kp-refresh-line</code></td><td>`on` (default) or `off` [ux-1101]: `off` leaves the bar’s own freshness line (“updated 12 s ago”, “updating…”) out, for a page that already says how fresh its data is in its header; Refresh now keeps its place. With `data-kp-look=&quot;menu&quot;` the control is one menu button and Refresh now. Under 30rem of the control’s own width (outside a form grid) the bar is two rows: the caption “Refresh automatically” (or the title or label) with Refresh now, then every choice as segments on a row of their own, 44 px high, that scroll sideways with a fade on the side that has more and open with the current one in view; the menu look shows those segments while narrow. The script writes `data-kp-refresh-narrow`; `data-kp-refresh-stack=&quot;always&quot;` or `&quot;never&quot;` decides it by hand.</td></tr>

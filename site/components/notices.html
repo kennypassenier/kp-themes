@@ -417,7 +417,10 @@ draw(<span class="kp-code__string">'ready'</span>);</code></pre>
                             <tr><td><code>data-kp-notice-fix</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-notice-read</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-notices</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-notices-go-key</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-notices-inbox-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-notices-look</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-notices-read-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-notices-retry</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-order</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-panel-max</code></td><td>read</td></tr>
@@ -489,6 +492,9 @@ draw(<span class="kp-code__string">'ready'</span>);</code></pre>
                             <tr><td><code>data-kp-toast-new</code></td><td>`none`, `severe` (default: a new critical notice also toasts) or `all`.</td></tr>
                             <tr><td><code>data-kp-inbox-href</code></td><td>Where the Inbox link goes; it also fires `kp-notices-open-inbox`.</td></tr>
                             <tr><td><code>data-kp-keys</code></td><td>`off` leaves the keys alone: g then i opens the Inbox, m marks the focused notice read.</td></tr>
+                            <tr><td><code>data-kp-notices-read-key</code></td><td>The key that marks the focused notice read, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `m`.</td></tr>
+                            <tr><td><code>data-kp-notices-go-key</code></td><td>The first key of the Inbox chord, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `g`.</td></tr>
+                            <tr><td><code>data-kp-notices-inbox-key</code></td><td>The second key of the Inbox chord, a key spec (`Mod+Z`, `Alt+U`, `Ctrl+Shift+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `i`.</td></tr>
                             <tr><td><code>states</code></td><td>`ready`, `loading` (the counter holds its place), `empty` (“Nothing waiting”), `error` (Retry; the counter says “?”) and `quiet` (a moon, “Quiet until 09:00”, End quiet).</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>

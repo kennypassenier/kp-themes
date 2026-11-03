@@ -305,9 +305,12 @@ document.getElementById(<span class="kp-code__string">'doc-markdown'</span>).rep
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-md-bold-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-md-editor</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-md-headings</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-md-italic-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-md-line</code></td><td>selector, read, written</td></tr>
+                            <tr><td><code>data-kp-md-link-key</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-md-preview</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-md-tabbed</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-md-tool</code></td><td>selector, read, written</td></tr>
@@ -353,6 +356,9 @@ document.getElementById(<span class="kp-code__string">'doc-markdown'</span>).rep
                             <tr><td><code>tasks</code></td><td>The reader’s option for task lists [habits-1101]: `markdownFragment(doc, text, { tasks: 'toggle' })` draws `- [ ] item` and `- [x] item` as a checkbox with the item’s words (`.kp-markdown__task`); a tick fires `kp-markdown-task` `{ line, checked, text }` on the box (`data-kp-md-line`, the source line from 0) and `toggleTaskLine(text, line, checked)` gives the text with it written in. `show` draws the box disabled; `off` (default) leaves them text, as before.</td></tr>
                             <tr><td><code>data-kp-md-editor</code></td><td>The Markdown editor [habits-1101] (js/markdown-editor.js, `attachMarkdownEditors`): the page’s text area with a toolbar (bold, italic, heading, bulleted list, checklist, link; one tab stop) above it, Mod+B, Mod+I and Mod+K, Enter that continues a list (and ends it on an empty item), every edit one undo step, and the reader’s preview with ticking boxes. The page saves on the text area’s own `input`.</td></tr>
                             <tr><td><code>data-kp-md-preview</code></td><td>`side` (default): the preview beside the text when the editor is at least 48rem wide, behind Write / Preview tabs when narrower (`data-kp-md-tabbed`); `tabs`: always tabs; `off`: no preview. `data-kp-md-headings` is the level a `#` takes in it (3). `showMarkdownView(el, view)` and `refreshMarkdownPreview(el)` for the page.</td></tr>
+                            <tr><td><code>data-kp-md-bold-key</code></td><td>The key that makes the selection bold, a key spec (`Mod+B`, `Alt+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `Mod+B`; the toolbar button names the key you set.</td></tr>
+                            <tr><td><code>data-kp-md-italic-key</code></td><td>The key that makes the selection italic, a key spec (`Mod+B`, `Alt+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `Mod+I`.</td></tr>
+                            <tr><td><code>data-kp-md-link-key</code></td><td>The key that makes the selection a link, a key spec (`Mod+B`, `Alt+U`, a bare letter; several with ` or `), `none` for no key [keys-1103]. Default `Mod+K`.</td></tr>
                             <tr><td><code>the script</code></td><td>`markdownFragment(doc, text, { headings, limit })` builds the fragment; `safeHref(href)` says whether an address may be a link (http, https, mailto, or no scheme); `MARKDOWN_LIMIT` (40 000) is the default cut.</td></tr>
                             <tr><td><code>kp-markdown__cut</code></td><td>The line after notes that were cut for length.</td></tr>
                     </tbody></table></div>

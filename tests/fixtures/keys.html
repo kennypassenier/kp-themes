@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Shortcuts as options [keys-1103]</title>
+        <link rel="stylesheet" href="/css/fonts.css" />
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+    </head>
+    <body>
+        <main>
+            <div id="editor" data-kp-md-editor><textarea id="text" aria-label="Notes">word</textarea></div>
+            <div class="kp-segmented kp-segmented--chips" id="tri" data-kp-segmented="tri" role="group" aria-label="Ingredients">
+                <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all><span class="kp-segmented__label">Clear all</span></button>
+                <button type="button" class="kp-segmented__item" data-value="rice"><span class="kp-segmented__label">Rice</span></button>
+            </div>
+        </main>
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module">
+            import { attachMarkdownEditors } from '/js/markdown-editor.js';
+            attachMarkdownEditors();
+        </script>
+    </body>
+</html>

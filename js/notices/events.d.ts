@@ -15,3 +15,15 @@ export declare const PANEL_MAX = 10;
 export declare const TOAST_MS = 8000;
 /** How soon `i` must follow `g` to open the Inbox [ms]. */
 export declare const G_I_WINDOW_MS = 1200;
+/** On the centre: the key that marks the focused notice read (a key spec, js/key-spec.js; `none` for no key). */
+export declare const NOTICES_READ_KEY_ATTRIBUTE = "data-kp-notices-read-key";
+/** The key that marks the focused notice read when the centre names none. */
+export declare const NOTICES_READ_KEY = "m";
+/** On the centre: the first key of the Inbox chord (a key spec, js/key-spec.js; `none` for no chord). */
+export declare const NOTICES_GO_KEY_ATTRIBUTE = "data-kp-notices-go-key";
+/** The first key of the chord that opens the Inbox when the centre names none. */
+export declare const NOTICES_GO_KEY = "g";
+/** On the centre: the second key of the Inbox chord, pressed within a moment of the first. */
+export declare const NOTICES_INBOX_KEY_ATTRIBUTE = "data-kp-notices-inbox-key";
+/** The second key of the chord that opens the Inbox when the centre names none. */
+export declare const NOTICES_INBOX_KEY = "i";
