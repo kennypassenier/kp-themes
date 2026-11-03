@@ -171,7 +171,7 @@ export { JSON_CHECK_MS, JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, attac
 export { MASK, REQUESTS, REQUESTS_COPY_EVENT, REQUESTS_MAX, REQUESTS_RETRY_EVENT, REQUESTS_TEST_EVENT, SECRET_HEADERS, attachRequestInspectors, setRequests, setRequestsState, toCurl, toJson, toneOf, } from './js/request-inspector.js';
 export type CapturedRequest = import('./js/request-inspector.js').CapturedRequest;
 /** @typedef {import('./js/request-inspector.js').CapturedRequest} CapturedRequest */
-export { QUANTITY, QUANTITY_EVENT, attachQuantities, formatQuantity, getQuantity, parseQuantity, setQuantity, settleQuantity, } from './js/quantity.js';
+export { QUANTITY, QUANTITY_EVENT, attachQuantities, formatQuantity, getQuantity, parseQuantity, setQuantity, setQuantityUnit, settleQuantity, } from './js/quantity.js';
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 export { UPDATE_PROPERTY, UPDATE_STYLE, UPDATING_ATTRIBUTE, markUpdating, unmarkUpdating, update, updateIdea, updatePlays, updateTiming, updateTimingOf, } from './js/update.js';
 export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';

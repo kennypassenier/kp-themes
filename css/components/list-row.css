@@ -62,13 +62,15 @@
 
     .kp-listrow__name {
         font-weight: 600;
-        overflow-wrap: break-word;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
     }
 
     .kp-listrow__meta {
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
-        overflow-wrap: break-word;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
     }
 
     .kp-listrow__status {

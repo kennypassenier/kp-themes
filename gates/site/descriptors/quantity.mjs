@@ -8,7 +8,7 @@ export const quantityDescriptor = {
         classes: ['kp-quantity', 'kp-accept-reason'],
         aliases: ['accept'],
         exports: [],
-        intro: 'A number between a minus and a plus button with its unit after it, for servings and amounts. `data-kp-quantity` on the root with `-min`, `-max`, `-step`, `-unit`, `-unit-one`, `-label` and `-locale`; js/quantity.js (`attachQuantities`, `setQuantity`, `getQuantity`) writes the buttons, the field box and the unit, and fires `kp-quantity-change` with `{ value, previous, source }`. The number is a spin button that can be typed in the page’s language, with a comma or a point.',
+        intro: 'A number between a minus and a plus button with its unit after it, for servings and amounts. `data-kp-quantity` on the root with `-min`, `-max`, `-step`, `-unit`, `-unit-one`, `-label` and `-locale`; js/quantity.js (`attachQuantities`, `setQuantity`, `setQuantityUnit(root, unit, unitOne)` for a unit that follows something else after attach, `getQuantity`) writes the buttons, the field box and the unit, and fires `kp-quantity-change` with `{ value, previous, source }`. The number is a spin button that can be typed in the page’s language, with a comma or a point.',
         whenToUse: 'For a small whole or stepped amount a person nudges up and down: portions, pieces, grams in steps. For a free number use a field; for a share of a range use a slider.',
         examples: [
             {

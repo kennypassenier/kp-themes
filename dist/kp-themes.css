@@ -7741,17 +7741,27 @@
 
     .kp-action-list__main {
         display: grid;
+        min-inline-size: 0;
         gap: calc(var(--kp-space-xs, 0.25rem) / 2);
     }
 
+    /* A long word wraps inside its cell: the cell shrinks below its content (min-inline-size 0), then the word breaks anywhere [mc-33]. */
     .kp-action-list__title {
         font-weight: 600;
+        min-inline-size: 0;
         overflow-wrap: anywhere;
+    }
+
+    /* Opt-in: a title that does not break at a hyphen, so "made-up" never leaves "up" alone on a line (data-kp-title-break="word" on the list or on a title; the default, "hyphen", is today's). A word longer than the line still breaks [homelab-89]. */
+    .kp-action-list[data-kp-title-break='word'] .kp-action-list__title,
+    .kp-action-list__title[data-kp-title-break='word'] {
+        word-break: keep-all;
     }
 
     .kp-action-list__text {
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
+        min-inline-size: 0;
         overflow-wrap: anywhere;
     }
 
@@ -40661,13 +40671,15 @@
 
     .kp-listrow__name {
         font-weight: 600;
-        overflow-wrap: break-word;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
     }
 
     .kp-listrow__meta {
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
-        overflow-wrap: break-word;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
     }
 
     .kp-listrow__status {

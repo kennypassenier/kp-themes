@@ -143,6 +143,7 @@ list.addEventListener('click', async (event) => {
         variants: [
             { name: '.kp-action-list', what: 'A list (`ul` or `ol`) whose rows are one grid: the row’s text first, then one column per button.' },
             { name: '.kp-row-actions', what: 'The button box in a row or a table cell. Empty, it takes no room.' },
+            { name: 'data-kp-title-break="word"', what: 'On the list or on one `.kp-action-list__title`: the title does not break at a hyphen, so “made-up” never leaves “up” alone on a line (default: it breaks there). A word longer than the line still breaks, and a long word wraps inside its cell.' },
             { name: 'data-kp-action', what: 'A button’s role, for rows whose buttons are not the same from the end: one column per role, in the order the rows give them.' },
             { name: '.kp-action-list--lead', what: 'Rows with a lead column before their words, as wide as the widest lead and no wider; the buttons keep their shared columns. In a narrow list the lead stays beside the words and the buttons go under them.' },
             { name: '.kp-action-list__lead, __main', what: 'The lead (a state dot or badge, a file’s format, a day and hour) sits on the title’s first line; the words are the main part.' },

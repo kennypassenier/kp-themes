@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "a66c445a29017fb5",
+    "base": "42eebf8dba1d4927",
     "modules": {
         "js/accept-follows.js": { "digest": "0fdf861ed688c68e", "when": "[data-kp-accept-follows]" },
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
@@ -76,7 +76,7 @@
         "js/log.js": { "digest": "a4be314cde32f0ef", "when": "[data-kp-source]" },
         "js/logviewer.js": { "digest": "e06a7ba52573eb82", "when": "[data-kp-logviewer]" },
         "js/master-detail.js": { "digest": "a7ae68a985fea8a0", "when": "[data-kp-master-detail]" },
-        "js/menu-button.js": { "digest": "802dc2ce9f56fe3f", "when": "[data-kp-menu-button]" },
+        "js/menu-button.js": { "digest": "80be557c1c0e264e", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
             "digest": "cce297d541c95dec",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
@@ -95,7 +95,7 @@
         "js/problems.js": { "digest": "be69d397b102b4eb", "when": "[data-kp-problems]" },
         "js/progressbar.js": { "digest": "4e4d2ee0142c280c", "when": ".kp-progressbar" },
         "js/qr.js": { "digest": "a97c773fa7b281ed", "when": "[data-kp-qr]" },
-        "js/quantity.js": { "digest": "4d4f04afc1e4a9bf", "when": "[data-kp-quantity]" },
+        "js/quantity.js": { "digest": "70e0abec53dc9fb1", "when": "[data-kp-quantity]" },
         "js/question-card.js": { "digest": "aa3eb8b4990a0106", "when": "[data-kp-questions]" },
         "js/quiet-hours.js": { "digest": "d716aa3c4b8653eb", "when": "[data-kp-quiet]" },
         "js/quote.js": { "digest": "0e961a3a16537647", "when": "[data-kp-quote], [data-kp-quote-list]" },
@@ -103,7 +103,7 @@
         "js/rating.js": { "digest": "e47e45e4adf5ecab", "when": "[data-kp-rating]" },
         "js/reason.js": { "digest": "8bdc8c220fddde65", "when": "[data-kp-disabled-reason]" },
         "js/request-inspector.js": { "digest": "d79def1e0b5620d6", "when": "[data-kp-requests]" },
-        "js/row-editor.js": { "digest": "51c496ac3d0c8160", "when": "[data-kp-rows]" },
+        "js/row-editor.js": { "digest": "54130bb12b3f5df1", "when": "[data-kp-rows]" },
         "js/row-select.js": { "digest": "dba95f9a5c0c551b", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
         "js/row-undo.js": { "digest": "f97a3d272eee1ddd", "when": "[data-kp-row-delete]" },
         "js/runs.js": { "digest": "2e552dd656dad61f", "when": "[data-kp-runs]" },
@@ -8100,12 +8100,13 @@
         "||||.kp-action-list": "20b63a71b69238c0",
         "||||.kp-action-list--lead": "c5003779a2f113e1",
         "||||.kp-action-list__lead": "677b0657b4a09714",
-        "||||.kp-action-list__main": "ed73f1e8a13fa34f",
+        "||||.kp-action-list__main": "a6785d9fbeffb68c",
         "||||.kp-action-list__meta": "ce788b3b773b9af0",
         "||||.kp-action-list__payload": "5f00a91430605245",
-        "||||.kp-action-list__text": "36304fb59fe2ae3e",
-        "||||.kp-action-list__title": "ad3c00578237e036",
+        "||||.kp-action-list__text": "2e6cea35ba0e7282",
+        "||||.kp-action-list__title": "239253acdbe53eb5",
         "||||.kp-action-list__title)": "73b753a45bc92abf",
+        "||||.kp-action-list__title[data-kp-title-break='word']": "741e6ada2316451d",
         "||||.kp-action-list__when": "ae5dfd7011e05b01",
         "||||.kp-action-visible": "01a035b316248303",
         "||||.kp-action[aria-busy='true']": "26a702061c4e5d0a",
@@ -9748,8 +9749,8 @@
         "||||.kp-listrow__action": "5a79d7dbeb6cbdf7",
         "||||.kp-listrow__action)": "ef9d203592b9fbda",
         "||||.kp-listrow__identity": "60a689d275caa6cf",
-        "||||.kp-listrow__meta": "1f316aeea480a995",
-        "||||.kp-listrow__name": "56ef5878d61e0c6c",
+        "||||.kp-listrow__meta": "e2efa3d219011f85",
+        "||||.kp-listrow__name": "1637668b1c2e4fef",
         "||||.kp-listrow__status": "6e3f5b51f710c1b5",
         "||||.kp-listrow__status)": "018a38bb5dd21be0",
         "||||.kp-listrow__stepper": "f722ac8ff78bb097",
@@ -13040,7 +13041,7 @@
             ]
         },
         "feedback": {
-            "modules": "70bd2b91f7b02bac",
+            "modules": "3b370e7b044ad5e1",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",

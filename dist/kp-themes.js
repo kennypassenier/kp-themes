@@ -603,7 +603,7 @@ var init_selection_undo_newpill = __esm({
       selectionCleared: "Selection cleared",
       undoToastUndo: "Undo",
       undoToastKeyTitle: (key) => `Undo (${key})`,
-      undoToastAnnounce: (text, seconds) => `${text}. Undo available for ${seconds} seconds`,
+      undoToastAnnounce: (text, seconds, key) => `${text.replace(/\.\s*$/, "")}. Undo available for ${seconds} seconds${key ? `, press ${key}` : ""}`,
       undoToastClock: (seconds) => `${seconds} s`,
       undoToastRestored: "Restored",
       undoToastSaving: "Saving\u2026",
@@ -4025,11 +4025,19 @@ __export(quantity_exports, {
   getQuantity: () => getQuantity,
   parseQuantity: () => parseQuantity,
   setQuantity: () => setQuantity,
+  setQuantityUnit: () => setQuantityUnit,
   settleQuantity: () => settleQuantity
 });
 function setQuantity(root, value) {
   if (!isHtmlElement(root)) return;
   paint(root, settleQuantity(value, rulesOf(root)), document.activeElement === inputOf(root));
+}
+function setQuantityUnit(root, unit2, unitOne = "") {
+  if (!isHtmlElement(root)) return;
+  root.setAttribute("data-kp-quantity-unit", unit2);
+  if (unitOne) root.setAttribute("data-kp-quantity-unit-one", unitOne);
+  else root.removeAttribute("data-kp-quantity-unit-one");
+  paint(root, getQuantity(root), document.activeElement === inputOf(root));
 }
 function attachQuantities(scope = document) {
   return attachAll(scope, QUANTITY, QuantityControl);
@@ -4046,7 +4054,6 @@ var init_quantity = __esm({
     init_realm();
     init_values();
     init_math();
-    init_read();
   }
 });
 
@@ -15110,9 +15117,9 @@ function renderSheet(board2, sheet) {
   const sorted = [...board2.entries].filter((e) => only.length === 0 || typeof e.scope === "string" && only.includes(e.scope)).sort((a, b) => a.order - b.order);
   const list = collectGroups(board2, sheet, fixed, sorted);
   sortGroups(list, listOf(sheet.getAttribute("data-kp-shortcuts-group")).concat(board2.config.groupOrder ?? []), fixed);
-  const registered2 = sorted.some(scopeActive);
+  const registered3 = sorted.some(scopeActive);
   body.replaceChildren();
-  if (!registered2 && sheet.getAttribute("data-kp-shortcuts-empty") !== "off") {
+  if (!registered3 && sheet.getAttribute("data-kp-shortcuts-empty") !== "off") {
     body.append(emptyPlate(doc));
     return;
   }
@@ -18613,12 +18620,24 @@ var init_controller7 = __esm({
 });
 
 // js/menu-button/attach.js
+function wireWith(wrapper, root, options) {
+  const { decorate: decorate2, strings } = { ...registered.get(root), ...options };
+  const control = controllerOf(wrapper, MenuButtonControl);
+  if (!control) return attachOne(wrapper, MenuButtonControl, { decorate: decorate2, strings });
+  const state12 = (
+    /** @type {MenuButtonControl} */
+    control.state
+  );
+  if (state12 && (decorate2 && state12.decorate !== decorate2 || strings && state12.strings !== strings)) control.join(state12, { decorate: decorate2, strings });
+  return void 0;
+}
 function attachMenuButtons(root = document, { decorate: decorate2, strings } = {}) {
   const wrappers = (
     /** @type {HTMLElement[]} */
     [...root.querySelectorAll(MENU_BUTTON)]
   );
-  const wire = (wrapper) => controllerOf(wrapper, MenuButtonControl) ? void 0 : attachOne(wrapper, MenuButtonControl, { decorate: decorate2, strings });
+  if (decorate2 || strings) registered.set(root, { ...registered.get(root), ...decorate2 && { decorate: decorate2 }, ...strings && { strings } });
+  const wire = (wrapper) => wireWith(wrapper, root, {});
   const made6 = wrappers.map(wire);
   const late = (event) => {
     const wrapper = event.target instanceof Element ? event.target.closest(MENU_BUTTON) : null;
@@ -18635,7 +18654,7 @@ function attachMenuButtons(root = document, { decorate: decorate2, strings } = {
     for (const control of made6) control?.destroy();
   };
 }
-var LATE_EVENTS;
+var LATE_EVENTS, registered;
 var init_attach3 = __esm({
   "js/menu-button/attach.js"() {
     "use strict";
@@ -18644,6 +18663,7 @@ var init_attach3 = __esm({
     init_count2();
     init_controller7();
     LATE_EVENTS = ["pointerdown", "focusin", "keydown", "click"];
+    registered = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -32199,6 +32219,60 @@ var init_patterns = __esm({
   }
 });
 
+// js/undo-toast/stack.js
+function keyMatches(event, spec) {
+  const parts2 = spec.toLowerCase().split("+").map((p) => p.trim());
+  const letter = parts2.pop();
+  if (!letter || event.key.toLowerCase() !== letter) return false;
+  const wants = (m) => parts2.includes(m);
+  const ctrlOrMeta = event.ctrlKey || event.metaKey;
+  const wantsCtrl = wants("mod") || wants("ctrl") || wants("cmd") || wants("meta");
+  return ctrlOrMeta === wantsCtrl && event.altKey === wants("alt") && event.shiftKey === wants("shift");
+}
+function onKey2(event) {
+  const target = event.target instanceof Element ? event.target : null;
+  if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+  for (let i = live2.length - 1; i >= 0; i -= 1) {
+    const entry = (
+      /** @type {StackEntry} */
+      live2[i]
+    );
+    if (entry.key === false || entry.handle.state() !== "counting") continue;
+    if (!keyMatches(event, entry.key)) return;
+    event.preventDefault();
+    entry.handle.undo();
+    return;
+  }
+}
+function enter(entry) {
+  live2.push(entry);
+  if (!listening && typeof document !== "undefined") {
+    document.addEventListener("keydown", onKey2);
+    listening = true;
+  }
+}
+function leaveStack(handle) {
+  const at = live2.findIndex((e) => e.handle === handle);
+  if (at >= 0) live2.splice(at, 1);
+  if (live2.length === 0 && listening) {
+    document.removeEventListener("keydown", onKey2);
+    listening = false;
+  }
+}
+var live2, listening, isMac2, keyName;
+var init_stack = __esm({
+  "js/undo-toast/stack.js"() {
+    "use strict";
+    live2 = [];
+    listening = false;
+    isMac2 = () => typeof navigator !== "undefined" && /mac|iphone|ipad/i.test(
+      /** @type {any} */
+      navigator.userAgentData?.platform ?? navigator.platform ?? ""
+    );
+    keyName = (key) => key.replace(/^mod\+/i, isMac2() ? "\u2318" : "Ctrl+").replace(/\balt\+/i, isMac2() ? "\u2325" : "Alt+");
+  }
+});
+
 // js/undo-toast/values.js
 var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, MS_PER_SECOND2, CLOCK_TICK_MS;
 var init_values17 = __esm({
@@ -32253,7 +32327,7 @@ function buildRing(doc) {
   ring.append(circles);
   return ring;
 }
-function buildBody2(doc, text, { ms, clock: clock4, seconds }) {
+function buildBody2(doc, text, { ms, clock: clock4, seconds, key }) {
   const strings = getStrings();
   const body = doc.createElement("span");
   body.className = "kp-undo";
@@ -32265,7 +32339,7 @@ function buildBody2(doc, text, { ms, clock: clock4, seconds }) {
   words3.textContent = text;
   const said = doc.createElement("span");
   said.className = "kp-sr-only";
-  said.textContent = ms > 0 ? strings.undoToastAnnounce(text, seconds) : text;
+  said.textContent = ms > 0 ? strings.undoToastAnnounce(text, seconds, key ? keyName(key) : void 0) : text;
   body.append(words3, said);
   let secs = null;
   if (clock4 === "text" || clock4 === "ring") {
@@ -32289,6 +32363,7 @@ var init_build8 = __esm({
     "use strict";
     init_patterns();
     init_strings();
+    init_stack();
     init_values17();
   }
 });
@@ -32390,51 +32465,6 @@ var init_core4 = __esm({
         this.attended();
       }
     };
-  }
-});
-
-// js/undo-toast/stack.js
-function onKey2(event) {
-  if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey || event.key.toLowerCase() !== "z") return;
-  const target = event.target instanceof Element ? event.target : null;
-  if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
-  for (let i = live2.length - 1; i >= 0; i -= 1) {
-    const entry = (
-      /** @type {StackEntry} */
-      live2[i]
-    );
-    if (entry.key === false || entry.handle.state() !== "counting") continue;
-    event.preventDefault();
-    entry.handle.undo();
-    return;
-  }
-}
-function enter(entry) {
-  live2.push(entry);
-  if (!listening && typeof document !== "undefined") {
-    document.addEventListener("keydown", onKey2);
-    listening = true;
-  }
-}
-function leaveStack(handle) {
-  const at = live2.findIndex((e) => e.handle === handle);
-  if (at >= 0) live2.splice(at, 1);
-  if (live2.length === 0 && listening) {
-    document.removeEventListener("keydown", onKey2);
-    listening = false;
-  }
-}
-var live2, listening, isMac2, keyName;
-var init_stack = __esm({
-  "js/undo-toast/stack.js"() {
-    "use strict";
-    live2 = [];
-    listening = false;
-    isMac2 = () => typeof navigator !== "undefined" && /mac|iphone|ipad/i.test(
-      /** @type {any} */
-      navigator.userAgentData?.platform ?? navigator.platform ?? ""
-    );
-    keyName = (key) => key.replace(/^mod\+/i, isMac2() ? "\u2318" : "Ctrl+");
   }
 });
 
@@ -69552,20 +69582,20 @@ var init_values32 = __esm({
 
 // js/timer-disc/register.js
 function registerDiscProperty() {
-  if (registered || typeof CSS === "undefined" || typeof CSS.registerProperty !== "function") return;
-  registered = true;
+  if (registered2 || typeof CSS === "undefined" || typeof CSS.registerProperty !== "function") return;
+  registered2 = true;
   try {
     CSS.registerProperty({ name: TIMER_DISC_LEFT, syntax: "<number>", inherits: true, initialValue: "1" });
   } catch {
   }
 }
-var registered, isDiscPropertyRegistered;
+var registered2, isDiscPropertyRegistered;
 var init_register3 = __esm({
   "js/timer-disc/register.js"() {
     "use strict";
     init_values32();
-    registered = false;
-    isDiscPropertyRegistered = () => registered;
+    registered2 = false;
+    isDiscPropertyRegistered = () => registered2;
   }
 });
 
@@ -89201,6 +89231,7 @@ var init_row_editor = __esm({
       connect() {
         this.serial = this.rows().length;
         this.ensureParts();
+        this.rows().forEach((row2, at) => numberRow(row2, at + 1));
         this.listen(this.host, "click", (event) => this.onClick(event));
         this.observe(new MutationObserver(() => this.sync())).observe(this.host, {
           attributes: true,
@@ -99233,7 +99264,7 @@ var init_selection_undo_newpill2 = __esm({
       selectionCleared: "Selectie gewist",
       undoToastUndo: "Ongedaan maken",
       undoToastKeyTitle: (key) => `Ongedaan maken (${key})`,
-      undoToastAnnounce: (text, seconds) => `${text}. Ongedaan maken kan nog ${seconds} ${seconds === 1 ? "seconde" : "seconden"}`,
+      undoToastAnnounce: (text, seconds, key) => `${text.replace(/\.\s*$/, "")}. Ongedaan maken kan nog ${seconds} ${seconds === 1 ? "seconde" : "seconden"}${key ? `, druk op ${key}` : ""}`,
       undoToastClock: (seconds) => `${seconds} s`,
       undoToastRestored: "Ongedaan gemaakt",
       undoToastSaving: "Opslaan\u2026",
@@ -103298,7 +103329,6 @@ export {
   getFacetValues,
   getLanguage,
   getLanguageDictionary,
-  getQuantity,
   getSegmentedTri,
   getSegmentedValues,
   getSelection,
@@ -103722,6 +103752,7 @@ export {
   setProgressFailed,
   setQr,
   setQuantity,
+  setQuantityUnit,
   setQuiet,
   setQuote,
   setQuoteState,

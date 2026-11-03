@@ -17,7 +17,7 @@ export declare function readSettings(options: import('../undo-toast.js').UndoToa
  * @param {Document} doc @param {string} text @param {ReturnType<typeof readSettings>} settings
  * @returns {{ body: HTMLElement, ring: HTMLElement | null, secs: HTMLElement | null, words: HTMLElement, said: HTMLElement }}
  */
-export declare function buildBody(doc: Document, text: string, { ms, clock, seconds }: ReturnType<typeof readSettings>): {
+export declare function buildBody(doc: Document, text: string, { ms, clock, seconds, key }: ReturnType<typeof readSettings>): {
     body: HTMLElement;
     ring: HTMLElement | null;
     secs: HTMLElement | null;

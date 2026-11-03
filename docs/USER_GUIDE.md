@@ -421,7 +421,9 @@ the phrase). Another language brings its own rules with the dictionary's
 **Restorable? Do not ask: offer Undo** [uxdialogs1101]. A confirmation
 is for what cannot come back. What can (a row moved to a bin, a setting
 that has an old value, anything your server can restore) is deleted at
-once with an Undo: `undoToast(…)`, or `data-kp-row-delete` on a row's
+once with an Undo (the newest toast answers a key, `Mod+Z` by default; `key: 'Alt+Z'` or `data-kp-undo-key="Alt+Z"` changes it, `Mod`
+is Ctrl or Command, `false` turns it off, never while typing in a field; the toast's spoken line ends "press Ctrl+Z" and its
+Undo button's title names it): `undoToast(…)`, or `data-kp-row-delete` on a row's
 button (the row goes, the toast offers Undo, the server hears it after the
 window). To keep yourself to that, mark the button
 `data-kp-confirm-restorable` (or pass `restorable: true`): the confirmation
@@ -2038,7 +2040,10 @@ markup, in the shape `setMenu` writes (the block `menu-button` in
   handed the button (`kind: 'menu-button'`) and every entry
   (`kind: 'menu-item'`, with its `index`, `label` and `value`), each time one
   is built, with `key` from the wrapper's `data-kp-key`; `strings` overrides
-  `menuLoading` and `menuEmpty` for these menus.
+  `menuLoading` and `menuEmpty` for these menus. The options are kept for
+  the root: a button wired first by the page's automatic wiring or by a
+  focus (before the page's own call) is handed to `decorate` when the call
+  arrives, and one wired later uses it at once [homelab 90].
 
 Knobs: `--kp-menu-rich-min` (19rem) and `--kp-menu-rich-max`
 (`min(26rem, 100vw - 2rem)`), the menu's width; `--kp-menu-max-height`
@@ -2539,7 +2544,11 @@ their tick (start and end) when centred they would cross the edge of the drawing
 rows (the buttons in shared columns stay as they are): a state badge or
 dot, a file's format, an appointment's day and hour. The column is as wide
 as the widest lead of the list, so every title starts at one edge, on a
-phone too.
+phone too. A long word in a title, a text or a `.kp-listrow` name wraps
+inside its cell (`min-inline-size: 0`, `overflow-wrap: anywhere`) and never
+widens the page. A title breaks at a hyphen by default; `data-kp-title-break="word"`
+on the list (or on one `.kp-action-list__title`) keeps "made-up" whole, so
+no 2-letter line is left over (a word longer than the line still breaks).
 
 ```html
 <ul class="kp-action-list kp-action-list--lead" aria-label="Inbox" data-kp-row-keys>

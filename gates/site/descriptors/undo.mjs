@@ -59,7 +59,7 @@ for (const button of document.querySelectorAll('[data-doc-undo]')) {
             { name: 'ms', what: 'How long Undo is offered; 6000, 0 commits at once.' },
             { name: 'mode', what: '`defer` (default: the action waits) or `revert` (the action is done; Undo calls the page’s reverse).' },
             { name: 'clock', what: '`ring` (default), `bar`, `text` or `none`; also `data-kp-undo-clock`.' },
-            { name: 'key', what: 'The key that undoes the newest toast; Mod+Z, `false` for none; never while typing in a field.' },
+            { name: 'key', what: 'The key that undoes the newest toast, also `data-kp-undo-key`: `Mod+Z` (default), `Alt+Z`, `Ctrl+Shift+U` (`Mod` is Ctrl or Command), `false` for none; never while typing in a field. The toast’s spoken line ends “press Ctrl+Z” and its Undo button’s title names the key.' },
             { name: 'leave', what: 'What a pending action does when the page is left: `carry` (default), `commit` or `cancel`.' },
             { name: 'max', what: 'How many toasts stand at once; 3. The oldest is committed when a newer one pushes it out.' },
             { name: 'states', what: 'Counting, committing, failed (“Not done: why”, the row comes back), undone, done.' },

@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Quantity — kp-themes</title>
-        <meta name="description" content="A number between a minus and a plus button with its unit after it, for servings and amounts. `data-kp-quantity` on the root with `-min`, `-max`, `-step`, `-unit`, `-unit-one`, `-label` and `-locale`; js/quantity.js (`attachQuantities`, `setQuantity`, `getQuantity`) writes the buttons, the field box and the unit, and fires `kp-quantity-change` with `{ value, previous, source }`. The number is a spin button that can be typed in the page’s language, with a comma or a point." />
+        <meta name="description" content="A number between a minus and a plus button with its unit after it, for servings and amounts. `data-kp-quantity` on the root with `-min`, `-max`, `-step`, `-unit`, `-unit-one`, `-label` and `-locale`; js/quantity.js (`attachQuantities`, `setQuantity`, `setQuantityUnit(root, unit, unitOne)` for a unit that follows something else after attach, `getQuantity`) writes the buttons, the field box and the unit, and fires `kp-quantity-change` with `{ value, previous, source }`. The number is a spin button that can be typed in the page’s language, with a comma or a point." />
         <!-- The theme a reader chose on another page, before first paint:
              without it every page opened in formal again. -->
         <script>
@@ -272,7 +272,7 @@
                 <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">Quantity</h1>
-                    <p class="kp-prose">A number between a minus and a plus button with its unit after it, for servings and amounts. `data-kp-quantity` on the root with `-min`, `-max`, `-step`, `-unit`, `-unit-one`, `-label` and `-locale`; js/quantity.js (`attachQuantities`, `setQuantity`, `getQuantity`) writes the buttons, the field box and the unit, and fires `kp-quantity-change` with `{ value, previous, source }`. The number is a spin button that can be typed in the page’s language, with a comma or a point.</p>
+                    <p class="kp-prose">A number between a minus and a plus button with its unit after it, for servings and amounts. `data-kp-quantity` on the root with `-min`, `-max`, `-step`, `-unit`, `-unit-one`, `-label` and `-locale`; js/quantity.js (`attachQuantities`, `setQuantity`, `setQuantityUnit(root, unit, unitOne)` for a unit that follows something else after attach, `getQuantity`) writes the buttons, the field box and the unit, and fires `kp-quantity-change` with `{ value, previous, source }`. The number is a spin button that can be typed in the page’s language, with a comma or a point.</p>
                 </header>
                 <section class="kp-section" data-sc-section="when" id="when">
                     <h2 class="kp-fw-semibold">When to use it</h2>

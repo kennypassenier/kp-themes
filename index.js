@@ -684,6 +684,7 @@ export {
     getQuantity,
     parseQuantity,
     setQuantity,
+    setQuantityUnit,
     settleQuantity,
 } from './js/quantity.js';
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
