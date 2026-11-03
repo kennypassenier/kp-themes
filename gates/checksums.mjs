@@ -19,6 +19,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
 import { DIST_FILES, DIST_MAP_FILES } from './checksums-dist.mjs';
 import { SPLIT_FILES, SPLIT_MAP_FILES } from './checksums-split.mjs';
+import { FACADE_FILES } from './checksums-facades.mjs';
 import { JS_FILES } from './checksums-js.mjs';
 import { PART_FILES } from './checksums-parts.mjs';
 import { CONTROLLER_PART_FILES } from './checksums-parts-controllers.mjs';
@@ -63,6 +64,8 @@ export const FILES = [
     ...DIST_FILES,
     // The split bundle in dist/js/, generated with it [load-1102].
     ...SPLIT_FILES,
+    // One facade per public dist/js entry over the single bundle, generated with it [superset-1103].
+    ...FACADE_FILES,
     ...JS_FILES,
     // The shipped fonts [T19, AR39]: every file under fonts/ that
     // fonts/families.json names — the faces, each family's LICENSE, the

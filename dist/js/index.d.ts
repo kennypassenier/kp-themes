@@ -158,7 +158,7 @@ export * as weekExports from '../../js/week.js';
 export * as weekdaysExports from '../../js/weekdays.js';
 export * as wheelExports from '../../js/wheel.js';
 export * as wizardExports from '../../js/wizard.js';
-export { AcceptFollows, FOLLOWS, MINIMUM, VERB, attachAcceptFollows } from '../../js/accept-follows.js';
+export { AcceptFollows, FOLLOWS, MINIMUM, VERB, acceptState, amountMakesSense, attachAcceptFollows } from '../../js/accept-follows.js';
 export { ACK_EVENT, ACK_GATE, ACK_RETRY_EVENT, ackGate, attachAckGates, setAckNotes } from '../../js/ack-gate.js';
 export { ACTION_BUSY_EVENT, ACTION_SIZES, ACTION_TILE, attachActionTiles, setActionBusy, setActionSize } from '../../js/action-tiles.js';
 export { ACTION_LIST, ROW_ACTIONS, ROW_KEYS, attachActionColumns, attachRowKeys, fitActionColumns, mergeRoles, removeRow, rowRoles, setRowBusy } from '../../js/actions.js';
@@ -281,7 +281,7 @@ export { STACKBAR, STACKBAR_PICK_EVENT, STACKBAR_RETRY_EVENT, attachStackbars, s
 export { hostStatePlate, statePlate } from '../../js/state-plate.js';
 export { CALM_STATUS_STATES, STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_PAUSE_EVENT, STATUS_RESUME_EVENT, STATUS_RETRY_EVENT, STATUS_STATES, STATUS_UNDO_EVENT, attachStatusLists, buildStatusList, countStatus, setStatus, setTodayState, settleToday } from '../../js/statusrow.js';
 export { STEPLIST_EVENT, STEPLIST_SELECTOR, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from '../../js/steplist.js';
-export { NL_STRINGS } from '../../js/strings-nl.js';
+export { NL_KEPT_ENGLISH, NL_STRINGS } from '../../js/strings-nl.js';
 export { DEFAULT_STRINGS, applyStringProperties, getLanguage, getLanguageDictionary, getStrings, languageReady, registerDictionary, resolveStrings, setLanguage, setStrings, stringProperties } from '../../js/strings.js';
 export { SPLIT_EVENT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, attachStructure, structure, visibleItems } from '../../js/structure.js';
 export { SWATCHES, SWATCH_CHANGE_EVENT, attachSwatches, getSwatchValue, setSwatches } from '../../js/swatches.js';

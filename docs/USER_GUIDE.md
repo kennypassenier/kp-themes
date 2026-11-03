@@ -4672,6 +4672,32 @@ not both". Only the automatic boot is guarded. The exported functions
 bundle that imports parts without loading `auto.js` is never refused. If you see
 the error, remove one of the two script tags.
 
+**One request instead of hundreds: an import map over the single bundle** [superset-1103]. A page that imports from the
+split bundle (`dist/js/<name>.js`) fetches the entries and their chunks (25 files for a bare page with `auto.js`; about 330
+for a page that uses many components). `dist/bundle/<name>.js` is a one-line facade per public entry that re-exports
+the names of `dist/js/<name>.js`, exactly, from `dist/kp-themes.min.js` (`OPEN_EVENT` from `combobox.js` included, which is
+only `COMBOBOX_OPEN_EVENT` in the bundle itself). Map the one onto the other and no import changes:
+
+```html
+<script type="importmap">
+{ "imports": {
+    "/static/kp/js/": "/static/kp/bundle/",
+    "@kp-soft/themes/dist/js/auto": "/static/kp/bundle/auto.js"
+} }
+</script>
+<script type="module" src="/static/kp/js/auto.js"></script>
+```
+
+The first line is for pages that import `/static/kp/js/<x>.js` (the folder where you serve `dist/js/`). The second shows
+the package specifier of one entry: a specifier has no `.js`, so it takes one line per entry you import (a folder line
+would map it to a file without an extension). Serve `dist/bundle/` and `dist/kp-themes.min.js` side by side.
+Measured on a bare page booting `dist/js/auto.js`: 25 kp requests without the map, 2 with it (the facade and the bundle).
+`gates/check-bundle-facades.mjs` holds the promise: for every entry the facade's export names equal the entry's, with no
+exception list. Limits: a name that is a live `let` binding in its module and also reached through a namespace copy
+would be copied at load time; the facades use a live `export { … } from` for every name today, and the generated file
+says if one ever needs the copy. Load either the facade set or the split bundle on a page, not both (the one-runtime
+guard above applies to both).
+
 ## Knowing where a reveal is [TF2]
 
 `js/effects.js` writes `data-kp-reveal-state` on every element it handles:

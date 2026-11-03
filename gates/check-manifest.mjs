@@ -115,7 +115,8 @@ export function copyableExports(pkg, { follow = true } = {}) {
             const dir = target.replace(/^\.\//, '').replace(/\/\*$/, '');
             // ha/, vscode/ and tui/ were exported here from 7.0.0 until 8.0.0
             // moved them to repositories of their own.
-            if (!/^(css|js|dist|fonts)$/.test(dir)) continue;
+            // dist/bundle/ is the facades over the single bundle [superset-1103].
+            if (!/^(css|js|dist|fonts|dist\/bundle)$/.test(dir)) continue;
             for (const file of filesUnder(new URL(`../${dir}/`, import.meta.url), dir)) found.add(file);
             continue;
         }
