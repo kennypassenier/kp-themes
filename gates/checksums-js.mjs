@@ -75,6 +75,7 @@ export const JS_FILES = [
     'js/controller.js',
     'js/realm.js',
     'js/boot-guard.js',
+    'js/by-id.js',
     'js/live-options.js',
     'js/live-say.js',
     'js/problems.js',

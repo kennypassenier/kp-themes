@@ -112,6 +112,8 @@ export const VENDORED = [
     'js/theme-core/values.js',
     // Since the 2026-10-30 conversion js/theme-picker.js is a facade over js/theme-picker/, and its picker is a controller class on
     // js/controller.js; chassis-rs bakes the parts and the controller base in beside it.
+    // js/by-id.js [byid-1103]: the confirmation dialogs look ids up through byId, so chassis-rs bakes it in beside them.
+    'js/by-id.js',
     'js/controller.js',
     'js/theme-picker/controller.js',
     'js/theme-picker/markup.js',

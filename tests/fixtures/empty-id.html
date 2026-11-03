@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Empty ids</title>
+    <link rel="stylesheet" href="/dist/kp-themes.css" />
+</head>
+<body>
+    <button data-kp-dialog="">Trigger with an empty value</button>
+    <button data-kp-dialog="real">Real trigger</button>
+    <dialog id="real"><p>Hi</p><button>Close</button></dialog>
+    <div role="tablist">
+        <button role="tab" aria-selected="true">No controls</button>
+        <button role="tab" aria-selected="false" aria-controls="p2">Two</button>
+    </div>
+    <div id="p2" role="tabpanel" hidden>Two</div>
+    <script type="module" src="/dist/js/auto.js"></script>
+</body>
+</html>

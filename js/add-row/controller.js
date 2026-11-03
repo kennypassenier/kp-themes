@@ -7,6 +7,7 @@ import { VALID_EVENT } from '../forms/constants.js';
 import { ADD_ROW_FOR } from './constants.js';
 import { headerCells, layLine, layTableRow } from './layout.js';
 import { addLine, refusalOf } from './submit.js';
+import { byId } from '../by-id.js';
 
 export class AddRow extends Controller {
     /** @param {HTMLElement} host the add row, a form */
@@ -49,7 +50,7 @@ export class AddRow extends Controller {
     wrap() {
         const id = this.row.getAttribute(ADD_ROW_FOR);
         if (!id) return null;
-        const named = this.row.ownerDocument.getElementById(id);
+        const named = byId(this.row.ownerDocument, id);
         const wrap = /** @type {HTMLElement | null} */ (named?.closest(TABLE) ?? named?.querySelector(TABLE) ?? null);
         if (!wrap) console.warn(`kp-addrow: no data table #${id} on the page; the row stands as a line`, this.row);
         return wrap;

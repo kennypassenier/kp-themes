@@ -1,14 +1,14 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "42eebf8dba1d4927",
+    "base": "980b7498efdfbc4c",
     "modules": {
-        "js/accept-follows.js": { "digest": "0fdf861ed688c68e", "when": "[data-kp-accept-follows]" },
+        "js/accept-follows.js": { "digest": "be79ca77bfba5707", "when": "[data-kp-accept-follows]" },
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
         "js/action-tiles.js": { "digest": "9979a93508a6cb63", "when": ".kp-action" },
         "js/actions.js": { "digest": "752ed11f9eed59e6", "when": ".kp-row-actions" },
-        "js/add-row.js": { "digest": "1fbea865f41b8333", "when": "[data-kp-addrow]" },
+        "js/add-row.js": { "digest": "a05caeda77874640", "when": "[data-kp-addrow]" },
         "js/alarm.js": { "digest": "f1234069084dbbb7", "when": "[data-kp-alarm]" },
-        "js/anchors.js": { "digest": "1cf5841c25e107ad", "when": "[data-kp-anchors]" },
+        "js/anchors.js": { "digest": "dd9c035829d6a4b4", "when": "[data-kp-anchors]" },
         "js/art.js": { "digest": "58d3433781a042cc", "when": "[data-kp-art]" },
         "js/attention.js": { "digest": "7f2c263f5049d046", "when": ".kp-attention" },
         "js/auto-refresh.js": { "digest": "e2b85f230ab42e00", "when": "[data-kp-refresh]" },
@@ -20,9 +20,9 @@
         "js/calendar.js": { "digest": "546adaa2d74cd96e", "when": "[data-kp-calendar]" },
         "js/calm.js": { "digest": "9e8fe8bae7b50f69", "when": "[data-kp-calm-switch]" },
         "js/card-state.js": { "digest": "2aab2935bba3ed51", "when": ".kp-card[data-kp-state]" },
-        "js/chart.js": { "digest": "d1b91c470e565c6f", "when": "[data-kp-chart]" },
+        "js/chart.js": { "digest": "49e0523b5b13c03a", "when": "[data-kp-chart]" },
         "js/checklist.js": { "digest": "cff08131410bec55", "when": "[data-kp-checklist]" },
-        "js/chip-filter.js": { "digest": "8a619e23d83458c7", "when": "[data-kp-filter-for]" },
+        "js/chip-filter.js": { "digest": "8cf5c623dcee4780", "when": "[data-kp-filter-for]" },
         "js/claim.js": { "digest": "3d2dcde526996c56", "when": "[data-kp-checklist-claim]" },
         "js/code-field.js": { "digest": "c1f1edf05fd0ca04", "when": "textarea[data-kp-code-field]" },
         "js/code.js": { "digest": "edc2a6259799b797", "when": "[data-kp-code]" },
@@ -31,15 +31,15 @@
         "js/command.js": { "digest": "d0b1e6320d85ce92", "when": "[data-kp-command]" },
         "js/compare.js": { "digest": "593b56b2dc26d88c", "when": "[data-kp-compare]" },
         "js/components.js": {
-            "digest": "b7091e72c355a66e",
+            "digest": "4ddf77fde88e6766",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], [data-kp-type-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
         "js/connection.js": { "digest": "2175ad931a99f8f9", "when": "[data-kp-connection]" },
         "js/console.js": { "digest": "a007778c7d52a785", "when": "[data-kp-console]" },
-        "js/context-menu.js": { "digest": "d000af338d65a82d", "when": "[data-kp-context-menu]" },
+        "js/context-menu.js": { "digest": "edd2bb4b09a0fe63", "when": "[data-kp-context-menu]" },
         "js/countdown.js": { "digest": "905c710addaafda6", "when": "[data-kp-countdown], [data-kp-countdown-until]" },
         "js/datatable.js": { "digest": "75075900bab39d51", "when": "[data-kp-datatable], [data-kp-cards-at], th[data-kp-col=\"actions\"]" },
-        "js/date-nav.js": { "digest": "dcd035ae59c3fb4b", "when": "[data-kp-date-nav]" },
+        "js/date-nav.js": { "digest": "ab6f4d64c515042a", "when": "[data-kp-date-nav]" },
         "js/dated-options.js": { "digest": "afb0ac71fb0d5b32", "when": "[data-kp-dated]" },
         "js/datepicker.js": { "digest": "dab334c42fd6b2dc", "when": "[data-kp-datepicker]" },
         "js/dayline.js": { "digest": "6ef5005b76b8b4c7", "when": "[data-kp-dayline]" },
@@ -50,7 +50,7 @@
         "js/facets.js": { "digest": "c6794ca99b3598e2", "when": "[data-kp-facets]" },
         "js/feed.js": { "digest": "06f7d10ab05ee41e", "when": "[data-kp-feed]" },
         "js/flash.js": { "digest": "07b895bbd6a06ba8", "when": "[data-kp-flash-button], [data-kp-post]" },
-        "js/focus-steps.js": { "digest": "eb685d4904118f64", "when": "[data-kp-focus-steps]" },
+        "js/focus-steps.js": { "digest": "aab4f36b6c010624", "when": "[data-kp-focus-steps]" },
         "js/footprint.js": {
             "digest": "fef9666c44fdaddb",
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-sequencer], [data-kp-graph], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops"
@@ -88,7 +88,7 @@
         "js/palette.js": { "digest": "bf36f30b237824bf", "when": "[data-kp-palette], [data-kp-shortcuts]" },
         "js/passkeys.js": { "digest": "d90d32e3a6206ae7", "when": "[data-kp-passkeys]" },
         "js/path-trace.js": { "digest": "a9ed28d3c55f21a5", "when": "[data-kp-trace]" },
-        "js/patterns.js": { "digest": "7f6cd58e9ccb9140", "when": "[data-kp-copy], [data-kp-undo-action], [data-kp-secret]" },
+        "js/patterns.js": { "digest": "f5ed2b5e27a20f40", "when": "[data-kp-copy], [data-kp-undo-action], [data-kp-secret]" },
         "js/pipeline.js": { "digest": "605ca14ef529b4f9", "when": "[data-kp-pipeline]" },
         "js/popover-form.js": { "digest": "b598b253ea3f3864", "when": "[data-kp-popover-form]" },
         "js/print.js": { "digest": "8c62d261fc3a8a91", "when": "[data-kp-print-action], [data-kp-checklist], [data-kp-print-sheet]" },
@@ -108,9 +108,9 @@
         "js/row-undo.js": { "digest": "f97a3d272eee1ddd", "when": "[data-kp-row-delete]" },
         "js/runs.js": { "digest": "2e552dd656dad61f", "when": "[data-kp-runs]" },
         "js/segmented-menu.js": { "digest": "b7bd3a845059dd98", "when": ".kp-segmented__menu" },
-        "js/segmented.js": { "digest": "a7f09dbb3e2a25f9", "when": "[data-kp-segmented]" },
-        "js/selection-bar.js": { "digest": "565c1f3b23e53c46", "when": "[data-kp-selection]" },
-        "js/sentence.js": { "digest": "1ee8f8dc94059a5a", "when": "[data-kp-sentence]" },
+        "js/segmented.js": { "digest": "1c7d3904ef0731e0", "when": "[data-kp-segmented]" },
+        "js/selection-bar.js": { "digest": "ab9e221c7e152866", "when": "[data-kp-selection]" },
+        "js/sentence.js": { "digest": "cced5762eb5f0053", "when": "[data-kp-sentence]" },
         "js/sequencer.js": { "digest": "720925af69ca0703", "when": "[data-kp-sequencer]" },
         "js/settled.js": {
             "digest": "e02962f2a0689b61",
@@ -123,17 +123,17 @@
         "js/stackbar.js": { "digest": "22ee6b6374f0c210", "when": "[data-kp-stackbar]" },
         "js/statusrow.js": { "digest": "0fed80955a05324a", "when": ".kp-statuslist" },
         "js/steplist.js": { "digest": "2bc8e0c21252bbd1", "when": ".kp-steplist" },
-        "js/structure.js": { "digest": "6c22a797c54d785d", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
+        "js/structure.js": { "digest": "da712c6749ea1bd1", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
         "js/swatches.js": { "digest": "1b965d9b70abffd2", "when": "[data-kp-swatches]" },
         "js/swipe.js": { "digest": "d0a21d4f58429239", "when": "[data-kp-swipe]" },
-        "js/tabbar.js": { "digest": "f9bae5db36357e88", "when": ".kp-tabbar" },
+        "js/tabbar.js": { "digest": "0d6f1e216b18b3d8", "when": ".kp-tabbar" },
         "js/tables.js": { "digest": "f44c970942c89bca", "when": ".kp-table-wrap" },
         "js/thread.js": { "digest": "65af4ca8e7a6c9b3", "when": "[data-kp-thread]" },
         "js/tick.js": { "digest": "c6f496988b5135c3", "when": "[data-kp-tick]" },
-        "js/tiles.js": { "digest": "8318ace37b833416", "when": "[data-kp-tiles-set]" },
+        "js/tiles.js": { "digest": "c993c9b612e312b6", "when": "[data-kp-tiles-set]" },
         "js/timefield.js": { "digest": "a0ec49f1e8fbc7f0", "when": "[data-kp-time]" },
         "js/timer-disc.js": { "digest": "7e7cf5f976812b90", "when": "[data-kp-timer-disc], [data-kp-timer-disc-until]" },
-        "js/timer.js": { "digest": "b22ac7d68d1294a0", "when": "[data-kp-timers], [data-kp-timer-start]" },
+        "js/timer.js": { "digest": "2269387739fddad5", "when": "[data-kp-timers], [data-kp-timer-start]" },
         "js/toggle.js": { "digest": "51e547f7c4a417b9", "when": "[data-kp-toggle]" },
         "js/toolbar.js": { "digest": "a89e8b2c4fc81573", "when": "[data-kp-toolbar]" },
         "js/transfer.js": { "digest": "299493b3bb8d006d", "when": "[data-kp-transfer]" },
@@ -147,7 +147,7 @@
         },
         "js/week.js": { "digest": "a89db1a5005a4421", "when": "[data-kp-week]" },
         "js/weekdays.js": { "digest": "0d81b4e0e6a7585d", "when": "[data-kp-weekdays]" },
-        "js/wheel.js": { "digest": "5f1c7bb5541aeed5", "when": "[data-kp-wheel]" },
+        "js/wheel.js": { "digest": "752baa05cda64cfc", "when": "[data-kp-wheel]" },
         "js/wizard.js": { "digest": "30df34a5ed6a9d70", "when": "[data-kp-wizard]" }
     },
     "themes": {
@@ -11822,7 +11822,7 @@
             ]
         },
         "data": {
-            "modules": "229947c305442d6d",
+            "modules": "7a7330ef75b17e9a",
             "families": [
                 "data-kp-activation",
                 "data-kp-active",
@@ -13058,7 +13058,7 @@
             ]
         },
         "feedback": {
-            "modules": "b714756a5d8f65e4",
+            "modules": "c8513e585f17a2f8",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14252,7 +14252,7 @@
             ]
         },
         "navigation": {
-            "modules": "4dfc49d04505f3d8",
+            "modules": "a783a2ceedb4f291",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14488,7 +14488,7 @@
             ]
         },
         "overlays": {
-            "modules": "81208086387c2b90",
+            "modules": "869f81e394a11d32",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14651,7 +14651,7 @@
             ]
         },
         "page": {
-            "modules": "3320df05201f7f98",
+            "modules": "72bae1cb31b784bb",
             "families": [
                 "data-kp-above",
                 "data-kp-accept-follows",

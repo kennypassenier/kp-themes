@@ -4,6 +4,7 @@ import { intentScore, queryWords } from '../js/intent.js';
 import { closeOnOutsidePress, isMac } from '../js/palette.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
+import { byId } from '../js/by-id.js';
 
 // Command palette and shortcut sheet, React [TH40, TH49].
 //
@@ -301,7 +302,7 @@ function CommandPaletteInner(
                             // router behind linkComponent — follows it, and
                             // the click runs the command on its way.
                             const link =
-                                command.href !== undefined && !command.disabled ? document.getElementById(`${listId}-option-${active}`) : null;
+                                command.href !== undefined && !command.disabled ? byId(document, `${listId}-option-${active}`) : null;
                             if (link !== null) link.click();
                             else run(command);
                         }

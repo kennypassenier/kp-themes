@@ -3069,6 +3069,15 @@ var init_accept_follows_words = __esm({
   }
 });
 
+// js/by-id.js
+var byId;
+var init_by_id = __esm({
+  "js/by-id.js"() {
+    "use strict";
+    byId = (doc, id) => typeof id === "string" && id.trim() !== "" ? doc.getElementById(id) : null;
+  }
+});
+
 // js/accept-follows.js
 var accept_follows_exports = {};
 __export(accept_follows_exports, {
@@ -3093,6 +3102,7 @@ var init_accept_follows = __esm({
     init_read();
     init_values();
     init_accept_follows_words();
+    init_by_id();
     init_accept_follows_words();
     FOLLOWS = "data-kp-accept-follows";
     VERB = "data-kp-accept-verb";
@@ -3111,7 +3121,7 @@ var init_accept_follows = __esm({
       }
       connect() {
         const id = this.host.getAttribute(FOLLOWS) ?? "";
-        const quantity = this.host.ownerDocument.getElementById(id);
+        const quantity = byId(this.host.ownerDocument, id);
         if (!quantity?.matches("[data-kp-quantity]")) throw new Error(`${FOLLOWS}="${id}": no quantity with that id is on the page`);
         this.quantity = quantity;
         this.keepHost();
@@ -3466,6 +3476,7 @@ var init_type_confirm = __esm({
     "use strict";
     init_controller();
     init_strings();
+    init_by_id();
     VIOLATION_EVENT = "kp-contract-violation";
     CONFIRM_WINDOW_MS = 4e3;
     CONFIRM_MODES = /** @type {const} */
@@ -3513,7 +3524,7 @@ var init_type_confirm = __esm({
       constructor(host, options = {}) {
         super(host, options);
         this.strings = options.strings;
-        const target = host.dataset.kpTypeConfirmFor ? host.ownerDocument.getElementById(host.dataset.kpTypeConfirmFor) : null;
+        const target = host.dataset.kpTypeConfirmFor ? byId(host.ownerDocument, host.dataset.kpTypeConfirmFor) : null;
         this.button = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
         this.wasDisabled = this.button?.disabled ?? false;
       }
@@ -3528,7 +3539,7 @@ var init_type_confirm = __esm({
           delete block.dataset.kpTypeConfirmAttached;
           if (this.button) this.button.disabled = this.wasDisabled;
         });
-        const lostSource = block.dataset.kpTypeConfirmLoses ? doc.getElementById(block.dataset.kpTypeConfirmLoses) : null;
+        const lostSource = block.dataset.kpTypeConfirmLoses ? byId(doc, block.dataset.kpTypeConfirmLoses) : null;
         const lost = lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null;
         if (lost instanceof Element) {
           lost.removeAttribute("id");
@@ -3676,7 +3687,7 @@ function openConfirmation(button6, { phrase, description: richText, acceptLook =
     const own = (button6.textContent ?? "").trim().replace(/\s*(?:…|\.\.\.)$/, "");
     accept.textContent = acceptLabel ?? button6.getAttribute("data-kp-confirm-label") ?? (own || s2.confirmAccept);
     const lostId = button6.getAttribute("data-kp-confirm-loses");
-    const lostSource = lostId ? document.getElementById(lostId) : null;
+    const lostSource = lostId ? byId(document, lostId) : null;
     const lost = loses ?? (lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null);
     if (lost instanceof Element) {
       lost.removeAttribute("id");
@@ -3731,6 +3742,7 @@ var init_confirm_dialog = __esm({
     "use strict";
     init_strings();
     init_type_confirm();
+    init_by_id();
     dialogSeq = 0;
     DESCRIPTION_FIELD = 'input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), [contenteditable="true"]';
   }
@@ -6539,7 +6551,7 @@ var init_dialog_open = __esm({
 function attachDialogs(root = document, { modal = true } = {}) {
   const triggers = (
     /** @type {HTMLElement[]} */
-    [...root.querySelectorAll("[data-kp-dialog]")].filter((trigger) => !("kpDialogAttached" in trigger.dataset)).filter((trigger) => document.getElementById(trigger.dataset.kpDialog ?? "") instanceof HTMLDialogElement).map((trigger) => attachOne(trigger, DialogTrigger, { modal }))
+    [...root.querySelectorAll("[data-kp-dialog]")].filter((trigger) => !("kpDialogAttached" in trigger.dataset)).filter((trigger) => byId(document, trigger.dataset.kpDialog) instanceof HTMLDialogElement).map((trigger) => attachOne(trigger, DialogTrigger, { modal }))
   );
   const closers = (
     /** @type {HTMLElement[]} */
@@ -6559,13 +6571,14 @@ var init_dialogs = __esm({
     init_strings();
     init_dialog_guard();
     init_dialog_open();
+    init_by_id();
     init_dialog_open();
     DialogTrigger = class extends Controller {
       /** @param {HTMLElement} host @param {{ modal?: boolean }} [options] */
       constructor(host, options = {}) {
         super(host, options);
         this.dialog = /** @type {HTMLDialogElement} */
-        document.getElementById(host.dataset.kpDialog ?? "");
+        byId(document, host.dataset.kpDialog);
         this.modal = options.modal ?? true;
       }
       connect() {
@@ -8696,9 +8709,10 @@ var init_tab_list = __esm({
     init_motion();
     init_constants2();
     init_tab_row();
+    init_by_id();
     SWAP_MARK_MS = 400;
     handles2 = /* @__PURE__ */ new WeakMap();
-    panelOf = (tab) => document.getElementById(tab.getAttribute("aria-controls") ?? "");
+    panelOf = (tab) => byId(document, tab.getAttribute("aria-controls"));
     TabsControl = class extends Controller {
       /** @param {HTMLElement} host @param {{ activation?: 'automatic' | 'manual', loop?: boolean }} [options] */
       constructor(host, options = {}) {
@@ -8785,7 +8799,7 @@ var init_tab_list = __esm({
         if (previous === index) return;
         const tab = all[index];
         this.host.dispatchEvent(
-          new CustomEvent(TAB_CHANGE_EVENT, { bubbles: true, detail: { index, tab, panel: document.getElementById(tab?.getAttribute("aria-controls") ?? ""), previous } })
+          new CustomEvent(TAB_CHANGE_EVENT, { bubbles: true, detail: { index, tab, panel: byId(document, tab?.getAttribute("aria-controls")), previous } })
         );
       }
       /**
@@ -11961,6 +11975,7 @@ var init_controller5 = __esm({
     init_constants6();
     init_layout();
     init_submit2();
+    init_by_id();
     AddRow = class extends Controller {
       /** @param {HTMLElement} host the add row, a form */
       constructor(host) {
@@ -12004,7 +12019,7 @@ var init_controller5 = __esm({
       wrap() {
         const id = this.row.getAttribute(ADD_ROW_FOR);
         if (!id) return null;
-        const named = this.row.ownerDocument.getElementById(id);
+        const named = byId(this.row.ownerDocument, id);
         const wrap2 = (
           /** @type {HTMLElement | null} */
           named?.closest(TABLE) ?? named?.querySelector(TABLE) ?? null
@@ -15784,7 +15799,7 @@ function uniqueAnchorId(doc, slug, fallback2 = "section") {
   const base = slug || fallback2;
   let id = base;
   let n = 2;
-  while (doc.getElementById(id)) id = `${base}-${n++}`;
+  while (byId(doc, id)) id = `${base}-${n++}`;
   return id;
 }
 function plainText(el16) {
@@ -15827,6 +15842,7 @@ var ANCHORS, ANCHOR, ANCHOR_COPY_EVENT, ANCHOR_REVEAL_EVENT, ANCHOR_MISSING_EVEN
 var init_text = __esm({
   "js/anchors/text.js"() {
     "use strict";
+    init_by_id();
     ANCHORS = "[data-kp-anchors]";
     ANCHOR = "[data-kp-anchor]";
     ANCHOR_COPY_EVENT = "kp-anchor-copy";
@@ -15998,6 +16014,7 @@ var init_controller6 = __esm({
     init_copy_key();
     init_marks();
     init_text();
+    init_by_id();
     LOOK_AGAIN_MS = 250;
     AnchorBox = class extends AnchorMarks {
       /** @param {HTMLElement} box @param {import('../anchors.js').AnchorOptions} [options] */
@@ -16063,7 +16080,7 @@ var init_controller6 = __esm({
       /** @param {string} id @returns {boolean} whether there was a place to land */
       land(id) {
         const box = this.host;
-        const target = id ? this.doc.getElementById(id) : null;
+        const target = id ? byId(this.doc, id) : null;
         if (!target || !box.contains(target)) return false;
         this.clearNotice();
         window.clearTimeout(this.waitTimer);
@@ -16124,7 +16141,7 @@ var init_controller6 = __esm({
         if (!id) return;
         const startedAt = Date.now();
         const tick6 = () => {
-          const there = this.doc.getElementById(id);
+          const there = byId(this.doc, id);
           if (there && this.host.contains(there)) return void this.land(id);
           if (there) return;
           const now = Date.now();
@@ -19262,7 +19279,7 @@ function nameOf3(group) {
   const own = group.getAttribute("aria-label");
   if (own) return own;
   const ids2 = (group.getAttribute("aria-labelledby") ?? "").split(/\s+/).filter(Boolean);
-  const text = ids2.map((id) => group.ownerDocument.getElementById(id)?.textContent?.trim() ?? "").join(" ").trim();
+  const text = ids2.map((id) => byId(group.ownerDocument, id)?.textContent?.trim() ?? "").join(" ").trim();
   return text || getStrings().segmentedFoldName;
 }
 function chosenWords(group) {
@@ -19368,6 +19385,7 @@ var init_fold2 = __esm({
     init_open();
     init_strings();
     init_read2();
+    init_by_id();
     folds = /* @__PURE__ */ new WeakMap();
   }
 });
@@ -19638,6 +19656,7 @@ var init_link = __esm({
     init_items2();
     init_paint3();
     init_link_choices();
+    init_by_id();
     LINK_ATTRIBUTE = "data-kp-segmented-for";
     MADE = "data-kp-search-placeholder";
     SegmentedLink = class extends Controller {
@@ -19649,7 +19668,7 @@ var init_link = __esm({
       /** The combobox the group names, or null while it is not on the page. @returns {HTMLElement | null} */
       target() {
         const id = this.host.getAttribute(LINK_ATTRIBUTE);
-        return id ? this.host.ownerDocument.getElementById(id) : null;
+        return id ? byId(this.host.ownerDocument, id) : null;
       }
       /** Whether the field holds one value (a combobox) and not a set of tags. */
       single() {
@@ -22851,6 +22870,7 @@ var init_keys6 = __esm({
     "use strict";
     init_controller();
     init_geometry2();
+    init_by_id();
     LETTERS_MS = 700;
     ROW_GAP_PX = 16;
     WATCHED6 = ["hidden", "open", "class", "data-kp-tiles-keys", "data-kp-folding", "data-kp-tile-stop"];
@@ -23007,7 +23027,7 @@ var init_keys6 = __esm({
         board2.dispatchEvent(new CustomEvent(TILES_EXIT_EVENT, { bubbles: true, detail: { direction: "up" } }));
         const named = board2.getAttribute("data-kp-tiles-keys-exit");
         if (!named) return;
-        let aim = this.doc.getElementById(named);
+        let aim = byId(this.doc, named);
         if (!aim) {
           try {
             aim = this.doc.querySelector(named);
@@ -23648,7 +23668,7 @@ function groupOf(el16) {
 function chipKey(chip) {
   const doc = chip.ownerDocument;
   const id = chip.getAttribute("data-kp-chart-zoom-for");
-  if (id) return doc.getElementById(id);
+  if (id) return byId(doc, id);
   return chip.closest(CHART_GROUP) ?? doc;
 }
 function dataInMarkup(el16) {
@@ -23716,6 +23736,7 @@ var init_dom2 = __esm({
     "use strict";
     init_api5();
     init_constants12();
+    init_by_id();
     SVGNS = "http://www.w3.org/2000/svg";
     pendingEnds = [];
   }
@@ -26990,6 +27011,7 @@ var init_controller14 = __esm({
     init_badge();
     init_dialog();
     init_fit3();
+    init_by_id();
     TabbarController = class extends Controller {
       /** @param {HTMLElement} bar */
       constructor(bar) {
@@ -27041,7 +27063,7 @@ var init_controller14 = __esm({
             /** @type {HTMLElement} */
             el16
           );
-          const dialog = this.doc.getElementById(tab.dataset.kpDialog ?? "");
+          const dialog = byId(this.doc, tab.dataset.kpDialog);
           if (!(dialog instanceof HTMLDialogElement)) continue;
           const wiring = this.wired.get(dialog);
           if (wiring === void 0) {
@@ -27379,7 +27401,7 @@ function menuFor(el16) {
   if (value !== "") {
     const source = (
       /** @type {HTMLElement | null} */
-      value === INNER ? el16.querySelector("[data-kp-menu-button]") : el16.ownerDocument.getElementById(value)
+      value === INNER ? el16.querySelector("[data-kp-menu-button]") : byId(el16.ownerDocument, value)
     );
     return { groups: (source && filled.get(source)) ?? [], source };
   }
@@ -27395,6 +27417,7 @@ var init_controller15 = __esm({
     init_strings();
     init_anchor();
     init_values16();
+    init_by_id();
     given = /* @__PURE__ */ new WeakMap();
     answered = /* @__PURE__ */ new WeakSet();
     hasItems = (groups) => groups.some((group) => group.items.length > 0);
@@ -29480,7 +29503,7 @@ var init_api7 = __esm({
 function driveTarget(nav, range, announce8) {
   const id = nav.getAttribute(FOR_ATTRIBUTE);
   if (!id) return;
-  const target = nav.ownerDocument.getElementById(id);
+  const target = byId(nav.ownerDocument, id);
   if (!target) {
     console.warn(`kp-date-nav: ${FOR_ATTRIBUTE}="${id}" names no element; the navigation moves nothing`);
     return;
@@ -29506,6 +29529,7 @@ var init_link2 = __esm({
     init_api7();
     init_constants16();
     init_constants14();
+    init_by_id();
   }
 });
 
@@ -32398,6 +32422,7 @@ var init_copy = __esm({
     init_constants22();
     init_secrets();
     init_undo();
+    init_by_id();
     CopyControl = class extends Controller {
       /** @param {HTMLElement} host @param {{ copiedMs?: number, toastOnCopyFailure?: boolean }} [options] */
       constructor(host, options = {}) {
@@ -32423,7 +32448,7 @@ var init_copy = __esm({
       async copy() {
         const button6 = this.host;
         const target = button6.dataset.kpCopy ?? "";
-        const source = target === "" ? null : document.getElementById(target);
+        const source = target === "" ? null : byId(document, target);
         const text = source?.textContent?.trim() ?? button6.dataset.kpCopyValue ?? "";
         try {
           await navigator.clipboard.writeText(text);
@@ -33280,6 +33305,7 @@ var init_controller24 = __esm({
     init_items2();
     init_constants23();
     init_counts();
+    init_by_id();
     ChipFilter = class extends Controller {
       /** @param {HTMLElement} host the chip group */
       constructor(host) {
@@ -33304,7 +33330,7 @@ var init_controller24 = __esm({
       /** The table's wrapper, or null while it is not on the page. @returns {HTMLElement | null} */
       wrap() {
         const id = this.host.getAttribute(FILTER_FOR) ?? "";
-        const named = id ? this.host.ownerDocument.getElementById(id) : null;
+        const named = id ? byId(this.host.ownerDocument, id) : null;
         return (
           /** @type {HTMLElement | null} */
           named?.closest(TABLE) ?? named?.querySelector(TABLE) ?? null
@@ -40347,7 +40373,7 @@ function sourcesOf(bar) {
   const named = (bar.getAttribute("data-kp-selection-for") ?? "").split(/\s+/).filter(Boolean);
   if (named.length) return (
     /** @type {HTMLElement[]} */
-    named.map((id) => doc.getElementById(id)).filter((el16) => el16 !== null)
+    named.map((id) => byId(doc, id)).filter((el16) => el16 !== null)
   );
   for (let up = bar.parentElement; up; up = up.parentElement) if (up.querySelector(`${BOX}, ${ROW_PICK}`)) return [up];
   return [];
@@ -40414,6 +40440,7 @@ var init_model2 = __esm({
     init_controller();
     init_row_pick();
     init_rows3();
+    init_by_id();
     SELECTION = "[data-kp-selection]";
     BOX = "[data-kp-select-row]";
     SELECTION_EVENT = "kp-selection-change";
@@ -43566,7 +43593,7 @@ function followStart(follower) {
 function leaderOf(follower, quiet = false) {
   const id = follower.getAttribute(WHEEL_FOLLOWS)?.trim();
   if (!id) return null;
-  const leader = follower.ownerDocument.getElementById(id);
+  const leader = byId(follower.ownerDocument, id);
   if (leader instanceof HTMLElement && leader !== follower && leader.matches("[data-kp-wheel]")) return leader;
   if (!quiet) warnOnce(`leader:${id}`, `${WHEEL_FOLLOWS}="${id}" names no other wheel on this page; the follower stays locked until it does.`);
   return null;
@@ -43703,6 +43730,7 @@ var init_follow = __esm({
     init_draw7();
     init_spin();
     init_state14();
+    init_by_id();
     WHEEL_FOLLOWS = "data-kp-wheel-follows";
     WHEEL_FOLLOWS_START = "data-kp-wheel-follows-start";
     WHEEL_LEADER_WON = "data-kp-wheel-leader-won";
@@ -44167,7 +44195,7 @@ function layTracks(root) {
 }
 function timerList(root) {
   const named = root.getAttribute("data-kp-focus-steps-timers");
-  const found = named ? document.getElementById(named) : document.querySelector("[data-kp-timers]");
+  const found = named ? byId(document, named) : document.querySelector("[data-kp-timers]");
   return found instanceof HTMLElement ? found : null;
 }
 function timerStates(root) {
@@ -44182,6 +44210,7 @@ var init_tracks = __esm({
     init_state15();
     init_dom6();
     init_resume();
+    init_by_id();
     tracksOn = (root) => stateOf2(root).tracks.length > 1 && opt(root, "tracks", "auto") !== "off";
     stepKeyOf = (state12, i) => state12.steps[i]?.id ?? `step-${i + 1}`;
     timerIdOf = (state12, i) => state12.steps[i]?.timer?.id ?? stepKeyOf(state12, i);
@@ -46563,11 +46592,12 @@ var init_run2 = __esm({
     init_sound();
     init_state16();
     init_sync4();
+    init_by_id();
     emit = (list, timer, type, extra = {}) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { timer: stateOf3(timer), ...extra } }));
     find = (list, id) => LISTS.get(list)?.get(id) ?? null;
     targetOf = (starter) => {
       const named = starter.getAttribute("data-kp-timer-for");
-      const found = named ? document.getElementById(named) : document.querySelector(TIMERS);
+      const found = named ? byId(document, named) : document.querySelector(TIMERS);
       return found instanceof HTMLElement ? found : null;
     };
   }
@@ -58846,7 +58876,7 @@ function listName(list) {
   const label2 = list.getAttribute("aria-label");
   if (label2) return label2;
   const ids2 = (list.getAttribute("aria-labelledby") ?? "").split(/\s+/).filter(Boolean);
-  const words3 = ids2.map((id) => list.ownerDocument.getElementById(id)?.textContent?.trim() ?? "").filter(Boolean);
+  const words3 = ids2.map((id) => byId(list.ownerDocument, id)?.textContent?.trim() ?? "").filter(Boolean);
   if (words3.length) return words3.join(" ");
   return list.dataset.kpReorderLabel ?? listKey(list);
 }
@@ -58885,6 +58915,7 @@ var ATTACHED2, EDGE_PX, EDGE_STEP_PX, groupOf2, shownList, listKey;
 var init_reorder_group = __esm({
   "js/structure/reorder-group.js"() {
     "use strict";
+    init_by_id();
     ATTACHED2 = "kpReorderAttached";
     EDGE_PX = 40;
     EDGE_STEP_PX = 16;
@@ -87147,7 +87178,7 @@ function nameOf9(control) {
   const by = control.getAttribute("aria-labelledby");
   if (by)
     return tidy(
-      by.split(/\s+/).map((id) => control.ownerDocument.getElementById(id)?.textContent ?? "").join(" ")
+      by.split(/\s+/).map((id) => byId(control.ownerDocument, id)?.textContent ?? "").join(" ")
     );
   return "";
 }
@@ -87290,6 +87321,7 @@ var init_fields2 = __esm({
     init_strings();
     init_weekdays();
     init_realm();
+    init_by_id();
     SENTENCE = "[data-kp-sentence]";
     SENTENCE_EVENT = "kp-sentence-change";
     LINES = /* @__PURE__ */ new WeakMap();
@@ -90193,8 +90225,8 @@ function drawEdges(doc, data, at, base) {
   const edges2 = svgEl(doc, "g", { class: "kp-graph__edges" });
   const bends = graphBends(data.edges);
   const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
-  const byId = new Map(data.nodes.map((n) => [n.id, n]));
-  const name = (id) => byId.get(id)?.label ?? id;
+  const byId2 = new Map(data.nodes.map((n) => [n.id, n]));
+  const name = (id) => byId2.get(id)?.label ?? id;
   data.edges.forEach((e, i) => {
     const a = at.get(e.from);
     const b = at.get(e.to);
@@ -90224,9 +90256,9 @@ function drawEdges(doc, data, at, base) {
       const far = end === "to" ? b : a;
       const r = radiusOf(
         /** @type {GraphNode} */
-        byId.get(toward),
+        byId2.get(toward),
         base
-      ) + (byId.get(toward)?.flag === "mismatch" ? 5 : 0);
+      ) + (byId2.get(toward)?.flag === "mismatch" ? 5 : 0);
       const head = svgEl(doc, "path", {
         d: graphArrow(near2, { x: mx, y: my }, far, r + 3),
         class: "kp-graph__arrow",
@@ -90245,7 +90277,7 @@ function drawEdges(doc, data, at, base) {
 function drawNodes(g, world, { data, at, base, hub, wraps }) {
   const doc = g.el.ownerDocument;
   const below = g.options.labels === "below";
-  const byId = new Map(data.nodes.map((n) => [n.id, n]));
+  const byId2 = new Map(data.nodes.map((n) => [n.id, n]));
   const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
   const labels = [];
   const ring = ringOf(data, hub);
@@ -90254,7 +90286,7 @@ function drawNodes(g, world, { data, at, base, hub, wraps }) {
   order.forEach((id, index) => {
     const n = (
       /** @type {GraphNode} */
-      byId.get(id)
+      byId2.get(id)
     );
     const p = at.get(id);
     if (!p) return;
@@ -91833,14 +91865,14 @@ function decorate(list) {
   if (!body) return;
   const countMode = attr10(list, "count", "both");
   const gapSort = attr10(list, "gap-sort", "keep") === "top";
-  const byId = new Map(items2.map((i) => [i.id, i]));
+  const byId2 = new Map(items2.map((i) => [i.id, i]));
   const loading2 = list.hasAttribute("aria-busy");
   for (
     const row2 of
     /** @type {NodeListOf<HTMLElement>} */
     body.querySelectorAll(".kp-checklist__item")
   ) {
-    const item = byId.get(row2.getAttribute("data-id") ?? "");
+    const item = byId2.get(row2.getAttribute("data-id") ?? "");
     if (item) fillRow(list, row2, item);
   }
   let shown6 = 0;
