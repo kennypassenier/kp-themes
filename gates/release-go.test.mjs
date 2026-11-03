@@ -10,8 +10,8 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { withDatabase } from './db/index.mjs';
-import { list, record, status } from './release-go.mjs';
-import { activeGos, compareVersions, gitTags, refusal } from './release-go-logic.mjs';
+import { gitTags, list, record, status } from './release-go.mjs';
+import { activeGos, compareVersions, refusal } from './release-go-logic.mjs';
 
 /** Fake tags: `latest` and the set that exist. @param {string[]} tagged */
 const fake = (tagged) => ({

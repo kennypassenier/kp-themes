@@ -57,6 +57,8 @@ js/boot-guard.js     one runtime boots per      │
                      refuses, one error         │
 js/by-id.js          an id lookup that returns  │
                      null for an empty id       │
+js/key-spec.js       one shortcut format: parse │
+                     and match `Mod+K`, `none`  │
 js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │

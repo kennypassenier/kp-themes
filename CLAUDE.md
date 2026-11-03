@@ -50,5 +50,5 @@ the project database (`node gates/release-go.mjs record|status|list`; table
 `release_gos`, Kenny's go for a release). A go is active while its version is
 greater than the latest release tag (`git describe`) and not tagged yet; the tag
 spends it. An unreadable database blocks. The old file `.claude/release-go` is
-accepted for now (deprecation note on stderr), removed after 12.6.0. Never
-record a go or create that file yourself.
+accepted for now (deprecation note on stderr), removed after 12.6.0. Record a go only
+from Kenny's own answer in a release form, and never create that file.

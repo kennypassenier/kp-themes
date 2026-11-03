@@ -9,11 +9,37 @@
 // A go is active while its version is greater than the latest tag (git describe) and `v<version>` does not exist.
 // The database is data/kp-themes.sqlite unless KP_THEMES_DB names another.
 
+import { execFileSync } from 'node:child_process';
 import { realpathSync } from 'node:fs';
 import process from 'node:process';
-import { fileURLToPath } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import { reading, writing, listGos, recordGo, ROOT } from './db/index.mjs';
-import { activeGos, gitTags, refusal } from './release-go-logic.mjs';
+import { activeGos, refusal } from './release-go-logic.mjs';
+
+/** The tags of a git checkout. @param {string} cwd @returns {import('./release-go-logic.mjs').TagReader} */
+export function gitTags(cwd) {
+    const git = (/** @type {string[]} */ ...args) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+    return {
+        latest() {
+            try {
+                return git('describe', '--tags', '--abbrev=0', '--match', 'v[0-9]*').replace(/^v/, '');
+            } catch (error) {
+                const text = String(/** @type {{ stderr?: unknown }} */ (error).stderr ?? '');
+                if (/No names found|No tags can describe/.test(text)) return null;
+                throw new Error(`cannot read the latest release tag in ${cwd}: ${text.trim() || error}`);
+            }
+        },
+        has(version) {
+            try {
+                git('rev-parse', '-q', '--verify', `refs/tags/v${version}`);
+                return true;
+            } catch (error) {
+                if (/** @type {{ status?: number }} */ (error).status === 1) return false;
+                throw new Error(`cannot read the tags in ${cwd}: ${error}`);
+            }
+        },
+    };
+}
 
 /** Exit code of status/active when no go is active; 1 is reserved for a crash, 2 for an unreadable database. */
 const NO_ACTIVE_GO = 3;
@@ -67,5 +93,6 @@ function main() {
     }
 }
 
-// realpath on both sides: the hook may reach this file through a symlinked project directory.
-if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) main();
+// The entry-point check (gates-register-faults: an imported gate must not run on import). realpath: the hook may reach
+// this file through a symlinked project directory, while import.meta.url is already the resolved path.
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) main();

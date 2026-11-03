@@ -11,8 +11,8 @@ today; GUI (Avalonia) and TUI (Ratatui) later.
 > import at the top of CLAUDE.md; other coding agents read it directly. Claude-specific rules,
 > the agents and the Procedure status table live in CLAUDE.md.
 
-**State:** 12 themes in `themes/`. The latest published release is `v12.5.0`
-(2026-11-03), after `v12.4.0` (2026-11-03), and
+**State:** 12 themes in `themes/`. The latest published release is `v12.6.0`
+(2026-11-03), after `v12.5.0` (2026-11-03), and
 the live position is in the Procedure status table in CLAUDE.md. Every character demo is decided and the Agenda holds no demo waiting for a
 verdict (2026-10-14). The full history of every release and
 round is in [docs/RELEASE_HISTORY.md](docs/RELEASE_HISTORY.md); the live position is the
@@ -35,8 +35,9 @@ helper may run [fix-118]. Kenny's go is a row in the project database
 (`release_gos`, written by `node gates/release-go.mjs record <version> --by Kenny
 --source "<form item and answer>"`); it is active while its version is greater
 than the latest release tag and not tagged yet, and spends itself when
-`v<version>` exists (`node gates/release-go.mjs status` shows it). Never record
-one yourself. The old git-ignored file `.claude/release-go` is still accepted
+`v<version>` exists (`node gates/release-go.mjs status` shows it). Claude
+records a go only from Kenny's own answer in a release form (Kenny, 2026-11-03:
+"release-go: Vervangen"), never on its own. The old git-ignored file `.claude/release-go` is still accepted
 during a transition and is deleted after the 12.6.0 release.
 
 **Chromium is off in the test suite** (Kenny, 2026-10-03: "doe ook het chrome
