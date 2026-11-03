@@ -38,6 +38,8 @@ export declare class AutosizeController extends Controller {
     /** The most lines, or null for no cap (a disabled or read-only box shows its whole value). */
     maxRows(): number | null;
     shrinks(): boolean;
+    /** What to do with a box whose content is not rendered: `measure` it now (default) or `skip` it until it shows. @returns {'measure' | 'skip'} */
+    hiddenMode(): 'measure' | 'skip';
     counterMode(): "both" | "chars" | "lines" | "off";
     /** @returns {'css' | 'js'} */
     engineInUse(): 'css' | 'js';

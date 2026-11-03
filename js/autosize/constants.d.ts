@@ -56,6 +56,11 @@ export type AutosizeOptions = {
     engine?: 'css' | 'js' | 'auto';
     shrink?: boolean;
     counter?: 'off' | 'chars' | 'lines' | 'both';
+    /**
+     * a box whose content is not rendered (a closed `<details>`, `content-visibility: hidden`): `measure`
+     * (default) sizes it now, which makes the browser lay that hidden content out; `skip` waits until it shows
+     */
+    hidden?: 'measure' | 'skip';
 };
 export type AutosizeHandle = {
     element: HTMLTextAreaElement;
@@ -88,6 +93,8 @@ export type AutosizeHandle = {
  * @property {'css' | 'js' | 'auto'} [engine]
  * @property {boolean} [shrink]
  * @property {'off' | 'chars' | 'lines' | 'both'} [counter]
+ * @property {'measure' | 'skip'} [hidden] a box whose content is not rendered (a closed `<details>`, `content-visibility: hidden`): `measure`
+ *   (default) sizes it now, which makes the browser lay that hidden content out; `skip` waits until it shows
  */
 /**
  * @typedef {object} AutosizeHandle

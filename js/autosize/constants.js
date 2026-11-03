@@ -42,6 +42,8 @@ export const LEVEL_FULL = 2;
  * @property {'css' | 'js' | 'auto'} [engine]
  * @property {boolean} [shrink]
  * @property {'off' | 'chars' | 'lines' | 'both'} [counter]
+ * @property {'measure' | 'skip'} [hidden] a box whose content is not rendered (a closed `<details>`, `content-visibility: hidden`): `measure`
+ *   (default) sizes it now, which makes the browser lay that hidden content out; `skip` waits until it shows
  */
 
 /**

@@ -246,6 +246,16 @@ export declare const sequencers: WeakMap<Element, SequencerModel>;
  * @returns {HTMLElementTagNameMap[K]}
  */
 export declare const make: <K extends keyof HTMLElementTagNameMap>(doc: Document, tag: K, className?: string, text?: string) => HTMLElementTagNameMap[K];
+/**
+ * Write an attribute only when its value differs: a same-value `setAttribute` is still a mutation (observers fire, and some engines
+ * restyle), and a refresh that changes nothing must write nothing.
+ * @param {Element} el @param {string} name @param {string} value
+ */
+export declare function setAttr(el: Element, name: string, value: string): void;
+/** Write a text only when it differs. @param {Node} el @param {string} text */
+export declare function setText(el: Node, text: string): void;
+/** Show or hide an element without a write when it already is so. @param {HTMLElement} el @param {boolean} hidden */
+export declare function setHidden(el: HTMLElement, hidden: boolean): void;
 /** @param {number} n */
 export declare const px: (n: number) => string;
 /** @param {SequencerModel} c @param {number} value */

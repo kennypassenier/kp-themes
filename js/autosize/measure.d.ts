@@ -32,6 +32,13 @@ export type AreaPlan = {
  * @property {string} [least] the css engine's `--kp-autosize-min`
  * @property {string} [most] the css engine's `--kp-autosize-max`
  */
+/**
+ * Whether a box is left for later: it asked to skip hidden content (`data-kp-autosize-hidden="skip"`) and its content is not
+ * rendered, so reading it would make the browser lay that hidden content out (in a closed `<details>` of forty rows that was
+ * 60 ms a box). Its width is forgotten, so the resize observer measures it the moment it shows.
+ * @param {import('./controller.js').AutosizeController} c
+ */
+export declare function leftForLater(c: import('./controller.js').AutosizeController): boolean;
 /** Step 1: read what a box needs. Writes nothing. @param {import('./controller.js').AutosizeController} c */
 export declare function readArea(c: import('./controller.js').AutosizeController): {
     c: import("./controller.js").AutosizeController;
@@ -68,5 +75,5 @@ export declare function writeArea(c: import('./controller.js').AutosizeControlle
 } | null;
 /** Size one box for its text, with the engine in use, and report the height. @param {import('./controller.js').AutosizeController} c */
 export declare function measureArea(c: import('./controller.js').AutosizeController): void;
-/** Size many boxes with one layout: every read, then every write, then the events. @param {import('./controller.js').AutosizeController[]} list */
-export declare function measureAreas(list: import('./controller.js').AutosizeController[]): void;
+/** Size many boxes with one layout: every read, then every write, then the events. @param {import('./controller.js').AutosizeController[]} every */
+export declare function measureAreas(every: import('./controller.js').AutosizeController[]): void;

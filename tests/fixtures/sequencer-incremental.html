@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Sequencer incremental set fixture</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <main>
+            <!-- Kitchen's recipe editor shape: 40 steps on 3 named tracks and the meeting lane. -->
+            <section id="seq" class="kp-gantt kp-sequencer" data-kp-sequencer data-kp-sequencer-unit="minute" data-kp-sequencer-snap="1" aria-label="Recipe"></section>
+        </main>
+        <script type="module">
+            import { attachSequencers, setSequencerItems, setSequencerSelection } from '/js/sequencer.js';
+            const lanes = [
+                { id: 'a', label: 'Sauce' },
+                { id: 'b', label: 'Pasta' },
+                { id: 'c', label: 'Oven' },
+                { id: 'm', label: 'Meet' },
+            ];
+            /** 40 steps, laid end to end per lane, a few linked. */
+            const make = () => {
+                const items = [];
+                const at = { a: 0, b: 0, c: 0, m: 0 };
+                for (let i = 0; i < 40; i += 1) {
+                    const lane = ['a', 'b', 'c', 'm'][i % 4];
+                    const duration = 3 + (i % 7);
+                    items.push({ id: `s${i}`, lane, label: `${i + 1}. Step number ${i + 1} of the recipe`, start: at[lane], duration, with: i % 9 === 8 ? `s${i - 4}` : null });
+                    at[lane] += duration;
+                }
+                return items;
+            };
+            window.kit = { setSequencerItems, setSequencerSelection, lanes, items: make() };
+            attachSequencers(document);
+            setSequencerItems(document.getElementById('seq'), window.kit.items, lanes);
+            window.kitReady = true;
+        </script>
+    </body>
+</html>

@@ -22202,8 +22202,8 @@ var init_strips = __esm({
 
 // js/kpi/meter.js
 function meterParts(value, mark2 = null) {
-  const measured2 = value != null && Number.isFinite(value);
-  const v = measured2 ? Math.max(
+  const measured3 = value != null && Number.isFinite(value);
+  const v = measured3 ? Math.max(
     0,
     /** @type {number} */
     value
@@ -22215,12 +22215,12 @@ function meterParts(value, mark2 = null) {
     mark2
   ) : 0;
   return {
-    measured: measured2,
+    measured: measured3,
     fill: Math.min(1, v),
     over: v > 1,
     mark: marked ? Math.min(1, m) : null,
     markOver: marked && m > 1,
-    now: measured2 ? Math.min(FULL_PERCENT, Math.round(v * FULL_PERCENT)) : null
+    now: measured3 ? Math.min(FULL_PERCENT, Math.round(v * FULL_PERCENT)) : null
   };
 }
 function meterText(value, mark2 = null, { unit: unit2 = "%", label: label2, markLabel = "" } = {}) {
@@ -63333,25 +63333,25 @@ function autoTone(value, warnAt, badAt) {
   if (value >= badAt) return "destructive";
   return value >= warnAt ? "warning" : null;
 }
-function sortText(sortValue, measured2) {
-  if (sortValue === void 0) return measured2 === null ? "" : String(Math.round(measured2 * SORT_SCALE) / SORT_TENTHS);
+function sortText(sortValue, measured3) {
+  if (sortValue === void 0) return measured3 === null ? "" : String(Math.round(measured3 * SORT_SCALE) / SORT_TENTHS);
   return sortValue === null ? "" : String(sortValue);
 }
 function setBarCell(el16, { value = null, text, tone, warnAt = WARN_AT, badAt = BAD_AT, sortValue, mark: mark2 = null, label: label2, markLabel, loading: loading2 = false }) {
   el16.classList.add("kp-bar-cell");
   const meter = partOf(el16, "kp-meter", "prepend");
   const number = partOf(el16, "kp-bar-cell__value", "append");
-  const measured2 = value != null && Number.isFinite(value) && !loading2 ? value : null;
-  setMeter(meter, { value: measured2, mark: mark2, tone: tone === void 0 ? autoTone(measured2, warnAt, badAt) : tone, label: label2, markLabel, loading: loading2 });
+  const measured3 = value != null && Number.isFinite(value) && !loading2 ? value : null;
+  setMeter(meter, { value: measured3, mark: mark2, tone: tone === void 0 ? autoTone(measured3, warnAt, badAt) : tone, label: label2, markLabel, loading: loading2 });
   if (loading2) {
     const ghost = el16.ownerDocument.createElement("span");
     ghost.className = "kp-skeleton kp-bar-cell__ghost";
     ghost.setAttribute("aria-hidden", "true");
     number.replaceChildren(ghost);
-  } else number.textContent = text ?? (measured2 === null ? "" : `${Math.round(measured2 * PERCENT4)}%`);
+  } else number.textContent = text ?? (measured3 === null ? "" : `${Math.round(measured3 * PERCENT4)}%`);
   el16.toggleAttribute("data-kp-loading", loading2);
   const holder = el16.closest("td, th");
-  if (holder) holder.setAttribute(SORT_VALUE_ATTRIBUTE, sortText(sortValue, measured2));
+  if (holder) holder.setAttribute(SORT_VALUE_ATTRIBUTE, sortText(sortValue, measured3));
 }
 function fill(el16) {
   const tone = el16.getAttribute("data-kp-bar-tone");
@@ -64142,6 +64142,15 @@ var init_timeline = __esm({
 });
 
 // js/sequencer/instance.js
+function setAttr(el16, name, value) {
+  if (el16.getAttribute(name) !== value) el16.setAttribute(name, value);
+}
+function setText2(el16, text) {
+  if (el16.textContent !== text) el16.textContent = text;
+}
+function setHidden2(el16, hidden2) {
+  if (el16.hidden !== hidden2) el16.hidden = hidden2;
+}
 function summary(c, item) {
   const lane = c.lanes.find((l) => l.id === item.lane)?.label ?? item.lane;
   const partner = item.with ? c.view.find((i) => i.id === item.with)?.label ?? null : null;
@@ -64475,14 +64484,13 @@ function syncBars(c, list) {
       /** @type {HTMLElement} */
       bar.querySelector(".kp-gantt__label")
     );
-    if (label2.textContent !== item.label) label2.textContent = item.label;
-    bar.dataset.kpSeries = String(seriesOf(c, item));
-    const said = summary(c, item);
-    if (bar.getAttribute("aria-label") !== said) bar.setAttribute("aria-label", said);
+    setText2(label2, item.label);
+    setAttr(bar, "data-kp-series", String(seriesOf(c, item)));
+    setAttr(bar, "aria-label", summary(c, item));
     bar.toggleAttribute("data-kp-linked", Boolean(item.with) || list.some((i) => i.with === item.id));
     bar.toggleAttribute("data-kp-locked", Boolean(item.locked));
-    bar.setAttribute("aria-pressed", String(c.selected === item.id));
-    bar.tabIndex = (c.focusId ?? c.selected ?? list[0]?.id) === item.id ? 0 : -1;
+    setAttr(bar, "aria-pressed", String(c.selected === item.id));
+    setAttr(bar, "tabindex", (c.focusId ?? c.selected ?? list[0]?.id) === item.id ? "0" : "-1");
   }
 }
 function syncJoins(c, list) {
@@ -64536,7 +64544,12 @@ function syncTicks(c) {
   }
 }
 function measureNames(c, list, perUnit) {
-  const probes = list.map((item) => {
+  const memory = measured.get(c) ?? /* @__PURE__ */ new Map();
+  measured.set(c, memory);
+  const font = getComputedStyle(c.measure).font;
+  const keyOf10 = (item) => `${item.label}|${Math.max(0, (item.start + item.duration) * perUnit - item.start * perUnit - 2)}|${font}`;
+  const stale = list.filter((item) => memory.get(item.id)?.key !== keyOf10(item));
+  const probes = stale.map((item) => {
     const wrap2 = (
       /** @type {HTMLElement} */
       c.measure.cloneNode(false)
@@ -64550,18 +64563,20 @@ function measureNames(c, list, perUnit) {
     line.textContent = item.label;
     return { item, wrap: wrap2, line };
   });
-  c.layer.append(...probes.flatMap((p) => [p.wrap, p.line]));
-  const sizes = new Map(
-    probes.map(({ item, wrap: wrap2, line }) => [
-      item.id,
-      { high: wrap2.scrollHeight, scroll: wrap2.scrollWidth, client: wrap2.clientWidth, need: line.offsetWidth }
-    ])
-  );
+  if (probes.length) c.layer.append(...probes.flatMap((p) => [p.wrap, p.line]));
+  for (const { item, wrap: wrap2, line } of probes)
+    memory.set(item.id, { key: keyOf10(item), size: { high: wrap2.scrollHeight, scroll: wrap2.scrollWidth, client: wrap2.clientWidth, need: line.offsetWidth } });
   for (const p of probes) {
     p.wrap.remove();
     p.line.remove();
   }
-  return sizes;
+  const keep = new Set(list.map((i) => i.id));
+  for (const id of memory.keys()) if (!keep.has(id)) memory.delete(id);
+  return new Map(list.map((item) => [
+    item.id,
+    /** @type {{ key: string, size: NameSize }} */
+    memory.get(item.id).size
+  ]));
 }
 function placeLabels(c) {
   const width = c.plot.clientWidth;
@@ -64607,20 +64622,21 @@ function placeLabels(c) {
           c.layer.append(out);
           c.outsides.set(item.id, out);
         }
-        out.textContent = item.label;
-        out.dataset.kpSide = side;
-        out.dataset.kpState = "ok";
+        setText2(out, item.label);
+        setAttr(out, "data-kp-side", side);
+        setAttr(out, "data-kp-state", "ok");
         setProp(out, "--kp-g-label-room", px2(side === "after" ? after : before3));
         setProp(out, "--kp-g-s", String(item.start));
         setProp(out, "--kp-g-e", String(round(item.start + item.duration)));
         setProp(out, "--kp-tl-top", bar.style.getPropertyValue("--kp-tl-top"));
         setProp(out, "--kp-tl-line", bar.style.getPropertyValue("--kp-tl-line"));
       }
-      if (side) bar.dataset.kpLabel = side;
+      if (side) setAttr(bar, "data-kp-label", side);
       else bar.removeAttribute("data-kp-label");
     });
   }
 }
+var measured;
 var init_bars = __esm({
   "js/sequencer/bars.js"() {
     "use strict";
@@ -64628,6 +64644,7 @@ var init_bars = __esm({
     init_lanes2();
     init_timeline();
     init_units();
+    measured = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -64639,39 +64656,39 @@ function paintWindow(c, list, fit2) {
   c.body.style.setProperty("--kp-g-span", String(c.span));
   c.body.style.setProperty("--kp-tl-zoom", String(c.zoom));
   c.endLine.style.setProperty("--kp-g-t", String(total));
-  c.endLine.hidden = total <= 0;
-  c.total.textContent = list.length ? c.strings.sequencerTotal(words2(c, total)) : "";
-  c.zoomValue.textContent = c.strings.sequencerZoomValue(Math.round(c.zoom * 100));
+  setHidden2(c.endLine, total <= 0);
+  setText2(c.total, list.length ? c.strings.sequencerTotal(words2(c, total)) : "");
+  setText2(c.zoomValue, c.strings.sequencerZoomValue(Math.round(c.zoom * 100)));
   const [out, fitButton, zin] = (
     /** @type {[HTMLButtonElement, HTMLButtonElement, HTMLButtonElement]} */
     c.zoomButtons
   );
-  out.setAttribute("aria-disabled", String(c.zoom <= SEQUENCER_ZOOM_MIN + EPS));
-  zin.setAttribute("aria-disabled", String(c.zoom >= SEQUENCER_ZOOM_MAX - EPS));
-  fitButton.setAttribute("aria-disabled", String(c.zoom === 1));
-  if (c.nowAt === null) c.nowLine.hidden = true;
+  setAttr(out, "aria-disabled", String(c.zoom <= SEQUENCER_ZOOM_MIN + EPS));
+  setAttr(zin, "aria-disabled", String(c.zoom >= SEQUENCER_ZOOM_MAX - EPS));
+  setAttr(fitButton, "aria-disabled", String(c.zoom === 1));
+  if (c.nowAt === null) setHidden2(c.nowLine, true);
   else {
-    c.nowLine.hidden = false;
+    setHidden2(c.nowLine, false);
     c.body.style.setProperty("--kp-g-now", String(c.nowAt));
     c.nowLine.toggleAttribute("data-kp-out", c.nowAt < 0 || c.nowAt > c.span);
-    c.nowLine.setAttribute("aria-label", c.strings.sequencerNow(words2(c, c.nowAt)));
+    setAttr(c.nowLine, "aria-label", c.strings.sequencerNow(words2(c, c.nowAt)));
   }
 }
 function paintSelection(c) {
   const item = c.selected ? c.view.find((i) => i.id === c.selected) : void 0;
   const linking = c.linking ? c.view.find((i) => i.id === c.linking) : void 0;
-  c.selectionText.textContent = linking ? c.strings.sequencerLinkStart(linking.label) : item ? summary(c, item) : c.strings.sequencerSelectedNone;
+  setText2(c.selectionText, linking ? c.strings.sequencerLinkStart(linking.label) : item ? summary(c, item) : c.strings.sequencerSelectedNone);
   const can = c.editable && Boolean(item) && !linking;
-  c.linkButton.hidden = !can || c.view.length < 2;
-  c.unlinkButton.hidden = !can || !item?.with;
-  c.cancelButton.hidden = !linking;
-  c.selection.dataset.kpMode = linking ? "linking" : item ? "selected" : "none";
+  setHidden2(c.linkButton, !can || c.view.length < 2);
+  setHidden2(c.unlinkButton, !can || !item?.with);
+  setHidden2(c.cancelButton, !linking);
+  setAttr(c.selection, "data-kp-mode", linking ? "linking" : item ? "selected" : "none");
 }
 function paintState2(c) {
   const empty = c.state === "ready" && c.items.length === 0;
   const plateKind = c.state === "error" || c.state === "empty" || empty ? c.state === "error" ? "error" : "empty" : null;
-  c.el.dataset.kpState = empty ? "empty" : c.state;
-  c.el.setAttribute("aria-busy", String(c.state === "loading"));
+  setAttr(c.el, "data-kp-state", empty ? "empty" : c.state);
+  setAttr(c.el, "aria-busy", String(c.state === "loading"));
   const title = c.state === "error" ? c.stateWords || c.strings.sequencerFailed : c.stateWords || c.strings.sequencerEmpty;
   const text = c.state === "error" ? c.stateText : c.stateText || c.strings.sequencerEmptyText;
   const key = plateKind ? `${plateKind}|${title}|${text}` : "";
@@ -64689,8 +64706,8 @@ function paintState2(c) {
         })
       );
   }
-  c.plate.hidden = plateKind === null;
-  c.plate.dataset.kpState = plateKind ?? "";
+  setHidden2(c.plate, plateKind === null);
+  setAttr(c.plate, "data-kp-state", plateKind ?? "");
   const want = c.state === "loading";
   if (want === (c.busy !== null)) {
     c.busy?.place();
@@ -68676,8 +68693,8 @@ function uptimeFigures(periods) {
     sum += share;
     incidents2 += typeof period.incidents === "number" && period.incidents >= 0 ? Math.floor(period.incidents) : state12 === "up" ? 0 : 1;
   }
-  const measured2 = counts.up + counts.degraded + counts.down;
-  return { measured: measured2, share: measured2 === 0 ? null : sum / measured2, incidents: incidents2, counts };
+  const measured3 = counts.up + counts.degraded + counts.down;
+  return { measured: measured3, share: measured3 === 0 ? null : sum / measured3, incidents: incidents2, counts };
 }
 function uptimePercent(share) {
   if (share >= 1) return "100";
@@ -71321,7 +71338,7 @@ function alertIcon(alert, severity) {
     icon.setAttribute("aria-hidden", "true");
     alert.prepend(icon);
   }
-  setText2(icon, GLYPH2[severity]);
+  setText3(icon, GLYPH2[severity]);
   return icon;
 }
 function alertBody(alert, icon) {
@@ -71336,7 +71353,7 @@ function alertBody(alert, icon) {
   }
   return body;
 }
-var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
+var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText3;
 var init_values35 = __esm({
   "js/problems/values.js"() {
     "use strict";
@@ -71358,7 +71375,7 @@ var init_values35 = __esm({
       /** @type {'critical' | 'warning' | 'info'} */
       p.severity
     ) : "warning";
-    setText2 = (el16, text) => {
+    setText3 = (el16, text) => {
       if (el16.textContent !== text) el16.textContent = text;
     };
   }
@@ -71376,7 +71393,7 @@ function paintWhat(host, p) {
     what.prepend(word);
   }
   const sr = `${severity === "critical" ? s2.attentionCritical : severity === "warning" ? s2.attentionWarning : s2.attentionInfo}: `;
-  setText2(word, sr);
+  setText3(word, sr);
   const words3 = [...what.childNodes].filter((n) => n !== word);
   if (words3.map((n) => n.textContent).join("") !== p.what) {
     for (const n of words3) n.remove();
@@ -71392,7 +71409,7 @@ function paintWhy(host, p, what) {
     return what;
   }
   const node = el16 ?? part5(host, ".kp-alert__why", "p", "kp-alert__why");
-  setText2(node, p.why);
+  setText3(node, p.why);
   if (!el16) what.after(node);
   return (
     /** @type {HTMLElement} */
@@ -71602,7 +71619,7 @@ var init_summary2 = __esm({
           heading.className = "kp-alert__summary";
           body.prepend(heading);
         }
-        setText2(heading, getStrings().problemListLabel(count4));
+        setText3(heading, getStrings().problemListLabel(count4));
         let ul = (
           /** @type {HTMLElement | null} */
           body.querySelector(":scope > .kp-alert__list")
@@ -71660,7 +71677,7 @@ var init_summary2 = __esm({
           body.append(more);
         }
         more.setAttribute("aria-expanded", String(expanded));
-        setText2(more, expanded ? s2.problemShowFewer : s2.problemShowOthers(list.length - open5));
+        setText3(more, expanded ? s2.problemShowFewer : s2.problemShowOthers(list.length - open5));
       }
       /** Show the rest of a folded alert, or fold it again. @param {HTMLElement} target the one alert */
       toggleExpanded(target) {
@@ -73338,10 +73355,10 @@ var init_core16 = __esm({
         const stalledFor = (now - st.lastMove) / MS;
         const stalled = st.phase === "running" && stalledFor >= numberOf2(row2, "data-kp-stall-after", DEFAULT_STALL_AFTER_S);
         const rate = stalled ? 0 : transferRate(st.samples, numberOf2(row2, "data-kp-rate-window", DEFAULT_RATE_WINDOW_S));
-        const measured2 = (last?.t ?? now) - st.start;
+        const measured3 = (last?.t ?? now) - st.start;
         const percent = known4 ? Math.min(FULL2, Math.floor(done / /** @type {number} */
         total * FULL2)) : null;
-        return { now, last, done, total, known: known4, stalledFor, stalled, rate, measured: measured2, percent };
+        return { now, last, done, total, known: known4, stalledFor, stalled, rate, measured: measured3, percent };
       }
       /**
        * The bar: ARIA is the source. A transfer of unknown size has no share to fill, and a bar that sweeps or restarts reads
@@ -82852,7 +82869,7 @@ function buildParts6(doc, s2, id) {
   live4.setAttribute("aria-live", "polite");
   return { ...buildBar4(doc, s2, id), problem, live: live4, ...buildPanel2(doc, s2, id) };
 }
-function setText3(node, text) {
+function setText4(node, text) {
   if (node.textContent !== text) node.textContent = text;
 }
 function paintSaveButton(doc, save2, label2, saving) {
@@ -82861,7 +82878,7 @@ function paintSaveButton(doc, save2, label2, saving) {
     text = make32(doc, "span", "kp-button__text");
     save2.prepend(text);
   }
-  setText3(text, label2);
+  setText4(text, label2);
   const layer = save2.querySelector(":scope > .kp-button__busy");
   if (saving && !layer) {
     const added2 = make32(doc, "span", "kp-button__busy");
@@ -82938,8 +82955,8 @@ function paintState3(ctl, n, dirty2) {
   bar.dataset.kpState = state12;
   none.hidden = dirty2;
   chip.hidden = !dirty2;
-  setText3(chip, s2.unsavedCount(n));
-  setText3(headTitle, s2.unsavedCount(n));
+  setText4(chip, s2.unsavedCount(n));
+  setText4(headTitle, s2.unsavedCount(n));
 }
 function paintButtons(ctl, n, dirty2) {
   const { s: s2, saving } = ctl;
@@ -84224,6 +84241,11 @@ var init_hooks = __esm({
 });
 
 // js/autosize/measure.js
+function leftForLater(c) {
+  if (c.hiddenMode() !== "skip" || typeof c.area.checkVisibility !== "function" || c.area.checkVisibility()) return false;
+  c.width = -1;
+  return true;
+}
 function readArea(c) {
   const cs = c.view.getComputedStyle(c.area);
   const lh = lineHeightOf(cs);
@@ -84290,11 +84312,14 @@ function announce5(c, detail) {
   if (detail) c.area.dispatchEvent(new CustomEvent(AUTOSIZE_EVENT, { bubbles: true, detail }));
 }
 function measureArea(c) {
+  if (leftForLater(c)) return;
   const read = readArea(c);
   stageArea(read);
   announce5(c, writeArea(c, planArea(read)));
 }
-function measureAreas(list) {
+function measureAreas(every) {
+  const list = every.filter((c) => !leftForLater(c));
+  if (!list.length) return;
   const reads = list.map((c) => readArea(c));
   for (const read of reads) stageArea(read);
   const plans = reads.map((read) => planArea(read));
@@ -84568,6 +84593,10 @@ var init_controller80 = __esm({
       }
       shrinks() {
         return (this.options.shrink ?? attr8(this.area, "data-kp-autosize-shrink", "on") !== "off") !== false;
+      }
+      /** What to do with a box whose content is not rendered: `measure` it now (default) or `skip` it until it shows. @returns {'measure' | 'skip'} */
+      hiddenMode() {
+        return (this.options.hidden ?? attr8(this.area, "data-kp-autosize-hidden", "measure")) === "skip" ? "skip" : "measure";
       }
       counterMode() {
         return this.options.counter ?? /** @type {'off' | 'chars' | 'lines' | 'both'} */
@@ -90476,9 +90505,9 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
         );
         text.textContent = n.label;
         g.svg.append(text);
-        const measured2 = isShown(g.svg) ? text.getComputedTextLength() : 0;
+        const measured3 = isShown(g.svg) ? text.getComputedTextLength() : 0;
         text.remove();
-        return (measured2 || n.label.length * 7.2) + 6;
+        return (measured3 || n.label.length * 7.2) + 6;
       };
       const widths2 = /* @__PURE__ */ new Map();
       const measureText = (label2) => {
@@ -90490,9 +90519,9 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
         );
         text.textContent = label2;
         g.svg.append(text);
-        const measured2 = isShown(g.svg) ? text.getComputedTextLength() : 0;
+        const measured3 = isShown(g.svg) ? text.getComputedTextLength() : 0;
         text.remove();
-        widths2.set(label2, measured2 || label2.length * 7.2);
+        widths2.set(label2, measured3 || label2.length * 7.2);
         return widths2.get(label2) ?? 0;
       };
       const wrapOf = (n, target) => {
@@ -91403,7 +91432,7 @@ var init_draw15 = __esm({
 function undress2(el16) {
   for (const old of el16.querySelectorAll(":scope > .kp-pieces")) old.remove();
   el16.removeAttribute(PIECES_ATTRIBUTE);
-  measured.delete(el16);
+  measured2.delete(el16);
   if (el16 instanceof HTMLElement) {
     el16.style.removeProperty("--kp-pieces-q");
     el16.style.removeProperty("--kp-pieces-d");
@@ -91435,7 +91464,7 @@ function dress3(el16) {
     return false;
   }
   const size2 = `${name} ${kind} ${el16.clientWidth}x${el16.clientHeight}`;
-  if (measured.get(el16) === size2 && el16.querySelector(":scope > .kp-pieces")) return true;
+  if (measured2.get(el16) === size2 && el16.querySelector(":scope > .kp-pieces")) return true;
   for (const old of el16.querySelectorAll(":scope > .kp-pieces")) old.remove();
   const { pieces, q, orbit } = draw6(el16, kind);
   const box = document.createElement("span");
@@ -91446,16 +91475,16 @@ function dress3(el16) {
   if (q) el16.style.setProperty("--kp-pieces-q", px4(q));
   if (kind === "day") staggerDay(el16);
   el16.setAttribute(PIECES_ATTRIBUTE, name);
-  measured.set(el16, size2);
+  measured2.set(el16, size2);
   return true;
 }
-var measured, piecesOf;
+var measured2, piecesOf;
 var init_dress = __esm({
   "js/loading-pieces/dress.js"() {
     "use strict";
     init_values51();
     init_draw15();
-    measured = /* @__PURE__ */ new WeakMap();
+    measured2 = /* @__PURE__ */ new WeakMap();
     piecesOf = (el16) => getComputedStyle(el16).getPropertyValue(PIECES_PROPERTY).trim();
   }
 });

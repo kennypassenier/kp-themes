@@ -394,6 +394,7 @@ setAutosizeState(document.getElementById(<span class="kp-code__string">'doc-auto
                             <tr><td><code>data-kp-autosize-capped</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-autosize-engine</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-autosize-engine-used</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-autosize-hidden</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-autosize-max</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-autosize-shrink</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-resize</code></td><td>read, written</td></tr>
@@ -438,6 +439,7 @@ setAutosizeState(document.getElementById(<span class="kp-code__string">'doc-auto
                             <tr><td><code>data-kp-autosize-max</code></td><td>The most lines (20 by default) or `none`; beyond it the box scrolls inside.</td></tr>
                             <tr><td><code>data-kp-autosize-engine</code></td><td>`auto` (default: the browser's own `field-sizing` where it has it), `css` or `js`.</td></tr>
                             <tr><td><code>data-kp-autosize-shrink</code></td><td>`on` (default) gives the height back when text is deleted; `off` keeps the tallest.</td></tr>
+                            <tr><td><code>data-kp-autosize-hidden</code></td><td>`measure` (default) sizes a box at once, even one inside a closed `&lt;details&gt;`, which makes the browser lay that hidden content out; `skip` leaves a box whose content is not rendered alone and measures it the moment it shows (Kitchen's 41 closed step notes: 2.9 s of the editor's opening).</td></tr>
                             <tr><td><code>data-kp-resize</code></td><td>`vertical` (default) or `none`: the drag handle.</td></tr>
                             <tr><td><code>data-kp-counter</code></td><td>`off` (default), `chars`, `lines` or `both`: an exact count under the box; with `maxlength` it reads &quot;1,204 of 4,000&quot;.</td></tr>
                             <tr><td><code>data-kp-submit-key</code></td><td>`mod-enter`: Ctrl or Command with Enter sends the form, and the shortcut sheet lists it.</td></tr>

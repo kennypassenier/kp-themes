@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Autosize in a closed details fixture</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+    </head>
+    <body>
+        <main>
+            <!-- A step row like Kitchen's editor: the notes sit in a closed details. `skip` leaves them for when it opens. -->
+            <details id="skipping">
+                <summary>More</summary>
+                <textarea id="skip-box" class="kp-field__input kp-field__input--multiline" rows="1" data-kp-autosize data-kp-autosize-hidden="skip">one
+two
+three
+four</textarea>
+            </details>
+            <details id="measuring">
+                <summary>More</summary>
+                <textarea id="measure-box" class="kp-field__input kp-field__input--multiline" rows="1" data-kp-autosize>one
+two
+three
+four</textarea>
+            </details>
+            <textarea id="shown-box" class="kp-field__input kp-field__input--multiline" rows="1" data-kp-autosize data-kp-autosize-hidden="skip">one
+two
+three</textarea>
+        </main>
+        <script type="module">
+            import { attachAutosize } from '/js/autosize.js';
+            attachAutosize(document);
+            window.ready = true;
+        </script>
+    </body>
+</html>
