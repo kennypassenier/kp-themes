@@ -11,8 +11,8 @@ today; GUI (Avalonia) and TUI (Ratatui) later.
 > import at the top of CLAUDE.md; other coding agents read it directly. Claude-specific rules,
 > the agents and the Procedure status table live in CLAUDE.md.
 
-**State:** 12 themes in `themes/`. The latest published release is `v12.4.0`
-(2026-11-03), after `v12.3.0` (2026-11-03), and
+**State:** 12 themes in `themes/`. The latest published release is `v12.5.0`
+(2026-11-03), after `v12.4.0` (2026-11-03), and
 the live position is in the Procedure status table in CLAUDE.md. Every character demo is decided and the Agenda holds no demo waiting for a
 verdict (2026-10-14). The full history of every release and
 round is in [docs/RELEASE_HISTORY.md](docs/RELEASE_HISTORY.md); the live position is the

@@ -1,2 +1,2 @@
-/* @kp-soft/themes v12.4.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
-import{a as b,b as c,c as d,d as e,e as f,f as g,g as h}from"./chunk-5QCTTIRY.js";import"./chunk-5MQ4VR3N.js";import{a}from"./chunk-TNDAI5YP.js";import"./chunk-FUGZUXRR.js";import"./chunk-Q3EW47IZ.js";import"./chunk-4C666HHU.js";export{b as PICK_EVENT,c as PREVIEW_EVENT,d as PREVIEW_LEAVE_MS,a as THEMES,e as THEME_MENU_ICON,h as attachThemePickers,g as themeMenuMarkup,f as themeOptionsMarkup};
+/* @kp-soft/themes v12.5.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
+import{a as b,b as c,c as d,d as e,e as f,f as g,g as h}from"./chunk-H737VL4M.js";import"./chunk-KUWL5AFI.js";import{a}from"./chunk-UWO7WRIN.js";import"./chunk-FUGZUXRR.js";import"./chunk-Q3EW47IZ.js";import"./chunk-4C666HHU.js";export{b as PICK_EVENT,c as PREVIEW_EVENT,d as PREVIEW_LEAVE_MS,a as THEMES,e as THEME_MENU_ICON,h as attachThemePickers,g as themeMenuMarkup,f as themeOptionsMarkup};

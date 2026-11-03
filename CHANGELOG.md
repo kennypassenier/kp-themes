@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 12.5.0 — 2026-11-03
+
+Released on Kenny's go after the trial bump of all eight apps on chassis-rs 4.6.0 (2026-11-03 22:15: "release-1250: Uitbrengen", dense touch parts kept parked, Enter in the add row: both, only the affected tests, no screenshot check). Every fix ran its own specs in Firefox (over 170 tests, all green); the full release suite did not run, on Kenny's choice.
 
 - **Added: Ctrl+Enter (Cmd+Enter) adds an add row's line from ANY field, a select included** [enter-1103; Kitchen 03/11]. Always on, additive; plain Enter keeps its meaning everywhere. `js/add-row/keys.js` listens on the row in the capture phase, so it runs before the drawn select (which already let modified keys pass) and before the list box's Enter, and calls `requestSubmit` with the Add button (a busy, disabled Add takes no second line; an open list closes). Lines added per key press, Firefox, `tests/fixtures/add-row.html` (`~/.cache/enter-1103/measure.mjs`), before -> after: Ctrl+Enter in a text field 1 -> 1 (Firefox submitted natively; now by the row, still exactly one line), in a closed select 0 -> 1, in an open select 0 -> 1 (the list closed either way); plain Enter in a text field 1 -> 1.
 - **Added: `data-kp-addrow-enter="submit"` makes a plain Enter on a CLOSED select add the line** [enter-1103; Kitchen 03/11]. Opt-in; default unchanged. Enter in a closed select: default 0 lines, list opens -> 0 lines, list opens; with the opt-in 0 lines, list opens -> 1 line, list stays closed. With the opt-in Space, Alt+Down and the arrows still open the list (0 lines, open) and Enter on an open list still picks its option (0 lines). Nothing new is announced: the status stays "Added x".

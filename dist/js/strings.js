@@ -1,2 +1,2 @@
-/* @kp-soft/themes v12.4.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
+/* @kp-soft/themes v12.5.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
 import{a,b,c,d,e,f,g,h,i,j,k,l}from"./chunk-FUGZUXRR.js";import"./chunk-4C666HHU.js";export{a as DEFAULT_STRINGS,b as STRINGS_CHANGE_EVENT,i as applyStringProperties,f as getLanguage,j as getLanguageDictionary,k as getStrings,g as languageReady,d as registerDictionary,l as resolveStrings,e as setLanguage,c as setStrings,h as stringProperties};
