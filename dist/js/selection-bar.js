@@ -1,2 +1,2 @@
-/* @kp-soft/themes v12.3.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
+/* @kp-soft/themes v12.4.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
 import{a,b,c,d,e,f,g,h,i,j,k,l,m,n}from"./chunk-ELP74U64.js";import"./chunk-QZECKFJ5.js";import"./chunk-2PQQBCMD.js";import"./chunk-EBDN33LD.js";import"./chunk-JL27NGGE.js";import"./chunk-OTO6WQUO.js";import"./chunk-Q3EW47IZ.js";import"./chunk-4C666HHU.js";export{a as SELECTION,e as SELECTION_ACTION_EVENT,c as SELECTION_CLEAR_EVENT,b as SELECTION_EVENT,d as SELECTION_MATCHING_EVENT,f as SELECTION_NAMES,g as SELECTION_SAY_MS,n as attachSelectionBars,i as getSelection,h as setSelection,j as setSelectionBusy,k as setSelectionProgress,l as setSelectionResult,m as setSelectionRules};
