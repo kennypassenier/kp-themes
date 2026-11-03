@@ -119,6 +119,8 @@ function ColorPickerInner(
             className={`kp-colorpicker ${className}`.trim()}
             style={style}
             data-kp-colorpicker
+            // React owns this picker: js/auto.js, which attaches after the page's dictionary loads, skips it [rel-1230].
+            data-kp-colorpicker-attached=""
             data-kp-against={against}
             data-kp-contrast-ok={ok ? '' : undefined}
             {...rest}

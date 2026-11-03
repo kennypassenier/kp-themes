@@ -13810,11 +13810,12 @@
             ]
         },
         "layout": {
-            "modules": "99f3efe7728382f6",
+            "modules": "add025b416d66ea5",
             "families": [
                 "data-kp-against",
                 "data-kp-channel",
                 "data-kp-colorpicker",
+                "data-kp-colorpicker-attached",
                 "data-kp-colorpicker-contrast",
                 "data-kp-colorpicker-value",
                 "data-kp-columns",
@@ -13828,7 +13829,7 @@
             ]
         },
         "media": {
-            "modules": "ca8d28fc13364842",
+            "modules": "c26f39b9680108a3",
             "families": [
                 "data-kp-announce",
                 "data-kp-calm",
@@ -14232,7 +14233,7 @@
             ]
         },
         "navigation": {
-            "modules": "c0ded82aa4cba9e5",
+            "modules": "cf2760a1fb908300",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -14247,6 +14248,7 @@
                 "data-kp-close-on-escape",
                 "data-kp-closing",
                 "data-kp-colorpicker",
+                "data-kp-colorpicker-attached",
                 "data-kp-colorpicker-contrast",
                 "data-kp-colorpicker-value",
                 "data-kp-column-hidden",
@@ -14728,7 +14730,7 @@
             ]
         },
         "page-effects": {
-            "modules": "9e8ca8449b35f347",
+            "modules": "6ad80185201777b8",
             "families": [
                 "data-kp-calm",
                 "data-kp-count",
@@ -15306,7 +15308,7 @@
             ]
         },
         "table": {
-            "modules": "f08436a805933535",
+            "modules": "4ce44cba14a6c74b",
             "families": [
                 "data-kp-action",
                 "data-kp-against",
@@ -15314,6 +15316,7 @@
                 "data-kp-cards",
                 "data-kp-channel",
                 "data-kp-colorpicker",
+                "data-kp-colorpicker-attached",
                 "data-kp-colorpicker-contrast",
                 "data-kp-colorpicker-value",
                 "data-kp-columns",

@@ -6,14 +6,19 @@
 // read it is how the unreadable colours got in.
 
 import { test, expect } from '@playwright/test';
+import { DEFAULT_STRINGS as EN } from '../js/strings.js';
 import { NL } from './helpers/dutch-words.mjs';
 
 const URL = '/tests/fixtures/components.html';
 
-// The fixture page is lang="nl", so both pickers speak Dutch since 12.2.0 (CHANGELOG, habits-1101 nl); the React one draws
-// again when the dictionary arrives (hooks/use-strings.jsx follows kp-strings-change) [rel-1220].
-/** @param {string} _name */
-const wordsOf = (_name) => ({ passes: new RegExp(NL.contrastPasses), fails: new RegExp(NL.contrastFails), ratio: /:1 tegen --background/ });
+// The fixture page is lang="nl": the framework-free picker, wired by /js/auto.js, speaks Dutch (habits-1101 nl). The React
+// picker comes from its own esbuild bundle (tests/fixtures/.build/react-components.js), which carries a second copy of the
+// strings runtime with no Dutch book registered, so it speaks English here; an app that loads one bundle has one runtime [rel-1230].
+/** @param {string} name */
+const wordsOf = (name) => {
+    const W = name === 'React' ? EN : NL;
+    return { passes: new RegExp(W.contrastPasses), fails: new RegExp(W.contrastFails), ratio: name === 'React' ? /:1 against --background/ : /:1 tegen --background/ };
+};
 
 const CHANNELS = [
     {

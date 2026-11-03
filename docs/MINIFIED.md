@@ -39,7 +39,7 @@ the selectors and their order are identical, which is what
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 46% |
 | `dist/kp-themes.css` | 4450.1 kB | 2359.0 kB | 47% |
 | `dist/kp-themes-base.css` | 1542.5 kB | 768.7 kB | 50% |
-| `dist/kp-themes.js` | 4002.4 kB | 2118.9 kB | 47% |
+| `dist/kp-themes.js` | 4002.4 kB | 2119.0 kB | 47% |
 
 The loose stylesheets together weigh **4503.3 kB** authored and
 **2389.9 kB** minified, 47% less. A page loading one theme's

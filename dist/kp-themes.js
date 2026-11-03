@@ -12349,7 +12349,7 @@ var init_headline_run = __esm({
       play() {
         const { ctx, el: el16 } = this;
         el16.setAttribute(TEXT_ATTRIBUTE, this.text);
-        if (!el16.hasAttribute("aria-label")) el16.setAttribute("aria-label", this.text);
+        if (!el16.hasAttribute("aria-label") && el16.getAttribute("aria-hidden") !== "true") el16.setAttribute("aria-label", this.text);
         const asked = ctx.routineOf(el16, "headline");
         this.routine = asked === "" || HEADLINE_ROUTINES.includes(asked) ? asked : ctx.reportUnknownRoutine(el16, ROUTINES.headline, asked, HEADLINE_ROUTINES);
         if (this.atRest || this.routine === "" || ctx.reduced() || ctx.seen(el16, "headline")) {

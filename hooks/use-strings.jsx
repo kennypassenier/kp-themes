@@ -54,6 +54,9 @@ function useStringsVersion() {
     useEffect(() => {
         const bump = () => setVersion((v) => v + 1);
         document.addEventListener('kp-strings-change', bump);
+        // A dictionary that arrived between the first render and this effect sent its event to nobody:
+        // draw once more so the words in force now are the ones shown [rel-1230].
+        bump();
         return () => document.removeEventListener('kp-strings-change', bump);
     }, []);
     return version;
