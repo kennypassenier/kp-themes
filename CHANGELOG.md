@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 12.3.0 — 2026-11-03
+
+Released on Kenny's go (2026-11-03 04:40: "release-1230: Uitbrengen"; "alle openstaande issues moeten opgelost worden voor de volgende release"), built without the screenshot check (his "Zonder"). Release suite (Firefox, 1932 tests, 22 min 41 s): 1926 passed, 2 failed, 4 skipped; both fixed and rerun green.
 
 - **Fixed: the React colour picker is no longer wired a second time** [rel-1230]. Since `js/auto.js` waits for the page's dictionary it attached after React had drawn, wrote the framework-free report into React's picker, and React then wrote its own over it. The picker now carries `data-kp-colorpicker-attached`. Found by the 12.3.0 release suite.
 - **Fixed: an aria-hidden headline reveal gets no second label** [rel-1230]. The headline effect labelled every headline it ran on, also the aria-hidden glyph layer of the React DecipherText, whose owner already carries the label; a screen reader (and `getByLabel`) found the words twice.
