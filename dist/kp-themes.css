@@ -39436,6 +39436,12 @@
             outline: var(--kp-touch-hit-outline, none);
         }
 
+        /* The task row's check box sits centred in a label already a target wide, so its area is centred too, instead of
+         * reaching back over the drag handle [handle-1103; Habits 03/11: the handle's tappable width was 36 px]. */
+        html label.kp-task-row__hit::after {
+            inset-inline: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
+        }
+
         html .kp-field__check + label::after {
             content: '';
             position: absolute;
@@ -39494,6 +39500,12 @@
         inset-inline: calc((1.15rem - var(--kp-touch-target, 2.75rem)) / 2) 0;
         background: var(--kp-touch-hit-paint, transparent);
         outline: var(--kp-touch-hit-outline, none);
+    }
+
+    /* The task row's check box sits centred in a label already a target wide, so its area is centred too, instead of
+     * reaching back over the drag handle [handle-1103; Habits 03/11: the handle's tappable width was 36 px]. */
+    [data-kp-touch] label.kp-task-row__hit::after {
+        inset-inline: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2));
     }
 
     [data-kp-touch] .kp-field__check + label::after {
