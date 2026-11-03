@@ -99,7 +99,8 @@ export const withShift = (spec) => spec.map((c) => ({ ...c, shift: true }));
 export function engineKeys(spec) {
     const c = spec[0];
     if (!c) return null;
-    return [c.mod ? 'Mod' : '', c.alt ? 'Alt' : '', c.shift ? 'Shift' : '', c.key === ' ' ? 'Space' : c.key].filter(Boolean).join(' ');
+    // A named key keeps its capitals (`Enter`), as the shortcut sheet prints it; a letter is lower case, as the engine always took it.
+    return [c.mod ? 'Mod' : '', c.alt ? 'Alt' : '', c.shift ? 'Shift' : '', c.key === ' ' ? 'Space' : c.key.length > 1 ? c.cap : c.key].filter(Boolean).join(' ');
 }
 
 /** The first key of a spec as a person reads it, `Ctrl+B` or `⌘+B`; empty when it is off. @param {KeySpec} spec */
@@ -122,3 +123,37 @@ const isMac = () =>
 
 /** A key spec as a person reads it (⌘ or Ctrl, ⌥ or Alt). @param {string} key `Mod+Z`, `Alt+Z` */
 export const keyName = (key) => key.replace(/\bmod\+/i, isMac() ? '⌘' : 'Ctrl+').replace(/\balt\+/i, isMac() ? '⌥' : 'Alt+');
+
+/** Whether a value is written as a key spec (`Mod+K`, `+ or =`) rather than in the older spellings (`k`, `Mod K`, `mod-enter`). @param {string} text */
+export const isKeySpecText = (text) => /\s+or\s+/.test(text) || (text.length > 1 && text.includes('+'));
+
+/**
+ * The keys for the shortcut engine (js/shortcuts.js) from an option, an attribute and a default. A key spec is converted; a value
+ * in the engine's own spelling (`:`, `Mod K`, `g s`), which pages used before key specs, is passed through unchanged.
+ * @param {Element | null} host @param {string} attribute @param {string | false | undefined} option @param {string | false} fallback
+ * @returns {string | null} null when the shortcut is off
+ */
+export function resolveEngineKeys(host, attribute, option, fallback) {
+    const raw = option ?? host?.getAttribute(attribute) ?? fallback;
+    if (raw === false) return null;
+    const text = raw.trim();
+    if (OFF.has(text.toLowerCase())) return null;
+    return isKeySpecText(text) ? engineKeys(parseKeySpec(text)) : text;
+}
+
+/** The engine's spelling of keys (`Mod e`, `g s`) for `aria-keyshortcuts` (`Control+e`, `g s`). @param {string} keys */
+export function ariaFromEngineKeys(keys) {
+    let prefix = '';
+    /** @type {string[]} */
+    const out = [];
+    for (const token of keys.trim().split(/\s+/)) {
+        const mod = /** @type {Record<string, string>} */ (MODS)[token.toLowerCase()];
+        if (mod) {
+            prefix += `${mod === 'mod' ? 'Control' : mod === 'alt' ? 'Alt' : 'Shift'}+`;
+            continue;
+        }
+        out.push(prefix + token);
+        prefix = '';
+    }
+    return out.join(' ');
+}

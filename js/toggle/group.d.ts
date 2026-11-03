@@ -53,3 +53,7 @@ export declare function planFor(member: HTMLElement, forceClear: boolean): Map<H
 export declare function withAll(g: NonNullable<ReturnType<typeof toggleGroup>>, plan: Map<HTMLElement, PressedState>): Map<HTMLElement, PressedState>;
 /** Put the members to the states a plan says. @param {Map<HTMLElement, PressedState>} plan */
 export declare function applyPlan(plan: Map<HTMLElement, PressedState>): void;
+/** On a toggle: the key that presses it, listed in the `?` sheet (a key spec, js/key-spec.js, or a plain letter; never a bare digit; `none` for no key). */
+export declare const TOGGLE_KEY_ATTRIBUTE = "data-kp-toggle-key";
+/** The key that presses a toggle when it names none: no key. */
+export declare const TOGGLE_KEY = "none";

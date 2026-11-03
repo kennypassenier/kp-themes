@@ -15,11 +15,31 @@
                 <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all><span class="kp-segmented__label">Clear all</span></button>
                 <button type="button" class="kp-segmented__item" data-value="rice"><span class="kp-segmented__label">Rice</span></button>
             </div>
+            <div class="kp-toolbar" id="bar" data-kp-toolbar role="group" aria-label="Containers">
+                <input class="kp-toolbar__input" id="find" type="search" aria-label="Search" />
+            </div>
+            <button type="button" id="elsewhere">Elsewhere</button>
+            <dialog class="kp-palette" id="pal" data-kp-palette aria-label="Go to">
+                <input class="kp-palette__input" type="text" role="combobox" aria-label="Go to" aria-expanded="true" aria-controls="pal-list" autocomplete="off" />
+                <ul class="kp-palette__list" id="pal-list" role="listbox" aria-label="Go to">
+                    <li class="kp-palette__option" role="option" data-kp-option data-value="theme">Change theme</li>
+                </ul>
+                <p class="kp-palette__status" role="status" aria-live="polite"></p>
+            </dialog>
         </main>
         <script type="module" src="/js/auto.js"></script>
         <script type="module">
             import { attachMarkdownEditors } from '/js/markdown-editor.js';
             attachMarkdownEditors();
+            const params = new URLSearchParams(location.search);
+            // The test sets the key attributes first (`?bar=/`, `?hotkey=none`), then the components attach.
+            if (params.has('bar')) document.querySelector('#bar').setAttribute('data-kp-toolbar-key', params.get('bar'));
+            if (params.has('hotkey')) document.querySelector('#pal').setAttribute('data-kp-hotkey', params.get('hotkey'));
+            const { attachToolbars } = await import('/js/toolbar.js');
+            const { attachPalettes } = await import('/js/palette.js');
+            attachToolbars(document);
+            attachPalettes(document);
+            window.ready = true;
         </script>
     </body>
 </html>

@@ -20,7 +20,7 @@ export declare class PaletteControl extends Controller {
     list: HTMLElement;
     status: HTMLElement | null;
     match: string | import("./types.js").Matcher;
-    key: string | null;
+    key: import("../key-spec.js").KeySpec;
     clears: boolean;
     closes: boolean;
     /** @type {Matcher} */
@@ -79,4 +79,6 @@ export declare class PaletteControl extends Controller {
     onKey(event: KeyboardEvent): void;
     /** The triggers that open this palette say so, and print its key [scope-48]. Only what the markup left out is written, and only that is taken back. */
     stampOpeners(): void;
+    /** The key as a trigger prints it: ⌘K on a Mac, Ctrl K elsewhere for the usual Mod+letter, else as a person reads the key. @param {import('../key-spec.js').KeySpec} key @param {boolean} mac */
+    hotkeyText(key: import('../key-spec.js').KeySpec, mac: boolean): string;
 }

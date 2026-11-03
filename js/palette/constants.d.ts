@@ -14,3 +14,7 @@ export declare const RUN_EVENT = "kp-palette-run";
 export declare const OPEN_EVENT = "kp-palette-open";
 /** @param {number} n */
 export declare const RESULTS_TEXT: (n: number) => string;
+/** On the palette: the key that opens it, `Mod` for Ctrl or Command (a key spec, js/key-spec.js, or the older single letter, which means `Mod` and that letter; `none` for no key). */
+export declare const PALETTE_KEY_ATTRIBUTE = "data-kp-hotkey";
+/** The key that opens a palette when it names none. */
+export declare const PALETTE_KEY = "Mod+K";

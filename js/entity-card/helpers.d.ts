@@ -9,11 +9,12 @@ export declare const DRAWN: WeakMap<Element, {
 /** @param {Element} el @param {string} name @returns {string | null} */
 export declare const opt: (el: Element, name: string) => string | null;
 /**
- * The key that stars a card: its own or its grid's `data-kp-entity-star-key`; with none, `s` - and `.` under a board whose tiles
- * jump by their first letter (`data-kp-tiles-keys="letters"`, js/tiles.js), so the star never takes a letter away from the search [wish-1120].
+ * The key that stars a card, as a key spec's text: its own or its grid's `data-kp-entity-star-key`; with none, `s` - and `.` under a board
+ * whose tiles jump by their first letter (`data-kp-tiles-keys="letters"`, js/tiles.js), so the star never takes a letter away from the
+ * search [wish-1120]. `off` when the key is switched off (`none`, `off`, `false` or empty all mean that).
  * @param {Element} card
  */
-export declare const starKeyOf: (card: Element) => string;
+export declare function starKeyOf(card: Element): string;
 /**
  * Write a name into an element, the part that matches `match` (first occurrence, any case) wrapped in a `<mark>`. Text nodes and an
  * element only: nothing is parsed as HTML [wish-1120, homelab 121].

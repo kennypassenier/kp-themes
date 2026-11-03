@@ -104,3 +104,11 @@ export type AutosizeHandle = {
  * @property {() => { chars: number, lines: number }} count
  * @property {'css' | 'js'} engine the engine in use
  */
+/** On the box: the key that submits its form, listed in the `?` sheet (a key spec, js/key-spec.js; `none` for no key). */
+export declare const AUTOSIZE_SUBMIT_KEY_ATTRIBUTE = "data-kp-submit-key";
+/** The key that submits the form when the box names none: no key; a page opts in with `Mod+Enter`. */
+export declare const AUTOSIZE_SUBMIT_KEY = "none";
+/** The older value of the attribute, kept: it means `Mod+Enter`. */
+export declare const AUTOSIZE_SUBMIT_LEGACY = "mod-enter";
+/** What the older value means, as a key spec. */
+export declare const AUTOSIZE_SUBMIT_LEGACY_KEY = "Mod+Enter";

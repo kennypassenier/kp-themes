@@ -43,3 +43,14 @@ export declare function keyLabel(spec: KeySpec): string;
 export declare function ariaKeyShortcut(spec: KeySpec): string;
 /** A key spec as a person reads it (⌘ or Ctrl, ⌥ or Alt). @param {string} key `Mod+Z`, `Alt+Z` */
 export declare const keyName: (key: string) => string;
+/** Whether a value is written as a key spec (`Mod+K`, `+ or =`) rather than in the older spellings (`k`, `Mod K`, `mod-enter`). @param {string} text */
+export declare const isKeySpecText: (text: string) => boolean;
+/**
+ * The keys for the shortcut engine (js/shortcuts.js) from an option, an attribute and a default. A key spec is converted; a value
+ * in the engine's own spelling (`:`, `Mod K`, `g s`), which pages used before key specs, is passed through unchanged.
+ * @param {Element | null} host @param {string} attribute @param {string | false | undefined} option @param {string | false} fallback
+ * @returns {string | null} null when the shortcut is off
+ */
+export declare function resolveEngineKeys(host: Element | null, attribute: string, option: string | false | undefined, fallback: string | false): string | null;
+/** The engine's spelling of keys (`Mod e`, `g s`) for `aria-keyshortcuts` (`Control+e`, `g s`). @param {string} keys */
+export declare function ariaFromEngineKeys(keys: string): string;

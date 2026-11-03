@@ -11012,7 +11012,7 @@ function keyCaps(spec) {
 function engineKeys(spec) {
   const c = spec[0];
   if (!c) return null;
-  return [c.mod ? "Mod" : "", c.alt ? "Alt" : "", c.shift ? "Shift" : "", c.key === " " ? "Space" : c.key].filter(Boolean).join(" ");
+  return [c.mod ? "Mod" : "", c.alt ? "Alt" : "", c.shift ? "Shift" : "", c.key === " " ? "Space" : c.key.length > 1 ? c.cap : c.key].filter(Boolean).join(" ");
 }
 function keyLabel(spec) {
   const caps = keyCaps(spec);
@@ -11024,7 +11024,31 @@ function ariaKeyShortcut(spec) {
   if (caps === null) return "";
   return [caps].flat().map((cap2) => cap2 === "Mod" ? isMac() ? "Meta" : "Control" : cap2.length === 1 ? cap2.toUpperCase() : cap2).join("+");
 }
-var OFF, MODS, withShift, isMac, keyName;
+function resolveEngineKeys(host, attribute, option, fallback2) {
+  const raw = option ?? host?.getAttribute(attribute) ?? fallback2;
+  if (raw === false) return null;
+  const text = raw.trim();
+  if (OFF.has(text.toLowerCase())) return null;
+  return isKeySpecText(text) ? engineKeys(parseKeySpec(text)) : text;
+}
+function ariaFromEngineKeys(keys) {
+  let prefix = "";
+  const out = [];
+  for (const token of keys.trim().split(/\s+/)) {
+    const mod = (
+      /** @type {Record<string, string>} */
+      MODS[token.toLowerCase()]
+    );
+    if (mod) {
+      prefix += `${mod === "mod" ? "Control" : mod === "alt" ? "Alt" : "Shift"}+`;
+      continue;
+    }
+    out.push(prefix + token);
+    prefix = "";
+  }
+  return out.join(" ");
+}
+var OFF, MODS, withShift, isMac, keyName, isKeySpecText;
 var init_key_spec = __esm({
   "js/key-spec.js"() {
     "use strict";
@@ -11036,6 +11060,7 @@ var init_key_spec = __esm({
       navigator.userAgentData?.platform ?? navigator.platform ?? ""
     );
     keyName = (key) => key.replace(/\bmod\+/i, isMac() ? "\u2318" : "Ctrl+").replace(/\balt\+/i, isMac() ? "\u2325" : "Alt+");
+    isKeySpecText = (text) => /\s+or\s+/.test(text) || text.length > 1 && text.includes("+");
   }
 });
 
@@ -41273,7 +41298,7 @@ var init_parts3 = __esm({
 });
 
 // js/newpill/values.js
-var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, LEAVE_FALLBACK_MS, DIVIDER_COLSPAN;
+var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, LEAVE_FALLBACK_MS, DIVIDER_COLSPAN, NEWPILL_FOLLOW_KEY_ATTRIBUTE, NEWPILL_FOLLOW_KEY, NEWPILL_FOLLOW_HEAD_KEY;
 var init_values22 = __esm({
   "js/newpill/values.js"() {
     "use strict";
@@ -41284,6 +41309,9 @@ var init_values22 = __esm({
     NEWPILL_SAY_MS = 1e4;
     LEAVE_FALLBACK_MS = 700;
     DIVIDER_COLSPAN = 99;
+    NEWPILL_FOLLOW_KEY_ATTRIBUTE = "data-kp-follow-key";
+    NEWPILL_FOLLOW_KEY = "End";
+    NEWPILL_FOLLOW_HEAD_KEY = "Home";
   }
 });
 
@@ -41298,7 +41326,7 @@ function readNewPillOptions(el16, options) {
     threshold: options.threshold ?? (Number(el16.getAttribute("data-kp-follow-threshold")) || FOLLOW_THRESHOLD),
     unitOne: unitRaw[0] || strings.newpillUnitOne,
     unitMany: unitRaw[1] || (unitRaw[0] ? `${unitRaw[0]}s` : strings.newpillUnitMany),
-    keyName: options.key ?? el16.getAttribute("data-kp-follow-key") ?? (head ? "Home" : "End"),
+    followKey: resolveKeySpec(el16, NEWPILL_FOLLOW_KEY_ATTRIBUTE, options.key, head ? NEWPILL_FOLLOW_HEAD_KEY : NEWPILL_FOLLOW_KEY),
     space: options.space ?? el16.hasAttribute("data-kp-follow-space"),
     inTbody: (options.rows ?? el16.getAttribute("data-kp-follow-rows")) === "tbody"
   };
@@ -41314,6 +41342,7 @@ var init_options3 = __esm({
   "js/newpill/options.js"() {
     "use strict";
     init_strings();
+    init_key_spec();
     init_values22();
   }
 });
@@ -41554,6 +41583,7 @@ var init_controller37 = __esm({
   "js/newpill/controller.js"() {
     "use strict";
     init_live_options();
+    init_key_spec();
     init_away();
     init_rows4();
     init_values22();
@@ -41667,13 +41697,12 @@ var init_controller37 = __esm({
       }
       /** Jump back to the tail, or pause and resume with Space. @param {KeyboardEvent} event */
       onKey(event) {
-        if (event.ctrlKey || event.metaKey || event.altKey) return;
         const target = event.target instanceof Element ? event.target : null;
         if (target?.closest("input, textarea, select, button, a")) return;
-        if (event.key === this.read.keyName) {
+        if (matchesKeySpec(event, this.read.followKey, { anyShift: true })) {
           event.preventDefault();
           this.jump();
-        } else if (this.read.space && event.key === " ") {
+        } else if (this.read.space && event.key === " " && !(event.ctrlKey || event.metaKey || event.altKey)) {
           event.preventDefault();
           this.toggle();
         }
@@ -48127,7 +48156,7 @@ var init_checklist = __esm({
 });
 
 // js/toolbar/values.js
-var TOOLBAR, TOOLBAR_REMOVE_EVENT, TOOLBAR_CLEAR_EVENT, SEARCH2, ACTIVE, LIST2, CLEAR2, REMOVE;
+var TOOLBAR, TOOLBAR_REMOVE_EVENT, TOOLBAR_CLEAR_EVENT, SEARCH2, ACTIVE, LIST2, CLEAR2, REMOVE, TOOLBAR_KEY_ATTRIBUTE, TOOLBAR_KEY;
 var init_values24 = __esm({
   "js/toolbar/values.js"() {
     "use strict";
@@ -48139,6 +48168,8 @@ var init_values24 = __esm({
     LIST2 = ".kp-toolbar__active-list";
     CLEAR2 = "[data-kp-toolbar-clear]";
     REMOVE = ".kp-toolbar__active .kp-tag__remove";
+    TOOLBAR_KEY_ATTRIBUTE = "data-kp-toolbar-key";
+    TOOLBAR_KEY = "none";
   }
 });
 
@@ -48243,6 +48274,7 @@ var init_controller45 = __esm({
     "use strict";
     init_controller();
     init_active();
+    init_key_spec();
     init_values24();
     HANDLED3 = /* @__PURE__ */ new WeakSet();
     toolbarOf = (event) => event.target instanceof Element ? event.target.closest(TOOLBAR) : null;
@@ -48321,12 +48353,12 @@ var init_controller45 = __esm({
       }
       /** The search key focuses the first visible toolbar's search, from anywhere that is not a field. @param {KeyboardEvent} event */
       onHotkey(event) {
-        if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (event.defaultPrevented) return;
         const target = event.target;
         if (target instanceof HTMLElement && (target.isContentEditable || target.matches('input, textarea, select, [role="textbox"], [role="combobox"]')))
           return;
         for (const toolbar of this.scope.querySelectorAll(TOOLBAR)) {
-          if (toolbar.getAttribute("data-kp-toolbar-key") !== event.key) continue;
+          if (!matchesKeySpec(event, resolveKeySpec(toolbar, TOOLBAR_KEY_ATTRIBUTE, void 0, TOOLBAR_KEY))) continue;
           const input = toolbarSearch(toolbar);
           if (!input || !(toolbar instanceof HTMLElement) || toolbar.getClientRects().length === 0) continue;
           event.preventDefault();
@@ -51560,7 +51592,7 @@ var init_combobox = __esm({
 });
 
 // js/palette/constants.js
-var PALETTE, SHEET, INPUT2, LIST3, STATUS4, GROUP, OPENER, KEYS_SLOT, RUN_EVENT, OPEN_EVENT2, RESULTS_TEXT2;
+var PALETTE, SHEET, INPUT2, LIST3, STATUS4, GROUP, OPENER, KEYS_SLOT, RUN_EVENT, OPEN_EVENT2, RESULTS_TEXT2, PALETTE_KEY_ATTRIBUTE, PALETTE_KEY;
 var init_constants33 = __esm({
   "js/palette/constants.js"() {
     "use strict";
@@ -51579,6 +51611,8 @@ var init_constants33 = __esm({
       const s2 = getStrings();
       return n === 0 ? s2.noCommands : n === 1 ? s2.oneCommand : s2.manyCommands(n);
     };
+    PALETTE_KEY_ATTRIBUTE = "data-kp-hotkey";
+    PALETTE_KEY = "Mod+K";
   }
 });
 
@@ -51798,19 +51832,22 @@ function isMac4() {
   );
   return /mac|iphone|ipad/i.test(platform);
 }
-function isHotkey(event, key) {
-  return event.key.toLowerCase() === key.toLowerCase() && (event.metaKey || event.ctrlKey);
+function paletteKeySpec(dialog, fallback2) {
+  const raw = (dialog.getAttribute(PALETTE_KEY_ATTRIBUTE) ?? fallback2 ?? "none").trim();
+  return parseKeySpec(/^\S$/.test(raw) ? `Mod+${raw}` : raw);
 }
 function isTyping(target, typingSelector) {
   if (!(target instanceof HTMLElement)) return false;
   return target.isContentEditable || target.matches(typingSelector);
 }
-var MATCHERS2;
+var MATCHERS2, isHotkey;
 var init_keys11 = __esm({
   "js/palette/keys.js"() {
     "use strict";
     init_listbox();
     init_intent();
+    init_key_spec();
+    init_constants33();
     MATCHERS2 = {
       // Words in any order, each starting a word of the command [kpadopt6-ops]: the default since then, drawn by the
       // palette itself (ranking, marks, the cap), so this entry is for a consumer that asks a single yes or no.
@@ -51823,6 +51860,7 @@ var init_keys11 = __esm({
       substring: (text, query) => text.toLowerCase().includes(query.toLowerCase()),
       prefix: (text, query) => text.toLowerCase().startsWith(query.toLowerCase())
     };
+    isHotkey = (event, spec) => matchesKeySpec(event, spec, { anyShift: true });
   }
 });
 
@@ -52394,6 +52432,7 @@ var init_palette_control = __esm({
     init_constants33();
     init_intent_filter();
     init_keys11();
+    init_key_spec();
     init_outside();
     init_plain_filter();
     PaletteControl = class extends Controller {
@@ -52412,7 +52451,7 @@ var init_palette_control = __esm({
         this.status = /** @type {HTMLElement | null} */
         dialog.querySelector(STATUS4);
         this.match = options.match ?? "intent";
-        this.key = dialog.dataset.kpHotkey === "none" ? null : dialog.dataset.kpHotkey ?? options.hotkey ?? null;
+        this.key = paletteKeySpec(dialog, options.hotkey);
         this.clears = dialog.dataset.kpClearOnClose === void 0 ? options.clearOnClose ?? true : dialog.dataset.kpClearOnClose !== "false";
         this.closes = dialog.dataset.kpCloseOnRun === void 0 ? options.closeOnRun ?? true : dialog.dataset.kpCloseOnRun !== "false";
         this.matcher = MATCHERS2.substring;
@@ -52442,7 +52481,7 @@ var init_palette_control = __esm({
         this.listen(input, "input", () => this.filter());
         this.listen(dialog, "close", () => this.onClose());
         this.own(closeOnOutsidePress(dialog));
-        if (this.key !== null) this.listen(document, "keydown", (event) => this.onKey(
+        if (this.key.length > 0) this.listen(document, "keydown", (event) => this.onKey(
           /** @type {KeyboardEvent} */
           event
         ));
@@ -52563,7 +52602,7 @@ var init_palette_control = __esm({
        * @param {KeyboardEvent} event
        */
       onKey(event) {
-        if (this.key === null || !isHotkey(event, this.key) || !answers(PALETTE, this.dialog)) return;
+        if (!isHotkey(event, this.key) || !answers(PALETTE, this.dialog)) return;
         event.preventDefault();
         if (this.dialog.open) this.dialog.close();
         else this.open();
@@ -52581,14 +52620,20 @@ var init_palette_control = __esm({
             this.own(() => opener.removeAttribute(attribute));
           };
           stamp4("aria-haspopup", "dialog");
-          if (key === null) continue;
-          stamp4("aria-keyshortcuts", `${mac ? "Meta" : "Control"}+${key.toUpperCase()}`);
+          if (key.length === 0) continue;
+          stamp4("aria-keyshortcuts", ariaKeyShortcut(key));
           for (const slot of opener.querySelectorAll(KEYS_SLOT)) {
             if ((slot.textContent ?? "").trim() !== "") continue;
-            slot.textContent = getStrings().paletteHotkey(key, mac);
+            slot.textContent = this.hotkeyText(key, mac);
             this.own(() => slot.textContent = "");
           }
         }
+      }
+      /** The key as a trigger prints it: ⌘K on a Mac, Ctrl K elsewhere for the usual Mod+letter, else as a person reads the key. @param {import('../key-spec.js').KeySpec} key @param {boolean} mac */
+      hotkeyText(key, mac) {
+        const caps = keyCaps(key);
+        const usual = Array.isArray(caps) && caps.length === 2 && caps[0] === "Mod" && caps[1]?.length === 1;
+        return usual ? getStrings().paletteHotkey(String(caps[1]), mac) : keyLabel(key);
       }
     };
   }
@@ -52656,7 +52701,7 @@ var init_sheet2 = __esm({
 
 // js/palette/attach.js
 function attachPalettes(root = document, {
-  hotkey = "k",
+  hotkey = PALETTE_KEY,
   sheetKey = "?",
   match = "intent",
   clearOnClose = true,
@@ -80204,7 +80249,7 @@ function withAll(g, plan) {
 function applyPlan(plan) {
   for (const [member, next2] of plan) member.setAttribute("aria-pressed", next2);
 }
-var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, stateOf5, toggleKey, storeKey, readStore, writeStore, made3;
+var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, stateOf5, toggleKey, storeKey, readStore, writeStore, made3, TOGGLE_KEY_ATTRIBUTE, TOGGLE_KEY;
 var init_group6 = __esm({
   "js/toggle/group.js"() {
     "use strict";
@@ -80241,6 +80286,8 @@ var init_group6 = __esm({
       el16.className = className;
       return el16;
     };
+    TOGGLE_KEY_ATTRIBUTE = "data-kp-toggle-key";
+    TOGGLE_KEY = "none";
   }
 });
 
@@ -80558,6 +80605,7 @@ var init_controller75 = __esm({
     "use strict";
     init_reason();
     init_shortcuts();
+    init_key_spec();
     init_group6();
     init_handle3();
     ToggleControl = class extends ToggleAnswers {
@@ -80700,10 +80748,10 @@ var init_controller75 = __esm({
       /** `data-kp-toggle-key`: the shortcut that presses the toggle (never a bare digit, which AZERTY types as a sign). */
       registerKey() {
         const button6 = this.button;
-        const key = button6.dataset.kpToggleKey;
-        if (!key) return;
+        const key = resolveEngineKeys(button6, TOGGLE_KEY_ATTRIBUTE, void 0, TOGGLE_KEY);
+        if (key === null) return;
         if (/^[0-9]$/.test(key)) return void console.warn(`[kp-toggle] "${key}" is a bare digit: an unshifted digit on AZERTY types & \xE9 ", so the key is not registered.`);
-        button6.setAttribute("aria-keyshortcuts", key);
+        button6.setAttribute("aria-keyshortcuts", ariaFromEngineKeys(key));
         const off = registerShortcuts(
           button6,
           [{ keys: key, what: this.s.toggleKeyWhat(this.labelText()), group: this.s.toggleKeyGroup, run: () => button6.click(), when: () => !/** @type {any} */
@@ -81979,7 +82027,7 @@ var init_path_trace = __esm({
 });
 
 // js/entity-card/constants.js
-var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT;
+var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, ENTITY_STAR_KEY_ATTRIBUTE, ENTITY_STAR_KEY, ENTITY_STAR_LETTERS_KEY;
 var init_constants45 = __esm({
   "js/entity-card/constants.js"() {
     "use strict";
@@ -81992,10 +82040,18 @@ var init_constants45 = __esm({
     ENTITY_RETRY_EVENT = "kp-entity-retry";
     ENTITY_NEW_EVENT = "kp-entity-new";
     ENTITY_GRID_RETRY_EVENT = "kp-entity-grid-retry";
+    ENTITY_STAR_KEY_ATTRIBUTE = "data-kp-entity-star-key";
+    ENTITY_STAR_KEY = "s";
+    ENTITY_STAR_LETTERS_KEY = ".";
   }
 });
 
 // js/entity-card/helpers.js
+function starKeyOf(card) {
+  const fallback2 = card.closest('[data-kp-tiles-keys="letters"]') ? ENTITY_STAR_LETTERS_KEY : ENTITY_STAR_KEY;
+  const text = (opt2(card, ENTITY_STAR_KEY_ATTRIBUTE) ?? fallback2).toLowerCase();
+  return parseKeySpec(text).length === 0 ? "off" : text;
+}
 function writeName(el16, name, match) {
   const at = match ? name.toLowerCase().indexOf(match.toLowerCase()) : -1;
   if (!match || at < 0) {
@@ -82033,14 +82089,14 @@ function columnsFor(host, inline2) {
   }
   return Math.max(1, most + (more ? 1 : 0));
 }
-var DRAWN5, opt2, starKeyOf, made5, sig, SLOTS, kindOf2, slotOf;
+var DRAWN5, opt2, made5, sig, SLOTS, kindOf2, slotOf;
 var init_helpers5 = __esm({
   "js/entity-card/helpers.js"() {
     "use strict";
+    init_key_spec();
     init_constants45();
     DRAWN5 = /* @__PURE__ */ new WeakMap();
     opt2 = (el16, name) => el16.getAttribute(name) ?? el16.closest(ENTITY_GRID)?.getAttribute(name) ?? null;
-    starKeyOf = (card) => (opt2(card, "data-kp-entity-star-key") ?? (card.closest('[data-kp-tiles-keys="letters"]') ? "." : "s")).toLowerCase();
     made5 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -82089,7 +82145,7 @@ function listenForStarKey(card) {
   KEYED.add(card);
   card.addEventListener("keydown", (event) => {
     const wanted = starKeyOf(card);
-    if (wanted === "off" || event.key.toLowerCase() !== wanted || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    if (wanted === "off" || !matchesKeySpec(event, parseKeySpec(wanted))) return;
     const target = (
       /** @type {Element} */
       event.target
@@ -82115,7 +82171,7 @@ function appendStar(card, el16, data, pressed2, starKey) {
   button6.setAttribute("data-kp-toggle", "");
   button6.setAttribute("data-kp-look", "icon");
   button6.setAttribute("aria-pressed", String(pressed2));
-  if (starKey !== "off") button6.setAttribute("aria-keyshortcuts", starKey);
+  if (starKey !== "off") button6.setAttribute("aria-keyshortcuts", isKeySpecText(starKey) ? ariaKeyShortcut(parseKeySpec(starKey)) : starKey);
   const glyph3 = doc.createElementNS(ns, "svg");
   glyph3.setAttribute("class", "kp-entity__star-glyph");
   glyph3.setAttribute("viewBox", "0 0 24 24");
@@ -82154,6 +82210,7 @@ var init_star = __esm({
     init_toggle2();
     init_strings();
     init_constants45();
+    init_key_spec();
     init_helpers5();
     KEYED = /* @__PURE__ */ new WeakSet();
   }
@@ -82283,6 +82340,7 @@ var init_drawing3 = __esm({
   "js/entity-card/drawing.js"() {
     "use strict";
     init_strings();
+    init_constants45();
     init_helpers5();
     MAX_METER_ROWS = 3;
     DEFAULT_METER_ROWS = 2;
@@ -82304,7 +82362,7 @@ var init_drawing3 = __esm({
         this.selectable = false;
         this.markKind = "idmark";
         this.starOn = false;
-        this.starKey = "s";
+        this.starKey = ENTITY_STAR_KEY;
       }
       /** The frame, the remembered draw and the attributes every status shows. */
       begin() {
@@ -84133,7 +84191,7 @@ var init_unsaved = __esm({
 });
 
 // js/autosize/constants.js
-var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE2, PHONE_HEIGHT_SHARE, NORMAL_LINE_HEIGHT, FALLBACK_FONT_PX2, COUNTER_WARN_SHARE, LEVEL_NONE, LEVEL_NEAR, LEVEL_FULL;
+var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE2, PHONE_HEIGHT_SHARE, NORMAL_LINE_HEIGHT, FALLBACK_FONT_PX2, COUNTER_WARN_SHARE, LEVEL_NONE, LEVEL_NEAR, LEVEL_FULL, AUTOSIZE_SUBMIT_KEY_ATTRIBUTE, AUTOSIZE_SUBMIT_KEY, AUTOSIZE_SUBMIT_LEGACY, AUTOSIZE_SUBMIT_LEGACY_KEY;
 var init_constants46 = __esm({
   "js/autosize/constants.js"() {
     "use strict";
@@ -84151,6 +84209,10 @@ var init_constants46 = __esm({
     LEVEL_NONE = 0;
     LEVEL_NEAR = 1;
     LEVEL_FULL = 2;
+    AUTOSIZE_SUBMIT_KEY_ATTRIBUTE = "data-kp-submit-key";
+    AUTOSIZE_SUBMIT_KEY = "none";
+    AUTOSIZE_SUBMIT_LEGACY = "mod-enter";
+    AUTOSIZE_SUBMIT_LEGACY_KEY = "Mod+Enter";
   }
 });
 
@@ -84418,14 +84480,16 @@ function hookValueSetter(c) {
 }
 function registerSubmitKey(c) {
   const area = c.area;
-  if (attr8(area, "data-kp-submit-key", "off") !== "mod-enter") return;
+  const asked = area.getAttribute(AUTOSIZE_SUBMIT_KEY_ATTRIBUTE)?.trim().toLowerCase() === AUTOSIZE_SUBMIT_LEGACY ? AUTOSIZE_SUBMIT_LEGACY_KEY : void 0;
+  const keys = resolveEngineKeys(area, AUTOSIZE_SUBMIT_KEY_ATTRIBUTE, asked, AUTOSIZE_SUBMIT_KEY);
+  if (keys === null) return;
   void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
     if (c.destroyed) return;
     const unregister = registerShortcuts2(
       area,
       [
         {
-          keys: "Mod Enter",
+          keys,
           what: c.strings.autosizeSubmit,
           group: c.strings.autosizeGroup,
           when: () => c.doc.activeElement === area && !area.disabled && !area.readOnly,
@@ -84444,6 +84508,8 @@ var attr8;
 var init_hooks = __esm({
   "js/autosize/hooks.js"() {
     "use strict";
+    init_key_spec();
+    init_constants46();
     attr8 = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
   }
 });
@@ -95246,7 +95312,7 @@ var init_qr = __esm({
 });
 
 // js/console/constants.js
-var CONSOLE2, CONSOLE_RUN_EVENT, CONSOLE_BLOCK_EVENT, CONSOLE_RETRY_EVENT, CONSOLE_STATES, CONSOLE_HISTORY, CONSOLE_MAX_BYTES;
+var CONSOLE2, CONSOLE_RUN_EVENT, CONSOLE_BLOCK_EVENT, CONSOLE_RETRY_EVENT, CONSOLE_STATES, CONSOLE_HISTORY, CONSOLE_MAX_BYTES, CONSOLE_FOCUS_KEY_ATTRIBUTE, CONSOLE_FOCUS_KEY;
 var init_constants52 = __esm({
   "js/console/constants.js"() {
     "use strict";
@@ -95257,6 +95323,8 @@ var init_constants52 = __esm({
     CONSOLE_STATES = Object.freeze(["sending", "queued", "running", "ok", "failed", "refused", "cancelled", "lost"]);
     CONSOLE_HISTORY = 50;
     CONSOLE_MAX_BYTES = 262144;
+    CONSOLE_FOCUS_KEY_ATTRIBUTE = "data-kp-console-focus-key";
+    CONSOLE_FOCUS_KEY = ":";
   }
 });
 
@@ -96050,6 +96118,7 @@ var init_controller91 = __esm({
     init_controller();
     init_strings();
     init_shortcuts();
+    init_key_spec();
     init_newpill();
     init_reason();
     init_api28();
@@ -96133,8 +96202,8 @@ var init_controller91 = __esm({
         const root = this.host;
         const s2 = getStrings();
         const keys = [{ keys: "Mod L", what: s2.consoleKeyClear, group: s2.consoleKeyGroup, run: () => clearConsole(root) }];
-        const focusKey = attr13(root, "focus-key", ":");
-        if (focusKey === "false" || focusKey === "") return keys;
+        const focusKey = resolveEngineKeys(root, CONSOLE_FOCUS_KEY_ATTRIBUTE, void 0, CONSOLE_FOCUS_KEY);
+        if (focusKey === null) return keys;
         const input = (
           /** @type {HTMLInputElement} */
           root.querySelector(".kp-console__input")
@@ -96301,7 +96370,7 @@ var init_console3 = __esm({
 });
 
 // js/logviewer/constants.js
-var LOGVIEWER, LOGVIEWER_EVENT, LOGVIEWER_RETRY_EVENT, LOGVIEWER_MAX, LOG_LEVELS;
+var LOGVIEWER, LOGVIEWER_EVENT, LOGVIEWER_RETRY_EVENT, LOGVIEWER_MAX, LOG_LEVELS, LOG_FOCUS_KEY_ATTRIBUTE, LOG_FOCUS_KEY;
 var init_constants53 = __esm({
   "js/logviewer/constants.js"() {
     "use strict";
@@ -96310,6 +96379,8 @@ var init_constants53 = __esm({
     LOGVIEWER_RETRY_EVENT = "kp-logviewer-retry";
     LOGVIEWER_MAX = 2e3;
     LOG_LEVELS = Object.freeze(["debug", "info", "notice", "warning", "error", "critical"]);
+    LOG_FOCUS_KEY_ATTRIBUTE = "data-kp-log-focus-key";
+    LOG_FOCUS_KEY = "/";
   }
 });
 
@@ -97032,6 +97103,7 @@ var init_controller92 = __esm({
     init_segmented();
     init_reason();
     init_shortcuts();
+    init_key_spec();
     init_flash();
     init_api29();
     init_constants53();
@@ -97080,8 +97152,8 @@ var init_controller92 = __esm({
       /** The key that jumps to the search field from anywhere, through the engine; none when `data-kp-log-focus-key` is off. @param {HTMLInputElement} find @param {HTMLElement} bar */
       searchKey(find2, bar) {
         const s2 = getStrings();
-        const focusKey = attr14(this.host, "focus-key", "/");
-        if (focusKey === "false" || focusKey === "") return () => void 0;
+        const focusKey = resolveEngineKeys(this.host, LOG_FOCUS_KEY_ATTRIBUTE, void 0, LOG_FOCUS_KEY);
+        if (focusKey === null) return () => void 0;
         const key = { keys: focusKey, what: s2.logviewerKeySearch, group: s2.logviewerKeyGroup, when: () => !find2.disabled && !find2.hidden && !bar.hidden, reason: s2.logviewerNothing, run: () => find2.focus() };
         return registerShortcuts(this.host, [key], { layoutGuard: "off" });
       }

@@ -11,7 +11,7 @@ export declare function readNewPillOptions(el: HTMLElement, options: NewPillOpti
     threshold: number;
     unitOne: string;
     unitMany: string;
-    keyName: string;
+    followKey: import("../key-spec.js").KeySpec;
     space: boolean;
     inTbody: boolean;
 };
