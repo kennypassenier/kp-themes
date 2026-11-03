@@ -7056,3 +7056,36 @@ only at the commit.
 **8 · The fallback if the measurement fails.** `npm test` itself refuses to start without `.claude/release-go`.
 
 **9 · When we review the measure.** At the next release suite.
+
+## csp-1103 · kp-themes wrote style attributes into the markup it builds (2026-11-03)
+
+Approved 2026-11-03 by Kenny: "csp-1103: Klopt".
+
+**1 · What went wrong.** kp-themes wrote a `style` attribute into markup it builds itself in 14 places (3 in the theme
+menu, 7 in the loading pieces, 4 in the network graph), so chassis-rs could not turn on `style-src 'self'` without
+`'unsafe-inline'`.
+
+**2 · Which gate let it through.** The "Inline styles" gate read only example pages, never the HTML that JavaScript builds.
+
+**3 · Where else the same fault sits.** Nowhere any more: three places in `js/graph/view.js` (through an `svgEl` style
+option) and a pass-through in `setMenu` (`attrs.style`) were fixed with it. Searched with
+`git grep -n -e 'style="' -e "setAttribute('style'" -e 'style=\${' -- js components`: 0 hits on main.
+
+**4 · How we prevent recurrence.** The new gate `gates/check-markup-styles.mjs` refuses `style=` in a js/ string and
+`setAttribute('style', …)`, with no exceptions; styles go through CSSOM (`style.setProperty`, `cssText`).
+
+**5 · What the remedy costs.** One gate more (46), a few seconds per commit.
+
+**6 · Who or what enforces it.** Code: the gate runs in `npm run gates` and in the commit hook.
+
+**7 · How we measure that it works, and at which moment.** At the next chassis-rs release: the kit runs with
+`style-src 'self'` and the console shows 0 CSP violations on every kp page.
+
+**8 · The fallback if the measurement fails.** The place the console names moves to CSSOM the same day, and the gate
+learns that pattern.
+
+**9 · When we review the measure.** At the first release in which chassis-rs would have to loosen its CSP again.
+
+Evidence: Firefox with `style-src 'self'` on a fixture (menu, spinner, skeleton row, day, plate, graph): 50 violations
+before, every loading piece at 0,0 and the graph without colours; 0 after, positions and colours identical to the page
+without CSP. Fixed in 6768a7809 and 16522babf, released in 12.4.0.
