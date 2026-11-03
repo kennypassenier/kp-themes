@@ -52,6 +52,9 @@ js/controller.js     the base every component   │
                      class extends: attachAll   │
 js/realm.js          an element check that holds│
                      for another window         │
+js/boot-guard.js     one runtime boots per      │
+                     page; a second one         │
+                     refuses, one error         │
 js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │

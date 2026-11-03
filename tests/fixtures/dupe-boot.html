@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Two kp runtimes on one page</title>
+        <link rel="stylesheet" href="/dist/kp-themes.css" />
+    </head>
+    <body>
+        <!-- The mistake [dupe-1103]: the full bundle and the chunked entry both boot.
+             The guard makes the second one refuse, with one console error. -->
+        <main class="kp-page kp-stack" data-test="page">
+            <button type="button" class="kp-button kp-button--primary" data-test="button">Save</button>
+            <div data-kp-theme-picker data-test="picker">
+                <button type="button" data-kp-theme="dark" data-test="pick-dark">Dark</button>
+            </div>
+        </main>
+        <script type="module" src="/dist/kp-themes.min.js"></script>
+        <script type="module">
+            // Imported, not a src tag: tests/auto-lazy.spec.mjs walks the pages that carry a js/auto.js tag, and this page is a deliberate misuse.
+            import '/dist/js/auto.js';
+        </script>
+    </body>
+</html>

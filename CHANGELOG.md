@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Fixed: a second kp runtime on one page refuses to boot, with one console error** [dupe-1103; Almanac 03/11, "the full bundle with `dist/js/auto.js` freezes Firefox before DOMContentLoaded"]. Loading `dist/kp-themes.min.js` and `dist/js/auto.js` together booted two runtimes (observers, attach, strings, motion) over the same markup. The boot in `js/auto.js` now asks the new `js/boot-guard.js`: the first copy claims `globalThis[Symbol.for('kp-themes.boot')]`, a later one skips its boot and logs "kp-themes: a second copy of the runtime tried to boot ... Fix: load either dist/kp-themes.min.js or dist/js/auto.js, not both" naming both entries. Only the automatic boot asks; plain exports, `attachAll`, the split entries sharing chunks, and a bundle that imports parts without `auto.js` are untouched. Measured in Firefox (`~/.cache/dupe-1103/count.mjs`), `tests/fixtures/dashboard.html` with both entries, before to after: mutation observers 44 to 24 (one entry alone: 25 chunked, 23 bundled), listeners 101 to 80 (78 alone), console errors 0 to 1, `data-kp-auto-ready` written by one copy. Not reproduced: the freeze itself. The two entries together did not stop `DOMContentLoaded` on any of 25 fixture pages in Firefox (slowest 701 ms, 1343 ms with `index.js`); the double boot is measured through its duplicate observers and listeners instead.
+
 ## 12.3.0 — 2026-11-03
 
 Released on Kenny's go (2026-11-03 04:40: "release-1230: Uitbrengen"; "alle openstaande issues moeten opgelost worden voor de volgende release"), built without the screenshot check (his "Zonder"). Release suite (Firefox, 1932 tests, 22 min 41 s): 1926 passed, 2 failed, 4 skipped; both fixed and rerun green.

@@ -378,6 +378,22 @@ consumer who wants them serves a map next to its file and either appends the
 comment (`//# sourceMappingURL=auto.js.map`, `/*# sourceMappingURL=x.min.css.map */`)
 or points devtools at it with "Add source map".
 
+**Load one runtime per page** [dupe-1103]. The automatic boot (`js/auto.js`, and so
+`dist/kp-themes.min.js` and `dist/js/auto.js`) may run once on a page. Loading
+the full bundle and the chunked entry together boots two runtimes that arm their
+own observers on the same markup; Almanac measured Firefox freezing before
+`DOMContentLoaded` that way (2026-11-03). The first runtime to boot claims
+`globalThis[Symbol.for('kp-themes.boot')]`; a second one refuses to boot and logs
+one console error naming both entries and the fix: load either
+`dist/kp-themes.min.js` or `dist/js/auto.js`, not both. Measured in Firefox on a
+page with a data table (`tests/fixtures/dashboard.html`, both entries): 44
+mutation observers and 101 listeners before, 24 and 80 after, the same as one
+entry alone (25 and 78 chunked, 23 and 78 bundled). What stays allowed:
+`dist/js/auto.js` with `dist/js/index.js`, `core.js` or `lazy-register.js` (they
+share chunks, so one runtime); a bundle that imports parts such as `attachDialogs`
+or `applyTheme` but does not load `auto.js`; and your own calls to `attachAll`.
+Plain function exports never ask the guard.
+
 ## The entry points worth naming
 
 Not all of them: `package.json` exports 181 paths, because every register,

@@ -100223,13 +100223,40 @@ init_remember();
 init_loader();
 init_calm();
 init_runtime();
+
+// js/boot-guard.js
+var BOOT_MARKER = /* @__PURE__ */ Symbol.for("kp-themes.boot");
+var BOOT_FIX = "load either dist/kp-themes.min.js or dist/js/auto.js, not both";
+function describeEntry(url) {
+  const path = url.replace(/^[a-z]+:\/\/[^/]*/i, "").replace(/[?#].*$/, "");
+  if (/\/kp-themes(\.min)?\.js$/.test(path)) return `${path} (the full bundle)`;
+  if (/\/dist\/js\//.test(path)) return "dist/js/ (the chunked bundle, started by dist/js/auto.js or dist/js/index.js)";
+  return `${path} (loose js/auto.js)`;
+}
+function claimBoot(entry, scope = (
+  /** @type {Record<symbol, unknown>} */
+  /** @type {unknown} */
+  globalThis
+)) {
+  const first = scope[BOOT_MARKER];
+  if (typeof first !== "string") {
+    scope[BOOT_MARKER] = entry;
+    return true;
+  }
+  console.error(
+    `kp-themes: a second copy of the runtime tried to boot on this page and was refused. First: ${describeEntry(first)}. Second: ${describeEntry(entry)}. Fix: ${BOOT_FIX}.`
+  );
+  return false;
+}
+
+// js/auto.js
 init_needs();
 var LANGUAGE_WAIT_MS = 3e3;
 var READY_ATTRIBUTE = "data-kp-auto-ready";
 function attachAll2(root = document) {
   return new AutoLoader(root).start();
 }
-if (typeof document !== "undefined") {
+if (typeof document !== "undefined" && claimBoot(import.meta.url)) {
   applyStoredTheme();
   applyStoredCalm();
   restoreRemembered();

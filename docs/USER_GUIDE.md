@@ -4620,6 +4620,18 @@ own, and a flat one would silently be somebody else's.
 [load-1102]; `dist/js/auto.js` boots like `js/auto.js` and fetches a
 widget's chunk only when the page carries that widget.
 
+**One runtime per page** [dupe-1103]. Boot with one entry: `dist/kp-themes.min.js`,
+or `dist/js/auto.js` (with any of the `dist/js/<name>.js` entries beside it,
+which share its chunks), or the loose `js/auto.js`. Loading two of these on one
+page used to boot two runtimes over the same markup and could freeze the
+browser before `DOMContentLoaded`. Now the first one to boot claims the global
+`Symbol.for('kp-themes.boot')`; the second boots nothing and logs one console
+error naming both entries: "load either dist/kp-themes.min.js or dist/js/auto.js,
+not both". Only the automatic boot is guarded. The exported functions
+(`attachDialogs`, `applyTheme`, `attachAll`, ...) work in every copy, so a React
+bundle that imports parts without loading `auto.js` is never refused. If you see
+the error, remove one of the two script tags.
+
 ## Knowing where a reveal is [TF2]
 
 `js/effects.js` writes `data-kp-reveal-state` on every element it handles:

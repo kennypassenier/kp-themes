@@ -39,7 +39,7 @@ the selectors and their order are identical, which is what
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 46% |
 | `dist/kp-themes.css` | 4450.1 kB | 2359.0 kB | 47% |
 | `dist/kp-themes-base.css` | 1542.5 kB | 768.7 kB | 50% |
-| `dist/kp-themes.js` | 4002.4 kB | 2119.0 kB | 47% |
+| `dist/kp-themes.js` | 4003.4 kB | 2119.6 kB | 47% |
 
 The loose stylesheets together weigh **4503.3 kB** authored and
 **2389.9 kB** minified, 47% less. A page loading one theme's
@@ -61,7 +61,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/anchors.js` | 6 | 91.2 kB |
 | `dist/js/art.js` | 4 | 17.2 kB |
 | `dist/js/attention.js` | 8 | 125.4 kB |
-| `dist/js/auto.js` | 24 | 267.1 kB |
+| `dist/js/auto.js` | 24 | 267.7 kB |
 | `dist/js/auto-refresh.js` | 24 | 189.3 kB |
 | `dist/js/autosize.js` | 7 | 98.3 kB |
 | `dist/js/availability.js` | 30 | 329.3 kB |
@@ -210,8 +210,8 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/weekdays.js` | 21 | 171.6 kB |
 | `dist/js/wheel.js` | 8 | 99.8 kB |
 | `dist/js/wizard.js` | 7 | 93.7 kB |
-| `dist/js/index.js` | 183 | 2041.1 kB |
-| the whole folder | 352 | 2166.2 kB |
+| `dist/js/index.js` | 183 | 2041.7 kB |
+| the whole folder | 352 | 2166.8 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 
