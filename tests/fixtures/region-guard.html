@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Region guard: flush first, one question, saved fields, registered editors [rguard-1103]</title>
+        <link rel="stylesheet" href="/css/themes.css" />
+    </head>
+    <body>
+        <main>
+            <section data-kp-region-guard data-test="notes">
+                <input class="kp-field__input" aria-label="Notes" value="" data-test="notes-field" />
+            </section>
+            <section data-kp-region-guard data-test="plan">
+                <input class="kp-field__input" aria-label="Plan" value="" data-test="plan-field" />
+            </section>
+            <input class="kp-field__input" aria-label="Quick add" data-test="quick" />
+        </main>
+        <script type="module" src="/js/auto.js"></script>
+        <script type="module">
+            import { setRegionFlush, markRegionSaved, whenPageFree, pageChanged, registerEditor } from '/js/overlays.js';
+            const notes = document.querySelector('[data-test="notes"]');
+            const quick = document.querySelector('[data-test="quick"]');
+            const state = { saves: 0, fail: false, left: 0, serverNotes: '' };
+            window.demo = { state, markRegionSaved, whenPageFree, pageChanged, notes };
+            const field = notes.querySelector('input');
+            setRegionFlush(notes, async () => {
+                state.saves++;
+                if (state.fail) throw new Error('offline');
+                state.serverNotes = field.value;
+                markRegionSaved(notes, field);
+            });
+            window.demo.leave = () => whenPageFree(() => state.left++);
+            window.demo.register = () => registerEditor({ element: quick, isDirty: () => quick.value !== '', flush: async () => (quick.value = '') });
+        </script>
+    </body>
+</html>

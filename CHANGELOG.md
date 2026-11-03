@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Added: the region guard saves first, asks once for the page, tracks saved fields and takes registered editors** [rguard-1103; Habits 03/11, "NOT enough for Habits yet"]. `setRegionFlush(region, save)` runs an async save before the leave question (it asks only if text is still unsaved; a rejected save asks); `whenPageFree(go)` / `pageChanged()` are one leave check for a router, covering every guarded region, open guarded dialog and registered editor with ONE "Discard your changes?"; `markRegionSaved(region, field)` sets one field's saved baseline so changed means "differs from what the server holds"; `registerEditor({ element, isDirty, flush, discard, reloadOnly })` brings inline title edits, a quick-add line or a rail draft into Back, reload and the page check. Back now asks once for all changed regions and editors. All opt-in, defaults unchanged; Habits' `web/js/core/unsaved.js` can go. Measured in Firefox (tests/region-guard.spec.mjs, 4 tests, 6.9 s): before, no hook existed and `whenRegionFree` asked per box; after, two changed regions give one question (count 1), and a region whose flush hook works asks none (saves 0 to 1, `left` 1).
+
 ## 12.4.0 — 2026-11-03
 
 Released on Kenny's go (2026-11-03: "release-1240: Uitbrengen", touch-dense parts kept parked), built without the screenshot check. Release suite (Firefox, 1934 tests, 34 min 29 s): 1926 passed, 4 failed, 4 skipped; all four were test-side (a minute change in the gantt demo, a frozen 6.1.0 effects copy, a seam check that parked animations before scrolling, a corpus budget too tight under load), fixed and rerun green.

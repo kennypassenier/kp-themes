@@ -572,6 +572,26 @@ dialog or on any element round it (`<html>` for the whole page)
   the guarded way, `markRegionSaved(region)` and `regionChanged(region)` mirror
   the dialog calls; a submit inside counts as saved. Window listeners start
   with `attachDialogGuards()` (once, `attachDialogs` does it).
+  For an editor that saves itself (Habits' notes, titles, quick-add)
+  [rguard-1103], all opt-in: `setRegionFlush(region, save)` names an async
+  save that runs before the question (the question asks only if text is
+  still unsaved; a rejected save asks too); `markRegionSaved(region, field)`
+  after each autosave makes "changed" mean "differs from what the server
+  holds"; `registerEditor({ element, isDirty, flush, discard, reloadOnly })`
+  (returns the unregister) lets an inline title edit, a quick-add line or a
+  rail draft take part in Back and reload; and a router calls
+  `whenPageFree(go)` once per screen move (`pageChanged()` only reads): every
+  region, guarded dialog and editor saves first, then ONE "Discard your
+  changes?" asks for all of them. Example:
+
+  ```js
+  const unset = setRegionFlush(notes, async () => {
+      await api.saveNotes(field.value);
+      markRegionSaved(notes, field); // the server holds this now
+  });
+  const stop = registerEditor({ element: quick, isDirty: () => quick.value !== '', flush: save });
+  router.beforeEach((go) => whenPageFree(go));
+  ```
 
 Both channels also say whether an overlay's box scrolls: `attachScrollbars`
 (in `attachAll`, and inside the React `Dialog`, `DropdownMenu` and

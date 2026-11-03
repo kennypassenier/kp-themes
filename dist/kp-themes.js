@@ -3327,12 +3327,12 @@ var init_constants2 = __esm({
 });
 
 // js/overlays/dialog-leave.js
-function attachDialogLeave(held2, ask3) {
+function attachDialogLeave(held2, ask3, heldOnUnload = held2) {
   let lastDelta = -1;
   let undoing = false;
   let replaying = false;
-  const onUnload = (event) => {
-    if (!held2()) return;
+  const onUnload2 = (event) => {
+    if (!heldOnUnload()) return;
     event.preventDefault();
     event.returnValue = "";
   };
@@ -3363,11 +3363,11 @@ function attachDialogLeave(held2, ask3) {
       window.history.go(delta);
     });
   };
-  window.addEventListener("beforeunload", onUnload);
+  window.addEventListener("beforeunload", onUnload2);
   window.addEventListener("popstate", onPop, true);
   window.navigation?.addEventListener("currententrychange", onEntry);
   return () => {
-    window.removeEventListener("beforeunload", onUnload);
+    window.removeEventListener("beforeunload", onUnload2);
     window.removeEventListener("popstate", onPop, true);
     window.navigation?.removeEventListener("currententrychange", onEntry);
   };
@@ -4305,8 +4305,8 @@ function columnId(header) {
   );
 }
 function paintSidenav(panel, memory) {
-  const open4 = memory.read("open", null);
-  if (typeof open4 === "boolean") panel.setAttribute("data-kp-sidenav-open", String(open4));
+  const open5 = memory.read("open", null);
+  if (typeof open5 === "boolean") panel.setAttribute("data-kp-sidenav-open", String(open5));
   const rail = memory.read("rail", null);
   if (typeof rail === "boolean") panel.toggleAttribute("data-kp-sidenav-slim-collapsed", rail);
   const width = memory.read("width", null);
@@ -4322,8 +4322,8 @@ function paintSidenav(panel, memory) {
   }
 }
 function paintDisclosure(element, memory) {
-  const open4 = memory.read("open", null);
-  if (typeof open4 === "boolean") element.toggleAttribute("open", open4);
+  const open5 = memory.read("open", null);
+  if (typeof open5 === "boolean") element.toggleAttribute("open", open5);
 }
 function paintTree(tree, memory) {
   const branches = memory.read("branches", null);
@@ -6107,17 +6107,23 @@ function valueOf(control) {
     control
   );
 }
-function readForm(box) {
+function formControls(box) {
   const seen = /* @__PURE__ */ new Set();
-  const out = [];
   for (const el16 of box.querySelectorAll(FIELDS2)) {
     if (el16.closest("[data-kp-untracked], .kp-confirm--inline")) continue;
-    const control = widgetOf(el16) ?? el16;
-    if (seen.has(control)) continue;
-    seen.add(control);
-    out.push(valueOf(control));
+    seen.add(widgetOf(el16) ?? el16);
   }
-  return JSON.stringify(out);
+  return [...seen];
+}
+function readFormValues(box) {
+  return formControls(box).map(valueOf);
+}
+function readForm(box) {
+  return JSON.stringify(readFormValues(box));
+}
+function controlIndex(box, field2) {
+  const control = widgetOf(field2) ?? field2;
+  return formControls(box).indexOf(control);
 }
 var FIELDS2;
 var init_guard_fields = __esm({
@@ -6129,74 +6135,183 @@ var init_guard_fields = __esm({
   }
 });
 
+// js/overlays/guard-question.js
+function anchorOf(units) {
+  const focused2 = document.activeElement;
+  const here = focused2 instanceof HTMLElement ? units.find((u) => u.el.contains(focused2)) : void 0;
+  const el16 = here ? focused2 : units[0].el;
+  return el16 instanceof HTMLElement && el16.getClientRects().length > 0 ? el16 : units[0].el;
+}
+function ask(units, go) {
+  if (open) return;
+  open = true;
+  const opened = openDiscardQuestion(anchorOf(units), {
+    onAccept: () => {
+      open = false;
+      for (const u of units) u.release();
+      go();
+    },
+    onCancel: () => open = false
+  });
+  if (!opened.open) open = false;
+}
+function flushUnits(units) {
+  return Promise.all(
+    units.map((u) => {
+      const save2 = u.flush;
+      return save2 ? Promise.resolve().then(save2).catch((err) => console.warn("saving before leaving failed", err)) : null;
+    })
+  );
+}
+function leaveUnits(units, go) {
+  const now = units();
+  if (!now.length) {
+    go();
+    return true;
+  }
+  if (open) return false;
+  if (!now.some((u) => u.flush)) {
+    ask(now, go);
+    return false;
+  }
+  void flushUnits(now).then(() => {
+    const rest = units();
+    if (rest.length) ask(rest, go);
+    else go();
+  });
+  return false;
+}
+var open;
+var init_guard_question = __esm({
+  "js/overlays/guard-question.js"() {
+    "use strict";
+    init_discard_question();
+    open = false;
+  }
+});
+
+// js/overlays/page-editors.js
+function registerEditor(editor) {
+  editors.add(editor);
+  return () => void editors.delete(editor);
+}
+function dirty(editor) {
+  try {
+    return editor.isDirty();
+  } catch (err) {
+    console.warn("an editor could not say whether it holds unsaved text; treating it as unsaved", err);
+    return true;
+  }
+}
+function editorUnits({ reload = false } = {}) {
+  const out = [];
+  for (const e of editors) {
+    if (!e.element.isConnected) editors.delete(e);
+    else if ((reload || !e.reloadOnly) && !released.has(e) && dirty(e)) {
+      out.push({
+        el: e.element,
+        flush: e.flush,
+        release: () => {
+          released.add(e);
+          e.discard?.();
+        }
+      });
+    }
+  }
+  return out;
+}
+function onEdit(event) {
+  if (!(event.target instanceof Node)) return;
+  for (const e of editors) if (released.has(e) && e.element.contains(event.target)) released.delete(e);
+}
+var editors, released, EDITOR_LISTENERS;
+var init_page_editors = __esm({
+  "js/overlays/page-editors.js"() {
+    "use strict";
+    editors = /* @__PURE__ */ new Set();
+    released = /* @__PURE__ */ new WeakSet();
+    EDITOR_LISTENERS = [
+      ["keydown", onEdit],
+      ["beforeinput", onEdit]
+    ];
+  }
+});
+
 // js/overlays/region-guard.js
 function regionChanged(region) {
   const was = before.get(region);
   return was !== void 0 && was !== readForm(region);
 }
-function markRegionSaved(region) {
-  before.set(region, readForm(region));
+function markRegionSaved(region, field2) {
+  if (!field2) return void before.set(region, readForm(region));
+  const was = before.get(region);
+  const index = controlIndex(region, field2);
+  if (was === void 0 || index < 0) return;
+  const base = JSON.parse(was);
+  base[index] = readFormValues(region)[index];
+  before.set(region, JSON.stringify(base));
+}
+function setRegionFlush(region, flush) {
+  flushes.set(region, flush);
+  return () => void (flushes.get(region) === flush && flushes.delete(region));
 }
 function forgetRegionEdits(region) {
   before.delete(region);
-  released.delete(region);
+  released2.delete(region);
 }
-function heldRegion() {
-  for (const region of document.querySelectorAll(REGION_GUARD)) {
-    if (region instanceof HTMLElement && region.getClientRects().length > 0 && !released.has(region) && regionChanged(region)) return region;
-  }
-  return null;
+function holding(region) {
+  return region instanceof HTMLElement && region.getClientRects().length > 0 && !released2.has(region) && regionChanged(region);
 }
-function ask(region, go) {
-  if (asking.has(region)) return;
-  asking.add(region);
-  const focused2 = document.activeElement;
-  const opened = openDiscardQuestion(focused2 instanceof HTMLElement && region.contains(focused2) ? focused2 : region, {
-    onAccept: () => {
-      asking.delete(region);
-      released.add(region);
-      go();
-    },
-    onCancel: () => asking.delete(region)
-  });
-  if (!opened.open) asking.delete(region);
+function unitOf(region) {
+  return { el: region, flush: flushes.get(region), release: () => released2.add(region) };
+}
+function regionUnits(options) {
+  const regions2 = [...document.querySelectorAll(REGION_GUARD)].filter(holding).map((r) => unitOf(
+    /** @type {HTMLElement} */
+    r
+  ));
+  return [...regions2, ...editorUnits(options)];
+}
+function heldRegion(options) {
+  return regionUnits(options)[0]?.el ?? null;
 }
 function whenRegionFree(region, go) {
-  if (!region.matches(REGION_GUARD) || released.has(region) || !regionChanged(region)) {
-    go();
-    return true;
-  }
-  ask(region, go);
-  return false;
+  return leaveUnits(() => region.matches(REGION_GUARD) && holding(region) ? [unitOf(region)] : [], go);
 }
-function regionLeave(region, go) {
-  ask(region, go);
+function regionLeave(_box, go) {
+  leaveUnits(regionUnits, go);
 }
-function onEdit(event) {
+function onUnload() {
+  void flushUnits(regionUnits({ reload: true }));
+}
+function onEdit2(event) {
   const region = event.target instanceof Element ? event.target.closest(REGION_GUARD) : null;
   if (!region) return;
-  if (released.has(region)) forgetRegionEdits(region);
+  if (released2.has(region)) forgetRegionEdits(region);
   if (!before.has(region)) before.set(region, readForm(region));
 }
 function onSubmit(event) {
   const region = event.target instanceof Element ? event.target.closest(REGION_GUARD) : null;
   if (region) markRegionSaved(region);
 }
-var REGION_GUARD, before, asking, released, REGION_LISTENERS;
+var REGION_GUARD, before, flushes, released2, REGION_LISTENERS;
 var init_region_guard = __esm({
   "js/overlays/region-guard.js"() {
     "use strict";
-    init_discard_question();
     init_guard_fields();
+    init_guard_question();
+    init_page_editors();
     REGION_GUARD = '[data-kp-region-guard]:not([data-kp-region-guard="off"], dialog)';
     before = /* @__PURE__ */ new WeakMap();
-    asking = /* @__PURE__ */ new WeakSet();
-    released = /* @__PURE__ */ new WeakSet();
+    flushes = /* @__PURE__ */ new WeakMap();
+    released2 = /* @__PURE__ */ new WeakSet();
     REGION_LISTENERS = [
-      ["pointerdown", onEdit],
-      ["keydown", onEdit],
-      ["beforeinput", onEdit],
-      ["submit", onSubmit]
+      ["pointerdown", onEdit2],
+      ["keydown", onEdit2],
+      ["beforeinput", onEdit2],
+      ["submit", onSubmit],
+      ["beforeunload", onUnload],
+      ...EDITOR_LISTENERS
     ];
   }
 });
@@ -6211,10 +6326,10 @@ function markDialogSaved(dialog) {
 }
 function forgetDialogEdits(dialog) {
   before2.delete(dialog);
-  released2.delete(dialog);
+  released3.delete(dialog);
 }
 function holds(dialog, value) {
-  if (!dialog.matches(DIALOG_GUARD) || released2.has(dialog) || dialog.hasAttribute("data-kp-confirm-replaced")) return false;
+  if (!dialog.matches(DIALOG_GUARD) || released3.has(dialog) || dialog.hasAttribute("data-kp-confirm-replaced")) return false;
   return WAYS_OUT.has(value ?? "") && dialogChanged(dialog);
 }
 function anchorIn(dialog) {
@@ -6222,20 +6337,20 @@ function anchorIn(dialog) {
   return focused2 instanceof HTMLElement && dialog.contains(focused2) ? focused2 : dialog;
 }
 function ask2(dialog, go, from) {
-  asking2.add(dialog);
+  asking.add(dialog);
   const anchor = from instanceof HTMLElement && from.getClientRects().length > 0 ? from : anchorIn(dialog);
   const opened = openDiscardQuestion(anchor, {
     onAccept: () => {
-      asking2.delete(dialog);
-      released2.add(dialog);
+      asking.delete(dialog);
+      released3.add(dialog);
       go();
     },
-    onCancel: () => asking2.delete(dialog)
+    onCancel: () => asking.delete(dialog)
   });
-  if (!opened.open) asking2.delete(dialog);
+  if (!opened.open) asking.delete(dialog);
 }
 function whenDialogFree(dialog, go, { value, from = null } = {}) {
-  if (asking2.has(dialog)) return false;
+  if (asking.has(dialog)) return false;
   if (!holds(dialog, value)) {
     go();
     return true;
@@ -6246,17 +6361,17 @@ function whenDialogFree(dialog, go, { value, from = null } = {}) {
 function requestDialogClose(dialog, value, from = null) {
   return whenDialogFree(dialog, () => dialog.close(value), { value, from });
 }
-function onEdit2(event) {
+function onEdit3(event) {
   const dialog = event.target instanceof Element ? event.target.closest(DIALOG_GUARD) : null;
   if (dialog instanceof HTMLDialogElement && dialog.open && !before2.has(dialog)) before2.set(dialog, readForm(dialog));
 }
 function onCancel(event) {
   const dialog = event.target;
   if (!(dialog instanceof HTMLDialogElement) || dialog.hasAttribute("data-kp-confirm-replaced")) return;
-  if (!asking2.has(dialog) && !holds(dialog, "")) return;
+  if (!asking.has(dialog) && !holds(dialog, "")) return;
   event.preventDefault();
   event.stopImmediatePropagation();
-  if (!asking2.has(dialog)) ask2(dialog, () => dialog.close(""), document.activeElement);
+  if (!asking.has(dialog)) ask2(dialog, () => dialog.close(""), document.activeElement);
 }
 function onRequest(event) {
   const dialog = event.target;
@@ -6265,7 +6380,7 @@ function onRequest(event) {
     /** @type {CustomEvent<{ returnValue?: string }>} */
     event.detail?.returnValue
   );
-  if (asking2.has(dialog)) return void event.preventDefault();
+  if (asking.has(dialog)) return void event.preventDefault();
   if (!holds(dialog, value)) return;
   event.preventDefault();
   ask2(dialog, () => dialog.close(value), document.activeElement);
@@ -6278,22 +6393,24 @@ function onClose(event) {
   const dialog = event.target;
   if (dialog instanceof HTMLDialogElement && dialog.matches(DIALOG_GUARD)) forgetDialogEdits(dialog);
 }
+function heldDialogs() {
+  const out = [];
+  for (const d of document.querySelectorAll(DIALOG_GUARD)) if (d instanceof HTMLDialogElement && d.open && !released3.has(d) && dialogChanged(d)) out.push(d);
+  return out;
+}
+function dialogUnits() {
+  return heldDialogs().map((dialog) => ({ el: dialog, release: () => released3.add(dialog) }));
+}
 function heldDialog() {
-  for (const dialog of document.querySelectorAll(DIALOG_GUARD)) {
-    if (dialog instanceof HTMLDialogElement && dialog.open && !released2.has(dialog) && dialogChanged(dialog)) return dialog;
-  }
-  return null;
+  return heldDialogs()[0] ?? null;
 }
 function attachDialogGuards() {
   if (attached++ === 0) {
     for (const [type, listener] of [...LISTENERS, ...REGION_LISTENERS]) window.addEventListener(type, listener, true);
     stopLeave = attachDialogLeave(
       () => heldDialog() ?? heldRegion(),
-      (box, go) => box instanceof HTMLDialogElement ? void whenDialogFree(box, go) : regionLeave(
-        /** @type {HTMLElement} */
-        box,
-        go
-      )
+      (box, go) => box instanceof HTMLDialogElement ? void whenDialogFree(box, go) : regionLeave(box, go),
+      () => heldDialog() ?? heldRegion({ reload: true })
     );
   }
   let done = false;
@@ -6306,7 +6423,7 @@ function attachDialogGuards() {
     stopLeave = null;
   };
 }
-var DIALOG_GUARD, WAYS_OUT, before2, asking2, released2, LISTENERS, attached, stopLeave;
+var DIALOG_GUARD, WAYS_OUT, before2, asking, released3, LISTENERS, attached, stopLeave;
 var init_dialog_guard = __esm({
   "js/overlays/dialog-guard.js"() {
     "use strict";
@@ -6318,12 +6435,12 @@ var init_dialog_guard = __esm({
     DIALOG_GUARD = 'dialog[data-kp-dialog-guard]:not([data-kp-dialog-guard="off"])';
     WAYS_OUT = /* @__PURE__ */ new Set(["", "cancel"]);
     before2 = /* @__PURE__ */ new WeakMap();
-    asking2 = /* @__PURE__ */ new WeakSet();
-    released2 = /* @__PURE__ */ new WeakSet();
+    asking = /* @__PURE__ */ new WeakSet();
+    released3 = /* @__PURE__ */ new WeakSet();
     LISTENERS = [
-      ["pointerdown", onEdit2],
-      ["keydown", onEdit2],
-      ["beforeinput", onEdit2],
+      ["pointerdown", onEdit3],
+      ["keydown", onEdit3],
+      ["beforeinput", onEdit3],
       ["cancel", onCancel],
       [DIALOG_CLOSE_REQUEST_EVENT, onRequest],
       ["submit", onSubmit2],
@@ -6478,6 +6595,25 @@ var init_dialogs = __esm({
   }
 });
 
+// js/overlays/page-guard.js
+function pageUnits() {
+  return [...dialogUnits(), ...regionUnits()];
+}
+function pageChanged() {
+  return pageUnits().length > 0;
+}
+function whenPageFree(go) {
+  return leaveUnits(pageUnits, go);
+}
+var init_page_guard = __esm({
+  "js/overlays/page-guard.js"() {
+    "use strict";
+    init_dialog_guard();
+    init_guard_question();
+    init_region_guard();
+  }
+});
+
 // js/motion/timing.js
 function registerTime(el16, name) {
   const raw = getComputedStyle(el16).getPropertyValue(name).trim();
@@ -6497,12 +6633,12 @@ function themeMotion(scope = document.documentElement) {
   probe.style.cssText = "position:fixed;inset:auto;left:-9999px;top:0;visibility:hidden;pointer-events:none;";
   const themed = scope.closest("[data-theme]");
   (themed && themed !== document.documentElement && themed instanceof HTMLElement ? themed : host).append(probe);
-  let open4 = 0;
+  let open5 = 0;
   let ease = "ease";
   try {
     const style = getComputedStyle(probe);
     if (style.animationName && style.animationName !== "none") {
-      open4 = firstMs(style.animationDuration);
+      open5 = firstMs(style.animationDuration);
       ease = style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim() || "ease";
     }
   } finally {
@@ -6511,10 +6647,10 @@ function themeMotion(scope = document.documentElement) {
   const root = scope.ownerDocument?.documentElement ?? document.documentElement;
   const scale = parseFloat(getComputedStyle(root).getPropertyValue("--kp-motion-scale")) || 1;
   return {
-    open: open4,
+    open: open5,
     ease,
-    close: Math.min(open4 * CLOSE_SHARE, msOf(root, "--kp-close-max", 600)) * scale,
-    size: Math.min(open4 * SIZE_SHARE, msOf(root, "--kp-size-max", 480)) * scale
+    close: Math.min(open5 * CLOSE_SHARE, msOf(root, "--kp-close-max", 600)) * scale,
+    size: Math.min(open5 * SIZE_SHARE, msOf(root, "--kp-size-max", 480)) * scale
   };
 }
 function closeTime(dialog) {
@@ -9124,18 +9260,18 @@ var init_tooltips = __esm({
         delete anchor.dataset.kpTooltipAttached;
       }
       /** @param {boolean} open */
-      set(open4) {
+      set(open5) {
         const tooltip = this.tooltip;
         clearTimeout(this.timer);
-        if (open4 && this.going) {
+        if (open5 && this.going) {
           this.going = false;
           stopReversing(tooltip);
-        } else if (this.going || this.shown() === open4) return;
-        else if (open4) {
+        } else if (this.going || this.shown() === open5) return;
+        else if (open5) {
           tooltip.hidden = false;
           if (this.promoted && !showLayer(tooltip)) return;
         } else this.leave();
-        this.host.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open: open4, tooltip } }));
+        this.host.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open: open5, tooltip } }));
       }
       /** Is the tooltip on screen? A promoted one also needs the top layer: a popover taken out of the document (a table that
        * re-rendered its rows) closes without its `hidden` changing, and must open again on the next hover. */
@@ -9155,10 +9291,10 @@ var init_tooltips = __esm({
         });
       }
       /** @param {boolean} open @param {number} delay */
-      schedule(open4, delay) {
+      schedule(open5, delay) {
         clearTimeout(this.timer);
-        if (delay <= 0) this.set(open4);
-        else this.timer = window.setTimeout(() => this.set(open4), delay);
+        if (delay <= 0) this.set(open5);
+        else this.timer = window.setTimeout(() => this.set(open5), delay);
       }
     };
   }
@@ -9376,16 +9512,20 @@ __export(overlays_exports, {
   markRegionSaved: () => markRegionSaved,
   openAtTop: () => openAtTop,
   openDialog: () => openDialog,
+  pageChanged: () => pageChanged,
   regionChanged: () => regionChanged,
+  registerEditor: () => registerEditor,
   requestDialogClose: () => requestDialogClose,
   revealTab: () => revealTab,
   selectTab: () => selectTab,
+  setRegionFlush: () => setRegionFlush,
   showAlertAgain: () => showAlertAgain,
   toast: () => toast,
   toastRegion: () => toastRegion,
   watchScrollbar: () => watchScrollbar,
   watchTabOverflow: () => watchTabOverflow,
   whenDialogFree: () => whenDialogFree,
+  whenPageFree: () => whenPageFree,
   whenRegionFree: () => whenRegionFree
 });
 var init_overlays = __esm({
@@ -9395,6 +9535,8 @@ var init_overlays = __esm({
     init_dialogs();
     init_dialog_guard();
     init_region_guard();
+    init_page_editors();
+    init_page_guard();
     init_tabs();
     init_tab_row();
     init_toast();
@@ -10119,7 +10261,7 @@ var init_values5 = __esm({
 });
 
 // js/ack-gate/targets.js
-var HANDLES, targetsOf, siblingsOf, open;
+var HANDLES, targetsOf, siblingsOf, open2;
 var init_targets = __esm({
   "js/ack-gate/targets.js"() {
     "use strict";
@@ -10146,7 +10288,7 @@ var init_targets = __esm({
         )
       );
     };
-    open = (gate) => {
+    open2 = (gate) => {
       const state12 = gate.getAttribute("data-kp-state");
       if (state12 === "empty" || gate.hidden) return false;
       return HANDLES.get(gate)?.checked() !== true;
@@ -10211,7 +10353,7 @@ var init_core = __esm({
       /** The reason a control gives while it is off. */
       reasonFor() {
         const { host, s: s2 } = this;
-        const mine = siblingsOf(host).filter(open);
+        const mine = siblingsOf(host).filter(open2);
         if (mine.length === 0) return "";
         const all = siblingsOf(host).filter((g) => g.getAttribute("data-kp-state") !== "empty" && !g.hidden);
         if (all.length > 1) return s2.ackReasonMany(mine.length, all.length);
@@ -10298,7 +10440,7 @@ var init_sync = __esm({
           if (target.getAttribute("aria-disabled") !== "true" || target.getAttribute("data-kp-ack-held") === null) return;
           event.preventDefault();
           event.stopImmediatePropagation();
-          const first = siblingsOf(this.host).find(open);
+          const first = siblingsOf(this.host).find(open2);
           if (first && first.getAttribute("data-kp-ack-focus") !== "off")
             first.querySelector(".kp-ack__tick input")?.focus();
         };
@@ -10330,8 +10472,8 @@ var init_sync = __esm({
       syncTargets() {
         for (const target of targetsOf(this.host)) {
           this.guardTarget(target);
-          const holding = siblingsOf(this.host).some(open);
-          if (holding) this.hold(target);
+          const holding2 = siblingsOf(this.host).some(open2);
+          if (holding2) this.hold(target);
           else if (target.getAttribute("data-kp-ack-held") !== null) this.release(target);
         }
       }
@@ -10419,7 +10561,7 @@ var init_controller4 = __esm({
             host.toggleAttribute("data-kp-ack-locked", value);
             this.paint();
           },
-          remaining: () => siblingsOf(host).filter(open).length
+          remaining: () => siblingsOf(host).filter(open2).length
         };
       }
       onLink() {
@@ -10442,7 +10584,7 @@ var init_controller4 = __esm({
         for (const g of siblingsOf(host)) g.dispatchEvent(new CustomEvent("kp-ack-sync"));
         this.syncTargets();
         if (changed3 && fire2) {
-          const remaining = siblingsOf(host).filter(open).length;
+          const remaining = siblingsOf(host).filter(open2).length;
           host.dispatchEvent(new CustomEvent(ACK_EVENT, { bubbles: true, detail: { key: this.key(), checked, remaining, at: (/* @__PURE__ */ new Date()).toISOString() } }));
           this.say(remaining === 0 ? s2.ackEnabled : s2.ackDisabled(remaining));
         }
@@ -12648,10 +12790,10 @@ var init_emphasis = __esm({
       }
       /** A press on the trigger opens or closes the file. @param {Element} trigger @param {Element[]} marks @param {Element} container @param {string} routine */
       toggle(trigger, marks, container, routine) {
-        const open4 = trigger.getAttribute("aria-pressed") !== "true";
-        trigger.setAttribute("aria-pressed", String(open4));
-        for (const mark2 of marks) mark2.classList.toggle(STATE.cleared, open4);
-        container.toggleAttribute(HOOKS.openState, open4);
+        const open5 = trigger.getAttribute("aria-pressed") !== "true";
+        trigger.setAttribute("aria-pressed", String(open5));
+        for (const mark2 of marks) mark2.classList.toggle(STATE.cleared, open5);
+        container.toggleAttribute(HOOKS.openState, open5);
         this.ctx.announce(container, "emphasis", routine, false);
       }
       /** The marks outside any emphasis container clear on load, one after another. @param {ParentNode} scope */
@@ -22273,8 +22415,8 @@ var init_core2 = __esm({
         this.described = null;
       }
       /** @param {boolean} open @param {HTMLElement} anchor */
-      announce(open4, anchor) {
-        anchor.dispatchEvent(new CustomEvent(HOVERCARD_EVENT, { bubbles: true, detail: { open: open4, card: this.card, anchor } }));
+      announce(open5, anchor) {
+        anchor.dispatchEvent(new CustomEvent(HOVERCARD_EVENT, { bubbles: true, detail: { open: open5, card: this.card, anchor } }));
       }
       /** @param {HTMLElement | null} anchor */
       setCurrent(anchor) {
@@ -28861,7 +29003,7 @@ function foldMenu(c, col, top = 0) {
         event.detail?.value
       );
       const item = col.hidden.find((i) => i.event.id === id) ?? col.items.find((i) => i.event.id === id);
-      if (item) open2(c, item, "keyboard");
+      if (item) open3(c, item, "keyboard");
     });
   }
   col.more.removeAttribute("hidden");
@@ -28915,7 +29057,7 @@ function syncTabStops(c) {
   }
   for (const el16 of all) el16.tabIndex = el16 === target ? 0 : -1;
 }
-function open2(c, item, source) {
+function open3(c, item, source) {
   c.el.dispatchEvent(new CustomEvent(WEEK_OPEN_EVENT, { bubbles: true, detail: { id: item.event.id, event: item.event, source } }));
 }
 function focusPill(c, to) {
@@ -30870,12 +31012,12 @@ var init_constants19 = __esm({
 // js/settled/controller.js
 function handOffFocus(row2) {
   if (!row2.contains(row2.ownerDocument.activeElement)) return;
-  const open4 = (el16) => el16 instanceof HTMLElement && !el16.hasAttribute(SETTLED_ATTRIBUTE) ? el16 : null;
+  const open5 = (el16) => el16 instanceof HTMLElement && !el16.hasAttribute(SETTLED_ATTRIBUTE) ? el16 : null;
   let next2 = row2.nextElementSibling;
-  while (next2 && !open4(next2)) next2 = next2.nextElementSibling;
+  while (next2 && !open5(next2)) next2 = next2.nextElementSibling;
   let prev = row2.previousElementSibling;
-  while (prev && !open4(prev)) prev = prev.previousElementSibling;
-  const target = open4(next2) ?? open4(prev) ?? row2.parentElement;
+  while (prev && !open5(prev)) prev = prev.previousElementSibling;
+  const target = open5(next2) ?? open5(prev) ?? row2.parentElement;
   if (!target) return;
   const inner = target.querySelector('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
   const to = inner instanceof HTMLElement ? inner : target;
@@ -34193,9 +34335,9 @@ function settleToday(list) {
     row2.hidden = true;
   }
   button6.addEventListener("click", () => {
-    const open4 = button6.getAttribute("aria-expanded") !== "true";
-    button6.setAttribute("aria-expanded", String(open4));
-    for (const row2 of long) row2.hidden = !open4;
+    const open5 = button6.getAttribute("aria-expanded") !== "true";
+    button6.setAttribute("aria-expanded", String(open5));
+    for (const row2 of long) row2.hidden = !open5;
   });
   line.append(button6);
   list.append(line);
@@ -35016,10 +35158,10 @@ var init_more_list = __esm({
         return ul;
       }
       toggle() {
-        const open4 = this.panel.hidden;
-        this.panel.hidden = !open4;
-        this.more.setAttribute("aria-expanded", String(open4));
-        if (open4) this.doc.addEventListener("pointerdown", this.away, true);
+        const open5 = this.panel.hidden;
+        this.panel.hidden = !open5;
+        this.more.setAttribute("aria-expanded", String(open5));
+        if (open5) this.doc.addEventListener("pointerdown", this.away, true);
         else this.doc.removeEventListener("pointerdown", this.away, true);
       }
       close() {
@@ -35619,14 +35761,14 @@ var init_nav_toggle = __esm({
         return this.nav.hasAttribute("data-kp-nav-open") ? s2.closeMenu : s2.menu;
       }
       /** @param {boolean} open */
-      write(open4) {
-        this.nav.toggleAttribute("data-kp-nav-open", open4);
-        this.host.setAttribute("aria-expanded", String(open4));
+      write(open5) {
+        this.nav.toggleAttribute("data-kp-nav-open", open5);
+        this.host.setAttribute("aria-expanded", String(open5));
         this.host.setAttribute("aria-label", this.label());
       }
       /** @param {boolean} open */
-      set(open4) {
-        if (open4) this.open();
+      set(open5) {
+        if (open5) this.open();
         else this.close();
       }
       open() {
@@ -35971,17 +36113,17 @@ var init_nav_menus = __esm({
         return this.buttons.find((b) => b.getAttribute("aria-expanded") === "true") ?? null;
       }
       /** Open or close one mega menu; opening one closes the others. @param {HTMLElement} button @param {boolean} open */
-      set(button6, open4) {
-        if (open4) {
+      set(button6, open5) {
+        if (open5) {
           for (const other of this.buttons) if (other !== button6 && other.getAttribute("aria-expanded") === "true") this.set(other, false);
         }
         const was = button6.getAttribute("aria-expanded") === "true";
         const panel = this.wired.get(button6)?.panel;
         const item = button6.parentElement;
-        if (open4) item?.removeAttribute("data-kp-nav-closing");
-        button6.setAttribute("aria-expanded", String(open4));
-        if (open4 && panel) placeNavPanel(panel);
-        if (!open4 && was && item) settleClosing(item, panel);
+        if (open5) item?.removeAttribute("data-kp-nav-closing");
+        button6.setAttribute("aria-expanded", String(open5));
+        if (open5 && panel) placeNavPanel(panel);
+        if (!open5 && was && item) settleClosing(item, panel);
       }
       /** @param {Event} event */
       onEnter(event) {
@@ -37251,7 +37393,7 @@ var init_view = __esm({
         );
         if (!body || !button6) return;
         const limit = Number(body.getAttribute("data-kp-fold-lines"));
-        const open4 = this.expanded.has(key);
+        const open5 = this.expanded.has(key);
         const before3 = body.getAttribute("data-kp-fold");
         body.setAttribute("data-kp-fold", "open");
         const style = body.ownerDocument.defaultView?.getComputedStyle(body);
@@ -37263,10 +37405,10 @@ var init_view = __esm({
           button6.hidden = true;
           return;
         }
-        body.setAttribute("data-kp-fold", open4 ? "open" : "folded");
+        body.setAttribute("data-kp-fold", open5 ? "open" : "folded");
         button6.hidden = false;
-        button6.textContent = open4 ? getStrings().threadShowLess : getStrings().threadShowAll(lines4);
-        button6.setAttribute("aria-expanded", String(open4));
+        button6.textContent = open5 ? getStrings().threadShowLess : getStrings().threadShowAll(lines4);
+        button6.setAttribute("aria-expanded", String(open5));
       }
     };
   }
@@ -37371,11 +37513,11 @@ var init_controller30 = __esm({
       onMessageClick(target, item, key) {
         const el16 = this.host;
         if (target.closest(".kp-thread__fold")) {
-          const open4 = !this.expanded.has(key);
-          if (open4) this.expanded.add(key);
+          const open5 = !this.expanded.has(key);
+          if (open5) this.expanded.add(key);
           else this.expanded.delete(key);
           this.applyFold(item, key);
-          el16.dispatchEvent(new CustomEvent(THREAD_FOLD_EVENT, { bubbles: true, detail: { key, expanded: open4 } }));
+          el16.dispatchEvent(new CustomEvent(THREAD_FOLD_EVENT, { bubbles: true, detail: { key, expanded: open5 } }));
         }
         const copy3 = (
           /** @type {HTMLElement | null} */
@@ -39272,7 +39414,7 @@ function specFromMarkup(el16) {
   const layout3 = read("layout");
   const binaryBytes = Number(el16.getAttribute("data-kp-binary-size"));
   const cut = (el16.getAttribute("data-kp-truncated") ?? "").split("/").map((n) => Number(n));
-  const open4 = read("open");
+  const open5 = read("open");
   return {
     text: source?.textContent ?? "",
     title: read("title"),
@@ -39284,7 +39426,7 @@ function specFromMarkup(el16) {
     layout: layout3 === "raw" ? "raw" : layout3 === "pretty" ? "pretty" : void 0,
     state: state12 ?? (el16.hasAttribute("data-kp-binary-size") ? "binary" : void 0),
     cell,
-    open: open4 === "dialog" ? "dialog" : void 0,
+    open: open5 === "dialog" ? "dialog" : void 0,
     downloadUrl: el16.getAttribute("data-kp-download") ?? void 0,
     copy: el16.getAttribute("data-kp-copy") === "false" ? false : void 0,
     highlight: ["off", "false"].includes(read("highlight") ?? "") ? false : void 0,
@@ -40394,9 +40536,9 @@ function draw3(bar, memory) {
   const max = Number(bar.getAttribute("data-kp-selection-max")) || SELECTION_NAMES;
   p.names.hidden = nameMode === "count" || items2.length === 0 || memory.matching;
   if (!p.names.hidden) {
-    const open4 = memory.namesOpen;
+    const open5 = memory.namesOpen;
     const doc = bar.ownerDocument;
-    const list = open4 ? items2 : items2.slice(0, max);
+    const list = open5 ? items2 : items2.slice(0, max);
     const nodes = (
       /** @type {Node[]} */
       []
@@ -40412,8 +40554,8 @@ function draw3(bar, memory) {
         make13(doc, "kp-selection__more", "button")
       );
       more.type = "button";
-      more.setAttribute("aria-expanded", String(open4));
-      more.textContent = open4 ? strings.selectionFewer : strings.selectionMore(items2.length - max);
+      more.setAttribute("aria-expanded", String(open5));
+      more.textContent = open5 ? strings.selectionFewer : strings.selectionMore(items2.length - max);
       nodes.push(more);
     }
     p.names.replaceChildren(...nodes);
@@ -40676,9 +40818,9 @@ var init_controller36 = __esm({
         if (take) return this.take(take.getAttribute("data-kp-selection-take") === "on");
         const toggle2 = target.closest(".kp-selection__toggle");
         if (toggle2) {
-          const open4 = toggle2.getAttribute("aria-expanded") !== "true";
-          toggle2.setAttribute("aria-expanded", String(open4));
-          this.host.toggleAttribute("data-kp-selection-open", open4);
+          const open5 = toggle2.getAttribute("aria-expanded") !== "true";
+          toggle2.setAttribute("aria-expanded", String(open5));
+          this.host.toggleAttribute("data-kp-selection-open", open5);
           return;
         }
         const button6 = (
@@ -42073,12 +42215,12 @@ function toJson(request3, { mask = true, secretHeaders = SECRET_HEADERS } = {}) 
 function readOptions(el16) {
   const list = (v) => v ? v.split(",").map((s2) => s2.trim()).filter(Boolean) : null;
   const secrets2 = el16.getAttribute("data-kp-secrets-in-copy");
-  const open4 = el16.getAttribute("data-kp-requests-open");
+  const open5 = el16.getAttribute("data-kp-requests-open");
   const copyAs = list(el16.getAttribute("data-kp-copy-as"));
   return {
     secretHeaders: list(el16.getAttribute("data-kp-secret-headers")) ?? SECRET_HEADERS,
     secretsInCopy: secrets2 === "real" || secrets2 === "masked-only" ? secrets2 : "masked",
-    open: open4 === "first" || open4 === "failed" ? open4 : "none",
+    open: open5 === "first" || open5 === "failed" ? open5 : "none",
     max: Number(el16.getAttribute("data-kp-requests-max")) || REQUESTS_MAX,
     copyAs: (
       /** @type {('curl' | 'json' | 'body')[]} */
@@ -42167,7 +42309,7 @@ function drawRequest(el16, memory, request3, index, slot) {
   const tone = toneOf(request3.status);
   const failed2 = request3.status === void 0 || request3.status >= 400;
   const defaultOpen = options.open === "first" ? index === 0 : options.open === "failed" ? failed2 : false;
-  const open4 = memory.opened.has(key) || defaultOpen && !memory.closed.has(key);
+  const open5 = memory.opened.has(key) || defaultOpen && !memory.closed.has(key);
   const item = (
     /** @type {HTMLDetailsElement} */
     make15(doc, "kp-accordion__item kp-inspector__item", "details")
@@ -42175,7 +42317,7 @@ function drawRequest(el16, memory, request3, index, slot) {
   item.setAttribute("role", "listitem");
   item.dataset.kpRequestKey = key;
   item.dataset.kpRequestTone = tone;
-  if (open4) item.setAttribute("open", "");
+  if (open5) item.setAttribute("open", "");
   item.append(summaryOf2(doc, request3, tone));
   let built = false;
   const ensure = () => {
@@ -42183,7 +42325,7 @@ function drawRequest(el16, memory, request3, index, slot) {
     built = true;
     item.append(bodyOf2(doc, request3, options));
   };
-  if (open4) ensure();
+  if (open5) ensure();
   item.addEventListener("toggle", () => {
     if (item.open) {
       ensure();
@@ -42952,15 +43094,15 @@ var init_tick = __esm({
 // js/wheel/state.js
 function pickWeighted(items2, { random = Math.random, avoid = null } = {}) {
   const awake = items2.some((item) => !item.resting);
-  const open4 = items2.map((item, index) => ({ item, index })).filter(({ item }) => (items2.length < 2 || item.id !== avoid) && (!awake || !item.resting));
-  const total = open4.reduce((sum, { item }) => sum + weightOf(item), 0);
-  if (!open4.length || total <= 0) return -1;
+  const open5 = items2.map((item, index) => ({ item, index })).filter(({ item }) => (items2.length < 2 || item.id !== avoid) && (!awake || !item.resting));
+  const total = open5.reduce((sum, { item }) => sum + weightOf(item), 0);
+  if (!open5.length || total <= 0) return -1;
   let at = random() * total;
-  for (const { item, index } of open4) {
+  for (const { item, index } of open5) {
     at -= weightOf(item);
     if (at < 0) return index;
   }
-  return open4[open4.length - 1].index;
+  return open5[open5.length - 1].index;
 }
 function wheelAngles(weights) {
   const total = weights.reduce((a, b) => a + Math.max(0, b), 0);
@@ -45096,7 +45238,7 @@ function paint6(root, arrive3) {
   const { steps: steps2, index } = state12;
   const total = steps2.length;
   const step = steps2[index];
-  const asking3 = answering(root);
+  const asking2 = answering(root);
   const onSum = onSummary(root);
   const tracked = tracksOn(root);
   const track2 = tracked ? activeTrack(state12) : void 0;
@@ -45110,30 +45252,30 @@ function paint6(root, arrive3) {
   const timers = tracked ? timerStates(root) : [];
   const blocks = tracked && step && !passed ? blockersOf(state12, index, timers) : [];
   state12.lockKey = blocks.map((b) => b.index).join(",");
-  part2(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : track2 ? strings.focusTrackCount(track2.name, track2.pos + 1, track2.order.length) : asking3 ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
+  part2(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : track2 ? strings.focusTrackCount(track2.name, track2.pos + 1, track2.order.length) : asking2 ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
   const bar = part2(root, "bar");
   const shownTotal = total + (summaryOn(root) ? 1 : 0);
   bar.style.setProperty("--kp-value", String(track2 ? (track2.pos + 1) / track2.order.length : shownTotal ? (index + 1) / shownTotal : 0));
-  const progress = asking3 ? opt(root, "progress", "count") ?? "count" : "count";
+  const progress = asking2 ? opt(root, "progress", "count") ?? "count" : "count";
   bar.hidden = progress !== "count";
   part2(root, "count").hidden = progress === "off";
   const wakeLine = (
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-focus-steps__wake")
   );
-  if (wakeLine) wakeLine.hidden = asking3 && (root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake")) !== "true";
+  if (wakeLine) wakeLine.hidden = asking2 && (root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake")) !== "true";
   const speakButton = (
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-focus-steps__speak")
   );
-  if (speakButton) speakButton.hidden = typeof speechSynthesis === "undefined" || asking3 && opt(root, "speak") !== "true";
+  if (speakButton) speakButton.hidden = typeof speechSynthesis === "undefined" || asking2 && opt(root, "speak") !== "true";
   const holder = part2(root, "step");
   const error = root.getAttribute("data-kp-focus-steps-error");
   holder.replaceChildren();
   holder.removeAttribute("data-kp-focus-steps-kind");
   holder.removeAttribute("data-kp-focus-steps-locked");
   const saveError = root.getAttribute("data-kp-state") === "save-error";
-  if (asking3 || root.getAttribute("data-kp-focus-mode") === "answer") {
+  if (asking2 || root.getAttribute("data-kp-focus-mode") === "answer") {
     if (saveError) {
       holder.append(
         statePlate(document, {
@@ -45242,7 +45384,7 @@ function paint6(root, arrive3) {
   const atStart = track2 ? track2.pos === 0 && !passed : index === 0;
   if (blocked || atStart) prev.setAttribute("aria-disabled", "true");
   else prev.removeAttribute("aria-disabled");
-  prev.hidden = asking3 && opt(root, "back") === "off";
+  prev.hidden = asking2 && opt(root, "back") === "off";
   if (blocked || passed || blocks.length > 0) next2.setAttribute("aria-disabled", "true");
   else next2.removeAttribute("aria-disabled");
   const last = track2 ? passed || track2.pos === track2.order.length - 1 : total > 0 && index === lastIndex(root);
@@ -45250,9 +45392,9 @@ function paint6(root, arrive3) {
     /** @type {HTMLElement} */
     next2.querySelector(".kp-button__text")
   );
-  nextText.textContent = track2 ? last ? passed ? strings.focusDone : strings.focusTrackFinish(track2.name) : strings.focusNext : last ? strings.focusDone : asking3 && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
+  nextText.textContent = track2 ? last ? passed ? strings.focusDone : strings.focusTrackFinish(track2.name) : strings.focusNext : last ? strings.focusDone : asking2 && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
   next2.toggleAttribute("data-kp-focus-steps-last", last);
-  if (asking3 && step?.answer && !blocked) paintAnswerState(root);
+  if (asking2 && step?.answer && !blocked) paintAnswerState(root);
   part2(root, "body").scrollTop = 0;
   if (showLanes) {
     paintLanes(root);
@@ -46615,12 +46757,12 @@ function goToStep(root, index) {
   if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
   paint6(root, true);
   const strings = getStrings();
-  const asking3 = answering(root);
-  if (asking3 && hadFocus) part2(root, "step").focus({ preventScroll: true });
+  const asking2 = answering(root);
+  if (asking2 && hadFocus) part2(root, "step").focus({ preventScroll: true });
   const step = state12.steps[to];
   say6(
     root,
-    asking3 ? `${strings.focusQuestionCount(to + 1, state12.steps.length)}. ${step?.text ?? strings.focusSummaryTitle}` : `${strings.focusCount(to + 1, state12.steps.length)}. ${step?.text ?? ""}`
+    asking2 ? `${strings.focusQuestionCount(to + 1, state12.steps.length)}. ${step?.text ?? strings.focusSummaryTitle}` : `${strings.focusCount(to + 1, state12.steps.length)}. ${step?.text ?? ""}`
   );
   remember2(root);
   root.dispatchEvent(
@@ -48427,8 +48569,8 @@ var init_base4 = __esm({
         return this.read(OPTIONS3.mode) ?? "side";
       }
       isOpen() {
-        const open4 = this.panel.getAttribute(OPTIONS3.open);
-        return open4 !== "false" && (this.mode() === "side" || open4 === "true");
+        const open5 = this.panel.getAttribute(OPTIONS3.open);
+        return open5 !== "false" && (this.mode() === "side" || open5 === "true");
       }
       /** Whether the panel lies over the content. */
       covering() {
@@ -48521,7 +48663,7 @@ var init_base4 = __esm({
        *
        * @param {boolean} open
        */
-      syncPeek(open4) {
+      syncPeek(open5) {
         if (this.mode() === "side" || this.peekSize() === "") {
           this.dropStrip();
           return;
@@ -48543,7 +48685,7 @@ var init_base4 = __esm({
           if (value !== "") strip.style.setProperty(name, value);
           else strip.style.removeProperty(name);
         }
-        strip.toggleAttribute("data-kp-sidenav-peek-hushed", open4 && variant === "floating");
+        strip.toggleAttribute("data-kp-sidenav-peek-hushed", open5 && variant === "floating");
       }
       /** Take the peek strip away, if there is one. */
       dropStrip() {
@@ -48623,22 +48765,22 @@ var init_shift = __esm({
        * @param {boolean} open
        * @returns {{ property: null; value: string } | { property: string; value: string }}
        */
-      offsetContent(open4) {
+      offsetContent(open5) {
         this.applyOpener();
-        this.syncPeek(open4);
+        this.syncPeek(open5);
         const mode2 = this.mode();
         for (const tab of this.tabs()) {
           tab.setAttribute("data-kp-sidenav-tab-edge", this.edge());
-          const value2 = mode2 === "side" ? "" : open4 ? this.edgeSize() : this.peekSize();
-          this.shift(tab, this.marginAlong(), value2, open4 ? "open" : "closed", mode2 !== "side");
+          const value2 = mode2 === "side" ? "" : open5 ? this.edgeSize() : this.peekSize();
+          this.shift(tab, this.marginAlong(), value2, open5 ? "open" : "closed", mode2 !== "side");
         }
         const target = this.contentEl();
         if (!target) return { property: null, value: "" };
         this.carryInset(target);
         const reserved = this.reserved();
         const property = mode2 === "push" || reserved ? this.marginAlong() : this.paddingAlong();
-        const value = reserved || open4 && mode2 !== "over" ? this.panelSize() : mode2 === "push" ? this.peekSize() : "";
-        this.shift(target, property, value, reserved ? "reserved" : open4 ? "open" : "closed", mode2 === "push" && !reserved);
+        const value = reserved || open5 && mode2 !== "over" ? this.panelSize() : mode2 === "push" ? this.peekSize() : "";
+        this.shift(target, property, value, reserved ? "reserved" : open5 ? "open" : "closed", mode2 === "push" && !reserved);
         return { property, value };
       }
       /**
@@ -48671,11 +48813,11 @@ var init_shift = __esm({
        * @param {boolean} open
        * @param {boolean} now no motion to wait for (the starting state, a mode change)
        */
-      light(open4, now) {
+      light(open5, now) {
         this.lightTurn += 1;
         const turn2 = this.lightTurn;
         const boxes = this.launchers();
-        if (open4) {
+        if (open5) {
           this.panel.inert = false;
           for (const box of boxes) box.setAttribute(OPTIONS3.lit, "");
           return;
@@ -48703,14 +48845,14 @@ var init_shift = __esm({
         this.panel.inert = this.mode() !== "side" && this.on(OPTIONS3.inert, true);
       }
       /** Tell the togglers the panel's state, and name the ones without words of their own. @param {boolean} open */
-      say(open4) {
+      say(open5) {
         const s2 = { ...getStrings(), ...this.strings };
         for (const toggler of this.togglers()) {
           if (this.ownedBy !== "" && toggler.matches(this.ownedBy)) continue;
-          toggler.setAttribute("aria-expanded", String(open4));
+          toggler.setAttribute("aria-expanded", String(open5));
           toggler.setAttribute("aria-controls", this.panel.id);
           if (wantsName(toggler)) {
-            toggler.setAttribute("aria-label", open4 ? s2.closeSidebar : s2.sidebar);
+            toggler.setAttribute("aria-label", open5 ? s2.closeSidebar : s2.sidebar);
           }
         }
       }
@@ -48860,32 +49002,32 @@ var init_open2 = __esm({
        * @param {string} [reason] what asked for the change, written in `detail.reason`: `toggler`, `escape`, `backdrop`, `shortcut`,
        *   `api` (a call on the handle), `breakpoint` (a layout adapting), `mode` (a mode change) or `init` (the starting state)
        */
-      set(open4, moveFocus = true, save2 = true, reason = "api") {
-        const asked = this.ask(SIDENAV_TOGGLE_EVENT, { open: open4 }, reason);
+      set(open5, moveFocus = true, save2 = true, reason = "api") {
+        const asked = this.ask(SIDENAV_TOGGLE_EVENT, { open: open5 }, reason);
         if (asked === "prevented") return;
         const { panel } = this;
         this.turnEase();
-        panel.setAttribute(OPTIONS3.open, String(open4));
-        this.say(open4);
-        const offset = this.offsetContent(open4);
-        this.light(open4, !moveFocus && !save2);
-        if (open4) this.raiseBackdrop();
+        panel.setAttribute(OPTIONS3.open, String(open5));
+        this.say(open5);
+        const offset = this.offsetContent(open5);
+        this.light(open5, !moveFocus && !save2);
+        if (open5) this.raiseBackdrop();
         else this.dropBackdrop();
-        if (this.on(OPTIONS3.lockScroll, false)) this.doc.documentElement.style.overflow = open4 && this.covering() ? "hidden" : "";
-        if (moveFocus) this.moveFocus(open4);
-        if (save2) this.memory?.write("open", open4);
-        if (asked === "told") panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open: open4, reason } }));
+        if (this.on(OPTIONS3.lockScroll, false)) this.doc.documentElement.style.overflow = open5 && this.covering() ? "hidden" : "";
+        if (moveFocus) this.moveFocus(open5);
+        if (save2) this.memory?.write("open", open5);
+        if (asked === "told") panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open: open5, reason } }));
         panel.dispatchEvent(new CustomEvent(SIDENAV_MODE_EVENT, { bubbles: true, detail: { mode: this.mode(), offset, reason } }));
       }
       /** Where the focus goes when a person opens or closes the panel. @param {boolean} open */
-      moveFocus(open4) {
+      moveFocus(open5) {
         const { panel, doc } = this;
-        if (!open4 && !this.covering() && panel.contains(doc.activeElement)) {
+        if (!open5 && !this.covering() && panel.contains(doc.activeElement)) {
           this.restoreFocusTo = this.restoreFocusTo ?? this.togglers().find((t) => t instanceof HTMLElement && !panel.contains(t) && t.offsetParent !== null) ?? null;
         }
         const named = this.read(OPTIONS3.initialFocus);
-        if (!(this.covering() || named !== null && open4 || !open4 && this.restoreFocusTo !== null)) return;
-        if (open4) {
+        if (!(this.covering() || named !== null && open5 || !open5 && this.restoreFocusTo !== null)) return;
+        if (open5) {
           this.restoreFocusTo = doc.activeElement;
           this.focusInto(named);
         } else if (this.restoreFocusTo instanceof HTMLElement) {
@@ -51516,7 +51658,7 @@ var init_api16 = __esm({
 });
 
 // js/palette/intent-dom.js
-function unitOf(list, option) {
+function unitOf2(list, option) {
   const parent = option.parentElement;
   return parent !== null && parent !== list && parent.matches('li[role="presentation"]') && parent.children.length === 1 ? parent : option;
 }
@@ -51639,7 +51781,7 @@ function orderCommands(f, items2, want) {
   for (const it of items2) {
     const parent = (
       /** @type {HTMLElement} */
-      unitOf(list, it.option).parentElement
+      unitOf2(list, it.option).parentElement
     );
     containers.set(parent, [...containers.get(parent) ?? [], it]);
   }
@@ -51650,7 +51792,7 @@ function orderCommands(f, items2, want) {
       if (want.length === 0 && a.recency !== b.recency) return (a.recency < 0 ? NOT_RECENT : a.recency) - (b.recency < 0 ? NOT_RECENT : b.recency);
       return a.at - b.at;
     });
-    place(doc, group.map((it) => unitOf(list, it.option)));
+    place(doc, group.map((it) => unitOf2(list, it.option)));
   }
   const groups = (
     /** @type {HTMLElement[]} */
@@ -51866,7 +52008,7 @@ var init_intent_filter = __esm({
           if (show && capped && shownCount >= max) show = false;
           if (show) shownCount += 1;
           setHidden(option, !show);
-          const unit2 = unitOf(list, option);
+          const unit2 = unitOf2(list, option);
           if (unit2 !== option) setHidden(unit2, !show);
           clearMarks2(doc, option);
           if (show && want.length > 0 && dialog.dataset.kpHighlight !== "off") markWords(doc, option, want, mode2);
@@ -51948,7 +52090,7 @@ var init_intent_filter = __esm({
         const { list, doc, origin } = this;
         const containers = /* @__PURE__ */ new Map();
         for (const option of options) {
-          const unit2 = unitOf(list, option);
+          const unit2 = unitOf2(list, option);
           const parent = (
             /** @type {HTMLElement} */
             unit2.parentElement
@@ -53939,13 +54081,13 @@ var init_opening = __esm({
       /** @param {boolean} next */
       setOpen(next2) {
         if (this.wanted === next2) return;
-        const { picker, open: open4, views, live: live4 } = this.ctl;
+        const { picker, open: open5, views, live: live4 } = this.ctl;
         this.wanted = next2;
         views.reset();
         live4.textContent = "";
         if (next2) this.show();
         else this.hidePanel();
-        open4.setAttribute("aria-expanded", String(next2));
+        open5.setAttribute("aria-expanded", String(next2));
         if (next2) views.focusCurrent();
         picker.dispatchEvent(new CustomEvent(OPEN_EVENT3, { bubbles: true, detail: { open: next2 } }));
       }
@@ -54118,7 +54260,7 @@ function partsOf5(picker) {
     /** @type {HTMLInputElement | null} */
     picker.querySelector("[data-kp-date-input]")
   );
-  const open4 = (
+  const open5 = (
     /** @type {HTMLButtonElement | null} */
     picker.querySelector("[data-kp-date-open]")
   );
@@ -54126,7 +54268,7 @@ function partsOf5(picker) {
     /** @type {HTMLElement | null} */
     picker.querySelector("[data-kp-date-panel]")
   );
-  return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
+  return input === null || open5 === null || panel === null ? null : { input, open: open5, panel };
 }
 var DatePickerController;
 var init_controller49 = __esm({
@@ -54166,13 +54308,13 @@ var init_controller49 = __esm({
         this.handle = null;
       }
       connect() {
-        const { picker, input, open: open4, panel, settings } = this;
+        const { picker, input, open: open5, panel, settings } = this;
         picker.dataset.kpDatepickerAttached = "";
         panel.dataset.kpArrive = "none";
         this.before = {
           placeholder: input.placeholder,
           value: input.dataset.kpDateValue,
-          expanded: open4.getAttribute("aria-expanded"),
+          expanded: open5.getAttribute("aria-expanded"),
           panelHidden: panel.hidden
         };
         this.opening.wanted = !panel.hidden;
@@ -54181,8 +54323,8 @@ var init_controller49 = __esm({
         this.live.className = "kp-sr-only";
         this.live.setAttribute("aria-live", "polite");
         this.own(() => this.restore());
-        open4.setAttribute("aria-expanded", "false");
-        this.listen(open4, "click", () => this.opening.wanted ? this.hide() : this.show());
+        open5.setAttribute("aria-expanded", "false");
+        this.listen(open5, "click", () => this.opening.wanted ? this.hide() : this.show());
         this.listen(input, "input", () => this.commit(this.read(), "typed"));
         this.listen(input, "change", () => this.tidy());
         this.listen(panel, "keydown", (event) => onPanelKey(
@@ -54203,7 +54345,7 @@ var init_controller49 = __esm({
       }
       /** Put back what the picker changed on its markup. */
       restore() {
-        const { picker, input, open: open4, panel, before: before3 } = this;
+        const { picker, input, open: open5, panel, before: before3 } = this;
         stopClose(panel);
         panel.inert = false;
         this.opening.lower();
@@ -54214,8 +54356,8 @@ var init_controller49 = __esm({
         input.placeholder = before3.placeholder;
         if (before3.value === void 0) delete input.dataset.kpDateValue;
         else input.dataset.kpDateValue = before3.value;
-        if (before3.expanded === null) open4.removeAttribute("aria-expanded");
-        else open4.setAttribute("aria-expanded", before3.expanded);
+        if (before3.expanded === null) open5.removeAttribute("aria-expanded");
+        else open5.setAttribute("aria-expanded", before3.expanded);
         delete picker.dataset.kpDatepickerAttached;
       }
       /** The ISO value as the field's text reads now, without an event. */
@@ -54402,8 +54544,8 @@ var init_filter_popover = __esm({
         return !this.panel.hidden;
       }
       /** @param {boolean} open @param {boolean} [focus]  move the focus in (a reader's press), not for a panel that opens with the page */
-      setOpen(open4, focus = false) {
-        if (open4) this.open(focus);
+      setOpen(open5, focus = false) {
+        if (open5) this.open(focus);
         else this.close(focus);
       }
       /** @param {boolean} focus */
@@ -54516,20 +54658,20 @@ var init_filter_ui = __esm({
         toggle2.setAttribute("aria-controls", panel.id);
         toggle2.setAttribute("aria-expanded", String(!panel.hidden));
         if (FilterPopover.wanted(this.t)) {
-          const open4 = !panel.hidden;
+          const open5 = !panel.hidden;
           this.popover = new FilterPopover(this.t, panel, toggle2);
-          if (open4) this.popover.open(false);
+          if (open5) this.popover.open(false);
         }
       }
       /** Open or close the panel, wherever it is drawn. @param {boolean} open @param {boolean} [focus] */
-      setPanelOpen(open4, focus = false) {
+      setPanelOpen(open5, focus = false) {
         if (this.panel === null || this.toggle === null) return;
         if (this.popover !== null) {
-          this.popover.setOpen(open4, focus);
+          this.popover.setOpen(open5, focus);
           return;
         }
-        this.panel.hidden = !open4;
-        this.toggle.setAttribute("aria-expanded", String(open4));
+        this.panel.hidden = !open5;
+        this.toggle.setAttribute("aria-expanded", String(open5));
       }
       /** The panel's toggle: the page's, or one made here, in the top bar. @param {HTMLElement} panel */
       takeToggle(panel) {
@@ -55087,11 +55229,11 @@ var init_reorder = __esm({
           row2.querySelector(ROW_TOGGLE)
         );
         if (toggleButton !== null) {
-          const open4 = this.t.details.expanded.has(key);
+          const open5 = this.t.details.expanded.has(key);
           toggleButton.setAttribute("aria-label", s2.tableRowDetails(this.t.columns.nameOf(row2, key)));
-          toggleButton.setAttribute("aria-expanded", String(open4));
-          toggleButton.textContent = open4 ? this.t.controls.glyphs.collapse : this.t.controls.glyphs.expand;
-          const detail = this.t.details.details.has(row2) || open4 ? this.t.sync.detailFor(row2) : void 0;
+          toggleButton.setAttribute("aria-expanded", String(open5));
+          toggleButton.textContent = open5 ? this.t.controls.glyphs.collapse : this.t.controls.glyphs.expand;
+          const detail = this.t.details.details.has(row2) || open5 ? this.t.sync.detailFor(row2) : void 0;
           if (detail !== void 0) toggleButton.setAttribute("aria-controls", detail.id);
           else toggleButton.removeAttribute("aria-controls");
         }
@@ -55384,13 +55526,13 @@ var init_groups2 = __esm({
         }
         for (const [key, heading] of this.groups) {
           const count4 = matched.get(key) ?? 0;
-          const open4 = !this.folded.has(key);
+          const open5 = !this.folded.has(key);
           heading.hidden = !onPage.has(key) && heading.dataset.kpGroupAlways === void 0;
           const button6 = heading.querySelector(GROUP_TOGGLE);
           if (button6 !== null) {
-            button6.setAttribute("aria-expanded", String(open4));
+            button6.setAttribute("aria-expanded", String(open5));
             button6.setAttribute("aria-label", s2.tableGroupRows(this.groupNames.get(heading) ?? key, count4));
-            button6.textContent = open4 ? this.t.controls.glyphs.collapse : this.t.controls.glyphs.expand;
+            button6.textContent = open5 ? this.t.controls.glyphs.collapse : this.t.controls.glyphs.expand;
             const ids2 = onPage.get(key) ?? [];
             if (ids2.length > 0) button6.setAttribute("aria-controls", ids2.join(" "));
             else button6.removeAttribute("aria-controls");
@@ -55921,9 +56063,9 @@ var init_render3 = __esm({
             if (detail !== void 0) body.append(detail);
           }
         for (const [row2, detail] of details.details) {
-          const open4 = details.expanded.has(this.t.columns.keyOf(row2)) && !row2.hidden && model.all.includes(row2);
-          if (open4) this.t.sync.detailFor(row2);
-          detail.hidden = !open4;
+          const open5 = details.expanded.has(this.t.columns.keyOf(row2)) && !row2.hidden && model.all.includes(row2);
+          if (open5) this.t.sync.detailFor(row2);
+          detail.hidden = !open5;
         }
         for (const row2 of model.all) this.t.reorder.labelRow(row2);
       }
@@ -56185,12 +56327,12 @@ var init_pills2 = __esm({
       }
       /** @param {Event} event */
       onAddToggle(event) {
-        const open4 = (
+        const open5 = (
           /** @type {ToggleEvent} */
           event.newState === "open"
         );
-        this.t.filterUi.addButton?.setAttribute("aria-expanded", String(open4));
-        if (!open4) return;
+        this.t.filterUi.addButton?.setAttribute("aria-expanded", String(open5));
+        if (!open5) return;
         this.renderAddMenu(getStrings());
         (this.t.filterUi.addMenu?.querySelector(".kp-menu__item") ?? null)?.focus();
       }
@@ -56975,16 +57117,16 @@ var init_expand = __esm({
       }
       // ── Expansion ──────────────────────────────────────────────────
       /** @param {HTMLTableRowElement} row @param {boolean} open */
-      setExpanded(row2, open4) {
+      setExpanded(row2, open5) {
         const key = this.t.columns.keyOf(row2);
-        if (open4 === this.t.details.expanded.has(key)) return;
-        const closed = open4 && this.t.details.single ? [...this.t.details.expanded] : [];
+        if (open5 === this.t.details.expanded.has(key)) return;
+        const closed = open5 && this.t.details.single ? [...this.t.details.expanded] : [];
         for (const other of closed) this.t.details.expanded.delete(other);
-        if (open4) this.t.details.expanded.add(key);
+        if (open5) this.t.details.expanded.add(key);
         else this.t.details.expanded.delete(key);
-        const detail = open4 ? this.t.sync.detailFor(row2) : this.t.details.details.get(row2);
+        const detail = open5 ? this.t.sync.detailFor(row2) : this.t.details.details.get(row2);
         this.t.render.render();
-        const said = { key, row: row2, open: open4, cell: detail?.cells[0] ?? null, expanded: [...this.t.details.expanded] };
+        const said = { key, row: row2, open: open5, cell: detail?.cells[0] ?? null, expanded: [...this.t.details.expanded] };
         if (this.t.details.single) said.closed = closed;
         this.t.wrap.dispatchEvent(new CustomEvent(EXPAND_EVENT, { bubbles: true, detail: said }));
       }
@@ -57418,8 +57560,8 @@ var init_edit_field = __esm({
         const event = new CustomEvent(EDIT_EVENT, { bubbles: true, cancelable: true, detail });
         this.t.wrap.dispatchEvent(event);
         if (event.defaultPrevented && refused2 === null) refused2 = s2.tableEditInvalid;
-        const onEdit3 = this.t.settings.onEdit;
-        if (onEdit3 !== void 0) waits.push(Promise.resolve().then(() => onEdit3(detail)));
+        const onEdit4 = this.t.settings.onEdit;
+        if (onEdit4 !== void 0) waits.push(Promise.resolve().then(() => onEdit4(detail)));
         if (refused2 === null && waits.length > 0) {
           try {
             for (const answer2 of await Promise.all(waits)) {
@@ -58489,7 +58631,7 @@ function attachDataTables(root = document, {
   detail: detailFn,
   load: loadFn,
   rowKey: rowKeyFn,
-  onEdit: onEdit3,
+  onEdit: onEdit4,
   expandGlyph = "\u25B8",
   collapseGlyph = "\u25BE",
   gridPageRows = GRID_PAGE_ROWS,
@@ -58513,7 +58655,7 @@ function attachDataTables(root = document, {
     detailFn,
     loadFn,
     rowKeyFn,
-    onEdit: onEdit3,
+    onEdit: onEdit4,
     expandGlyph,
     collapseGlyph,
     gridPageRows,
@@ -59280,17 +59422,17 @@ var init_tree = __esm({
         const list = visibleItems(this.host);
         const at = list.indexOf(item);
         const expandable = item.hasAttribute("aria-expanded");
-        const open4 = item.getAttribute("aria-expanded") === "true";
+        const open5 = item.getAttribute("aria-expanded") === "true";
         const keys = {
           ArrowDown: () => list[at + 1] && this.setStop(list[at + 1]),
           ArrowUp: () => list[at - 1] && this.setStop(list[at - 1]),
           // Right opens a closed branch and steps into an open one — two jobs for one key, which is what makes a tree
           // navigable without a mouse.
-          ArrowRight: () => expandable && !open4 ? this.setExpanded(item, true) : list[at + 1] && this.setStop(list[at + 1]),
-          ArrowLeft: () => expandable && open4 ? this.setExpanded(item, false) : this.toParent(item),
+          ArrowRight: () => expandable && !open5 ? this.setExpanded(item, true) : list[at + 1] && this.setStop(list[at + 1]),
+          ArrowLeft: () => expandable && open5 ? this.setExpanded(item, false) : this.toParent(item),
           Home: () => list[0] && this.setStop(list[0]),
           End: () => list[list.length - 1] && this.setStop(list[list.length - 1]),
-          Enter: () => this.selects ? this.setSelected(item) : expandable && this.setExpanded(item, !open4)
+          Enter: () => this.selects ? this.setSelected(item) : expandable && this.setExpanded(item, !open5)
         };
         keys[" "] = keys.Enter;
         const run = keys[event.key];
@@ -60917,10 +61059,10 @@ function drawAxis(doc, columns2, { every, picked, loading: loading2 }) {
   const axis = make16(doc, "div", "kp-heat__row kp-heat__axis", { role: "row" });
   axis.append(make16(doc, "span", "kp-heat__label", { role: "columnheader", "aria-hidden": "true" }));
   const heads = make16(doc, "div", "kp-heat__cells", { role: "none" });
-  const open4 = columns2.map((c, i) => c.minor === void 0 ? i : -1).filter((i) => i >= 0);
-  const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
-  const before3 = open4[open4.length - 2];
-  if (every > 1 && before3 !== void 0 && before3 === open4[open4.length - 1] - 1) named.delete(before3);
+  const open5 = columns2.map((c, i) => c.minor === void 0 ? i : -1).filter((i) => i >= 0);
+  const named = new Set(open5.filter((_, at) => at % every === 0 || at === open5.length - 1));
+  const before3 = open5[open5.length - 2];
+  if (every > 1 && before3 !== void 0 && before3 === open5[open5.length - 1] - 1) named.delete(before3);
   const made6 = columns2.map((c, i) => column(c.key, loading2 && !c.label ? "" : c.label, c.minor ?? !named.has(i)));
   columns2.forEach((c, i) => c.full && made6[i].setAttribute("data-kp-full", c.full));
   placeAxis(made6);
@@ -62114,15 +62256,15 @@ function nodeFor(m, node, kind) {
   const card = cardOf(m, node, kind, related);
   li.append(card);
   if (node.href && !node.disabledReason) {
-    const open4 = (
+    const open5 = (
       /** @type {HTMLAnchorElement} */
       make17(m.doc, "a", "kp-uses__open")
     );
-    open4.href = node.href;
-    open4.tabIndex = -1;
-    open4.setAttribute("aria-label", m.strings.usesOpen(node.label));
-    open4.textContent = "\u2197";
-    li.append(open4);
+    open5.href = node.href;
+    open5.tabIndex = -1;
+    open5.setAttribute("aria-label", m.strings.usesOpen(node.label));
+    open5.textContent = "\u2197";
+    li.append(open5);
   } else if (node.disabledReason) {
     card.setAttribute("data-kp-disabled-reason", node.disabledReason);
     li.setAttribute("data-kp-unavailable", "");
@@ -63384,7 +63526,7 @@ var init_controller54 = __esm({
         if (!item) return;
         c.active = item.event.id;
         syncTabStops(c);
-        open2(c, item, event.detail === 0 ? "keyboard" : "pointer");
+        open3(c, item, event.detail === 0 ? "keyboard" : "pointer");
       }
       /** Arrows, Home and End move between the pills of a day, the days, or the upcoming list. @param {KeyboardEvent} event */
       onKey(event) {
@@ -66117,7 +66259,7 @@ function scaleOf(c) {
   return { room, from: w.from, perPx, nowX: perPx ? (w.now - w.from) / perPx : -1 };
 }
 function waysOf(b, s2) {
-  const { left, right, reach: reach3, open: open4, need } = b;
+  const { left, right, reach: reach3, open: open5, need } = b;
   const take = { l: left, r: reach3 };
   if (need <= right - left - 2) {
     if (!onNow(s2.nowX, { l: left, r: left + need }) || s2.nowX <= left) return [{ side: "inside", x: left, take, inset: 0 }];
@@ -66127,7 +66269,7 @@ function waysOf(b, s2) {
   const after = { l: reach3 + SIDE_GAP_PX, r: reach3 + SIDE_GAP_PX + wide };
   const before3 = { l: left - SIDE_GAP_PX - wide, r: left - SIDE_GAP_PX };
   const ways = [];
-  if (!open4 && after.r <= s2.room && !onNow(s2.nowX, after)) ways.push({ side: "after", x: after.l, take: { l: left, r: after.r }, inset: 0 });
+  if (!open5 && after.r <= s2.room && !onNow(s2.nowX, after)) ways.push({ side: "after", x: after.l, take: { l: left, r: after.r }, inset: 0 });
   if (before3.l >= 0 && !onNow(s2.nowX, before3)) ways.push({ side: "before", x: before3.l, take: { l: before3.l, r: reach3 }, inset: 0 });
   return ways;
 }
@@ -66148,8 +66290,8 @@ function geometryOf(c, b, s2, minBar) {
   const right = Math.max(left + minBar, (end - s2.from) / s2.perPx);
   const rest = restEnd(c, b.run);
   const reach3 = rest === null ? right : Math.max(right, (rest - s2.from) / s2.perPx);
-  const open4 = b.e === null && rest === null;
-  return { left, right, reach: reach3, open: open4, need: labelWidth(c, b.bar) };
+  const open5 = b.e === null && rest === null;
+  return { left, right, reach: reach3, open: open5, need: labelWidth(c, b.bar) };
 }
 function packFit(c, bars, marks, minBar) {
   const s2 = scaleOf(c);
@@ -66586,8 +66728,8 @@ function paint9(c) {
       laneById.set(run.lane, lane);
       byLane.set(run.lane, []);
     }
-    const open4 = run.state === "running" || run.state === "queued";
-    const endRaw = open4 ? null : run.end == null || !Number.isFinite(toMs2(run.end)) ? startMs : toMs2(run.end);
+    const open5 = run.state === "running" || run.state === "queued";
+    const endRaw = open5 ? null : run.end == null || !Number.isFinite(toMs2(run.end)) ? startMs : toMs2(run.end);
     let bar = c.bars.get(run.id);
     if (!bar) {
       bar = make19(doc, "button", "kp-gantt__run");
@@ -67599,15 +67741,15 @@ var init_lanes3 = __esm({
         const doc = this.host.ownerDocument;
         const s2 = this.strings;
         const limit = lane.closed ? 0 : this.limit();
-        const open4 = this.open.has(lane.key);
-        const shown6 = limit > 0 && !open4 ? cards2.slice(0, limit) : cards2;
+        const open5 = this.open.has(lane.key);
+        const shown6 = limit > 0 && !open5 ? cards2.slice(0, limit) : cards2;
         for (const card of shown6) list.append(this.cardNode(card, lane));
         if (limit > 0 && cards2.length > limit) {
           const more = make20(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-pipeline__more");
           more.type = "button";
           more.dataset.kpPipelineMore = lane.key;
-          more.setAttribute("aria-expanded", String(open4));
-          more.textContent = open4 ? s2.pipelineLess : s2.pipelineMore(cards2.length - limit);
+          more.setAttribute("aria-expanded", String(open5));
+          more.textContent = open5 ? s2.pipelineLess : s2.pipelineMore(cards2.length - limit);
           list.append(more);
         }
       }
@@ -67674,10 +67816,10 @@ var init_view3 = __esm({
       drawLanes() {
         const byLane = this.byLane();
         const total = this.cards.filter((card) => this.lanes.some((l) => l.key === card.lane && !l.closed)).length;
-        const open4 = this.lanes.filter((l) => !l.closed);
+        const open5 = this.lanes.filter((l) => !l.closed);
         const closed = this.lanes.filter((l) => l.closed);
-        this.board.style.setProperty("--kp-pipeline-lanes", String(Math.max(1, open4.length)));
-        this.board.replaceChildren(...open4.map((l) => this.laneNode(l, byLane.get(l.key) ?? [], total)));
+        this.board.style.setProperty("--kp-pipeline-lanes", String(Math.max(1, open5.length)));
+        this.board.replaceChildren(...open5.map((l) => this.laneNode(l, byLane.get(l.key) ?? [], total)));
         this.closed.replaceChildren(...closed.map((l) => this.laneNode(l, byLane.get(l.key) ?? [], total)));
         this.closed.hidden = closed.length === 0;
       }
@@ -67811,13 +67953,13 @@ var init_controller57 = __esm({
       /** A lane shows more or fewer cards. @param {HTMLElement} more the toggle that was pressed */
       toggleMore(more) {
         const key = more.dataset.kpPipelineMore ?? "";
-        const open4 = !this.open.has(key);
-        if (open4) this.open.add(key);
+        const open5 = !this.open.has(key);
+        if (open5) this.open.add(key);
         else this.open.delete(key);
         this.active = key;
         this.paint();
         this.host.querySelector(`[data-kp-pipeline-more="${CSS.escape(key)}"]`)?.focus();
-        this.host.dispatchEvent(new CustomEvent(PIPELINE_MORE_EVENT, { bubbles: true, detail: { lane: key, open: open4 } }));
+        this.host.dispatchEvent(new CustomEvent(PIPELINE_MORE_EVENT, { bubbles: true, detail: { lane: key, open: open5 } }));
       }
       /** @param {MouseEvent} event */
       onClick(event) {
@@ -68632,8 +68774,8 @@ function leaveGroupCard(el16) {
   return { last: group.loading.size === 0, card: group.card, host };
 }
 function infoMode(el16) {
-  const open4 = SPECS.get(el16)?.open ?? el16.dataset.kpUptimeOpen;
-  return open4 === "info" || open4 === void 0 && coarsePointer();
+  const open5 = SPECS.get(el16)?.open ?? el16.dataset.kpUptimeOpen;
+  return open5 === "info" || open5 === void 0 && coarsePointer();
 }
 var coarsePointer;
 var init_group4 = __esm({
@@ -70162,21 +70304,21 @@ function buildDatePicker(doc, s2, legendText) {
   date.autocomplete = "off";
   date.dataset.kpDateInput = "";
   date.setAttribute("aria-label", s2.rangeDateLabel(legendText));
-  const open4 = doc.createElement("button");
-  open4.type = "button";
-  open4.className = "kp-button";
-  open4.dataset.kpDateOpen = "";
-  open4.setAttribute("aria-label", s2.calendarOpen);
-  open4.title = s2.calendarOpen;
+  const open5 = doc.createElement("button");
+  open5.type = "button";
+  open5.className = "kp-button";
+  open5.dataset.kpDateOpen = "";
+  open5.setAttribute("aria-label", s2.calendarOpen);
+  open5.title = s2.calendarOpen;
   const glyph3 = doc.createElement("span");
   glyph3.setAttribute("aria-hidden", "true");
   glyph3.textContent = s2.calendarButton;
-  open4.append(glyph3);
+  open5.append(glyph3);
   const datePanel = doc.createElement("div");
   datePanel.className = "kp-datepicker__panel";
   datePanel.dataset.kpDatePanel = "";
   datePanel.hidden = true;
-  picker.append(date, open4, datePanel);
+  picker.append(date, open5, datePanel);
   return { picker, date };
 }
 function buildBound(doc, s2, which) {
@@ -71420,7 +71562,7 @@ var init_summary2 = __esm({
         return ul;
       }
       /** The rows by key; the rows beyond `open` are hidden unless the alert is expanded. @param {HTMLElement} ul @param {Problem[]} list @param {number} open @param {boolean} expanded @param {string} remedyLabel */
-      summaryRows(ul, list, open4, expanded, remedyLabel) {
+      summaryRows(ul, list, open5, expanded, remedyLabel) {
         const doc = this.host.ownerDocument;
         const rows2 = /* @__PURE__ */ new Map();
         for (
@@ -71438,7 +71580,7 @@ var init_summary2 = __esm({
           li.setAttribute("data-kp-severity", severityOf(p));
           paintParts(li, p, remedyLabel);
           paintAction2(li, p);
-          li.hidden = at >= open4 && !expanded;
+          li.hidden = at >= open5 && !expanded;
           return li;
         });
         for (const [key, li] of rows2) if (!list.some((p) => p.key === key)) li.remove();
@@ -71447,13 +71589,13 @@ var init_summary2 = __esm({
         });
       }
       /** The "Show the other N" button of a folded alert, made when it is needed and taken away when it is not. @param {HTMLElement} summary @param {HTMLElement} body @param {Problem[]} list @param {string} mode @param {number} open @param {boolean} expanded */
-      summaryMore(summary2, body, list, mode2, open4, expanded) {
+      summaryMore(summary2, body, list, mode2, open5, expanded) {
         const s2 = getStrings();
         let more = (
           /** @type {HTMLButtonElement | null} */
           body.querySelector(":scope > .kp-problems__more")
         );
-        if (mode2 !== "fold" || list.length <= open4) {
+        if (mode2 !== "fold" || list.length <= open5) {
           more?.remove();
           return;
         }
@@ -71465,7 +71607,7 @@ var init_summary2 = __esm({
           body.append(more);
         }
         more.setAttribute("aria-expanded", String(expanded));
-        setText2(more, expanded ? s2.problemShowFewer : s2.problemShowOthers(list.length - open4));
+        setText2(more, expanded ? s2.problemShowFewer : s2.problemShowOthers(list.length - open5));
       }
       /** Show the rest of a folded alert, or fold it again. @param {HTMLElement} target the one alert */
       toggleExpanded(target) {
@@ -71505,11 +71647,11 @@ var init_summary2 = __esm({
           list[0]
         )));
         const ul = this.summaryList(body, list.length);
-        const open4 = mode2 === "fold" ? foldFrom - 1 : list.length;
-        summary2.setAttribute("data-kp-open", String(open4));
+        const open5 = mode2 === "fold" ? foldFrom - 1 : list.length;
+        summary2.setAttribute("data-kp-open", String(open5));
         const expanded = summary2.getAttribute("data-kp-expanded") === "true";
-        this.summaryRows(ul, list, open4, expanded, remedyLabel);
-        this.summaryMore(summary2, body, list, mode2, open4, expanded);
+        this.summaryRows(ul, list, open5, expanded, remedyLabel);
+        this.summaryMore(summary2, body, list, mode2, open5, expanded);
         if (fresh) host.prepend(summary2);
       }
     };
@@ -75573,14 +75715,14 @@ var init_build13 = __esm({
 
 // js/question-card/title.js
 function trackOpen(card) {
-  open3.add(card);
+  open4.add(card);
 }
 function untrackOpen(card) {
-  open3.delete(card);
+  open4.delete(card);
 }
 function paintTitle2() {
   if (typeof document === "undefined") return;
-  const count4 = [...open3].filter(
+  const count4 = [...open4].filter(
     (c) => c.isConnected && (c.getAttribute("data-kp-state") === "waiting" || c.getAttribute("data-kp-state") === "urgent") && c.closest(QUESTIONS)?.getAttribute("data-kp-title") !== "off"
   ).length;
   const on = count4 > 0;
@@ -75589,13 +75731,13 @@ function paintTitle2() {
   else if (titleOn) document.title = baseTitle;
   titleOn = on;
 }
-var open3, baseTitle, titleOn;
+var open4, baseTitle, titleOn;
 var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
     init_values43();
-    open3 = /* @__PURE__ */ new Set();
+    open4 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
   }
@@ -75930,12 +76072,12 @@ var init_batch = __esm({
        * @returns {QuestionRun[]}
        */
       runs() {
-        const open4 = [];
+        const open5 = [];
         for (const card of this.host.querySelectorAll(":scope > .kp-question")) {
           const run = controllerOf(card, QuestionRun);
-          if (run && OPEN.has(run.state) && run.q.fallback) open4.push(run);
+          if (run && OPEN.has(run.state) && run.q.fallback) open5.push(run);
         }
-        return open4;
+        return open5;
       }
       /** Draw the bar for the questions open now, or take it away. */
       paint() {
@@ -76215,7 +76357,7 @@ var init_frame3 = __esm({
 });
 
 // js/feed/options.js
-function unitOf2(el16) {
+function unitOf3(el16) {
   const [one, many] = optionAttr(el16, "unit").split(/[,/]/).map((word) => word.trim());
   const s2 = getStrings();
   return { one: one || s2.feedUnitOne, many: many || (one ? `${one}s` : s2.feedUnitMany) };
@@ -76229,7 +76371,7 @@ function feedOptions(el16) {
     time: ["relative", "clock", "moment"].includes(time) ? time : "auto",
     actor: actor === "mark" || actor === "off" ? actor : "chip",
     expand: expand === "one" || expand === "off" ? expand : "many",
-    unit: unitOf2(el16),
+    unit: unitOf3(el16),
     level: Math.min(MAX_DAY_LEVEL, Math.max(MIN_DAY_LEVEL, Number(optionAttr(el16, "level")) || DEFAULT_DAY_LEVEL))
   };
 }
@@ -78211,12 +78353,12 @@ function measureFold(c) {
   if (!textEl || !more) return;
   const lines4 = attr6(c.el, "lines") ?? String(QUOTE_LINES);
   const folds2 = lines4 !== "all" && Number(lines4) > 0;
-  const open4 = c.expanded || !folds2;
+  const open5 = c.expanded || !folds2;
   textEl.removeAttribute("data-kp-folded");
   const whole2 = textEl.getBoundingClientRect().height;
-  textEl.toggleAttribute("data-kp-folded", !open4);
+  textEl.toggleAttribute("data-kp-folded", !open5);
   const shown6 = textEl.getBoundingClientRect().height;
-  const overflows = open4 ? c.expanded : whole2 - shown6 > FOLD_SLACK_PX;
+  const overflows = open5 ? c.expanded : whole2 - shown6 > FOLD_SLACK_PX;
   more.hidden = !(folds2 && overflows);
   more.setAttribute("aria-expanded", String(c.expanded));
   more.textContent = c.expanded ? getStrings().quoteShowLess : getStrings().quoteShowAll;
@@ -82726,35 +82868,35 @@ var init_parts15 = __esm({
 function paintBar(ctl) {
   const changes3 = ctl.tracker.changes();
   const n = changes3.length;
-  const dirty = n > 0;
-  paintState3(ctl, n, dirty);
-  paintButtons(ctl, n, dirty);
+  const dirty2 = n > 0;
+  paintState3(ctl, n, dirty2);
+  paintButtons(ctl, n, dirty2);
   paintList(ctl, changes3);
   if (n !== ctl.lastCount) countChanged(ctl, n, changes3);
-  if (!dirty && !ctl.parts.panel.hidden) void ctl.panel.close(false);
+  if (!dirty2 && !ctl.parts.panel.hidden) void ctl.panel.close(false);
   ctl.dock.dock();
   ctl.dock.compact();
 }
-function paintState3(ctl, n, dirty) {
+function paintState3(ctl, n, dirty2) {
   const { s: s2 } = ctl;
   const { bar, none, chip, headTitle } = ctl.parts;
-  const state12 = ctl.saving ? "saving" : dirty ? "dirty" : "clean";
+  const state12 = ctl.saving ? "saving" : dirty2 ? "dirty" : "clean";
   ctl.el.dataset.kpState = state12;
   bar.dataset.kpState = state12;
-  none.hidden = dirty;
-  chip.hidden = !dirty;
+  none.hidden = dirty2;
+  chip.hidden = !dirty2;
   setText3(chip, s2.unsavedCount(n));
   setText3(headTitle, s2.unsavedCount(n));
 }
-function paintButtons(ctl, n, dirty) {
+function paintButtons(ctl, n, dirty2) {
   const { s: s2, saving } = ctl;
   const { save: save2, discard, moreButton, chip, more } = ctl.parts;
   const { saveLabel } = ctl.settings;
-  const label2 = dirty ? saveLabel ? saveLabel.replace("{n}", String(n)) : s2.unsavedSave(n) : s2.unsavedSaveNone;
+  const label2 = dirty2 ? saveLabel ? saveLabel.replace("{n}", String(n)) : s2.unsavedSave(n) : s2.unsavedSaveNone;
   paintSaveButton(ctl.doc, save2, label2, saving);
   const offReason = saving ? s2.unsavedSavingNow : s2.unsavedNothingToSave;
   for (const b of [save2, discard, moreButton]) {
-    const off = saving || !dirty;
+    const off = saving || !dirty2;
     b.setAttribute("aria-disabled", String(off));
     if (off) b.setAttribute("title", offReason);
     else b.removeAttribute("title");
@@ -82769,9 +82911,9 @@ function paintButtons(ctl, n, dirty) {
           hint: s2.unsavedDiscardHint,
           value: "discard",
           danger: true,
-          disabled: saving || !dirty ? offReason : null
+          disabled: saving || !dirty2 ? offReason : null
         },
-        { label: s2.unsavedShowChanges, hint: s2.unsavedShowHint, value: "review", disabled: dirty ? null : s2.unsavedNothingToSave }
+        { label: s2.unsavedShowChanges, hint: s2.unsavedShowHint, value: "review", disabled: dirty2 ? null : s2.unsavedNothingToSave }
       ]
     }
   ]);
@@ -83344,8 +83486,8 @@ var init_dock = __esm({
       /** Dock the bar when it has changes and should be on screen; undock it otherwise. */
       dock() {
         const { el: el16, settings, parts: parts2, tracker } = this.ctl;
-        const dirty = tracker.changes().length > 0;
-        const want = dirty && (settings.placement === "sticky-bottom" || settings.placement === "header+sticky" && this.headerOut);
+        const dirty2 = tracker.changes().length > 0;
+        const want = dirty2 && (settings.placement === "sticky-bottom" || settings.placement === "header+sticky" && this.headerOut);
         const docked = el16.hasAttribute("data-kp-docked");
         if (want === docked) return;
         if (want) {
@@ -85733,13 +85875,13 @@ function tileFor(gallery, item) {
     cell.style.setProperty("--kp-gallery-ratio", `${item.width} / ${item.height}`);
     cell.style.setProperty("--kp-gallery-ratio-num", String(Math.round(item.width / item.height * 100) / 100));
   }
-  const open4 = (
+  const open5 = (
     /** @type {HTMLButtonElement} */
     make34(doc, "button", "kp-gallery__open")
   );
-  open4.type = "button";
+  open5.type = "button";
   const name = item.alt || item.caption || strings.galleryPicture;
-  open4.setAttribute("aria-label", item.kind === "video" ? strings.galleryOpenVideo(name) : strings.galleryOpenPicture(name));
+  open5.setAttribute("aria-label", item.kind === "video" ? strings.galleryOpenVideo(name) : strings.galleryOpenPicture(name));
   const img = (
     /** @type {HTMLImageElement} */
     make34(doc, "img", "kp-gallery__thumb")
@@ -85751,20 +85893,20 @@ function tileFor(gallery, item) {
   if (item.height) img.height = item.height;
   img.src = item.thumb ?? item.poster ?? item.src;
   img.addEventListener("error", () => failTile(gallery, cell, tile, item));
-  open4.append(img);
+  open5.append(img);
   if (item.kind === "video") {
     const play = make34(doc, "span", "kp-gallery__play");
     play.setAttribute("aria-hidden", "true");
-    open4.append(play);
+    open5.append(play);
   }
   const words3 = item.uploader || item.caption;
   if (attr9(el16, "data-kp-caption", "hover") !== "none" && words3) {
     const caption = make34(doc, "span", "kp-gallery__caption");
     caption.textContent = words3;
-    open4.append(caption);
+    open5.append(caption);
   }
-  open4.addEventListener("click", () => gallery.openItem(item.id));
-  tile.append(open4);
+  open5.addEventListener("click", () => gallery.openItem(item.id));
+  tile.append(open5);
   cell.append(tile);
   return cell;
 }
@@ -88608,18 +88750,18 @@ function buildPanel3(doc, s2, id) {
   picker.dataset.kpDatepicker = "";
   const date = field(doc, "kp-field__input", s2.snoozeDateLabel);
   date.dataset.kpDateInput = "";
-  const open4 = button4(doc, "kp-button");
-  open4.dataset.kpDateOpen = "";
-  open4.setAttribute("aria-label", s2.calendarOpen);
-  open4.title = s2.calendarOpen;
+  const open5 = button4(doc, "kp-button");
+  open5.dataset.kpDateOpen = "";
+  open5.setAttribute("aria-label", s2.calendarOpen);
+  open5.title = s2.calendarOpen;
   const glyph3 = make36(doc, "span", "", s2.calendarButton);
   glyph3.removeAttribute("class");
   glyph3.setAttribute("aria-hidden", "true");
-  open4.append(glyph3);
+  open5.append(glyph3);
   const datePanel = make36(doc, "div", "kp-datepicker__panel");
   datePanel.dataset.kpDatePanel = "";
   datePanel.hidden = true;
-  picker.append(date, open4, datePanel);
+  picker.append(date, open5, datePanel);
   const time = field(doc, "kp-field__input kp-snooze__time", s2.snoozeTimeLabel);
   time.placeholder = s2.rangeTimeHint;
   const inputs = make36(doc, "div", "kp-snooze__inputs");
@@ -89042,9 +89184,9 @@ function setSnoozedUntil(element, until) {
 function setSnoozeBusy(element, busy) {
   snooze(element)?.setBusy(busy);
 }
-function openSnoozePanel(element, open4 = true) {
+function openSnoozePanel(element, open5 = true) {
   const h2 = snooze(element);
-  if (open4) h2?.openPanel();
+  if (open5) h2?.openPanel();
   else h2?.closePanel();
 }
 function attachSnoozes(root = document, { now } = {}) {
@@ -89239,12 +89381,12 @@ function trackRows(editor) {
   };
   const undo = [];
   let writing = false;
-  const onEdit3 = (event) => {
+  const onEdit4 = (event) => {
     if (!(event.type === TRACK_EVENT && event.target === host) && !writing) track(editor, true);
   };
   for (const type of EDITS) {
-    host.addEventListener(type, onEdit3);
-    undo.push(() => host.removeEventListener(type, onEdit3));
+    host.addEventListener(type, onEdit4);
+    undo.push(() => host.removeEventListener(type, onEdit4));
   }
   undo.push(
     onTrackWrite(host, (value) => {
@@ -91626,27 +91768,27 @@ function fillRow(list, row2, item) {
     if (!wrapper) {
       wrapper = el10("kp-menu-button kp-claim__assign");
       wrapper.setAttribute("data-kp-menu-button", "");
-      const open5 = (
+      const open6 = (
         /** @type {HTMLButtonElement} */
         el10("kp-button kp-button--sm", "button")
       );
-      open5.type = "button";
+      open6.type = "button";
       const menu = el10("kp-menu kp-menu--rich");
       menu.setAttribute("role", "menu");
-      wrapper.append(open5, menu);
+      wrapper.append(open6, menu);
       control.replaceChildren(wrapper);
       attachMenuButtons(control);
     }
     wrapper.setAttribute("data-kp-key", item.id);
-    const open4 = (
+    const open5 = (
       /** @type {HTMLButtonElement} */
       wrapper.querySelector(":scope > button")
     );
-    open4.textContent = s2.claimAssign;
-    open4.setAttribute("aria-label", s2.claimAssignOf(item.label));
-    open4.disabled = off !== null;
-    if (off !== null) open4.setAttribute("data-kp-disabled-reason", off);
-    else open4.removeAttribute("data-kp-disabled-reason");
+    open5.textContent = s2.claimAssign;
+    open5.setAttribute("aria-label", s2.claimAssignOf(item.label));
+    open5.disabled = off !== null;
+    if (off !== null) open5.setAttribute("data-kp-disabled-reason", off);
+    else open5.removeAttribute("data-kp-disabled-reason");
     const everyone = [...st.people];
     for (const p of by) if (!everyone.some((q) => q.id === p.id)) everyone.push(p);
     setMenu(wrapper, [
@@ -91741,9 +91883,9 @@ function decorate(list) {
         section.querySelector(".kp-checklist__list")
       );
       if (list_) {
-        const open4 = members.filter((r) => !r.hasAttribute("data-kp-checklist-checked"));
+        const open5 = members.filter((r) => !r.hasAttribute("data-kp-checklist-checked"));
         const rank2 = (r) => r.hasAttribute("data-kp-claim-gap") ? 0 : 1;
-        const wanted = [...open4].sort((a, b) => rank2(a) - rank2(b) || members.indexOf(a) - members.indexOf(b));
+        const wanted = [...open5].sort((a, b) => rank2(a) - rank2(b) || members.indexOf(a) - members.indexOf(b));
         const done = members.filter((r) => r.hasAttribute("data-kp-checklist-checked"));
         const order = [...wanted, ...done];
         if (order.some((r, i) => list_.children[i] !== r)) {
@@ -91926,9 +92068,9 @@ async function takeAll(list) {
   const viewer = st.viewer;
   if (!viewer) return;
   const before3 = getChecklistItems(list);
-  const open4 = before3.filter((i) => byOf(i).length === 0 && !i.claim?.locked);
-  if (open4.length === 0) return;
-  const by = (i) => open4.includes(i) ? [viewer] : byOf(i);
+  const open5 = before3.filter((i) => byOf(i).length === 0 && !i.claim?.locked);
+  if (open5.length === 0) return;
+  const by = (i) => open5.includes(i) ? [viewer] : byOf(i);
   let waiting2 = null;
   const detail = {
     id: "",
@@ -91937,7 +92079,7 @@ async function takeAll(list) {
     by: [viewer],
     previousBy: [],
     items: before3,
-    ids: open4.map((i) => i.id),
+    ids: open5.map((i) => i.id),
     settle: (a) => void (waiting2 = a)
   };
   if (!list.dispatchEvent(new CustomEvent(CLAIM_EVENT, { bubbles: true, cancelable: true, detail }))) return;
@@ -91953,10 +92095,10 @@ async function takeAll(list) {
     list,
     before3.map((i) => ({ ...i, claim: { ...i.claim, by: by(i) } }))
   );
-  say12(list, s2.claimTookAll(open4.length));
+  say12(list, s2.claimTookAll(open5.length));
   const ms = Number(attr10(list, "undo-ms", String(CLAIM_UNDO_MS)));
   if (ms > 0)
-    undoToast(s2.claimTookAll(open4.length), {
+    undoToast(s2.claimTookAll(open5.length), {
       mode: "revert",
       ms,
       undo: () => setChecklistItems(list, before3)
@@ -97146,14 +97288,14 @@ function fillBody(root, st, file, body) {
         continue;
       }
       const key = `${file.path}|${h2}|${part7.from}`;
-      const open4 = st.folds.has(key);
-      const fold2 = rowButton("kp-diff__fold", open4 ? s2.diffUnchangedHide(part7.lines.length) : s2.diffUnchanged(part7.lines.length));
-      fold2.setAttribute("aria-expanded", String(open4));
+      const open5 = st.folds.has(key);
+      const fold2 = rowButton("kp-diff__fold", open5 ? s2.diffUnchangedHide(part7.lines.length) : s2.diffUnchanged(part7.lines.length));
+      fold2.setAttribute("aria-expanded", String(open5));
       fold2.setAttribute("data-kp-diff-fold-key", key);
       fold2.setAttribute("data-kp-diff-fold-lines", String(part7.lines.length));
-      if (!open4) fold2.setAttribute("aria-label", s2.diffUnchangedName(part7.lines.length));
+      if (!open5) fold2.setAttribute("aria-label", s2.diffUnchangedName(part7.lines.length));
       surface.append(fold2);
-      if (open4) for (const line of part7.lines) draw6(line, pairs);
+      if (open5) for (const line of part7.lines) draw6(line, pairs);
     }
   });
   if (left > 0) {
@@ -97218,12 +97360,12 @@ function proportion(added2, removed) {
 }
 function fileEl(root, st, file, index) {
   const s2 = getStrings();
-  const open4 = isOpen2(root, st, file, index);
+  const open5 = isOpen2(root, st, file, index);
   diffState.serial += 1;
   const id = `kp-diffview-${diffState.serial}`;
   const section = el15("kp-diffview__file", "section");
   section.setAttribute("data-kp-diff-status", file.status);
-  section.setAttribute("data-kp-diff-file-open", String(open4));
+  section.setAttribute("data-kp-diff-file-open", String(open5));
   section.setAttribute("data-kp-diff-path", file.path);
   const head = el15("kp-diffview__head");
   const title = el15("kp-diffview__title", "h3");
@@ -97232,7 +97374,7 @@ function fileEl(root, st, file, index) {
     el15("kp-diffview__toggle", "button")
   );
   toggle2.type = "button";
-  toggle2.setAttribute("aria-expanded", String(open4));
+  toggle2.setAttribute("aria-expanded", String(open5));
   toggle2.setAttribute("aria-controls", id);
   const chevron = el15("kp-diffview__chevron", "span");
   chevron.setAttribute("aria-hidden", "true");
@@ -97285,8 +97427,8 @@ function fileEl(root, st, file, index) {
   body.setAttribute("role", "group");
   body.setAttribute("aria-label", s2.diffChangesIn(file.path));
   body.tabIndex = -1;
-  body.hidden = !open4;
-  if (open4) fillBody(root, st, file, body);
+  body.hidden = !open5;
+  if (open5) fillBody(root, st, file, body);
   section.append(head, body);
   return section;
 }
@@ -97330,13 +97472,13 @@ function barEl(root, st) {
 function syncBar(root) {
   const s2 = getStrings();
   const files2 = [...root.querySelectorAll(".kp-diffview__file")];
-  const open4 = files2.filter((file) => file.getAttribute("data-kp-diff-file-open") === "true").length;
+  const open5 = files2.filter((file) => file.getAttribute("data-kp-diff-file-open") === "true").length;
   for (
     const [name, off, reason] of
     /** @type {const} */
     [
-      ["expand", open4 === files2.length, s2.diffAllOpen],
-      ["collapse", open4 === 0, s2.diffAllClosed]
+      ["expand", open5 === files2.length, s2.diffAllOpen],
+      ["collapse", open5 === 0, s2.diffAllClosed]
     ]
   ) {
     const button6 = root.querySelector(`[data-kp-diff-all="${name}"]`);
@@ -97477,22 +97619,22 @@ function fileOf(root, path) {
   const section = [...root.querySelectorAll(".kp-diffview__file")].find((node) => node.getAttribute("data-kp-diff-path") === path);
   return file && isHtmlElement(section) ? { file, section } : null;
 }
-function toggleFile(root, path, open4, announce8 = true) {
+function toggleFile(root, path, open5, announce8 = true) {
   const found = fileOf(root, path);
   if (!found) return;
   const st = stateOf11(root);
   const { file, section } = found;
-  st.opened.set(path, open4);
-  section.setAttribute("data-kp-diff-file-open", String(open4));
-  section.querySelector(".kp-diffview__toggle")?.setAttribute("aria-expanded", String(open4));
+  st.opened.set(path, open5);
+  section.setAttribute("data-kp-diff-file-open", String(open5));
+  section.querySelector(".kp-diffview__toggle")?.setAttribute("aria-expanded", String(open5));
   const body = (
     /** @type {HTMLElement} */
     section.querySelector(".kp-diffview__body")
   );
-  if (open4 && body.childElementCount === 0) fillBody(root, st, file, body);
-  body.hidden = !open4;
+  if (open5 && body.childElementCount === 0) fillBody(root, st, file, body);
+  body.hidden = !open5;
   syncBar(root);
-  if (announce8) root.dispatchEvent(new CustomEvent(DIFF_TOGGLE_EVENT, { bubbles: true, detail: { path, open: open4 } }));
+  if (announce8) root.dispatchEvent(new CustomEvent(DIFF_TOGGLE_EVENT, { bubbles: true, detail: { path, open: open5 } }));
 }
 async function copyPath(root, button6) {
   const path = button6.closest(".kp-diffview__file")?.getAttribute("data-kp-diff-path") ?? "";
@@ -97584,10 +97726,10 @@ var init_controller93 = __esm({
       /** Expand or collapse every file that is not that way yet. @param {HTMLButtonElement} button */
       toggleAll(button6) {
         if (button6.disabled) return;
-        const open4 = button6.getAttribute("data-kp-diff-all") === "expand";
+        const open5 = button6.getAttribute("data-kp-diff-all") === "expand";
         for (const section of this.host.querySelectorAll(".kp-diffview__file")) {
           const path = section.getAttribute("data-kp-diff-path") ?? "";
-          if (section.getAttribute("data-kp-diff-file-open") === "true" !== open4) toggleFile(this.host, path, open4);
+          if (section.getAttribute("data-kp-diff-file-open") === "true" !== open5) toggleFile(this.host, path, open5);
         }
       }
       /** Show or hide one run of unchanged lines, keep the focus on its fold, and say how many lines moved. @param {HTMLElement} fold */
@@ -97597,8 +97739,8 @@ var init_controller93 = __esm({
         const key = fold2.getAttribute("data-kp-diff-fold-key") ?? "";
         const lines4 = Number(fold2.getAttribute("data-kp-diff-fold-lines"));
         const path = key.split("|")[0];
-        const open4 = !st.folds.has(key);
-        if (open4) st.folds.add(key);
+        const open5 = !st.folds.has(key);
+        if (open5) st.folds.add(key);
         else st.folds.delete(key);
         const found = fileOf(root, path);
         if (!found) return;
@@ -97610,8 +97752,8 @@ var init_controller93 = __esm({
           found.section.querySelector(".kp-diffview__body")
         );
         root.querySelector(`[data-kp-diff-fold-key="${CSS.escape(key)}"]`)?.focus();
-        say17(root, open4 ? s2.diffUnchangedShown(lines4) : s2.diffUnchangedHidden(lines4));
-        root.dispatchEvent(new CustomEvent(DIFF_EXPAND_EVENT, { bubbles: true, detail: { path, lines: lines4, open: open4 } }));
+        say17(root, open5 ? s2.diffUnchangedShown(lines4) : s2.diffUnchangedHidden(lines4));
+        root.dispatchEvent(new CustomEvent(DIFF_EXPAND_EVENT, { bubbles: true, detail: { path, lines: lines4, open: open5 } }));
       }
       /** Draw the rest of a long file, past its line cap. @param {Element} more */
       showRest(more) {
@@ -103647,6 +103789,7 @@ export {
   outsideRange,
   overlays_exports as overlaysExports,
   packRows,
+  pageChanged,
   page_contents_exports as pageContentsExports,
   paintRemembered,
   palette,
@@ -103733,6 +103876,7 @@ export {
   refreshOf,
   regionChanged,
   registerDictionary,
+  registerEditor,
   registerHref,
   registerLink,
   registerLoaded,
@@ -103919,6 +104063,7 @@ export {
   setRatingState,
   setRefreshInterval,
   setRefreshTitle,
+  setRegionFlush,
   setRequests,
   setRequestsState,
   setRowBusy,
@@ -104167,6 +104312,7 @@ export {
   wheelAngles,
   wheel_exports as wheelExports,
   whenDialogFree,
+  whenPageFree,
   whenRegionFree,
   withCustomProperties,
   withoutOvershoot,
