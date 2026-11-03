@@ -6,7 +6,7 @@
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
         "js/action-tiles.js": { "digest": "9979a93508a6cb63", "when": ".kp-action" },
         "js/actions.js": { "digest": "752ed11f9eed59e6", "when": ".kp-row-actions" },
-        "js/add-row.js": { "digest": "c280be1035538329", "when": "[data-kp-addrow]" },
+        "js/add-row.js": { "digest": "982b970691202517", "when": "[data-kp-addrow]" },
         "js/alarm.js": { "digest": "f1234069084dbbb7", "when": "[data-kp-alarm]" },
         "js/anchors.js": { "digest": "dd9c035829d6a4b4", "when": "[data-kp-anchors]" },
         "js/art.js": { "digest": "58d3433781a042cc", "when": "[data-kp-art]" },
@@ -13738,6 +13738,7 @@
             "families": [
                 "data-kp-addrow",
                 "data-kp-addrow-column",
+                "data-kp-addrow-enter",
                 "data-kp-addrow-for",
                 "data-kp-addrow-labels",
                 "data-kp-addrow-name",

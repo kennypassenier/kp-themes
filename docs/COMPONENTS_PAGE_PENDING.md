@@ -122,3 +122,4 @@ example `script`, run live and printed under the markup. Not on a page, because 
 own block in the review catalogue, still listed in `catalogue/coverage.json`. The pass of 2026-10-15 brought the date picker's `data-kp-date-format`,
 the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; the pass of 2026-10-14 every line before them.)
 - kit1-1103 (2026-11-03), site/components/form.html: add row options `data-kp-addrow-labels="show"` and `data-kp-addrow-name`, a date picker inside an add row cell; nav-bar.html: the More words after `setStrings()`.
+- enter-1103 (2026-11-03), site/components/form.html: add row `data-kp-addrow-enter="submit"` (a plain Enter on a closed select adds the line; the list opens with Space, Alt+Down, arrows or typing) and the always-on Ctrl+Enter / Cmd+Enter that adds the line from any field of the row.

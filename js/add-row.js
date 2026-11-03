@@ -22,6 +22,10 @@
 // (Kitchen's date, meal and dish columns want their words over the fields); `data-kp-addrow-name="dish"` names the field whose
 // value the "Added x" status says, where the first filled value would be an id or a date.
 //
+// Keys: Ctrl+Enter (Cmd+Enter) adds the line from any field of the row, a select and an open list included; plain Enter keeps
+// its meaning everywhere. `data-kp-addrow-enter="submit"` also lets a plain Enter on a CLOSED select add the line (the list then
+// opens with Space, Alt+Down, the arrows or typing; an open list still picks its option with Enter) [enter-1103].
+//
 // Each cell stands under the column `data-kp-addrow-column` names (its id, `data-kp-field`, else its words, or its number), as
 // wide as the column, and follows it when the table is resized, scrolled sideways or a column is hidden; the column words name
 // the fields, so the labels are for screen readers only. The Add button stands under `data-kp-addrow-submit-column`, else the

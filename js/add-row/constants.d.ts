@@ -10,6 +10,10 @@ export declare const ADD_ROW_SUBMIT_COLUMN = "data-kp-addrow-submit-column";
 export declare const ADD_ROW_LABELS = "data-kp-addrow-labels";
 /** On the row: the name of the field whose value names the line in the "Added x" announcement (default: the first filled value). */
 export declare const ADD_ROW_NAME = "data-kp-addrow-name";
+/** On the row, `submit`: a plain Enter on a closed select adds the line instead of opening the list (default: it opens the list). */
+export declare const ADD_ROW_ENTER = "data-kp-addrow-enter";
+/** The value of `data-kp-addrow-enter` that adds the line. */
+export declare const ENTER_SUBMIT = "submit";
 /** Written on the row while its fields stand under each other (the table shows cards, or the row is narrower than the fold). */
 export declare const STACKED = "data-kp-addrow-stacked";
 /** The width of its own under which a line in a form grid stacks; a table's row stacks with the table's cards. */

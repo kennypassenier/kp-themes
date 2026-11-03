@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../js/combobox/handle.js"],
+  "sourcesContent": ["// The handles of the comboboxes and the lookup a page uses.\n/** @typedef {import('./types.js').ComboboxHandle} ComboboxHandle */\n\n/** @type {WeakMap<Element, ComboboxHandle>} */\nexport const handles = new WeakMap();\n\n/** The handle for an attached combobox. @param {Element} element */\nexport function combobox(element) {\n    return handles.get(element) ?? null;\n}\n\n/** @type {WeakMap<Element, import('./types.js').SelectHandle>} */\nexport const selectHandles = new WeakMap();\n"],
+  "mappings": "AAIO,IAAMA,EAAU,IAAI,QAGpB,SAASC,EAASC,EAAS,CAC9B,OAAOF,EAAQ,IAAIE,CAAO,GAAK,IACnC,CAGO,IAAMC,EAAgB,IAAI",
+  "names": ["handles", "combobox", "element", "selectHandles"]
+}

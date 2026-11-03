@@ -11301,7 +11301,7 @@ var init_constants5 = __esm({
 });
 
 // js/add-row/constants.js
-var ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, ADD_ROW_LABELS, ADD_ROW_NAME, STACKED, FOLD_AT_REM, CELL, SUBMIT_CELL, REFUSAL, ADD_EVENT, ADDED_EVENT;
+var ADD_ROW, ADD_ROW_FOR, ADD_ROW_COLUMN, ADD_ROW_SUBMIT_COLUMN, ADD_ROW_LABELS, ADD_ROW_NAME, ADD_ROW_ENTER, ENTER_SUBMIT, STACKED, FOLD_AT_REM, CELL, SUBMIT_CELL, REFUSAL, ADD_EVENT, ADDED_EVENT;
 var init_constants6 = __esm({
   "js/add-row/constants.js"() {
     "use strict";
@@ -11311,6 +11311,8 @@ var init_constants6 = __esm({
     ADD_ROW_SUBMIT_COLUMN = "data-kp-addrow-submit-column";
     ADD_ROW_LABELS = "data-kp-addrow-labels";
     ADD_ROW_NAME = "data-kp-addrow-name";
+    ADD_ROW_ENTER = "data-kp-addrow-enter";
+    ENTER_SUBMIT = "submit";
     STACKED = "data-kp-addrow-stacked";
     FOLD_AT_REM = 30;
     CELL = ".kp-addrow__cell";
@@ -11379,6 +11381,40 @@ var init_layout = __esm({
     init_constants6();
     headerShown = (heads) => heads.some((th) => th.getBoundingClientRect().width > 0);
     rem = (el16) => parseFloat(getComputedStyle(el16.ownerDocument.documentElement).fontSize) || 16;
+  }
+});
+
+// js/add-row/keys.js
+function isModifiedEnter(event) {
+  return event.key === "Enter" && (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey;
+}
+function isEnterOnClosedSelect(row2, event, field2) {
+  if (event.key !== "Enter" || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return false;
+  return row2.getAttribute(ADD_ROW_ENTER) === ENTER_SUBMIT && field2 instanceof HTMLSelectElement && field2.getAttribute("aria-expanded") !== "true";
+}
+function addFromKey(row2, event) {
+  if (event.isComposing || event.defaultPrevented || event.key !== "Enter") return false;
+  const field2 = event.target instanceof Element ? event.target.closest(FIELD) : null;
+  if (!field2 || !row2.contains(field2)) return false;
+  if (!isModifiedEnter(event) && !isEnterOnClosedSelect(row2, event, field2)) return false;
+  event.preventDefault();
+  event.stopPropagation();
+  const button6 = (
+    /** @type {HTMLButtonElement | null} */
+    row2.querySelector('button[type="submit"], input[type="submit"]')
+  );
+  if (button6?.disabled) return true;
+  selectHandles.get(field2)?.close();
+  row2.requestSubmit(button6);
+  return true;
+}
+var FIELD;
+var init_keys3 = __esm({
+  "js/add-row/keys.js"() {
+    "use strict";
+    init_handle();
+    init_constants6();
+    FIELD = "input, select, textarea";
   }
 });
 
@@ -11986,6 +12022,7 @@ var init_controller5 = __esm({
     init_constants5();
     init_constants6();
     init_layout();
+    init_keys3();
     init_submit2();
     init_by_id();
     AddRow = class extends Controller {
@@ -12014,6 +12051,11 @@ var init_controller5 = __esm({
             event.detail?.data ?? new FormData(row2)
           );
         });
+        this.listen(row2, "keydown", (event) => void addFromKey(
+          row2,
+          /** @type {KeyboardEvent} */
+          event
+        ), { capture: true });
         this.own(() => cancelAnimationFrame(this.frame));
         const sizes = this.observe(new ResizeObserver(() => this.soon()));
         sizes.observe(row2);
@@ -15296,7 +15338,7 @@ function ignoredKey(event) {
   return event.isComposing || event.repeat || event.key === "Dead" || event.key === "Shift" || event.key === "Control" || event.key === "Alt" || event.key === "Meta";
 }
 var MODIFIERS, normal, DIGIT_CODE;
-var init_keys3 = __esm({
+var init_keys4 = __esm({
   "js/shortcuts/keys.js"() {
     "use strict";
     MODIFIERS = /* @__PURE__ */ new Set(["mod", "ctrl", "control", "alt", "shift", "meta", "cmd"]);
@@ -15411,7 +15453,7 @@ var init_sheet = __esm({
     "use strict";
     init_strings();
     init_entries();
-    init_keys3();
+    init_keys4();
     UNRANKED = 1e3;
     SCOPED_RANK = 0.5;
     listOf = (value) => (value ?? "").split(",").map((x) => x.trim()).filter(Boolean);
@@ -15426,7 +15468,7 @@ var init_board = __esm({
     init_constants7();
     init_entries();
     init_hint();
-    init_keys3();
+    init_keys4();
     init_sheet();
     ShortcutBoard = class {
       constructor() {
@@ -15685,7 +15727,7 @@ var init_register = __esm({
     "use strict";
     init_strings();
     init_constants7();
-    init_keys3();
+    init_keys4();
   }
 });
 
@@ -15749,7 +15791,7 @@ var init_shortcuts = __esm({
     init_register();
     init_sheet();
     init_constants7();
-    init_keys3();
+    init_keys4();
     board = new ShortcutBoard();
   }
 });
@@ -18277,7 +18319,7 @@ function menuKeyTarget(event, at, labels) {
   }
   return null;
 }
-var init_keys4 = __esm({
+var init_keys5 = __esm({
   "js/menu-button/keys.js"() {
     "use strict";
   }
@@ -18786,7 +18828,7 @@ var init_controller7 = __esm({
     init_controller();
     init_constants10();
     init_items();
-    init_keys4();
+    init_keys5();
     init_model();
     init_open();
     MenuButtonControl = class extends Controller {
@@ -18974,7 +19016,7 @@ var init_menu_button = __esm({
     init_constants10();
     init_count2();
     init_model();
-    init_keys4();
+    init_keys5();
     init_placement();
     init_open();
     init_attach3();
@@ -20097,7 +20139,7 @@ function targetIndex(event, group, at, count4) {
   const step = stepFor(event, group);
   return step === 0 ? -1 : (at + step + count4) % count4;
 }
-var init_keys5 = __esm({
+var init_keys6 = __esm({
   "js/segmented/keys.js"() {
     "use strict";
   }
@@ -20123,7 +20165,7 @@ var init_root = __esm({
     init_read2();
     init_group();
     init_actions2();
-    init_keys5();
+    init_keys6();
     init_roving();
     DIRECT_KEYS = { "+": "include", "=": "include", "-": "exclude" };
     SegmentedRoot = class extends Controller {
@@ -22879,7 +22921,7 @@ var init_geometry2 = __esm({
 
 // js/tiles/keys.js
 var LETTERS_MS, ROW_GAP_PX, WATCHED6, TileBoard;
-var init_keys6 = __esm({
+var init_keys7 = __esm({
   "js/tiles/keys.js"() {
     "use strict";
     init_controller();
@@ -23302,7 +23344,7 @@ var init_tiles = __esm({
     "use strict";
     init_controller();
     init_geometry2();
-    init_keys6();
+    init_keys7();
     init_sets2();
     init_geometry2();
     init_sets2();
@@ -28307,7 +28349,7 @@ function targetDay(key, shift, iso, firstDay) {
       return null;
   }
 }
-var init_keys7 = __esm({
+var init_keys8 = __esm({
   "js/calendar/keys.js"() {
     "use strict";
     init_constants15();
@@ -28502,7 +28544,7 @@ var init_controller17 = __esm({
     init_day();
     init_dates2();
     init_dom3();
-    init_keys7();
+    init_keys8();
     init_paint4();
     WATCHED8 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
     CalendarController = class extends Controller {
@@ -39573,7 +39615,7 @@ function attachKeys(root = document) {
   return () => void 0;
 }
 var MOD_CAP, KEYS2, isMacPlatform, capText;
-var init_keys8 = __esm({
+var init_keys9 = __esm({
   "js/keys.js"() {
     "use strict";
     init_strings();
@@ -39742,7 +39784,7 @@ var TEXT_ENTRY, RowSelector;
 var init_controller34 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
-    init_keys8();
+    init_keys9();
     init_strings();
     init_core6();
     init_rows();
@@ -41697,7 +41739,7 @@ function handleKey(c, event) {
   }
   c.escaped = false;
 }
-var init_keys9 = __esm({
+var init_keys10 = __esm({
   "js/json-field/keys.js"() {
     "use strict";
     init_constants27();
@@ -41965,7 +42007,7 @@ var init_controller38 = __esm({
     init_constants27();
     init_explain();
     init_frame2();
-    init_keys9();
+    init_keys10();
     init_layout3();
     init_state13();
     init_tools();
@@ -48284,7 +48326,7 @@ var init_dashboard = __esm({
       // A button whose words follow a quantity in its dialog: "Add 3 boxes" [mc-r2].
       { name: "accept-follows", when: "[data-kp-accept-follows]", load: () => Promise.resolve().then(() => (init_accept_follows(), accept_follows_exports)), attach: (m, root) => [m.attachAcceptFollows(root)] },
       { name: "toolbar", when: "[data-kp-toolbar]", load: () => Promise.resolve().then(() => (init_toolbar(), toolbar_exports)), attach: (m, root) => [m.attachToolbars(root)] },
-      { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys8(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] }
+      { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys9(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] }
     ];
   }
 });
@@ -51620,7 +51662,7 @@ function isTyping(target, typingSelector) {
   return target.isContentEditable || target.matches(typingSelector);
 }
 var MATCHERS2;
-var init_keys10 = __esm({
+var init_keys11 = __esm({
   "js/palette/keys.js"() {
     "use strict";
     init_listbox();
@@ -52207,7 +52249,7 @@ var init_palette_control = __esm({
     init_api16();
     init_constants32();
     init_intent_filter();
-    init_keys10();
+    init_keys11();
     init_outside();
     init_plain_filter();
     PaletteControl = class extends Controller {
@@ -52416,7 +52458,7 @@ var init_sheet2 = __esm({
     init_controller();
     init_api16();
     init_constants32();
-    init_keys10();
+    init_keys11();
     init_outside();
     SheetControl = class extends Controller {
       /** @param {HTMLElement} host @param {{ sheetKey?: string | null, typingSelector?: string }} [options] */
@@ -52522,7 +52564,7 @@ var init_palette = __esm({
   "js/palette.js"() {
     "use strict";
     init_constants32();
-    init_keys10();
+    init_keys11();
     init_outside();
     init_api16();
     init_attach11();
@@ -54084,7 +54126,7 @@ function onPanelClick(ctl, event) {
   ctl.choose(/* @__PURE__ */ new Date(`${day2.dataset.kpDay}T00:00:00`));
 }
 var jumpCellOf, dayCellOf, isChoose;
-var init_keys11 = __esm({
+var init_keys12 = __esm({
   "js/datepicker/keys.js"() {
     "use strict";
     init_constants33();
@@ -54332,7 +54374,7 @@ var init_controller49 = __esm({
     init_constants33();
     init_dates3();
     init_grid2();
-    init_keys11();
+    init_keys12();
     init_opening();
     init_settings();
     init_views();
@@ -61275,7 +61317,7 @@ var init_legend2 = __esm({
     "use strict";
     init_strings();
     init_calm_tones();
-    init_keys8();
+    init_keys9();
     init_dom7();
     legendCount = 0;
   }
@@ -62423,7 +62465,7 @@ function keyTarget(m, root, card, key, kind, pressed2) {
   return void 0;
 }
 var cardsOf;
-var init_keys12 = __esm({
+var init_keys13 = __esm({
   "js/uses-map/keys.js"() {
     "use strict";
     cardsOf = (root, kind) => [...root.querySelectorAll(`.kp-uses__node[data-side="${kind}"] .kp-uses__card`)].filter((n) => n instanceof HTMLElement);
@@ -62590,7 +62632,7 @@ var init_wire3 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_keys12();
+    init_keys13();
     init_lines();
     init_memory2();
     UsesWire = class extends Controller {
@@ -70997,7 +71039,7 @@ function compareKey(key, at, big) {
   if (key === "End") return ALL_BEFORE;
   return null;
 }
-var init_keys13 = __esm({
+var init_keys14 = __esm({
   "js/compare/keys.js"() {
     "use strict";
     init_values34();
@@ -71010,7 +71052,7 @@ var init_controller62 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
-    init_keys13();
+    init_keys14();
     init_values34();
     Compare = class extends CompareLoad {
       /**
@@ -71138,7 +71180,7 @@ var init_compare = __esm({
     init_controller62();
     init_values34();
     init_values34();
-    init_keys13();
+    init_keys14();
   }
 });
 
@@ -78024,7 +78066,7 @@ function onKey4(m, event) {
   window.setTimeout(() => focusStar(m), 0);
 }
 var starNumber;
-var init_keys14 = __esm({
+var init_keys15 = __esm({
   "js/rating/keys.js"() {
     "use strict";
     init_math4();
@@ -78044,7 +78086,7 @@ var init_controller72 = __esm({
     init_constants41();
     init_build14();
     init_commit();
-    init_keys14();
+    init_keys15();
     init_math4();
     init_paint10();
     init_read8();
@@ -85377,7 +85419,7 @@ function previewKeys(strings, grouped, runOf) {
     ] : []
   ];
 }
-var init_keys15 = __esm({
+var init_keys16 = __esm({
   "js/docpreview/keys.js"() {
     "use strict";
   }
@@ -85680,7 +85722,7 @@ var init_open3 = __esm({
     init_viewer();
     init_values47();
     init_kinds();
-    init_keys15();
+    init_keys16();
     init_run5();
   }
 });
@@ -93489,7 +93531,7 @@ function registerAvailabilityKeys(el16) {
   );
 }
 var focused;
-var init_keys16 = __esm({
+var init_keys17 = __esm({
   "js/availability/keys.js"() {
     "use strict";
     init_strings();
@@ -93518,7 +93560,7 @@ var init_controller89 = __esm({
     init_menu2();
     init_paint12();
     init_request3();
-    init_keys16();
+    init_keys17();
     CELL3 = ".kp-availability__grid .kp-heat__cell[data-col-key]";
     LIVE_OPTIONS7 = [
       "data-kp-heat-edit",
@@ -100920,7 +100962,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys8();
+init_keys9();
 init_kpi();
 
 // js/lazy-register.js
@@ -101243,7 +101285,7 @@ function lineRange(value, line) {
 }
 
 // js/markdown-editor/toolbar.js
-init_keys8();
+init_keys9();
 var TOOLS = (
   /** @type {const} */
   [
@@ -102443,7 +102485,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys8();
+init_keys9();
 init_kpi();
 init_lede();
 init_listbox();

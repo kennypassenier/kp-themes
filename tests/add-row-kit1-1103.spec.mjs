@@ -93,3 +93,40 @@ test.describe('the add row [K2, K3, K4]', () => {
         await expect(live).toHaveText('Added 42');
     });
 });
+
+test.describe('the add row keys [enter-1103]', () => {
+    /** Lines the row added after `press`, and whether the drawn list is open. @param {import('@playwright/test').Page} page @param {string} focus @param {string[]} presses */
+    async function pressIn(page, focus, presses, optIn = false) {
+        await openRow(page);
+        await page.evaluate((on) => {
+            window.__added = 0;
+            const row = document.querySelector('#row');
+            row.addEventListener('kp-addrow-added', () => window.__added++);
+            if (on) row.setAttribute('data-kp-addrow-enter', 'submit');
+        }, optIn);
+        await page.locator('#new-dish').fill('Pasta pesto');
+        await page.locator(focus).focus();
+        for (const key of presses) await page.keyboard.press(key);
+        await page.waitForTimeout(200);
+        return page.evaluate(() => ({ lines: window.__added, open: !document.querySelector('[data-kp-select-list]').hidden }));
+    }
+
+    test('Ctrl+Enter adds one line from a text field, a closed select and an open select', { tag: ['@component:field'] }, async ({ page }) => {
+        expect(await pressIn(page, '#new-dish', ['Control+Enter'])).toEqual({ lines: 1, open: false });
+        expect(await pressIn(page, '#new-meal', ['Control+Enter'])).toEqual({ lines: 1, open: false });
+        expect(await pressIn(page, '#new-meal', ['Space', 'Control+Enter'])).toEqual({ lines: 1, open: false });
+        expect(await pressIn(page, '#new-meal', ['Meta+Enter'])).toEqual({ lines: 1, open: false });
+    });
+
+    test('plain Enter on a closed select opens the list by default and adds with data-kp-addrow-enter="submit"', { tag: ['@component:field'] }, async ({ page }) => {
+        expect(await pressIn(page, '#new-meal', ['Enter'])).toEqual({ lines: 0, open: true });
+        expect(await pressIn(page, '#new-meal', ['Enter'], true)).toEqual({ lines: 1, open: false });
+        expect(await pressIn(page, '#new-dish', ['Enter'], true)).toEqual({ lines: 1, open: false });
+    });
+
+    test('with the opt-in the list still opens by Space, Alt+Down and the arrows, and Enter on it picks', { tag: ['@component:field'] }, async ({ page }) => {
+        for (const key of ['Space', 'Alt+ArrowDown', 'ArrowDown']) expect(await pressIn(page, '#new-meal', [key], true)).toEqual({ lines: 0, open: true });
+        expect(await pressIn(page, '#new-meal', ['Space', 'ArrowUp', 'Enter'], true)).toEqual({ lines: 0, open: false });
+        expect(await page.locator('#new-meal').inputValue()).toBe('Breakfast');
+    });
+});

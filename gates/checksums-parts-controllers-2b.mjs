@@ -210,6 +210,7 @@ export const CONTROLLER_PART_FILES_2B = [
     'js/chip-filter/controller.js',
     'js/chip-filter/counts.js',
     'js/add-row/constants.js',
+    'js/add-row/keys.js',
     'js/add-row/controller.js',
     'js/add-row/layout.js',
     'js/add-row/submit.js',

@@ -2358,6 +2358,15 @@ Two opt-in attributes on the row, both off by default:
 A date picker (`.kp-datepicker`) in a cell gives way to the column: its input has no minimum width there and the calendar
 button stays beside it, so a 159 px column holds a 139 px picker instead of one 252 px wide.
 
+#### Keys of the add row [enter-1103]
+
+- **Ctrl+Enter** (**Cmd+Enter** on macOS) adds the line from any field of the row: a text field, a textarea, a closed select
+  and an open select (the list closes, the line is added as it stands). Always on; plain Enter keeps its meaning everywhere.
+  A busy Add button takes no second line.
+- `data-kp-addrow-enter="submit"` on the row (opt-in, default: Enter opens a select's list): a plain Enter on a CLOSED select
+  adds the line. The list then opens with Space, Alt+Down, the arrows or by typing; on an open list Enter still picks the
+  highlighted option. Nothing new is announced: the status stays "Added x".
+
 ## Rows, cards and choices [kpadopt4-rows]
 
 What Kenny's apps still drew themselves around their lists (the homelab
