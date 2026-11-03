@@ -158,6 +158,7 @@ gate examples-wired node gates/check-examples-wired.mjs || exit 1
 # no inline styles on the example pages (TH109)
 gate inline-styles node gates/check-inline-styles.mjs || exit 1
 gate markup-styles node gates/check-markup-styles.mjs || exit 1
+gate bundle-exports node gates/check-bundle-exports.mjs || exit 1
 
 # the documentation site matches its source and holds its promises (TH100, TH101)
 gate gen-site node gates/generate-site.mjs --check || exit 1

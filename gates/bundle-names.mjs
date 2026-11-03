@@ -24,7 +24,36 @@ export function declaredNames(module, source) {
             if (name && !name.startsWith('type ')) names.push(name);
         }
     }
+    names.push(...passedOnFromFolder(source, folder));
     return names.filter(Boolean);
+}
+
+/**
+ * The names a facade imports from its own folder and exports bare (`import { getQuantity } from './quantity/read.js';`
+ * then `export { getQuantity };`): the same declarations as a re-export from the folder, written in two lines. Missing
+ * them dropped `getQuantity` from the 12.4.0 bundle [qty-1103; Medicine Cabinet 03/11].
+ * @param {string} source the facade's text
+ * @param {string} folder its parts folder
+ * @returns {string[]}
+ */
+function passedOnFromFolder(source, folder) {
+    /** @type {Map<string, string>} local name → imported name */
+    const imported = new Map();
+    for (const block of source.matchAll(/^import\s*\{([^}]*)\}\s*from\s*['"]\.\/([\w-]+)\//gm)) {
+        if (block[2] !== folder) continue;
+        for (const item of block[1].split(',')) {
+            const [from, local] = item.trim().split(/\s+as\s+/);
+            if (from && !from.startsWith('type ')) imported.set((local ?? from).trim(), from.trim());
+        }
+    }
+    const out = [];
+    for (const block of source.matchAll(/^export\s*\{([^}]*)\}\s*;/gm)) {
+        for (const item of block[1].split(',')) {
+            const [local, exported] = item.trim().split(/\s+as\s+/);
+            if (local && imported.has(local.trim())) out.push((exported ?? local).trim());
+        }
+    }
+    return out;
 }
 
 

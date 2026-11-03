@@ -253,7 +253,7 @@ export { PRINT_ACTION, PRINT_EVENT, PRINT_SHEETS, attachPrint, preparePrint } fr
 export { PROBLEMS, PROBLEM_DISMISS_EVENT, PROBLEM_MODES, PROBLEM_SEVERITIES, attachProblems, setProblems } from '../js/problems.js';
 export { INDETERMINATE_ATTRIBUTE, PROGRESSBAR_RETRY_EVENT, PROGRESSBAR_SELECTOR, VALUE_PROPERTY, attachProgressbars, buildProgressbar, setIndeterminate, setProgressFailed, syncProgressbar } from '../js/progressbar.js';
 export { QR, QR_COPY_EVENT, QR_EXPIRED_EVENT, QR_FOLD, QR_LEVELS, QR_PLATE, QR_RETRY_EVENT, QR_REVEAL_EVENT, attachQr, qrContrast, qrMatrix, qrSvg, setQr } from '../js/qr.js';
-export { HOLD_DELAY, HOLD_FAST, HOLD_SLOW, QUANTITY, QUANTITY_EVENT, attachQuantities, decimalsOf, formatQuantity, parseQuantity, setQuantity, setQuantityUnit, settleQuantity } from '../js/quantity.js';
+export { HOLD_DELAY, HOLD_FAST, HOLD_SLOW, QUANTITY, QUANTITY_EVENT, attachQuantities, decimalsOf, formatQuantity, getQuantity, parseQuantity, setQuantity, setQuantityUnit, settleQuantity } from '../js/quantity.js';
 export { QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_DISMISS_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_URGENT_AT, askQuestion, attachQuestions, questionOf } from '../js/question-card.js';
 export { QUIET, QUIET_EVENT, QUIET_SEVERITIES, attachQuietHours, quietSummary, quietValue, readQuiet, setQuiet } from '../js/quiet-hours.js';
 export { QUOTE, QUOTE_FOLD_EVENT, QUOTE_HIDE_EVENT, QUOTE_LINES, QUOTE_LIST, QUOTE_LIST_MAX, QUOTE_RETRY_EVENT, QUOTE_STATES, attachQuotes, quote, quoteWhen, setQuote, setQuoteState } from '../js/quote.js';

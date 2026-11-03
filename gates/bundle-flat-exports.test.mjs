@@ -52,3 +52,9 @@ test('dist/kp-themes.js exports every declared name, flat or under its alias: no
     assert.deepEqual(missing, [], `${missing.length} name(s) the bundle dropped`);
     assert.ok(MODULES.length > 100);
 });
+
+test('a name imported from the facade\'s folder and exported bare is declared [qty-1103]', () => {
+    const source = "import { getQuantity, inputOf } from './quantity/read.js';\nexport { getQuantity };\n";
+    assert.deepEqual(declaredNames('./js/quantity.js', source), ['getQuantity']);
+    assert.ok(declaredNames('./js/quantity.js', read('./js/quantity.js')).includes('getQuantity'));
+});

@@ -103627,6 +103627,7 @@ export {
   getFacetValues,
   getLanguage,
   getLanguageDictionary,
+  getQuantity,
   getSegmentedTri,
   getSegmentedValues,
   getSelection,
