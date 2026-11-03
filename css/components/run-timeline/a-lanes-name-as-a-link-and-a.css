@@ -43,7 +43,7 @@
     }
 
     .kp-gantt__body[data-kp-gantt-subs] {
-        --kp-gantt-row: var(--kp-gantt-row-sub, 2.5rem);
+        --kp-gantt-row: var(--kp-gantt-row-sub, 1.625rem);
     }
 
     /* The dated line [kpadopt4] (`.kp-gantt--line`): one lane, no toolbar, no lane names, no hint, the axis under the line. */

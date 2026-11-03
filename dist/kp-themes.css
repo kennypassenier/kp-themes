@@ -12895,9 +12895,17 @@
             justify-self: start;
         }
 
-        /* A value that is a block of its own (a code cell, a field) fills the track. */
+        /* A value that is a block of its own (a code cell, a field) fills the track. `--kp-cards-value-justify` (stretch) moves it to
+         * the track's `start`, `center` or `end` when the page right-aligns the other values, and `--kp-cards-code-size` (100%) then
+         * sizes a code cell (`fit-content`, or `min(100%, 16rem)`), so its box sits on the same edge as the words beside it
+         * [cyc3-1103, almanac 19]. */
         :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td > :is(.kp-code, .kp-field__input, .kp-jsonfield) {
-            justify-self: stretch;
+            justify-self: var(--kp-cards-value-justify, stretch);
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td > .kp-code--cell {
+            inline-size: var(--kp-cards-code-size, 100%);
+            max-inline-size: 100%;
         }
 
         /* A long token in a card line (a payload, a hub URL: one word, no space) breaks where the track ends instead of running past
@@ -15294,7 +15302,7 @@
  * hollow; marks too close to tell apart are one mark with a count on a small plate beside it. A stretch is a thin band in
  * its lane, or a band behind every lane. The mark's button is larger than the mark, so it is easy to hit. Knobs [KT6]:
  * `--kp-gantt-mark-size` (0.75rem), `--kp-gantt-hit` (1.375rem, the button), `--kp-gantt-zone` (0.25rem, a lane's band),
- * `--kp-gantt-row-sub` (2.5rem, a lane's row when lanes carry a second line). */
+ * `--kp-gantt-row-sub` (1.625rem, a lane's row when lanes carry a second line). */
     .kp-gantt__point {
         --kp-gantt-mark: var(--primary);
         position: absolute;
@@ -15505,7 +15513,7 @@
     }
 
     .kp-gantt__body[data-kp-gantt-subs] {
-        --kp-gantt-row: var(--kp-gantt-row-sub, 2.5rem);
+        --kp-gantt-row: var(--kp-gantt-row-sub, 1.625rem);
     }
 
     /* The dated line [kpadopt4] (`.kp-gantt--line`): one lane, no toolbar, no lane names, no hint, the axis under the line. */

@@ -3389,6 +3389,7 @@ one edge, a code cell included. A cell with no `data-label` in a table that
 asks for cards (`data-kp-cards` on the `.kp-datatable`) takes its header's
 words; a column with no header words (selection, actions) spans the card.
 `data-kp-cards="spread"` keeps the earlier look (name left, value pushed right).
+A code cell (`.kp-code--cell`) fills the value track in a card; a page that right-aligns the other values sets `--kp-cards-value-justify: end` and `--kp-cards-code-size: min(100%, 16rem)` (defaults `stretch` and `100%`) so the box sits on the same edge [cyc3-1103, Almanac 19].
 
 `<Table cards />` writes both the attribute and every `data-label`;
 `<DataTable>` has done the card layout since 1.0.0 and now does it by

@@ -20,6 +20,8 @@
 //                             Serve every request whose path starts with <prefix> from <dir> (repeatable), through
 //                             context.route, with the right content type: `/static/kp=$HOME/Projects/kp-themes`
 //                             measures the app against this checkout. A path with no such file falls through to the app.
+//   --kp-root <dir>           Shorthand for `--assets-from /static/kp=<dir>` [cyc3-1103, gap http-switchboard 37].
+//   --section <selector>      Same as --items: every match of the selector is measured as one review section.
 //   --ignore-https-errors     Accept a self-signed certificate.
 //   --no-drive                (measure-states only) skip the driven half.
 //   --live-streams            (measure-states, measure-gaps) leave the page's EventSource / WebSocket streams running during the
@@ -53,7 +55,7 @@ const TYPES = {
     '.wasm': 'application/wasm',
 };
 
-const VALUE_OPTIONS = ['url', 'cookie', 'login-form', 'login-env', 'storage-state', 'assets-from', 'items'];
+const VALUE_OPTIONS = ['url', 'cookie', 'login-form', 'login-env', 'storage-state', 'assets-from', 'kp-root', 'items', 'section'];
 const FLAG_OPTIONS = ['ignore-https-errors', 'no-drive', 'live-streams'];
 
 /**
@@ -91,8 +93,8 @@ export function parseArgs(argv) {
             loginForm: values['login-form']?.[0] ?? '',
             loginEnv: values['login-env']?.[0] ?? 'KP_LOGIN_USER,KP_LOGIN_PASS',
             storageState: values['storage-state']?.[0] ?? '',
-            assets: values['assets-from'] ?? [],
-            items: values.items?.[0] ?? '',
+            assets: [...(values['assets-from'] ?? []), ...(values['kp-root'] ?? []).map((dir) => `/static/kp=${dir}`)],
+            items: values.items?.[0] ?? values.section?.[0] ?? '',
             ignoreHttpsErrors: flags.has('ignore-https-errors'),
             noDrive: flags.has('no-drive'),
             liveStreams: flags.has('live-streams'),
@@ -232,4 +234,4 @@ export async function launch(origin, opts) {
 
 /** The usage line tail all three CLIs share. */
 export const OPTIONS_USAGE =
-    '[--url <page url>] [--cookie n=v] [--login-form url,user,pass,submit] [--storage-state f] [--assets-from /prefix=<dir>] [--items <selector>] [--ignore-https-errors] [--live-streams]';
+    '[--url <page url>] [--cookie n=v] [--login-form url,user,pass,submit] [--storage-state f] [--assets-from /prefix=<dir>|--kp-root <dir>] [--items|--section <selector>] [--ignore-https-errors] [--live-streams]';

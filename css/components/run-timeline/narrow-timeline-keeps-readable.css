@@ -70,7 +70,7 @@
  * hollow; marks too close to tell apart are one mark with a count on a small plate beside it. A stretch is a thin band in
  * its lane, or a band behind every lane. The mark's button is larger than the mark, so it is easy to hit. Knobs [KT6]:
  * `--kp-gantt-mark-size` (0.75rem), `--kp-gantt-hit` (1.375rem, the button), `--kp-gantt-zone` (0.25rem, a lane's band),
- * `--kp-gantt-row-sub` (2.5rem, a lane's row when lanes carry a second line). */
+ * `--kp-gantt-row-sub` (1.625rem, a lane's row when lanes carry a second line). */
     .kp-gantt__point {
         --kp-gantt-mark: var(--primary);
         position: absolute;

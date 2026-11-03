@@ -193,9 +193,17 @@
             justify-self: start;
         }
 
-        /* A value that is a block of its own (a code cell, a field) fills the track. */
+        /* A value that is a block of its own (a code cell, a field) fills the track. `--kp-cards-value-justify` (stretch) moves it to
+         * the track's `start`, `center` or `end` when the page right-aligns the other values, and `--kp-cards-code-size` (100%) then
+         * sizes a code cell (`fit-content`, or `min(100%, 16rem)`), so its box sits on the same edge as the words beside it
+         * [cyc3-1103, almanac 19]. */
         :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td > :is(.kp-code, .kp-field__input, .kp-jsonfield) {
-            justify-self: stretch;
+            justify-self: var(--kp-cards-value-justify, stretch);
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td > .kp-code--cell {
+            inline-size: var(--kp-cards-code-size, 100%);
+            max-inline-size: 100%;
         }
 
         /* A long token in a card line (a payload, a hub URL: one word, no space) breaks where the track ends instead of running past
