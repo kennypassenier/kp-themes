@@ -10,8 +10,7 @@
 # `node gates/release-go.mjs record`). It is ACTIVE while its version is greater
 # than the latest release tag and not tagged yet; once `v<version>` exists it is
 # spent by itself. An unreadable database BLOCKS (it never fails open).
-# Transition: the old git-ignored file `.claude/release-go` is still accepted,
-# with a deprecation note on stderr; it is deleted after the 12.6.0 release.
+# The old file `.claude/release-go` was retired after the 12.6.0 release (2026-11-04).
 set -u
 
 payload=$(cat) || exit 0
@@ -57,10 +56,6 @@ for seg in re.split(r"\|\||&&|;|\||\n", out):
 # The database decides. cli exit: 0 active, 3 no active go, anything else = unreadable.
 cli_out=$(node "$project_dir/gates/release-go.mjs" status 2>&1); cli=$?
 if [ "$cli" -eq 0 ]; then exit 0; fi
-if [ -e "$project_dir/.claude/release-go" ]; then
-  echo "release-tests: DEPRECATED: allowed by the old file .claude/release-go; the go now lives in the database (node gates/release-go.mjs record)." >&2
-  exit 0
-fi
 if [ "$cli" -ne 3 ]; then
   {
     echo "BLOCKED: '$hit' needs a release go, but the release-go database cannot be read, so the hook does not guess."

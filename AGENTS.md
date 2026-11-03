@@ -37,8 +37,8 @@ helper may run [fix-118]. Kenny's go is a row in the project database
 than the latest release tag and not tagged yet, and spends itself when
 `v<version>` exists (`node gates/release-go.mjs status` shows it). Claude
 records a go only from Kenny's own answer in a release form (Kenny, 2026-11-03:
-"release-go: Vervangen"), never on its own. The old git-ignored file `.claude/release-go` is still accepted
-during a transition and is deleted after the 12.6.0 release.
+"release-go: Vervangen"), never on its own. The old file `.claude/release-go` was retired after
+the 12.6.0 release.
 
 **Chromium is off in the test suite** (Kenny, 2026-10-03: "doe ook het chrome
 gedeelte tijdelijk weg, tot ik het terugwil"): `playwright.config.mjs` runs

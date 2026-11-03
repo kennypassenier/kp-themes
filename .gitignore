@@ -41,8 +41,6 @@ test-timings/
 # The coherence round's screenshot output (research/_coherence/README.md).
 research/_coherence/out/
 
-# Old go file (deprecated 2026-11-03: the go is a row in release_gos); the hook still accepts it during the transition.
-.claude/release-go
 
 # The review database's lock and journal files, present only while a writer runs [db-1102].
 data/*.sqlite-journal
