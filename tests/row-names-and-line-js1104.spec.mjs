@@ -24,6 +24,27 @@ test.describe('a row editor names its controls per row with {n} [js-1104]', () =
             { time: 'Time of dose 2', days: 'Days of dose 2', dose: 'Amount of dose 2' },
         ]);
     });
+
+    test('the time toggle and the quick-picks group follow the row, and stay as before without a label [rownames-1104]', { tag: ['@component:field'] }, async ({ page }) => {
+        await page.goto('/tests/fixtures/row-editor-names.html');
+        await page.locator('[data-kp-rows-add]').click();
+        await expect(page.locator('.kp-rows__row')).toHaveCount(2);
+        const names = await page.evaluate(() =>
+            [...document.querySelectorAll('.kp-rows__row')].map((row) => ({
+                toggle: row.querySelector('.kp-time__toggle')?.getAttribute('aria-label'),
+                quick: row.querySelector('.kp-weekdays__presets')?.getAttribute('aria-label'),
+            })),
+        );
+        expect(names).toEqual([
+            { toggle: 'Choose a time for Time of dose 1', quick: 'Quick picks for Days of dose 1' },
+            { toggle: 'Choose a time for Time of dose 2', quick: 'Quick picks for Days of dose 2' },
+        ]);
+        // A field and a picker without a label of their own keep today's generic names.
+        await page.goto('/tests/fixtures/row-editor-unlabelled.html');
+        await expect(page.locator('.kp-time__toggle')).toHaveCount(1);
+        await expect(page.locator('.kp-time__toggle')).toHaveAttribute('aria-label', 'Choose a time');
+        await expect(page.locator('.kp-weekdays__presets')).toHaveAttribute('aria-label', 'Quick picks');
+    });
 });
 
 test.describe('the add line in a form grid [js-1104]', () => {

@@ -1447,6 +1447,7 @@ var init_range_weekdays_runs = __esm({
       weekdaysLastDay: "last day",
       weekdaysAnd: "and",
       weekdaysPresets: "Quick picks",
+      weekdaysPresetsFor: (label2) => `Quick picks for ${label2}`,
       weekdaysPresetWeekdays: "Weekdays",
       weekdaysPresetWeekend: "Weekend",
       weekdaysPresetEvery: "Every day",
@@ -2012,6 +2013,7 @@ var init_availability_qr_time = __esm({
       qrKeyReason: "Put the focus on a QR code that has a link first.",
       // Timefield (js/timefield.js) [kpadopt6].
       timeChoose: "Choose a time",
+      timeChooseFor: (label2) => `Choose a time for ${label2}`,
       timeRequired: "Choose a time.",
       timeInvalid: "Use a time like 03:00",
       timeOutside: (min, max) => `Choose a time from ${min} to ${max}.`,
@@ -4739,14 +4741,15 @@ function buildInput(root, n) {
   if (labelled) input.setAttribute("aria-labelledby", labelled);
   return input;
 }
-function buildToggle() {
+function buildToggle(label2) {
   const toggle2 = (
     /** @type {HTMLButtonElement} */
     el("kp-time__toggle", "button")
   );
   toggle2.type = "button";
   toggle2.tabIndex = -1;
-  toggle2.setAttribute("aria-label", getStrings().timeChoose);
+  const s2 = getStrings();
+  toggle2.setAttribute("aria-label", label2 ? s2.timeChooseFor(label2) : s2.timeChoose);
   toggle2.setAttribute("aria-haspopup", "listbox");
   toggle2.append(el("kp-time__glyph", "span"));
   return toggle2;
@@ -4762,7 +4765,7 @@ function buildParts2(root) {
   root.classList.add("kp-time");
   const control = el("kp-time__control");
   const input = buildInput(root, n);
-  control.append(input, buildToggle());
+  control.append(input, buildToggle(input.getAttribute("aria-label")));
   const hidden2 = (
     /** @type {HTMLInputElement} */
     el("kp-time__value", "input")
@@ -75324,11 +75327,11 @@ function buildLines(el16, o, id) {
   reason.textContent = o.disabled && reasonText ? reasonText : "";
   return { summary: summary2, why, reason };
 }
-function buildQuick(doc, o, s2) {
+function buildQuick(doc, o, s2, label2 = null) {
   const quick = doc.createElement("div");
   quick.className = "kp-weekdays__presets";
   quick.setAttribute("role", "group");
-  quick.setAttribute("aria-label", s2.weekdaysPresets);
+  quick.setAttribute("aria-label", label2 ? s2.weekdaysPresetsFor(label2) : s2.weekdaysPresets);
   quick.hidden = o.presets.length === 0;
   const buttons = /* @__PURE__ */ new Map();
   for (const name of o.presets) {
@@ -75415,7 +75418,7 @@ var init_core19 = __esm({
         this.group = buildChips(doc, this.o, this.label);
         this.items = chipItems(this.o, s2);
         this.lines = buildLines(host, this.o, this.id);
-        this.quick = buildQuick(doc, this.o, s2);
+        this.quick = buildQuick(doc, this.o, s2, host.getAttribute("aria-label"));
         this.touched = false;
       }
       /** The reader has interacted: show what is missing, and go on showing it. */
@@ -98689,6 +98692,7 @@ var init_availability_qr_time2 = __esm({
       qrKeyGroup: "QR-code",
       qrKeyReason: "Zet eerst de focus op een QR-code met een link.",
       timeChoose: "Kies een tijd",
+      timeChooseFor: (label2) => `Kies een tijd voor ${label2}`,
       timeRequired: "Kies een tijd.",
       timeInvalid: "Gebruik een tijd zoals 03:00",
       timeOutside: (min, max) => `Kies een tijd van ${min} tot ${max}.`,
@@ -99847,6 +99851,7 @@ var init_range_weekdays_runs2 = __esm({
       weekdaysLastDay: "laatste dag",
       weekdaysAnd: "en",
       weekdaysPresets: "Snel kiezen",
+      weekdaysPresetsFor: (label2) => `Snel kiezen voor ${label2}`,
       weekdaysPresetWeekdays: "Weekdagen",
       weekdaysPresetWeekend: "Weekend",
       weekdaysPresetEvery: "Elke dag",

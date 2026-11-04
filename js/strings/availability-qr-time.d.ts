@@ -244,6 +244,10 @@ export type AvailabilityQrTimeStrings = {
      */
     timeChoose: string;
     /**
+     * The same button when the field has its own label, so a row editor's buttons differ: "Choose a time for Time of dose 2" (js/timefield.js) [rownames-1104]
+     */
+    timeChooseFor: (label: string) => string;
+    /**
      * The line under an empty required field (js/timefield.js) [kpadopt6]
      */
     timeRequired: string;
@@ -367,6 +371,7 @@ export type AvailabilityQrTimeStrings = {
  * @property {string} qrKeyGroup  The sheet's heading (js/qr.js) [kpadopt6]
  * @property {string} qrKeyReason  Why the key does nothing now (js/qr.js) [kpadopt6]
  * @property {string} timeChoose  The button that opens the list of times, and the sheet's title when the field has no name (js/timefield.js) [kpadopt6]
+ * @property {(label: string) => string} timeChooseFor  The same button when the field has its own label, so a row editor's buttons differ: "Choose a time for Time of dose 2" (js/timefield.js) [rownames-1104]
  * @property {string} timeRequired  The line under an empty required field (js/timefield.js) [kpadopt6]
  * @property {string} timeInvalid  The line under a text that is not a time (js/timefield.js) [kpadopt6]
  * @property {(min: string, max: string) => string} timeOutside  The line under a time outside the window (js/timefield.js) [kpadopt6]

@@ -25,8 +25,9 @@ export declare function buildLines(el: HTMLElement, o: WeekdaysOptions, id: stri
 /**
  * The quick picks: one press for the common sets.
  * @param {Document} doc @param {WeekdaysOptions} o @param {Strings} s
+ * @param {string | null} [label] The picker's own label, when it has one: the group is then named "Quick picks for <label>"
  */
-export declare function buildQuick(doc: Document, o: WeekdaysOptions, s: Strings): {
+export declare function buildQuick(doc: Document, o: WeekdaysOptions, s: Strings, label?: string | null): {
     quick: HTMLDivElement;
     buttons: Map<string, HTMLButtonElement>;
 };

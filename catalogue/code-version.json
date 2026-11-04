@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "5dcae7196dfcc0fa",
+    "base": "0603f2119cca1873",
     "modules": {
         "js/accept-follows.js": { "digest": "be79ca77bfba5707", "when": "[data-kp-accept-follows]" },
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
@@ -131,7 +131,7 @@
         "js/thread.js": { "digest": "65af4ca8e7a6c9b3", "when": "[data-kp-thread]" },
         "js/tick.js": { "digest": "c6f496988b5135c3", "when": "[data-kp-tick]" },
         "js/tiles.js": { "digest": "c993c9b612e312b6", "when": "[data-kp-tiles-set]" },
-        "js/timefield.js": { "digest": "a0ec49f1e8fbc7f0", "when": "[data-kp-time]" },
+        "js/timefield.js": { "digest": "3ea6e09f293fd793", "when": "[data-kp-time]" },
         "js/timer-disc.js": { "digest": "7e7cf5f976812b90", "when": "[data-kp-timer-disc], [data-kp-timer-disc-until]" },
         "js/timer.js": { "digest": "2269387739fddad5", "when": "[data-kp-timers], [data-kp-timer-start]" },
         "js/toggle.js": { "digest": "926c8818139b4dce", "when": "[data-kp-toggle]" },
@@ -146,7 +146,7 @@
             "when": "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]"
         },
         "js/week.js": { "digest": "a89db1a5005a4421", "when": "[data-kp-week]" },
-        "js/weekdays.js": { "digest": "0d81b4e0e6a7585d", "when": "[data-kp-weekdays]" },
+        "js/weekdays.js": { "digest": "33877904bc7f463a", "when": "[data-kp-weekdays]" },
         "js/wheel.js": { "digest": "752baa05cda64cfc", "when": "[data-kp-wheel]" },
         "js/wizard.js": { "digest": "30df34a5ed6a9d70", "when": "[data-kp-wizard]" }
     },
