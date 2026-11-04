@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="/css/formal-register.css" />
         <style>
             .fx-stack { display: grid; gap: 1.5rem; padding: 1rem; }
+            .narrow-column { display: grid; gap: 1rem; inline-size: 14rem; }
             .fx-meter { display: block; inline-size: 9.625rem; block-size: 0.5rem; background: var(--muted); }
         </style>
     </head>
@@ -42,11 +43,28 @@
                 <tbody><tr><td>Preferences</td><td>The choices this device keeps for you: theme, language, the density of lists and every setting that is yours alone.</td><td><span class="fx-meter"></span></td></tr></tbody>
             </table></div>
 
-            <!-- Two toolbars: today's scrolling chip line and the wrapping one. -->
+            <!-- Toolbars [chips-1270]: wrapping is the default; "wrap" says it aloud; "scroll" is the opt-out; a stacked one in a narrow column. -->
             <div class="kp-toolbar" id="toolbar-default" data-kp-toolbar role="group" aria-label="Medicines">
                 <div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-label="State"><b class="kp-toolbar__label">State</b>
                     <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="State"><button type="button" class="kp-segmented__item" data-value="all" aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="on" aria-pressed="false"><span class="kp-segmented__label">Switched on</span></button><button type="button" class="kp-segmented__item" data-value="off" aria-pressed="false"><span class="kp-segmented__label">Switched off</span></button><button type="button" class="kp-segmented__item" data-value="tab" aria-pressed="false"><span class="kp-segmented__label">Tablet 4</span></button></div>
                 </div></div>
+            </div>
+            <div class="kp-toolbar" id="toolbar-scroll" data-kp-toolbar data-kp-toolbar-chips="scroll" role="group" aria-label="Medicines scrolling">
+                <div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-label="State"><b class="kp-toolbar__label">State</b>
+                    <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="State"><button type="button" class="kp-segmented__item" data-value="all" aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="on" aria-pressed="false"><span class="kp-segmented__label">Switched on</span></button><button type="button" class="kp-segmented__item" data-value="off" aria-pressed="false"><span class="kp-segmented__label">Switched off</span></button><button type="button" class="kp-segmented__item" data-value="tab" aria-pressed="false"><span class="kp-segmented__label">Tablet 4</span></button></div>
+                </div></div>
+            </div>
+            <div class="narrow-column">
+            <div class="kp-toolbar kp-toolbar--stacked" id="toolbar-stacked" data-kp-toolbar role="group" aria-label="Medicines stacked">
+                <div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-label="State"><b class="kp-toolbar__label">State</b>
+                    <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="State"><button type="button" class="kp-segmented__item" data-value="all" aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="on" aria-pressed="false"><span class="kp-segmented__label">Switched on</span></button><button type="button" class="kp-segmented__item" data-value="off" aria-pressed="false"><span class="kp-segmented__label">Switched off</span></button><button type="button" class="kp-segmented__item" data-value="tab" aria-pressed="false"><span class="kp-segmented__label">Tablet 4</span></button></div>
+                </div></div>
+            </div>
+            <div class="kp-toolbar kp-toolbar--stacked" id="toolbar-stacked-scroll" data-kp-toolbar data-kp-toolbar-chips="scroll" role="group" aria-label="Medicines stacked scrolling">
+                <div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-label="State"><b class="kp-toolbar__label">State</b>
+                    <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="State"><button type="button" class="kp-segmented__item" data-value="all" aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="on" aria-pressed="false"><span class="kp-segmented__label">Switched on</span></button><button type="button" class="kp-segmented__item" data-value="off" aria-pressed="false"><span class="kp-segmented__label">Switched off</span></button><button type="button" class="kp-segmented__item" data-value="tab" aria-pressed="false"><span class="kp-segmented__label">Tablet 4</span></button></div>
+                </div></div>
+            </div>
             </div>
             <div class="kp-toolbar" id="toolbar-wrap" data-kp-toolbar data-kp-toolbar-chips="wrap" role="group" aria-label="Medicines wrapped">
                 <div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-label="State"><b class="kp-toolbar__label">State</b>

@@ -4947,6 +4947,18 @@ moment the overlay is removed — at its own end, on Skip, on a click, or on
 `detach()`. Without an arrival (a theme that declares none, seen this
 session, reduced motion) the headline starts at once, as before.
 
+The formal page title and a repeat view [title-1270; Kenny, 2026-11-04,
+"Herbezoek en kortere veeg"]: formal wipes the page title (an `h1` with
+`data-kp-reveal="headline"`) open in `--kp-title-wipe-time`, default 240 ms,
+linear; set it on the root to change it. Other headlines keep the 400 ms
+ruling time. On a repeat view in the same session the title is whole from
+the first frame and has no entrance: `noFlashSnippet({ effects: true })`
+writes `data-kp-effects-repeat` on the root when the path already ran a
+headline reveal, and a headline that went straight to rest never
+transitions. `noFlashSnippet({ effects: true, repeat: false })` leaves the
+mark out (the title stays hidden until the module decides), and
+`data-kp-reveal-every="load"` on a headline plays it on every load.
+
 ## The side navigation [feat-nav-3]
 
 A navigation that stands beside the content instead of above it: three
@@ -5426,9 +5438,9 @@ Fix the token, not the gate.
 
 ### Steady connection band, wrapping tab labels, wrapping toolbar chips, a syncing state
 
-Four small options for what a phone or an offline queue shows. Each is opt-in; the default is the approved look.
+Four small options for what a phone or an offline queue shows. Three are opt-in, the approved look stays the default; the toolbar chips wrap by default and `scroll` is the opt-out.
 
 - `setConnection(banner, 'syncing', { pending: 3 })`: the connection is back and the waiting changes are being sent. Info plate, spinner, "Syncing 3 changes" as the title, no Retry; `online` then shows "Connected again". The words are `connSyncing` and `connSyncingWhy` in `js/strings` (English and Dutch).
 - `data-kp-connection-layout="steady"` on the banner: the words start at the top of the band in every state and Retry holds a slot of `--kp-connection-retry-slot` (6.5rem).
 - `data-kp-tabbar-labels="wrap"` on a `.kp-tabbar`: a label wraps to up to `--kp-tabbar-label-lines` (2) lines, icons stay on one line at the top.
-- `data-kp-toolbar-chips="wrap"` on a `.kp-toolbar`: under 48rem (and in `.kp-toolbar--stacked`) the chips wrap by whole chips instead of scrolling on one line.
+- Toolbar chips wrap by default [chips-1270; Kenny, 2026-11-04, "Standaard volgende regel"]: under 48rem and in `.kp-toolbar--stacked` the chips of a `.kp-toolbar` wrap onto more lines at whole chips, nothing scrolls sideways and no chip is cut. `data-kp-toolbar-chips="scroll"` on the toolbar is the opt-out and brings back the one scrolling line per group; `wrap` still works and says the default aloud.

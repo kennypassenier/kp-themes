@@ -9,6 +9,12 @@ export declare class HeadlineRun {
     constructor(ctx: EffectsContext, el: Element, atRest: boolean);
     /** The headline: decipher, then one slice burst [TH119], or the routine the theme asked for. */
     play(): void;
+    /**
+     * The head snippet marked the page as a repeat view and left its title legible [title-1270]; this headline plays after all
+     * (`data-kp-reveal-every="load"`, or text the page has not shown), so the mark comes off and the register hides the title for
+     * its wipe again.
+     */
+    playAfterAll(): void;
     /** Hand the element to the routine it asked for. */
     perform(): void;
     /** The element ends as its own text, announced as played or skipped. @param {boolean} skipped */

@@ -740,6 +740,7 @@ focusable="false"
                             <tr><td><code>data-kp-divider</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-effects</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-effects-done</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-effects-repeat</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-measure</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-measure-bracket</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-measured</code></td><td>selector, written</td></tr>
@@ -798,6 +799,8 @@ focusable="false"
                             <tr><td><code>data-kp-surface-align=&quot;center&quot;</code></td><td>Sets a surface’s content on its middle: the text centres, a narrower child takes auto margins and a row centres its controls. Off unless a page asks; every surface keeps its content off its own inline edges either way, one lg step in.</td></tr>
                             <tr><td><code>data-kp-divider</code></td><td>The seam between two surfaces. A theme may draw it as a rule, a tear, or nothing.</td></tr>
                             <tr><td><code>data-kp-reveal</code></td><td>headline, emphasis or rule: the element a theme may bring in with a reveal. Once per session unless data-kp-reveal-every=&quot;load&quot; says otherwise.</td></tr>
+                            <tr><td><code>--kp-title-wipe-time</code></td><td>Formal: how long the page title (an h1 with data-kp-reveal=&quot;headline&quot;) takes to wipe open [title-1270]. Default 240 ms, linear; other headlines keep the 400 ms ruling time.</td></tr>
+                            <tr><td><code>data-kp-effects-repeat</code></td><td>Written on the root by noFlashSnippet({ effects: true }) when this path already ran a headline reveal this session [title-1270]: the page title is whole from the first frame and has no entrance. `noFlashSnippet({ effects: true, repeat: false })` leaves it out; `data-kp-reveal-every=&quot;load&quot;` plays a headline every load.</td></tr>
                             <tr><td><code>data-kp-reveal-trigger</code></td><td>A control that replays the reveals of the surface it sits in.</td></tr>
                             <tr><td><code>data-kp-label-open</code></td><td>The word a stamp takes once the file is open, beside data-kp-label for the word it wears while sealed. A theme whose demo changes the stamp answers it; the rest keep the one word.</td></tr>
                             <tr><td><code>data-kp-open</code></td><td>What the module writes on a reveal container while its trigger holds it open, so a register can answer the open state without a script of its own.</td></tr>

@@ -22,13 +22,13 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 37.1 kB | 19.0 kB | 49% |
 | `css/blueprint-register.css` | 261.1 kB | 140.1 kB | 46% |
 | `css/brutalism-register.css` | 254.8 kB | 144.7 kB | 43% |
-| `css/components.css` | 1374.3 kB | 667.0 kB | 51% |
+| `css/components.css` | 1374.5 kB | 667.2 kB | 51% |
 | `css/cyberpunk-register.css` | 322.8 kB | 186.7 kB | 42% |
 | `css/dark-register.css` | 230.9 kB | 115.3 kB | 50% |
 | `css/deco-register.css` | 259.4 kB | 150.0 kB | 42% |
 | `css/fonts.css` | 16.6 kB | 12.0 kB | 28% |
 | `css/forest-register.css` | 244.4 kB | 126.9 kB | 48% |
-| `css/formal-register.css` | 193.4 kB | 99.1 kB | 49% |
+| `css/formal-register.css` | 194.7 kB | 99.4 kB | 49% |
 | `css/layout.css` | 13.0 kB | 2.5 kB | 81% |
 | `css/nostromo-register.css` | 250.0 kB | 139.3 kB | 44% |
 | `css/pastel-register.css` | 241.3 kB | 127.5 kB | 47% |
@@ -37,12 +37,12 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 141.2 kB | 87.0 kB | 38% |
 | `css/titanium-register.css` | 223.4 kB | 122.1 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 46% |
-| `dist/kp-themes.css` | 4465.7 kB | 2366.0 kB | 47% |
-| `dist/kp-themes-base.css` | 1553.8 kB | 773.0 kB | 50% |
-| `dist/kp-themes.js` | 4051.4 kB | 2139.1 kB | 47% |
+| `dist/kp-themes.css` | 4467.2 kB | 2366.5 kB | 47% |
+| `dist/kp-themes-base.css` | 1554.0 kB | 773.1 kB | 50% |
+| `dist/kp-themes.js` | 4052.7 kB | 2139.7 kB | 47% |
 
-The loose stylesheets together weigh **4518.8 kB** authored and
-**2397.0 kB** minified, 47% less. A page loading one theme's
+The loose stylesheets together weigh **4520.4 kB** authored and
+**2397.5 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 **The base and the split bundle** [load-1102]. `dist/kp-themes-base.min.css` is the bundle without
@@ -61,7 +61,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/anchors.js` | 8 | 94.9 kB |
 | `dist/js/art.js` | 4 | 17.5 kB |
 | `dist/js/attention.js` | 8 | 126.1 kB |
-| `dist/js/auto.js` | 26 | 272.2 kB |
+| `dist/js/auto.js` | 26 | 272.7 kB |
 | `dist/js/auto-refresh.js` | 27 | 194.5 kB |
 | `dist/js/autosize.js` | 8 | 102.3 kB |
 | `dist/js/availability.js` | 34 | 338.1 kB |
@@ -99,7 +99,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/diagnostics.js` | 7 | 120.2 kB |
 | `dist/js/diff.js` | 23 | 227.8 kB |
 | `dist/js/docpreview.js` | 28 | 249.4 kB |
-| `dist/js/effects.js` | 4 | 39.5 kB |
+| `dist/js/effects.js` | 4 | 39.6 kB |
 | `dist/js/entity-card.js` | 35 | 293.4 kB |
 | `dist/js/facets.js` | 5 | 84.7 kB |
 | `dist/js/feed.js` | 10 | 119.8 kB |
@@ -135,7 +135,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/motion.js` | 7 | 119.8 kB |
 | `dist/js/nav-fold.js` | 14 | 146.9 kB |
 | `dist/js/newpill.js` | 7 | 90.0 kB |
-| `dist/js/no-flash.js` | 4 | 2.9 kB |
+| `dist/js/no-flash.js` | 4 | 3.4 kB |
 | `dist/js/notices.js` | 24 | 227.5 kB |
 | `dist/js/overlays.js` | 19 | 201.0 kB |
 | `dist/js/page-contents.js` | 5 | 86.7 kB |
@@ -211,8 +211,8 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/weekdays.js` | 24 | 176.5 kB |
 | `dist/js/wheel.js` | 9 | 100.7 kB |
 | `dist/js/wizard.js` | 7 | 94.4 kB |
-| `dist/js/index.js` | 187 | 2062.2 kB |
-| the whole folder | 357 | 2193.0 kB |
+| `dist/js/index.js` | 187 | 2062.7 kB |
+| the whole folder | 357 | 2193.8 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

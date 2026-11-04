@@ -12333,7 +12333,7 @@ var init_add_row = __esm({
 });
 
 // js/effects-core/knobs.js
-var CARET_KNOB, KNOBS, COUNT_KNOB, COUNT_FROM_KNOB, BOOT_PROGRESS, MARQUEE_KNOB, MARQUEE_PAUSE_KNOB, MEASURE_KNOB, POINTER_KNOB, POINTER, LIGHT_KNOB, LIGHT, LIGHT_SELECTOR, LIGHT_REACH, LIGHT_FAR, PRESS_KNOB, PRESS, PRESS_SIZE, PRESS_HOLD, PRESS_HELD, PRESS_HOLD_MS, ROOT_ATTRIBUTE, DONE_ATTRIBUTE, REVEAL_STATE, TEXT_ATTRIBUTE, UNKNOWN_EVENT, REVEAL_EVENT, MEMO_PREFIX, GLYPHS;
+var CARET_KNOB, KNOBS, COUNT_KNOB, COUNT_FROM_KNOB, BOOT_PROGRESS, MARQUEE_KNOB, MARQUEE_PAUSE_KNOB, MEASURE_KNOB, POINTER_KNOB, POINTER, LIGHT_KNOB, LIGHT, LIGHT_SELECTOR, LIGHT_REACH, LIGHT_FAR, PRESS_KNOB, PRESS, PRESS_SIZE, PRESS_HOLD, PRESS_HELD, PRESS_HOLD_MS, ROOT_ATTRIBUTE, REPEAT_ATTRIBUTE, DONE_ATTRIBUTE, REVEAL_STATE, TEXT_ATTRIBUTE, UNKNOWN_EVENT, REVEAL_EVENT, MEMO_PREFIX, GLYPHS;
 var init_knobs = __esm({
   "js/effects-core/knobs.js"() {
     "use strict";
@@ -12396,6 +12396,7 @@ var init_knobs = __esm({
     PRESS_HELD = ".kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend, .kp-calendar__day";
     PRESS_HOLD_MS = 400;
     ROOT_ATTRIBUTE = "data-kp-effects";
+    REPEAT_ATTRIBUTE = "data-kp-effects-repeat";
     DONE_ATTRIBUTE = "data-kp-effects-done";
     REVEAL_STATE = "data-kp-reveal-state";
     TEXT_ATTRIBUTE = "data-kp-text";
@@ -12815,6 +12816,7 @@ var init_headline_run = __esm({
     "use strict";
     init_effects();
     init_headline_special();
+    init_knobs();
     init_headline_text();
     TIMED_CLASS = {
       // The nostromo headline [S48, LIFT_PLAN nostromo row]: the text stays whole throughout — no glyph or word is ever touched —
@@ -12865,7 +12867,16 @@ var init_headline_run = __esm({
           this.rest(true);
           return;
         }
+        this.playAfterAll();
         this.perform();
+      }
+      /**
+       * The head snippet marked the page as a repeat view and left its title legible [title-1270]; this headline plays after all
+       * (`data-kp-reveal-every="load"`, or text the page has not shown), so the mark comes off and the register hides the title for
+       * its wipe again.
+       */
+      playAfterAll() {
+        if (this.el.matches("h1")) this.ctx.doc.documentElement.removeAttribute(REPEAT_ATTRIBUTE);
       }
       /** Hand the element to the routine it asked for. */
       perform() {
@@ -101250,6 +101261,7 @@ __export(auto_exports, {
 var no_flash_exports = {};
 __export(no_flash_exports, {
   EFFECTS_ATTRIBUTE: () => EFFECTS_ATTRIBUTE,
+  EFFECTS_REPEAT_ATTRIBUTE: () => EFFECTS_REPEAT_ATTRIBUTE,
   NO_FLASH_SNIPPET: () => NO_FLASH_SNIPPET,
   REGISTER_PATTERN_DEFAULT: () => REGISTER_PATTERN_DEFAULT,
   THEME_ATTRIBUTE: () => THEME_ATTRIBUTE,
@@ -101259,23 +101271,35 @@ __export(no_flash_exports, {
 init_theme_registry();
 var THEME_ATTRIBUTE = "data-theme";
 var EFFECTS_ATTRIBUTE = "data-kp-effects";
+var EFFECTS_REPEAT_ATTRIBUTE = "data-kp-effects-repeat";
+var HEADLINE_MEMO_PREFIX = "kp-effects:";
+function repeatLines(root) {
+  return `
+    try {
+        var p = ${jsString(HEADLINE_MEMO_PREFIX)} + location.pathname + ':headline:';
+        for (var i = 0; i < sessionStorage.length; i++) {
+            if (sessionStorage.key(i).indexOf(p) === 0) { ${root}.setAttribute(${jsString(EFFECTS_REPEAT_ATTRIBUTE)}, ''); break; }
+        }
+    } catch (e) {}`;
+}
 function jsString(value) {
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 var REGISTER_PATTERN_DEFAULT = "/css/{theme}-register.css";
 var attributeText = (text) => text.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, effects = false, register = false } = {}) {
-  if (register) return registerSnippet({ key, attribute, effects, ...register === true ? {} : register });
+function noFlashSnippet({ key = STORAGE_KEY, attribute = THEME_ATTRIBUTE, effects = false, repeat = true, register = false } = {}) {
+  if (register) return registerSnippet({ key, attribute, effects, repeat, ...register === true ? {} : register });
   const arm = effects ? `
         document.documentElement.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : "";
+  const again2 = effects && repeat ? repeatLines("document.documentElement") : "";
   return `(function () {
     try {
         var t = localStorage.getItem(${jsString(key)});
         if (t) document.documentElement.setAttribute(${jsString(attribute)}, t);${arm}
-    } catch (e) {}
+    } catch (e) {}${again2}
 })();`;
 }
-function registerSnippet({ key, attribute, effects, pattern = REGISTER_PATTERN_DEFAULT, fallback: fallback2 = DEFAULT_THEME }) {
+function registerSnippet({ key, attribute, effects, repeat, pattern = REGISTER_PATTERN_DEFAULT, fallback: fallback2 = DEFAULT_THEME }) {
   const names = THEMES.map((t) => t.name);
   if (!names.includes(
     /** @type {import('./theme-registry.js').ThemeName} */
@@ -101286,12 +101310,13 @@ function registerSnippet({ key, attribute, effects, pattern = REGISTER_PATTERN_D
   const after = rest.join("{theme}");
   const arm = effects ? `
     d.setAttribute(${jsString(EFFECTS_ATTRIBUTE)}, '');` : "";
+  const again2 = effects && repeat ? repeatLines("d") : "";
   return `(function () {
     var d = document.documentElement;
     try {
         var t = localStorage.getItem(${jsString(key)});
         if (t) d.setAttribute(${jsString(attribute)}, t);
-    } catch (e) {}${arm}
+    } catch (e) {}${arm}${again2}
     var n = d.getAttribute(${jsString(attribute)});
     if (${JSON.stringify(names).replace(/</g, "\\u003c")}.indexOf(n) < 0) n = ${jsString(fallback2)};
     document.write('<link rel="stylesheet" href="' + ${jsString(attributeText(before3))} + n + ${jsString(attributeText(after))} + '" data-kp-register="' + n + '" blocking="render">');
@@ -103459,6 +103484,7 @@ export {
   DONE_EVENT,
   EDIT_EVENT,
   EFFECTS_ATTRIBUTE,
+  EFFECTS_REPEAT_ATTRIBUTE,
   ENTITY_ACTION_EVENT,
   ENTITY_CARD,
   ENTITY_FLAG_EVENT,

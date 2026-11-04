@@ -12,6 +12,17 @@
             transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
         }
 
+        /* The page title's wipe is shorter than the ruling time [title-1270; Kenny, 2026-11-04]: the same inset, the same linear
+           curve, `--kp-title-wipe-time` (240 ms) long. Only the page title, an h1; every other headline keeps the ruling time. */
+        [data-theme='formal'] h1[data-kp-reveal='headline'] {
+            transition-duration: var(--kp-title-wipe-time);
+        }
+
+        /* A headline that went straight to rest (a repeat view) has no entrance at all. */
+        [data-theme='formal'] [data-kp-reveal='headline'][data-kp-reveal-state='rest'] {
+            transition: none;
+        }
+
         [data-theme='formal'] mark {
             transition: background-size var(--kp-sig-fm-time) var(--fx-ease);
         }

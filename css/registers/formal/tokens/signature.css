@@ -16,6 +16,8 @@
         --kp-sig-fm-st: 60;
         --kp-sig-fm-lift: 160;
         --kp-sig-fm-time: 400ms;
+        /* The page title's wipe [title-1270]: shorter than the ruling time; a page sets `--kp-title-wipe-time` to change it. */
+        --kp-title-wipe-time: 240ms;
         --kp-sig-fm-stagger: 60ms;
         --kp-sig-fm-loop: 2400ms;
         /* The pen, and how far past a ruled part's edge its own shadow may

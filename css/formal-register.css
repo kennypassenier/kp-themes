@@ -145,6 +145,13 @@
         clip-path: inset(-0.5em 100% -0.5em -0.5em);
     }
 
+    /* A repeat view [title-1270; Kenny, 2026-11-04: "Herbezoek en kortere veeg"]: the head snippet marks the root when this path
+       already played its headline this session, and the page title is then legible from the first paint instead of hidden for a
+       wipe that will not run. The module removes the mark if it plays the title after all (`data-kp-reveal-every="load"`). */
+    [data-theme='formal'][data-kp-effects][data-kp-effects-repeat] h1[data-kp-reveal='headline']:not(.is-deciphered) {
+        clip-path: inset(-0.5em);
+    }
+
     [data-theme='formal'] [data-kp-reveal='headline'] {
         opacity: 1;
         transform: none;
@@ -994,6 +1001,17 @@
             transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
         }
 
+        /* The page title's wipe is shorter than the ruling time [title-1270; Kenny, 2026-11-04]: the same inset, the same linear
+           curve, `--kp-title-wipe-time` (240 ms) long. Only the page title, an h1; every other headline keeps the ruling time. */
+        [data-theme='formal'] h1[data-kp-reveal='headline'] {
+            transition-duration: var(--kp-title-wipe-time);
+        }
+
+        /* A headline that went straight to rest (a repeat view) has no entrance at all. */
+        [data-theme='formal'] [data-kp-reveal='headline'][data-kp-reveal-state='rest'] {
+            transition: none;
+        }
+
         [data-theme='formal'] mark {
             transition: background-size var(--kp-sig-fm-time) var(--fx-ease);
         }
@@ -1563,6 +1581,8 @@
         --kp-sig-fm-st: 60;
         --kp-sig-fm-lift: 160;
         --kp-sig-fm-time: 400ms;
+        /* The page title's wipe [title-1270]: shorter than the ruling time; a page sets `--kp-title-wipe-time` to change it. */
+        --kp-title-wipe-time: 240ms;
         --kp-sig-fm-stagger: 60ms;
         --kp-sig-fm-loop: 2400ms;
         /* The pen, and how far past a ruled part's edge its own shadow may

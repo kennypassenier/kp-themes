@@ -1,9 +1,11 @@
-// Connection band, tab labels, a growing column, toolbar chips and the syncing state [ui-1104].
+// Connection band, tab labels, a growing column, toolbar chips, the syncing state and the formal page title [ui-1104, chips-1270, title-1270].
 //
 // Every assertion reads the paint (boxes, computed layout), at 1280 and 390, never an attribute alone. The fixture holds each
 // part twice, today's default beside the opt-in, so a test compares the two in one page.
 
 import { expect, test } from '@playwright/test';
+import { EFFECTS_REPEAT_ATTRIBUTE, noFlashSnippet } from '../js/no-flash.js';
+import { MEMO_PREFIX, REPEAT_ATTRIBUTE } from '../js/effects-core/knobs.js';
 
 const FIXTURE = '/tests/fixtures/ui-1104.html';
 const WIDTHS = [1280, 390];
@@ -97,18 +99,105 @@ for (const width of WIDTHS) {
             expect(cols.grow[2]).toBeLessThanOrEqual(cols.plain[2]);
         });
 
-        test('wrapping chips stay inside the toolbar; the default line still scrolls on a phone', { tag: ['@component:data'] }, async ({ page }) => {
+        test('chips wrap by default and in a stacked toolbar; "scroll" keeps the one line [chips-1270]', { tag: ['@component:data'] }, async ({ page }) => {
             await open(page, width);
             const m = await page.evaluate(() => {
                 const read = (id) => {
                     const g = document.querySelector(`#${id} .kp-segmented--chips`);
+                    const group = g.closest('.kp-toolbar__group').getBoundingClientRect();
                     const box = g.getBoundingClientRect();
-                    return { scrolls: g.scrollWidth > g.clientWidth + 1, cut: [...g.children].some((c) => c.getBoundingClientRect().right > box.right + 1) };
+                    const rows = new Set([...g.children].map((c) => Math.round(c.getBoundingClientRect().top))).size;
+                    return {
+                        scrolls: g.scrollWidth > g.clientWidth + 1,
+                        cut: [...g.children].some((c) => c.getBoundingClientRect().right > box.right + 1),
+                        lastRight: Math.round(Math.max(...[...g.children].map((c) => c.getBoundingClientRect().right))),
+                        groupRight: Math.round(group.right),
+                        rows,
+                    };
                 };
-                return { plain: read('toolbar-default'), wrap: read('toolbar-wrap') };
+                return {
+                    plain: read('toolbar-default'),
+                    wrap: read('toolbar-wrap'),
+                    scroll: read('toolbar-scroll'),
+                    stacked: read('toolbar-stacked'),
+                    stackedScroll: read('toolbar-stacked-scroll'),
+                };
             });
-            expect(m.wrap).toEqual({ scrolls: false, cut: false });
-            expect(m.plain.scrolls).toBe(width === 390);
+            for (const name of ['plain', 'wrap', 'stacked']) {
+                expect(m[name].scrolls, `${name} does not scroll`).toBe(false);
+                expect(m[name].cut, `${name} cuts no chip`).toBe(false);
+                expect(m[name].lastRight, `${name} last chip inside its group`).toBeLessThanOrEqual(m[name].groupRight);
+            }
+            expect(m.plain).toEqual(m.wrap);
+            // The stacked toolbar sits in a 14rem column: four chips never fit one row.
+            expect(m.stacked.rows).toBeGreaterThan(1);
+            expect(m.stackedScroll.scrolls).toBe(true);
+            expect(m.stackedScroll.rows).toBe(1);
+            expect(m.scroll.scrolls).toBe(width === 390);
+            if (width === 390) expect(m.plain.rows).toBeGreaterThan(1);
+            // Desktop is unchanged: one row of four chips.
+            else expect(m.plain.rows).toBe(1);
         });
     });
 }
+
+// The formal page title [title-1270; Kenny, 2026-11-04, "Herbezoek en kortere veeg"].
+const CONCEPT = '/examples/concept.html';
+
+/** The page h1's clip, per frame, as the share of the title that shows (0 hidden, 1 whole). @param {import('@playwright/test').Page} page */
+async function recordTitle(page) {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.addInitScript(() => {
+        localStorage.setItem('theme', 'formal');
+        window.__title = [];
+        const tick = () => {
+            const h = document.querySelector('h1[data-kp-reveal="headline"]');
+            const m = h && getComputedStyle(h).clipPath.match(/inset\([^ ]+ (?:calc\()?([\d.]+)%/);
+            if (h) window.__title.push([performance.now(), m ? 1 - parseFloat(m[1]) / 100 : 1]);
+            requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    });
+}
+
+test.describe('the page title wipe and the repeat view [title-1270]', { tag: ['@component:page-effects'] }, () => {
+    test('the snippet and the module name the same marker and memo prefix; repeat:false leaves the marker out', () => {
+        expect(EFFECTS_REPEAT_ATTRIBUTE).toBe(REPEAT_ATTRIBUTE);
+        expect(noFlashSnippet({ effects: true })).toContain(`'${MEMO_PREFIX}'`.replace(/'/g, '"'));
+        expect(noFlashSnippet({ effects: true })).toContain(REPEAT_ATTRIBUTE);
+        expect(noFlashSnippet({ effects: true, repeat: false })).not.toContain(REPEAT_ATTRIBUTE);
+        expect(noFlashSnippet({ effects: false })).not.toContain(REPEAT_ATTRIBUTE);
+    });
+
+    test('the first view wipes the title in 240 ms, linear; the knob changes it', async ({ page }) => {
+        await recordTitle(page);
+        await page.setViewportSize({ width: 1280, height: 900 });
+        await page.goto(CONCEPT);
+        await page.locator('h1[data-kp-reveal="headline"].is-deciphered').waitFor();
+        await page.waitForTimeout(600);
+        const frames = await page.evaluate(() => window.__title);
+        const start = frames.find(([, shown]) => shown > 0.02 && shown < 0.98);
+        const at = (share) => frames.find(([t, shown]) => t >= start[0] && shown >= share)[0] - start[0];
+        // Linear: half shown at about half the time, nine tenths at about nine tenths of 240 ms (a frame is 17 ms).
+        expect(at(0.5)).toBeGreaterThan(90);
+        expect(at(0.5)).toBeLessThan(150);
+        expect(at(0.9)).toBeGreaterThan(190);
+        expect(at(0.9)).toBeLessThan(250);
+        await expect(page.locator('h1[data-kp-reveal="headline"]')).toHaveCSS('transition-duration', '0.24s');
+        await page.evaluate(() => document.documentElement.style.setProperty('--kp-title-wipe-time', '600ms'));
+        await expect(page.locator('h1[data-kp-reveal="headline"]')).toHaveCSS('transition-duration', '0.6s');
+    });
+
+    test('a repeat view shows the whole title from the first frame and never wipes it', async ({ page }) => {
+        await recordTitle(page);
+        await page.setViewportSize({ width: 1280, height: 900 });
+        await page.goto(CONCEPT);
+        await page.locator('h1[data-kp-reveal="headline"].is-deciphered').waitFor();
+        await page.goto(CONCEPT);
+        await page.locator('h1[data-kp-reveal="headline"][data-kp-reveal-state="rest"]').waitFor();
+        await page.waitForTimeout(500);
+        const frames = await page.evaluate(() => window.__title);
+        expect(frames.length).toBeGreaterThan(5);
+        expect(Math.min(...frames.map(([, shown]) => shown)), 'every frame shows the whole title').toBe(1);
+    });
+});

@@ -49,6 +49,13 @@
         clip-path: inset(-0.5em 100% -0.5em -0.5em);
     }
 
+    /* A repeat view [title-1270; Kenny, 2026-11-04: "Herbezoek en kortere veeg"]: the head snippet marks the root when this path
+       already played its headline this session, and the page title is then legible from the first paint instead of hidden for a
+       wipe that will not run. The module removes the mark if it plays the title after all (`data-kp-reveal-every="load"`). */
+    [data-theme='formal'][data-kp-effects][data-kp-effects-repeat] h1[data-kp-reveal='headline']:not(.is-deciphered) {
+        clip-path: inset(-0.5em);
+    }
+
     [data-theme='formal'] [data-kp-reveal='headline'] {
         opacity: 1;
         transform: none;

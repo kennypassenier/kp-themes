@@ -52,6 +52,8 @@ export const effectsDescriptor = {
             },
             { name: 'data-kp-divider', what: 'The seam between two surfaces. A theme may draw it as a rule, a tear, or nothing.' },
             { name: 'data-kp-reveal', what: 'headline, emphasis or rule: the element a theme may bring in with a reveal. Once per session unless data-kp-reveal-every="load" says otherwise.' },
+            { name: '--kp-title-wipe-time', what: 'Formal: how long the page title (an h1 with data-kp-reveal="headline") takes to wipe open [title-1270]. Default 240 ms, linear; other headlines keep the 400 ms ruling time.' },
+            { name: 'data-kp-effects-repeat', what: 'Written on the root by noFlashSnippet({ effects: true }) when this path already ran a headline reveal this session [title-1270]: the page title is whole from the first frame and has no entrance. `noFlashSnippet({ effects: true, repeat: false })` leaves it out; `data-kp-reveal-every="load"` plays a headline every load.' },
             { name: 'data-kp-reveal-trigger', what: 'A control that replays the reveals of the surface it sits in.' },
             {
                 name: 'data-kp-label-open',

@@ -18743,29 +18743,29 @@
             border-inline-start: 0;
         }
 
+        /* Chips wrap by whole chips [chips-1270; Kenny, 2026-11-04: "Standaard volgende regel"; ui-1104, MedicineCabinet gap 32]. The
+         * default on a phone: no chip is cut at the edge and nothing scrolls sideways. `data-kp-toolbar-chips="scroll"` on the
+         * toolbar brings back the one scrolling line per group of fix-1031. */
         .kp-toolbar .kp-segmented--chips {
+            flex-wrap: wrap;
+            overflow: visible;
+        }
+
+        .kp-toolbar[data-kp-toolbar-chips='scroll'] .kp-segmented--chips {
             flex-wrap: nowrap;
             overflow-x: auto;
             scrollbar-width: none;
         }
 
-        /* A chip keeps its whole label on the scrolling line, and its focus ring goes inside, as the segmented control's own
+        /* A scrolling chip keeps its whole label on its line, and its focus ring goes inside, as the segmented control's own
          * scroller does: a scroller clips what paints outside it. */
-        .kp-toolbar .kp-segmented--chips > .kp-segmented__item {
+        .kp-toolbar[data-kp-toolbar-chips='scroll'] .kp-segmented--chips > .kp-segmented__item {
             flex-shrink: 0;
         }
 
-        .kp-toolbar .kp-segmented--chips > .kp-segmented__item:focus-visible {
+        .kp-toolbar[data-kp-toolbar-chips='scroll'] .kp-segmented--chips > .kp-segmented__item:focus-visible {
             outline-offset: calc(-1 * var(--focus-ring-width, 2px));
             box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
-        }
-
-        /* Chips that wrap [ui-1104; Medicine Cabinet gap 32]: `data-kp-toolbar-chips="wrap"` on the toolbar. Opt-in; the scrolling line above is
-         * the approved phone layout [fix-1031]. With it the chips of a group wrap onto more lines at whole chips, nothing scrolls sideways
-         * and no chip is cut at the edge. */
-        .kp-toolbar[data-kp-toolbar-chips='wrap'] .kp-segmented--chips {
-            flex-wrap: wrap;
-            overflow: visible;
         }
 
         .kp-toolbar__state {
@@ -18800,24 +18800,25 @@
         border-inline-start: 0;
     }
 
+    /* Wrapping chips are the default here too [chips-1270]; `data-kp-toolbar-chips="scroll"` keeps one scrolling line. */
     .kp-toolbar--stacked .kp-segmented--chips {
+        flex-wrap: wrap;
+        overflow: visible;
+    }
+
+    .kp-toolbar--stacked[data-kp-toolbar-chips='scroll'] .kp-segmented--chips {
         flex-wrap: nowrap;
         overflow-x: auto;
         scrollbar-width: none;
     }
 
-    .kp-toolbar--stacked .kp-segmented--chips > .kp-segmented__item {
+    .kp-toolbar--stacked[data-kp-toolbar-chips='scroll'] .kp-segmented--chips > .kp-segmented__item {
         flex-shrink: 0;
     }
 
-    .kp-toolbar--stacked .kp-segmented--chips > .kp-segmented__item:focus-visible {
+    .kp-toolbar--stacked[data-kp-toolbar-chips='scroll'] .kp-segmented--chips > .kp-segmented__item:focus-visible {
         outline-offset: calc(-1 * var(--focus-ring-width, 2px));
         box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
-    }
-
-    .kp-toolbar--stacked[data-kp-toolbar-chips='wrap'] .kp-segmented--chips {
-        flex-wrap: wrap;
-        overflow: visible;
     }
 
     .kp-toolbar--stacked > .kp-toolbar__state {

@@ -151,7 +151,7 @@
         "js/wizard.js": { "digest": "30df34a5ed6a9d70", "when": "[data-kp-wizard]" }
     },
     "themes": {
-        "formal": "a11893f0bca05246",
+        "formal": "030fefe9dbfd9e4b",
         "dark": "79feac4c80e8a35e",
         "cyberpunk": "cd5fbae7dd668a60",
         "synthwave": "d8cc0126e4ea253e",
@@ -4109,6 +4109,7 @@
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-leaving]:dir(rtl)": "576f1faee55c2dbd",
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-resizing]": "45935f14557eb2d5",
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline']": "fbbde469dadb2dd1",
+        "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline'][data-kp-reveal-state='rest']": "5c7271d67fe20832",
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='rule']": "6319cba905eb5006",
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-sidenav-mode='push'])": "3795715762e5f7f5",
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']": "2d198eda3aa96651",
@@ -4117,6 +4118,7 @@
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-updating='closed']:not(.kp-state-word)": "1de2e5371a2d8cce",
         "formal||@media (prefers-reduced-motion: no-preference)||dialog.kp-palette)": "4ace5a461a1d2601",
         "formal||@media (prefers-reduced-motion: no-preference)||dialog.kp-palette):dir(rtl)": "0cbe9fd1e6b39c3e",
+        "formal||@media (prefers-reduced-motion: no-preference)||h1[data-kp-reveal='headline']": "3d77a7c02f3fb2b4",
         "formal||@media (prefers-reduced-motion: no-preference)||mark": "9ef3c674a292e45a",
         "formal||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(2)": "f1ae333de5ed5e65",
         "formal||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(3)": "e9e89770b216a78b",
@@ -4427,6 +4429,7 @@
         "formal||||figcaption": "dbd72735e05e7f52",
         "formal||||g[data-kp-art-set='ledger']": "ca5aad1929367c8e",
         "formal||||h1": "ee06c9a65b99569a",
+        "formal||||h1[data-kp-reveal='headline']:not(.is-deciphered)": "609e3df68d7a419e",
         "formal||||h2": "8e06f5f9005081cc",
         "formal||||h3": "0517206fb150066d",
         "formal||||h4": "b41d34fa111d9b88",
@@ -7921,9 +7924,9 @@
         "||@media (max-width: 48rem)||.kp-notices__panel": "51073976f5bdaa52",
         "||@media (max-width: 48rem)||.kp-row-actions": "ad8e4a131150d813",
         "||@media (max-width: 48rem)||.kp-segmented))": "6bdc8e9f76a611d5",
-        "||@media (max-width: 48rem)||.kp-segmented--chips": "41826cf1477df2cd",
-        "||@media (max-width: 48rem)||.kp-segmented__item": "cc5cad2f38f1561f",
-        "||@media (max-width: 48rem)||.kp-segmented__item-visible": "a27508841f7d45d5",
+        "||@media (max-width: 48rem)||.kp-segmented--chips": "bb2e5bc9560eb755",
+        "||@media (max-width: 48rem)||.kp-segmented__item": "60f7d9ea2a0cf922",
+        "||@media (max-width: 48rem)||.kp-segmented__item-visible": "1106abab269e28cc",
         "||@media (max-width: 48rem)||.kp-toolbar": "0e9bd025a60f366c",
         "||@media (max-width: 48rem)||.kp-toolbar__filters": "0797ef687a463e64",
         "||@media (max-width: 48rem)||.kp-toolbar__group": "aa8707c30d30dd5d",
@@ -10426,7 +10429,7 @@
         "||||.kp-segmented": "0bc985c1186568fa",
         "||||.kp-segmented))": "c9533de9672cda75",
         "||||.kp-segmented--block": "64b6a65118db319a",
-        "||||.kp-segmented--chips": "fc1efc1439a04121",
+        "||||.kp-segmented--chips": "e15b463831eb3a8f",
         "||||.kp-segmented--chips[data-kp-segmented-fit='tracks']": "102b703d636e1efe",
         "||||.kp-segmented--chips[data-kp-segmented-fit='tracks'][data-kp-segmented-cols]": "38c14d25366a32e7",
         "||||.kp-segmented--chips[data-kp-segmented-fit='tracks'][data-kp-segmented-cols][data-kp-segmented-narrow]": "418f43576e43b0c8",
@@ -10443,8 +10446,8 @@
         "||||.kp-segmented__count:empty": "e0fe62ff1bfaa0f2",
         "||||.kp-segmented__fold": "f354d8bae4446e91",
         "||||.kp-segmented__fold-button": "4cd7658787c702ef",
-        "||||.kp-segmented__item": "a346eee7dbcaf695",
-        "||||.kp-segmented__item-visible": "fefb8f14139eb3d2",
+        "||||.kp-segmented__item": "2357aceb0b35f4ef",
+        "||||.kp-segmented__item-visible": "fe7d30fde3eff26c",
         "||||.kp-segmented__item.kp-week__step--icon": "3e62bc6538f0ef7b",
         "||||.kp-segmented__item:not(-visible)": "34f325612f9d4a3f",
         "||||.kp-segmented__item:not([data-kp-segmented-all])": "417292bbf1a4e5bb",
@@ -13890,7 +13893,7 @@
             ]
         },
         "media": {
-            "modules": "c26f39b9680108a3",
+            "modules": "9c3ba25daf5a2dcc",
             "families": [
                 "data-kp-announce",
                 "data-kp-calm",
@@ -13914,6 +13917,7 @@
                 "data-kp-doc-lines",
                 "data-kp-effects",
                 "data-kp-effects-done",
+                "data-kp-effects-repeat",
                 "data-kp-flash-words",
                 "data-kp-gallery",
                 "data-kp-gallery-full-key",
@@ -14804,7 +14808,7 @@
             ]
         },
         "page-effects": {
-            "modules": "6ad80185201777b8",
+            "modules": "ea68440679a6b680",
             "families": [
                 "data-kp-calm",
                 "data-kp-count",
@@ -14812,6 +14816,7 @@
                 "data-kp-divider",
                 "data-kp-effects",
                 "data-kp-effects-done",
+                "data-kp-effects-repeat",
                 "data-kp-label",
                 "data-kp-label-open",
                 "data-kp-measure",
@@ -15093,7 +15098,7 @@
             ]
         },
         "picker": {
-            "modules": "821ce2c0402a924a",
+            "modules": "e6a288ef830370d3",
             "families": [
                 "data-kp-add",
                 "data-kp-all",
@@ -15110,6 +15115,7 @@
                 "data-kp-disabled",
                 "data-kp-disabled-reason",
                 "data-kp-effects",
+                "data-kp-effects-repeat",
                 "data-kp-group",
                 "data-kp-hint",
                 "data-kp-invalid",
@@ -15188,6 +15194,7 @@
                 "kp-dated",
                 "kp-dated-change",
                 "kp-dated-retry",
+                "kp-effects",
                 "kp-register-error",
                 "kp-register-load",
                 "kp-remember",
