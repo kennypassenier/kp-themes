@@ -60,6 +60,10 @@ export type SequencerModel = {
      * a hidden box one row tall and one pad wide, to read both in px
      */
     probe: HTMLElement;
+    /**
+     * a layout-contained hidden box the name probes are put in, so measuring one name relays out nothing else
+     */
+    probeBox: HTMLElement;
     rowPx: number;
     padPx: number;
     unit: {
@@ -195,6 +199,7 @@ export type SequencerModel = {
  * @property {HTMLElement} measure a hidden label that wraps, to ask whether a name fits its bar
  * @property {HTMLElement} ruler a hidden label on one line, to ask how wide a name is
  * @property {HTMLElement} probe a hidden box one row tall and one pad wide, to read both in px
+ * @property {HTMLElement} probeBox a layout-contained hidden box the name probes are put in, so measuring one name relays out nothing else
  * @property {number} rowPx
  * @property {number} padPx
  * @property {{ name: SequencerUnit, seconds: number }} unit

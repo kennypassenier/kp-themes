@@ -64566,7 +64566,9 @@ function build5(el16, strings) {
   ruler.setAttribute("aria-hidden", "true");
   const probe = make18(doc, "span", "kp-sequencer__probe");
   probe.setAttribute("aria-hidden", "true");
-  layer.append(measure, ruler, probe);
+  const probeBox = make18(doc, "div", "kp-sequencer__probes");
+  probeBox.setAttribute("aria-hidden", "true");
+  layer.append(measure, ruler, probe, probeBox);
   el16.replaceChildren(bar, frame3, selection, hint, help, announcer2);
   el16.dataset.kpSequencerId = id;
   return {
@@ -64601,6 +64603,7 @@ function build5(el16, strings) {
     measure,
     ruler,
     probe,
+    probeBox,
     rowPx: 28,
     padPx: 4,
     unit: { name: "minute", seconds: 60 },
@@ -64807,8 +64810,8 @@ function syncJoins(c, list) {
       c.joins.delete(id);
     }
 }
-function syncTicks(c) {
-  const room = c.plot.clientWidth || 600;
+function syncTicks(c, width = c.plot.clientWidth) {
+  const room = width || 600;
   const { step, values } = sequencerTicks(c.span, room, c.unit.seconds);
   const key = `${c.unit.name}:${step}:${values.length}:${c.span}`;
   if (key === c.tickKey) return;
@@ -64846,7 +64849,7 @@ function measureNames(c, list, perUnit) {
     line.textContent = item.label;
     return { item, wrap: wrap2, line };
   });
-  if (probes.length) c.layer.append(...probes.flatMap((p) => [p.wrap, p.line]));
+  if (probes.length) c.probeBox.append(...probes.flatMap((p) => [p.wrap, p.line]));
   for (const { item, wrap: wrap2, line } of probes)
     memory.set(item.id, { key: keyOf10(item), size: { high: wrap2.scrollHeight, scroll: wrap2.scrollWidth, client: wrap2.clientWidth, need: line.offsetWidth } });
   for (const p of probes) {
@@ -64861,14 +64864,17 @@ function measureNames(c, list, perUnit) {
     memory.get(item.id).size
   ]));
 }
-function placeLabels(c) {
+function readNames(c) {
   const width = c.plot.clientWidth;
-  if (!width) return;
+  if (!width) return null;
+  const pad2 = Number.parseFloat(getComputedStyle(c.measure).paddingLeft) * 2 || 12;
+  return { width, pad: pad2, barPx: c.rowPx * 0.8, sizes: measureNames(c, c.view, width / c.span) };
+}
+function placeLabels(c, read = readNames(c)) {
+  if (!read) return;
+  const { width, pad: pad2, barPx, sizes } = read;
   const perUnit = width / c.span;
   const doc = c.el.ownerDocument;
-  const pad2 = Number.parseFloat(getComputedStyle(c.measure).paddingLeft) * 2 || 12;
-  const barPx = c.rowPx * 0.8;
-  const sizes = measureNames(c, c.view, perUnit);
   const byRow = /* @__PURE__ */ new Map();
   for (const item of c.view) {
     const key = `${item.lane}|${c.rows.rows.get(item.id) ?? 0}`;
@@ -65030,16 +65036,18 @@ function paint8(c, { fit: fit2 = true } = {}) {
   );
   paintLanes2(c);
   paintState2(c);
-  measureLanes(c);
   paintWindow(c, c.view, fit2);
-  syncTicks(c);
+  measureLanes(c);
+  const room = c.plot.clientWidth;
+  const names = readNames(c);
+  syncTicks(c, room);
   syncBars(c, c.view);
   for (const item of c.view) {
     const bar = c.bars.get(item.id);
     if (bar) place4(c, bar, item, c.rows.rows.get(item.id) ?? 0);
   }
   syncJoins(c, c.view);
-  placeLabels(c);
+  placeLabels(c, names);
   paintSelection(c);
   c.drawn = true;
 }

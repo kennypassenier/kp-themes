@@ -37387,6 +37387,19 @@
         pointer-events: none;
     }
 
+    /* The box the name probes are measured in. Layout containment alone did not stop the relayout of the whole timeline (and
+       of the page around it) that appending a probe into the layer caused, 30-55 ms in Kitchen's editor; a size-contained,
+       paint-contained box does: the probes are measured inside it and nothing outside it is dirtied [perf-1104; Kitchen K5]. */
+    .kp-sequencer__probes {
+        position: absolute;
+        inset: 0 auto auto 0;
+        inline-size: 0;
+        block-size: 0;
+        contain: strict;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
     .kp-sequencer__measure {
         display: block;
         box-sizing: border-box;

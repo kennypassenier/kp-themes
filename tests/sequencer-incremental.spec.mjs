@@ -59,3 +59,44 @@ test('a removed and an added item change only their own bars', { tag: ['@compone
     await expect(page.locator('[data-kp-id="new"]')).toHaveCount(1);
     await expect(page.locator('[data-kp-id="s39"]')).toHaveCount(0);
 });
+
+// A paint lays the page out once [perf-1104, Kitchen K5/K6]: every layout read (lane tops, plot width, name sizes) comes before
+// the first write of a bar, and the name probes live in a layout-contained box, so measuring a changed name does not relayout
+// the page around the timeline (30-55 ms a key in Kitchen's editor; the page there has 16 000 elements).
+test('a refresh reads the layout first and writes after, and probes stay in the contained box', { tag: ['@component:data'] }, async ({ page }) => {
+    const log = await page.evaluate(async () => {
+        const el = /** @type {HTMLElement} */ (document.getElementById('seq'));
+        const k = /** @type {any} */ (window).kit;
+        const box = /** @type {HTMLElement} */ (el.querySelector('.kp-sequencer__probes'));
+        /** @type {string[]} */
+        const events = [];
+        const read = (/** @type {object} */ proto, /** @type {string} */ name) => {
+            const d = /** @type {PropertyDescriptor} */ (Object.getOwnPropertyDescriptor(proto, name));
+            const get = /** @type {() => any} */ (d.get ?? (() => undefined));
+            Object.defineProperty(proto, name, { ...d, get() { if (el.contains(this)) events.push('R'); return get.call(this); } });
+        };
+        for (const name of ['clientWidth', 'clientHeight', 'scrollHeight', 'scrollWidth']) read(Element.prototype, name);
+        for (const name of ['offsetHeight', 'offsetWidth']) read(HTMLElement.prototype, name);
+        const rect = Element.prototype.getBoundingClientRect;
+        Element.prototype.getBoundingClientRect = function () { if (el.contains(this)) events.push('R'); return rect.call(this); };
+        const setProperty = CSSStyleDeclaration.prototype.setProperty;
+        CSSStyleDeclaration.prototype.setProperty = function (...a) { events.push('W'); return setProperty.apply(this, a); };
+        const text = /** @type {PropertyDescriptor} */ (Object.getOwnPropertyDescriptor(Node.prototype, 'textContent'));
+        Object.defineProperty(Node.prototype, 'textContent', { ...text, set(v) { if (this !== box && !box.contains(this) && el.contains(this)) events.push('W'); text.set.call(this, v); } });
+        k.setSequencerItems(el, k.items.map((/** @type {any} */ x, /** @type {number} */ j) => (j === 5 ? { ...x, label: 'A quite different and much longer name' } : x)), k.lanes);
+        return { events: events.join(''), left: box.childElementCount };
+    });
+    expect(log.left).toBe(0);
+    expect(log.events).toMatch(/R/);
+    expect(log.events).toMatch(/^W*R+W*$/);
+});
+
+test('the name probes are in a layout-contained box', { tag: ['@component:data'] }, async ({ page }) => {
+    const style = await page.evaluate(() => {
+        const box = /** @type {HTMLElement} */ (document.querySelector('#seq .kp-sequencer__probes'));
+        const cs = getComputedStyle(box);
+        return { contain: cs.contain, parent: box.parentElement?.className };
+    });
+    expect(style.contain).toMatch(/strict|layout/);
+    expect(style.parent).toBe('kp-sequencer__items');
+});

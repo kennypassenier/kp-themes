@@ -111,7 +111,7 @@
         "js/segmented.js": { "digest": "b5ae92ddcfe2cc72", "when": "[data-kp-segmented]" },
         "js/selection-bar.js": { "digest": "ab9e221c7e152866", "when": "[data-kp-selection]" },
         "js/sentence.js": { "digest": "cced5762eb5f0053", "when": "[data-kp-sentence]" },
-        "js/sequencer.js": { "digest": "5d64ad47bebdd77e", "when": "[data-kp-sequencer]" },
+        "js/sequencer.js": { "digest": "8351a6706902c4ce", "when": "[data-kp-sequencer]" },
         "js/settled.js": {
             "digest": "e02962f2a0689b61",
             "when": "[data-kp-settled], [data-kp-settled-list], [data-kp-reorder], .kp-checklist, .kp-task-list"
@@ -10530,6 +10530,7 @@
         "||||.kp-sequencer__plot": "306b0718f852723e",
         "||||.kp-sequencer__plot)": "70a0f1e3c5f7e6b7",
         "||||.kp-sequencer__probe": "492340191364925d",
+        "||||.kp-sequencer__probes": "0ac0aebbabf319f6",
         "||||.kp-sequencer__readout": "dcc5de93fd064fe6",
         "||||.kp-sequencer__readout[data-kp-flip]": "e1611ac9776042c6",
         "||||.kp-sequencer__readout[data-kp-refused]": "946dc369f911a492",

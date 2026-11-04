@@ -22,7 +22,7 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 37.1 kB | 19.0 kB | 49% |
 | `css/blueprint-register.css` | 261.1 kB | 140.1 kB | 46% |
 | `css/brutalism-register.css` | 254.8 kB | 144.7 kB | 43% |
-| `css/components.css` | 1373.7 kB | 666.9 kB | 51% |
+| `css/components.css` | 1374.3 kB | 667.0 kB | 51% |
 | `css/cyberpunk-register.css` | 322.8 kB | 186.7 kB | 42% |
 | `css/dark-register.css` | 230.9 kB | 115.3 kB | 50% |
 | `css/deco-register.css` | 259.4 kB | 150.0 kB | 42% |
@@ -37,12 +37,12 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 141.2 kB | 87.0 kB | 38% |
 | `css/titanium-register.css` | 223.4 kB | 122.1 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 46% |
-| `dist/kp-themes.css` | 4465.1 kB | 2365.9 kB | 47% |
-| `dist/kp-themes-base.css` | 1553.2 kB | 772.8 kB | 50% |
-| `dist/kp-themes.js` | 4035.9 kB | 2133.9 kB | 47% |
+| `dist/kp-themes.css` | 4465.7 kB | 2366.0 kB | 47% |
+| `dist/kp-themes-base.css` | 1553.8 kB | 773.0 kB | 50% |
+| `dist/kp-themes.js` | 4036.3 kB | 2134.2 kB | 47% |
 
-The loose stylesheets together weigh **4518.2 kB** authored and
-**2396.9 kB** minified, 47% less. A page loading one theme's
+The loose stylesheets together weigh **4518.8 kB** authored and
+**2397.0 kB** minified, 47% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 **The base and the split bundle** [load-1102]. `dist/kp-themes-base.min.css` is the bundle without
@@ -169,7 +169,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/segmented-menu.js` | 14 | 142.6 kB |
 | `dist/js/selection-bar.js` | 11 | 114.6 kB |
 | `dist/js/sentence.js` | 26 | 184.8 kB |
-| `dist/js/sequencer.js` | 9 | 123.2 kB |
+| `dist/js/sequencer.js` | 9 | 123.4 kB |
 | `dist/js/settled.js` | 6 | 81.0 kB |
 | `dist/js/shortcuts.js` | 5 | 89.9 kB |
 | `dist/js/sidenav.js` | 9 | 160.3 kB |
@@ -211,8 +211,8 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/weekdays.js` | 24 | 175.3 kB |
 | `dist/js/wheel.js` | 9 | 100.3 kB |
 | `dist/js/wizard.js` | 7 | 94.0 kB |
-| `dist/js/index.js` | 186 | 2056.9 kB |
-| the whole folder | 356 | 2187.0 kB |
+| `dist/js/index.js` | 186 | 2057.2 kB |
+| the whole folder | 356 | 2187.3 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 
