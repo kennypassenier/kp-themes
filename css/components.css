@@ -36715,7 +36715,11 @@
      * A share bar's segments join them [touch-1103; HTTPSwitchboard 03/11] (the skip link takes a 44 px floor in touch-target.css
      * instead: cyberpunk cuts it with a clip-path that would clip an area): a segment (8-20 px high) grows its area upward and
      * downward only, because its neighbours are in a row (a segment 13 px wide stays 13 px wide: the documented "dense parts
-     * stay under 44 px" limit). The title above and the legend below take no press, so the area stands over them. */
+     * stay under 44 px" limit). The title above and the legend below take no press, so the area stands over them.
+     * [touch-1104; measured pressable in a chassis-rs shell and on the component pages] Two more: the brand in a bar that folds
+     * (`data-kp-nav-fold` with no toggle, the chassis-rs shell) is clipped by its own ellipsis rule, which cut its area to the 30 px
+     * box, so it clips with `overflow: clip` and gives 0.6875rem (11 px, so a 22 px brand reaches 44) of the clip back (--kp-touch-brand-room); and a tab (38-42 px high)
+     * takes an area centred on it, up to a fingertip high (a scrolling row clips the lower part). */
     @media (pointer: coarse) {
         /* A tag's remove button, the bar's brand and a reorder list's handle: the look stays, the finger gets the area. */
         html :is(.kp-tag__remove, .kp-nav__brand, .kp-reorder [data-kp-handle]) {
@@ -36749,6 +36753,30 @@
             inset-inline: 0;
             background: var(--kp-touch-hit-paint, transparent);
             outline: var(--kp-touch-hit-outline, none);
+        }
+
+        /* The brand of a folding bar ellipsizes, so it clips: `overflow: clip` plus a clip margin lets its area out again. */
+        html .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__brand {
+            overflow: clip;
+            overflow-clip-margin: var(--kp-touch-brand-room, 0.6875rem);
+        }
+
+        /* A tab: an area centred on it, a fingertip high; the row's neighbours are above and below it only. */
+        html .kp-tab {
+            position: relative;
+        }
+
+        html .kp-tab::after {
+            content: '';
+            position: absolute;
+            inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+            inset-inline: 0;
+            background: var(--kp-touch-hit-paint, transparent);
+            outline: var(--kp-touch-hit-outline, none);
+        }
+
+        html .kp-tab:disabled::after {
+            content: none;
         }
     }
 
@@ -36785,6 +36813,30 @@
         inset-inline: 0;
         background: var(--kp-touch-hit-paint, transparent);
         outline: var(--kp-touch-hit-outline, none);
+    }
+
+    /* The brand of a folding bar ellipsizes, so it clips: `overflow: clip` plus a clip margin lets its area out again. */
+    [data-kp-touch] .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__brand {
+        overflow: clip;
+        overflow-clip-margin: var(--kp-touch-brand-room, 0.6875rem);
+    }
+
+    /* A tab: an area centred on it, a fingertip high; the row's neighbours are above and below it only. */
+    [data-kp-touch] .kp-tab {
+        position: relative;
+    }
+
+    [data-kp-touch] .kp-tab::after {
+        content: '';
+        position: absolute;
+        inset-block: min(0px, calc((100% - var(--kp-touch-target, 2.75rem)) / 2 - 0.5px));
+        inset-inline: 0;
+        background: var(--kp-touch-hit-paint, transparent);
+        outline: var(--kp-touch-hit-outline, none);
+    }
+
+    [data-kp-touch] .kp-tab:disabled::after {
+        content: none;
     }
 }
 @layer kp.layout {

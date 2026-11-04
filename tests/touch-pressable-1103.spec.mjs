@@ -2,6 +2,7 @@
 // (40 px when it shows on focus) stands 44 px high (touch-target.css) and a share bar's segments (8-20 px high) take an invisible 44 px high area (touch-hit-small.css);
 // a plain segmented item keeps the 44 px it already had. Measured as the points of the part's middle lines that
 // `document.elementFromPoint` lands on the part (or its descendants), in five registers.
+// [touch-1104] adds the brand of a folding bar (chassis-rs shell: it ellipsizes, so it clips, which cut its area to the 30 px box) and the tab.
 
 import { test, expect } from '@playwright/test';
 
@@ -55,5 +56,61 @@ for (const theme of THEMES) {
         const { seg } = await pressable(page, theme);
         expect(seg.h).toBeLessThanOrEqual(seg.boxH + 1);
         await context.close();
+    });
+}
+
+/** What a finger can press on `selector` at the middle of its box, along both middle lines. */
+async function pressableOf(page, selector) {
+    return page.evaluate(async (sel) => {
+        const el = document.querySelector(sel);
+        el.scrollIntoView({ block: 'center' });
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        const box = el.getBoundingClientRect();
+        const onIt = (x, y) => { const hit = document.elementFromPoint(x, y); return Boolean(hit && el.contains(hit)); };
+        let h = 0;
+        for (let y = box.top - 40; y <= box.bottom + 40; y += 0.5) if (onIt(box.x + box.width / 2, y)) h += 0.5;
+        return { boxH: box.height, h };
+    }, selector);
+}
+
+// [touch-1104] the chassis-rs shell's bar: a folding bar without a toggle, whose brand clips for its ellipsis.
+const BRAND_THEMES = ['formal', 'nostromo', 'blueprint', 'forest', 'pastel'];
+for (const theme of BRAND_THEMES) {
+    test(`the brand of a folding bar presses 44 px high under a coarse pointer in ${theme} [touch-1104]`, { tag: ['@component:navigation'] }, async ({ browser }) => {
+        const context = await browser.newContext({ viewport: { width: 390, height: 800 }, hasTouch: true, isMobile: true });
+        const page = await context.newPage();
+        await page.goto('/site/components/nav-bar.html');
+        await page.evaluate((name) => {
+            document.documentElement.dataset.theme = name;
+            document.body.insertAdjacentHTML('afterbegin', '<div class="kp-nav-wrap"><nav class="kp-nav" data-kp-nav-fold aria-label="Shell"><a class="kp-nav__brand" id="shell-brand" href="/">Kitchen</a><ul class="kp-nav__links"></ul></nav></div>');
+            // The documentation's own header stands over the top of the page: lift the fixture bar over it.
+            const wrap = document.querySelector('body > .kp-nav-wrap');
+            wrap.style.setProperty('position', 'relative');
+            wrap.style.setProperty('z-index', '9999');
+        }, theme);
+        const brand = await pressableOf(page, '#shell-brand');
+        expect(brand.boxH).toBeLessThan(40);
+        expect(brand.h).toBeGreaterThanOrEqual(43.5);
+        await context.close();
+    });
+}
+
+for (const theme of ['formal', 'nostromo', 'pastel', 'dark', 'deco']) {
+    test(`a tab presses 44 px high under a coarse pointer and its own box under a mouse in ${theme} [touch-1104]`, { tag: ['@component:navigation'] }, async ({ browser }) => {
+        const touch = await browser.newContext({ viewport: { width: 390, height: 800 }, hasTouch: true, isMobile: true });
+        const page = await touch.newPage();
+        await page.goto('/site/components/tabs.html');
+        await page.evaluate((name) => { document.documentElement.dataset.theme = name; }, theme);
+        const tab = await pressableOf(page, '#doc-tab-0');
+        expect(tab.boxH).toBeLessThan(44);
+        expect(tab.h).toBeGreaterThanOrEqual(43.5);
+        await touch.close();
+        const mouse = await browser.newContext({ viewport: { width: 390, height: 800 } });
+        const fine = await mouse.newPage();
+        await fine.goto('/site/components/tabs.html');
+        await fine.evaluate((name) => { document.documentElement.dataset.theme = name; }, theme);
+        const plain = await pressableOf(fine, '#doc-tab-0');
+        expect(plain.h).toBeLessThanOrEqual(plain.boxH + 1);
+        await mouse.close();
     });
 }

@@ -484,6 +484,12 @@ together than 44 px (a date picker's days, heat cells, a column of radios)
 keep the room their layout has. `--kp-touch-hit-paint` and
 `--kp-touch-hit-outline` draw the areas, for checking a layout by eye.
 
+The brand of a bar that folds (`data-kp-nav-fold` without a toggle: the
+chassis-rs shell) ellipsizes, so it clips; it keeps its 44 px area by a clip
+margin, `--kp-touch-brand-room` (0.6875rem, 11 px each way; `0px` turns it
+off). A tab (38-42 px high) takes an area centred on it, up to
+`--kp-touch-target` high.
+
 #### Known limit: dense parts stay under 44 px [touchdense-1102]
 
 Kenny decided on 2026-11-02 ("Zo laten") that parts whose targets sit closer than 44 px apart keep their layout on a
