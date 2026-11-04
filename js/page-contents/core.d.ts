@@ -20,6 +20,8 @@ export declare class ContentsCore extends Controller {
     current: string | null;
     /** The animation frame a spy is waiting for, 0 for none. */
     raf: number;
+    /** The observer a spy is waiting on until the frame is laid out. @type {IntersectionObserver | null} */
+    waiting: IntersectionObserver | null;
     /** The pane with its own scroll that is listened to. @type {HTMLElement | null} */
     pane: HTMLElement | null;
     /** The scroll handler, one function so it can be removed. */
@@ -39,6 +41,8 @@ export declare class ContentsCore extends Controller {
     setCurrent(id: string | null): void;
     /** @param {number} frame */
     setFrame(frame: number): void;
+    /** @param {IntersectionObserver | null} observer */
+    setWaiting(observer: IntersectionObserver | null): void;
     /** @param {HTMLElement | null} pane */
     setPane(pane: HTMLElement | null): void;
     /** Ask for a spy on the next frame. The spy overrides it. */

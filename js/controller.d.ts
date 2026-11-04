@@ -37,6 +37,14 @@ export declare class Controller {
     observe<O extends {
         disconnect(): void;
     }>(observer: O): O;
+    /**
+     * Run `fn` once the document's web fonts have loaded, unless this controller is gone by then. Reading `document.fonts.ready`
+     * flushes layout in Firefox, and the first read after a page drew 16 000 elements paid for all of them (~200 ms), once for
+     * every component that asked. The read is therefore made once per document, in the next frame, after the attach pass, and the
+     * layout it forces is the one that frame needed anyway [attach-1104].
+     * @param {() => void} fn
+     */
+    afterFonts(fn: () => void): void;
     /** Wire the host: listeners, observers, first render. Subclasses override it; the base has nothing to wire. */
     connect(): void;
     /** Undo everything the controller set up, newest first; an undo step that throws is reported and the rest still run. */

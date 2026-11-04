@@ -149,7 +149,7 @@ export class AutosizeController extends Controller {
     /** A change of width changes the wrapping; the viewport and a font arriving change the cap and the lines. All measure together. */
     watchSize() {
         this.own(watchBox(this));
-        void this.doc.fonts?.ready.then(() => this.measureTogether());
+        this.afterFonts(() => this.measureTogether());
     }
 
     /** Undo what the box got: the card, frame, counter, twin, inline sizes, class and marks. */

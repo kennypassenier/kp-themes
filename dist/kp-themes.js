@@ -60,11 +60,12 @@ function attachAll(root, selector, Ctor, options = {}) {
     for (const controller of made6) controller.destroy();
   };
 }
-var LIVE, report, Controller;
+var LIVE, FONT_WAITERS, report, Controller;
 var init_controller = __esm({
   "js/controller.js"() {
     "use strict";
     LIVE = /* @__PURE__ */ new WeakMap();
+    FONT_WAITERS = /* @__PURE__ */ new WeakMap();
     report = (error) => typeof globalThis.reportError === "function" ? globalThis.reportError(error) : console.error(error);
     Controller = class {
       /**
@@ -107,6 +108,38 @@ var init_controller = __esm({
       observe(observer2) {
         this.own(() => observer2.disconnect());
         return observer2;
+      }
+      /**
+       * Run `fn` once the document's web fonts have loaded, unless this controller is gone by then. Reading `document.fonts.ready`
+       * flushes layout in Firefox, and the first read after a page drew 16 000 elements paid for all of them (~200 ms), once for
+       * every component that asked. The read is therefore made once per document, in the next frame, after the attach pass, and the
+       * layout it forces is the one that frame needed anyway [attach-1104].
+       * @param {() => void} fn
+       */
+      afterFonts(fn) {
+        const doc = this.host.ownerDocument;
+        if (!doc.fonts) return;
+        const run = () => !this.destroyed && fn();
+        let waiting2 = FONT_WAITERS.get(doc);
+        if (!waiting2) {
+          const group = waiting2 = /* @__PURE__ */ new Set();
+          FONT_WAITERS.set(doc, group);
+          const ask3 = () => doc.fonts.ready.then(() => {
+            FONT_WAITERS.delete(doc);
+            for (const wanted of group) {
+              try {
+                wanted();
+              } catch (error) {
+                report(error);
+              }
+            }
+          });
+          const frame3 = doc.defaultView?.requestAnimationFrame;
+          if (frame3) frame3.call(doc.defaultView, ask3);
+          else setTimeout(ask3, 0);
+        }
+        waiting2.add(run);
+        this.own(() => waiting2.delete(run));
       }
       /** Wire the host: listeners, observers, first render. Subclasses override it; the base has nothing to wire. */
       connect() {
@@ -19240,33 +19273,60 @@ var init_read2 = __esm({
 });
 
 // js/segmented/plate.js
-function reach(group) {
+function sidesOf(group) {
   const sides = [];
   if (group.hasAttribute(OVERFLOW_ATTRIBUTE)) {
     const from = Math.abs(group.scrollLeft);
     if (from > SCROLL_SLOP_PX) sides.push("start");
     if (from + group.clientWidth < group.scrollWidth - SCROLL_SLOP_PX) sides.push("end");
   }
+  return sides;
+}
+function writeSides(group, sides) {
   if (sides.length) group.setAttribute(MORE_ATTRIBUTE, sides.join(" "));
   else group.removeAttribute(MORE_ATTRIBUTE);
 }
-function layout(group) {
-  if (!(group instanceof HTMLElement)) return;
+function reach(group) {
+  writeSides(group, sidesOf(group));
+}
+function measureLayout(group) {
+  if (!(group instanceof HTMLElement)) return null;
   const chips = group.classList.contains("kp-segmented--chips");
-  group.toggleAttribute(OVERFLOW_ATTRIBUTE, !chips && group.scrollWidth > group.clientWidth + SCROLL_SLOP_PX);
-  reach(group);
+  const overflow = !chips && group.scrollWidth > group.clientWidth + SCROLL_SLOP_PX;
+  return { overflow, ...measureRest(group, chips) };
+}
+function measureRest(group, chips) {
   const chosen2 = isMulti(group) || chips ? void 0 : itemsOf2(group).find((item) => isOn(group, item));
-  if (!chosen2 || chosen2.offsetWidth === 0) {
+  const placed = chosen2 !== void 0 && chosen2.offsetWidth !== 0;
+  return { sides: sidesOf(group), placed, x: placed ? chosen2.offsetLeft : 0, w: placed ? chosen2.offsetWidth : 0 };
+}
+function applyLayout(group, measured3) {
+  if (!(group instanceof HTMLElement)) return;
+  let { sides, placed, x, w } = measured3;
+  if (group.hasAttribute(OVERFLOW_ATTRIBUTE) !== measured3.overflow) {
+    group.toggleAttribute(OVERFLOW_ATTRIBUTE, measured3.overflow);
+    ({ sides, placed, x, w } = measureRest(group, group.classList.contains("kp-segmented--chips")));
+  }
+  writeSides(group, sides);
+  if (!placed) {
     group.removeAttribute(THUMB_ATTRIBUTE);
     group.removeAttribute(GLIDE_ATTRIBUTE);
     return;
   }
-  group.style.setProperty("--kp-seg-x", `${chosen2.offsetLeft}px`);
-  group.style.setProperty("--kp-seg-w", `${chosen2.offsetWidth}px`);
+  group.style.setProperty("--kp-seg-x", `${x}px`);
+  group.style.setProperty("--kp-seg-w", `${w}px`);
   if (!group.hasAttribute(THUMB_ATTRIBUTE)) {
     group.setAttribute(THUMB_ATTRIBUTE, "");
     requestAnimationFrame(() => requestAnimationFrame(() => group.hasAttribute(THUMB_ATTRIBUTE) && group.setAttribute(GLIDE_ATTRIBUTE, "")));
   }
+}
+function layout(group) {
+  const measured3 = measureLayout(group);
+  if (measured3) applyLayout(group, measured3);
+}
+function layoutGroups(groups) {
+  const measured3 = groups.map((group) => measureLayout(group));
+  groups.forEach((group, i) => measured3[i] && applyLayout(group, measured3[i]));
 }
 var init_plate = __esm({
   "js/segmented/plate.js"() {
@@ -19608,7 +19668,7 @@ function paintTriValues(group, values) {
   }
   paintTri(group);
 }
-function paint3(group, values) {
+function paint3(group, values, place5 = true) {
   if (isTri(group)) return paintTriValues(group, values);
   const multi = isMulti(group);
   const items2 = itemsOf2(group);
@@ -19626,7 +19686,7 @@ function paint3(group, values) {
     item.setAttribute(multi ? "aria-pressed" : "aria-checked", String(pressed2));
   }
   roving(group);
-  layout(group);
+  if (place5) layout(group);
   repaintFold(group);
   writeGroupTrack(group);
 }
@@ -20067,6 +20127,16 @@ var init_fit2 = __esm({
 });
 
 // js/segmented/group.js
+function flushWaiting() {
+  const groups = [...WAITING];
+  WAITING.clear();
+  layoutGroups(groups);
+  for (const group of groups) fitGroup(group);
+}
+function placeSoon(group) {
+  WAITING.add(group);
+  if (WAITING.size === 1) queueMicrotask(flushWaiting);
+}
 function enhance(group) {
   const el16 = (
     /** @type {HTMLElement} */
@@ -20076,7 +20146,7 @@ function enhance(group) {
   if (existing) existing.refresh();
   else attachOne(el16, SegmentedGroup);
 }
-var SegmentedGroup;
+var WAITING, OWNERS, sharedObserver, GroupSizes, SegmentedGroup;
 var init_group = __esm({
   "js/segmented/group.js"() {
     "use strict";
@@ -20092,6 +20162,33 @@ var init_group = __esm({
     init_fold2();
     init_constants11();
     init_track();
+    WAITING = /* @__PURE__ */ new Set();
+    OWNERS = /* @__PURE__ */ new WeakMap();
+    sharedObserver = null;
+    GroupSizes = class {
+      constructor() {
+        this.watching = /* @__PURE__ */ new Set();
+        sharedObserver ??= new ResizeObserver((entries2) => {
+          for (const { target } of entries2) {
+            const group = OWNERS.get(target);
+            if (group) placeSoon(group);
+          }
+        });
+      }
+      /** @param {Element} element @param {HTMLElement} group */
+      watch(element, group) {
+        OWNERS.set(element, group);
+        this.watching.add(element);
+        sharedObserver?.observe(element);
+      }
+      disconnect() {
+        for (const element of this.watching) {
+          sharedObserver?.unobserve(element);
+          OWNERS.delete(element);
+        }
+        this.watching.clear();
+      }
+    };
     SegmentedGroup = class extends Controller {
       /** @param {HTMLElement} host the group */
       constructor(host) {
@@ -20103,20 +20200,12 @@ var init_group = __esm({
         const group = this.host;
         if (!group.hasAttribute("role")) group.setAttribute("role", isMulti(group) || isTri(group) ? "group" : "radiogroup");
         if (typeof ResizeObserver !== "undefined") {
-          this.sizes = this.observe(
-            new ResizeObserver(() => {
-              layout(group);
-              fitGroup(group);
-            })
-          );
-          this.sizes.observe(group);
+          this.sizes = this.observe(new GroupSizes());
+          this.sizes.watch(group, group);
         }
         this.listen(group, "scroll", () => reach(group), { passive: true });
-        if (typeof document !== "undefined" && document.fonts?.ready)
-          document.fonts.ready.then(() => {
-            layout(group);
-            fitGroup(group);
-          });
+        this.afterFonts(() => placeSoon(group));
+        this.own(() => WAITING.delete(group));
         this.mode = group.getAttribute("data-kp-segmented") ?? "single";
         this.own(
           watchOptions(group, ["data-kp-segmented"], () => {
@@ -20136,21 +20225,25 @@ var init_group = __esm({
           this.listen(group, SEGMENTED_EVENT, (event) => event.target === group && writeGroupTrack(group, true));
           this.own(listenGroupWrites(group, { values: (g, v) => paint3(g, v), tri: (g, v) => setTriValues(g, v) }));
         }
-        this.refresh();
+        this.refresh(true);
       }
-      /** Give the items their type and roles, let the size watcher see them, and paint the state. */
-      refresh() {
+      /**
+       * Give the items their type and roles, let the size watcher see them, and paint the state.
+       * @param {boolean} [together] the plate and the tracks wait for the other groups of the pass, which `connect()` asks
+       */
+      refresh(together = false) {
         const group = this.host;
         const multi = isMulti(group);
         for (const item of itemsOf2(group)) {
           if (item instanceof HTMLButtonElement && !item.hasAttribute("type")) item.type = "button";
           if (!multi && !isTri(group) && !item.hasAttribute("role")) item.setAttribute("role", "radio");
           if (isTri(group) && !isAll(item)) writeTri(item, triOf(item));
-          this.sizes?.observe(item);
+          this.sizes?.watch(item, group);
         }
         if (isTri(group)) paintTri(group);
-        else paint3(group, getSegmentedValues(group));
-        fitGroup(group);
+        else paint3(group, getSegmentedValues(group), !together);
+        if (together) placeSoon(group);
+        else fitGroup(group);
       }
       /**
        * `data-kp-segmented` changed from `was` to something else: the roles and the state attributes are written the way the new
@@ -26831,9 +26924,7 @@ var init_controller13 = __esm({
         this.listen(doc, STRINGS_CHANGE_EVENT, () => this.rewrite());
         this.watchSizes();
         this.watchList();
-        doc.fonts?.ready.then(() => {
-          if (!this.destroyed) this.fit();
-        });
+        this.afterFonts(() => this.fit());
         this.listen(view, "resize", () => this.fit());
         this.fit();
       }
@@ -51397,7 +51488,6 @@ var init_select_control = __esm({
         this.listen(select2, "focusout", () => this.onFocusOut());
         this.listen(select2, "change", () => this.onChange());
         this.listen(list, "mousedown", (event) => event.preventDefault());
-        this.build();
         selectHandles.set(select2, this.handle);
         select2.dataset.kpSelectAttached = "";
       }
@@ -60907,7 +60997,7 @@ function layoutOf(grid2) {
     };
   });
 }
-function applyLayout(grid2, layout3) {
+function applyLayout2(grid2, layout3) {
   const columns2 = Number.parseInt(grid2.dataset.kpColumns ?? "", 10) || COLUMNS;
   for (const entry of layout3) {
     const tile = (
@@ -60959,7 +61049,7 @@ var init_controller53 = __esm({
           element: host,
           layout: () => layoutOf(host),
           apply: (layout3) => {
-            applyLayout(host, layout3);
+            applyLayout2(host, layout3);
             this.announce();
           },
           refresh: () => this.placeAll()
@@ -61085,7 +61175,7 @@ __export(gridlayout_exports, {
   COMMIT_MS: () => COMMIT_MS,
   LAYOUT_COMMIT_EVENT: () => LAYOUT_COMMIT_EVENT,
   LAYOUT_EVENT: () => LAYOUT_EVENT,
-  applyLayout: () => applyLayout,
+  applyLayout: () => applyLayout2,
   attachGrids: () => attachGrids,
   grid: () => grid,
   layoutOf: () => layoutOf
@@ -61266,10 +61356,10 @@ var init_constants35 = __esm({
 
 // js/heat/card.js
 function waitForCard(el16, spec, loading2, draw6) {
-  const waiting2 = WAITING.get(el16);
+  const waiting2 = WAITING2.get(el16);
   if (loading2) {
     if (waiting2) {
-      WAITING.delete(el16);
+      WAITING2.delete(el16);
       waiting2.card.remove();
     }
     return false;
@@ -61282,10 +61372,10 @@ function waitForCard(el16, spec, loading2, draw6) {
   if (!card) return false;
   CARDS.delete(el16);
   const entry = { card, spec };
-  WAITING.set(el16, entry);
+  WAITING2.set(el16, entry);
   void card.close().then(() => {
-    if (WAITING.get(el16) !== entry) return;
-    WAITING.delete(el16);
+    if (WAITING2.get(el16) !== entry) return;
+    WAITING2.delete(el16);
     draw6(el16, entry.spec);
   });
   return true;
@@ -61320,13 +61410,13 @@ function replaceKeepingCard(el16, nodes) {
   if (keep && keep.parentElement === el16) keep.before(...nodes);
   else el16.append(...nodes);
 }
-var CARDS, WAITING, DRAWN3, PLATES;
+var CARDS, WAITING2, DRAWN3, PLATES;
 var init_card2 = __esm({
   "js/heat/card.js"() {
     "use strict";
     init_busy_card();
     CARDS = /* @__PURE__ */ new WeakMap();
-    WAITING = /* @__PURE__ */ new WeakMap();
+    WAITING2 = /* @__PURE__ */ new WeakMap();
     DRAWN3 = /* @__PURE__ */ new WeakSet();
     PLATES = /* @__PURE__ */ new WeakMap();
   }
@@ -69008,13 +69098,13 @@ var init_figures = __esm({
 });
 
 // js/uptime/state.js
-var SPECS, CARDS2, WAITING2, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, uptimeState;
+var SPECS, CARDS2, WAITING3, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, uptimeState;
 var init_state20 = __esm({
   "js/uptime/state.js"() {
     "use strict";
     SPECS = /* @__PURE__ */ new WeakMap();
     CARDS2 = /* @__PURE__ */ new WeakMap();
-    WAITING2 = /* @__PURE__ */ new WeakMap();
+    WAITING3 = /* @__PURE__ */ new WeakMap();
     GROUPS2 = /* @__PURE__ */ new WeakMap();
     GROUP_OF = /* @__PURE__ */ new WeakMap();
     UNPINNED = /* @__PURE__ */ new WeakSet();
@@ -69180,9 +69270,9 @@ var init_helpers4 = __esm({
 function setUptime(el16, spec) {
   SPECS.set(el16, spec);
   const loading2 = spec.state === "loading";
-  const waiting2 = WAITING2.get(el16);
+  const waiting2 = WAITING3.get(el16);
   if (loading2 && waiting2) {
-    WAITING2.delete(el16);
+    WAITING3.delete(el16);
     waiting2.card.remove();
   } else if (!loading2) {
     if (waiting2) {
@@ -69202,11 +69292,11 @@ function setUptime(el16, spec) {
         if (group) group.closing = true;
       }
       const entry = { card, spec };
-      WAITING2.set(el16, entry);
+      WAITING3.set(el16, entry);
       void card.close().then(() => {
         if (left && GROUPS2.get(left.host)?.card === card) GROUPS2.delete(left.host);
-        if (WAITING2.get(el16) !== entry) return;
-        WAITING2.delete(el16);
+        if (WAITING3.get(el16) !== entry) return;
+        WAITING3.delete(el16);
         draw5(el16, entry.spec);
       });
       return;
@@ -74799,6 +74889,7 @@ var init_core18 = __esm({
         this.entries = [];
         this.current = null;
         this.raf = 0;
+        this.waiting = null;
         this.pane = null;
         this.onScroll = () => this.queueSpy();
       }
@@ -74823,6 +74914,10 @@ var init_core18 = __esm({
       /** @param {number} frame */
       setFrame(frame3) {
         this.raf = frame3;
+      }
+      /** @param {IntersectionObserver | null} observer */
+      setWaiting(observer2) {
+        this.waiting = observer2;
       }
       /** @param {HTMLElement | null} pane */
       setPane(pane) {
@@ -74990,9 +75085,26 @@ var init_spy = __esm({
         );
         this.mark(at < 0 ? this.entries[0]?.item.id ?? null : this.entries[at].item.id);
       }
-      /** Ask for a spy on the next frame. */
+      /** Ask for a spy on the next frame. The boxes are read once that frame has been laid out, see `spyAfterLayout`. */
       queueSpy() {
-        if (!this.raf) this.setFrame(this.view.requestAnimationFrame(() => this.spy()));
+        if (!this.raf) this.setFrame(this.view.requestAnimationFrame(() => this.spyAfterLayout()));
+      }
+      /**
+       * Spy when the browser has laid the frame out. A callback of `requestAnimationFrame` runs before layout, so reading the boxes
+       * there forced a layout of the whole page on top of the one the frame made anyway (~100 ms on a page of 16 000 elements).
+       * An IntersectionObserver reports after layout, whose result is then clean to read [attach-1104].
+       */
+      spyAfterLayout() {
+        const Observer = this.view.IntersectionObserver;
+        if (!Observer) return this.spy();
+        this.waiting?.disconnect();
+        const once = new Observer(() => {
+          once.disconnect();
+          if (this.waiting === once) this.setWaiting(null);
+          if (!this.destroyed) this.spy();
+        });
+        this.setWaiting(once);
+        once.observe(this.host);
       }
       /** A pane with its own scroll: its scroll does not bubble to the window, so it is listened to itself (and again when the sections move to another pane). */
       bindPane() {
@@ -75047,15 +75159,11 @@ var init_draw12 = __esm({
         this.wait.hidden = state12 !== "loading";
         nav.toggleAttribute("aria-busy", state12 === "loading");
         nav.hidden = state12 !== "loading" && next2.length < this.least();
-        if (nav.getAttribute("data-kp-contents-sig") === signature2) {
-          this.bindPane();
-          return this.queueSpy();
-        }
+        if (nav.getAttribute("data-kp-contents-sig") === signature2) return this.queueSpy();
         nav.setAttribute("data-kp-contents-sig", signature2);
         const entries2 = next2.map(({ item, target }) => this.entryFor(item, target));
         this.setEntries(entries2, null);
         this.list.replaceChildren(...entries2.map((e) => e.li));
-        this.bindPane();
         this.queueSpy();
       }
     };
@@ -75111,6 +75219,7 @@ var init_controller67 = __esm({
         this.own(() => this.pane?.removeEventListener("scroll", this.onScroll));
         this.draw();
         this.own(() => view.cancelAnimationFrame(this.raf));
+        this.own(() => this.waiting?.disconnect());
       }
       /** The title, the list and the loading bars. @param {string} id */
       build(id) {
@@ -84993,7 +85102,7 @@ var init_controller80 = __esm({
       /** A change of width changes the wrapping; the viewport and a font arriving change the cap and the lines. All measure together. */
       watchSize() {
         this.own(watchBox(this));
-        void this.doc.fonts?.ready.then(() => this.measureTogether());
+        this.afterFonts(() => this.measureTogether());
       }
       /** Undo what the box got: the card, frame, counter, twin, inline sizes, class and marks. */
       reset() {
@@ -103747,7 +103856,7 @@ export {
   anchorSlug,
   anchors_exports as anchorsExports,
   appendLogLines,
-  applyLayout,
+  applyLayout2 as applyLayout,
   applyStoredCalm,
   applyStoredTheme,
   applyStringProperties,

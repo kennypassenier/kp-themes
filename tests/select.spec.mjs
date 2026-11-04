@@ -214,6 +214,23 @@ test(
     },
 );
 
+test('a closed drawn list is empty until it opens, and holds the options when it does [attach-1104]', { tag: ['@component:field'] }, async ({ page }) => {
+    await ready(page);
+    const state = await page.evaluate(async () => {
+        const { attachSelects } = await import('/js/combobox.js');
+        const holder = document.createElement('div');
+        holder.innerHTML = '<select class="kp-field__input"><option>One</option><option>Two</option><option>Three</option></select>';
+        document.body.append(holder);
+        const { handles } = attachSelects(holder);
+        const closed = holder.querySelectorAll('[data-kp-select-list] > *').length;
+        handles[0].open();
+        const open = holder.querySelectorAll('[data-kp-select-list] > [role="option"]').length;
+        handles[0].close();
+        return { closed, open };
+    });
+    expect(state).toEqual({ closed: 0, open: 3 });
+});
+
 test('detach takes the drawn list away and leaves the native select as it was [scope-54]', { tag: ['@component:field'] }, async ({ page }) => {
     await ready(page);
     const detached = await page.evaluate(async () => {
