@@ -73,3 +73,62 @@
         clip-path: var(--kp-cp-clip);
     }
 
+    /* A tab's touch area (touch-hit-small.css) reaches below the tab, and below the row that holds it: the head cut of the tab and the plate cut of the row,
+       each with the same top edge, the same diagonal and the same side edges, give it room under the tab, so the tab presses a fingertip high and looks as before.
+       The area goes downward only: upward it would show the top row of a focus ring that the cut now hides at a fractional position [touch-1104]. */
+    @media (pointer: coarse) {
+        [data-theme='cyberpunk'] .kp-tab.kp-tab {
+            --kp-sig-slack: calc(var(--kp-touch-target, 2.75rem) / 2);
+            --kp-cp-clip: polygon(
+                0 0,
+                calc(100% - var(--kp-cp-notch-sm)) 0,
+                100% var(--kp-cp-notch-sm),
+                100% calc(100% + var(--kp-sig-slack)),
+                0 calc(100% + var(--kp-sig-slack))
+            );
+        }
+        [data-theme='cyberpunk'] .kp-tabs__list {
+            --kp-sig-slack: calc(var(--kp-touch-target, 2.75rem) / 2);
+            --kp-cp-clip: polygon(
+                0 0,
+                calc(100% - var(--kp-cp-notch)) 0,
+                100% var(--kp-cp-notch),
+                100% calc(100% + var(--kp-sig-slack)),
+                0 calc(100% + var(--kp-sig-slack))
+            );
+        }
+    }
+    [data-kp-touch][data-theme='cyberpunk'] .kp-tab.kp-tab,
+    [data-kp-touch] [data-theme='cyberpunk'] .kp-tab.kp-tab,
+    [data-theme='cyberpunk'] [data-kp-touch] .kp-tab.kp-tab {
+        --kp-sig-slack: calc(var(--kp-touch-target, 2.75rem) / 2);
+        --kp-cp-clip: polygon(
+            0 0,
+            calc(100% - var(--kp-cp-notch-sm)) 0,
+            100% var(--kp-cp-notch-sm),
+            100% calc(100% + var(--kp-sig-slack)),
+            0 calc(100% + var(--kp-sig-slack))
+        );
+    }
+    [data-kp-touch][data-theme='cyberpunk'] .kp-tabs__list,
+    [data-kp-touch] [data-theme='cyberpunk'] .kp-tabs__list,
+    [data-theme='cyberpunk'] [data-kp-touch] .kp-tabs__list {
+        --kp-sig-slack: calc(var(--kp-touch-target, 2.75rem) / 2);
+        --kp-cp-clip: polygon(
+            0 0,
+            calc(100% - var(--kp-cp-notch)) 0,
+            100% var(--kp-cp-notch),
+            100% calc(100% + var(--kp-sig-slack)),
+            0 calc(100% + var(--kp-sig-slack))
+        );
+    }
+    @media (pointer: coarse) {
+        [data-theme='cyberpunk'] .kp-tab::after {
+            inset-block: 0 min(0px, calc(100% - var(--kp-touch-target, 2.75rem) - 0.5px));
+        }
+    }
+    [data-kp-touch][data-theme='cyberpunk'] .kp-tab::after,
+    [data-kp-touch] [data-theme='cyberpunk'] .kp-tab::after,
+    [data-theme='cyberpunk'] [data-kp-touch] .kp-tab::after {
+        inset-block: 0 min(0px, calc(100% - var(--kp-touch-target, 2.75rem) - 0.5px));
+    }

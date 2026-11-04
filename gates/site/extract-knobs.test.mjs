@@ -242,7 +242,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // through var(): 1214 + 2 = 1216.
     // Re-pinned 2026-11-02 [touch2-1102]: the touch room knobs --kp-uptime-touch-room and --kp-touch-chips-room, read through var(): 1214 + 2 = 1216.
     // Re-pinned 2026-11-02 [heatstates-1102]: a row's list of days reads --kp-heat-days-width and -max: 1214 + 2 = 1216.
-    assert.equal(result.expected, 1230, 'AR21 counted the --kp-* properties in css/components.css');
+    assert.equal(result.expected, 1229, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -358,7 +358,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-11-02 [touch2-1102]: --kp-uptime-touch-room and --kp-touch-chips-room are read through var(): 1204 + 2 = 1206.
     // Re-pinned 2026-11-02 [heatstates-1102]: a row's list of days reads --kp-heat-days-width and -max through var() (its -gap is read
     // by js/heat/days.js): 1204 + 2 = 1206.
-    assert.equal(result.readCount, 1220);
+    assert.equal(result.readCount, 1219);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

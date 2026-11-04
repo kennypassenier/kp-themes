@@ -2,7 +2,8 @@
 // (40 px when it shows on focus) stands 44 px high (touch-target.css) and a share bar's segments (8-20 px high) take an invisible 44 px high area (touch-hit-small.css);
 // a plain segmented item keeps the 44 px it already had. Measured as the points of the part's middle lines that
 // `document.elementFromPoint` lands on the part (or its descendants), in five registers.
-// [touch-1104] adds the brand of a folding bar (chassis-rs shell: it ellipsizes, so it clips, which cut its area to the 30 px box) and the tab.
+// [touch-1104] adds the brand of a folding bar (chassis-rs shell: it ellipsizes, so it clips, which cut its area to the 30 px box) and the tab, in all 12 themes.
+// The brand's area is anchored from outside its clip, so its look is clipped exactly as before: its overflow stays `hidden` and the area paints nothing.
 
 import { test, expect } from '@playwright/test';
 
@@ -74,43 +75,63 @@ async function pressableOf(page, selector) {
 }
 
 // [touch-1104] the chassis-rs shell's bar: a folding bar without a toggle, whose brand clips for its ellipsis.
-const BRAND_THEMES = ['formal', 'nostromo', 'blueprint', 'forest', 'pastel'];
-for (const theme of BRAND_THEMES) {
-    test(`the brand of a folding bar presses 44 px high under a coarse pointer in ${theme} [touch-1104]`, { tag: ['@component:navigation'] }, async ({ browser }) => {
-        const context = await browser.newContext({ viewport: { width: 390, height: 800 }, hasTouch: true, isMobile: true });
-        const page = await context.newPage();
-        await page.goto('/site/components/nav-bar.html');
-        await page.evaluate((name) => {
-            document.documentElement.dataset.theme = name;
-            document.body.insertAdjacentHTML('afterbegin', '<div class="kp-nav-wrap"><nav class="kp-nav" data-kp-nav-fold aria-label="Shell"><a class="kp-nav__brand" id="shell-brand" href="/">Kitchen</a><ul class="kp-nav__links"></ul></nav></div>');
-            // The documentation's own header stands over the top of the page: lift the fixture bar over it.
-            const wrap = document.querySelector('body > .kp-nav-wrap');
-            wrap.style.setProperty('position', 'relative');
-            wrap.style.setProperty('z-index', '9999');
-        }, theme);
-        const brand = await pressableOf(page, '#shell-brand');
-        expect(brand.boxH).toBeLessThan(40);
-        expect(brand.h).toBeGreaterThanOrEqual(43.5);
-        await context.close();
-    });
+const ALL_THEMES = ['blueprint', 'brutalism', 'cyberpunk', 'dark', 'deco', 'forest', 'formal', 'nostromo', 'pastel', 'solstice', 'synthwave', 'titanium'];
+const SHELL_BAR = '<div class="kp-nav-wrap"><nav class="kp-nav" data-kp-nav-fold aria-label="Shell"><a class="kp-nav__brand" id="shell-brand" href="/">Kitchen</a><ul class="kp-nav__links"></ul></nav></div>';
+const TABS_ROW = '<div class="kp-tabs"><div class="kp-tablist" role="tablist"><a class="kp-tab" id="shell-tab" role="tab" aria-selected="true" href="#a">Overview</a><a class="kp-tab" role="tab" aria-selected="false" href="#b">Logs</a></div></div>';
+
+/** Put a fixture over the documentation's own header, which stands over the top of the page. */
+async function lift(page, theme, html) {
+    await page.evaluate(({ name, markup }) => {
+        document.documentElement.dataset.theme = name;
+        document.body.insertAdjacentHTML('afterbegin', `<div id="lifted">${markup}</div>`);
+        const box = document.getElementById('lifted');
+        box.style.setProperty('position', 'relative');
+        box.style.setProperty('z-index', '9999');
+        box.style.setProperty('padding-block', '60px');
+    }, { name: theme, markup: html });
 }
 
-for (const theme of ['formal', 'nostromo', 'pastel', 'dark', 'deco']) {
-    test(`a tab presses 44 px high under a coarse pointer and its own box under a mouse in ${theme} [touch-1104]`, { tag: ['@component:navigation'] }, async ({ browser }) => {
+for (const theme of ALL_THEMES) {
+    for (const width of [390, 700]) {
+        test(`the brand of a folding bar presses 44 px high under a coarse pointer and keeps its clip in ${theme} at ${width} px [touch-1104]`, { tag: ['@component:navigation'] }, async ({ browser }) => {
+            const context = await browser.newContext({ viewport: { width, height: 800 }, hasTouch: true, isMobile: true });
+            const page = await context.newPage();
+            await page.goto('/site/components/nav-bar.html');
+            await lift(page, theme, SHELL_BAR);
+            const brand = await pressableOf(page, '#shell-brand');
+            expect(brand.boxH).toBeLessThan(40);
+            expect(brand.h).toBeGreaterThanOrEqual(43.5);
+            // The look is the clipped one: overflow stays hidden with no clip margin, and the area paints nothing (the bar with and without it is the same picture).
+            const clip = await page.evaluate(() => { const style = getComputedStyle(document.getElementById('shell-brand')); return { overflow: style.overflow, margin: style.overflowClipMargin }; });
+            expect(clip.overflow).toBe('hidden');
+            expect(clip.margin).toBe('0px');
+            const bar = page.locator('#lifted');
+            const withArea = await bar.screenshot();
+            await page.addStyleTag({ content: '#shell-brand::after { content: none !important; }' });
+            expect((await bar.screenshot()).equals(withArea)).toBe(true);
+            await context.close();
+        });
+    }
+
+    test(`a tab, button or anchor, presses 44 px high under a coarse pointer and its own box under a mouse in ${theme} [touch-1104]`, { tag: ['@component:navigation'] }, async ({ browser }) => {
         const touch = await browser.newContext({ viewport: { width: 390, height: 800 }, hasTouch: true, isMobile: true });
         const page = await touch.newPage();
         await page.goto('/site/components/tabs.html');
-        await page.evaluate((name) => { document.documentElement.dataset.theme = name; }, theme);
-        const tab = await pressableOf(page, '#doc-tab-0');
-        expect(tab.boxH).toBeLessThan(44);
-        expect(tab.h).toBeGreaterThanOrEqual(43.5);
+        await lift(page, theme, TABS_ROW);
+        const anchor = await pressableOf(page, '#shell-tab');
+        const button = await pressableOf(page, '#doc-tab-0');
+        for (const tab of [anchor, button]) {
+            expect(tab.h).toBeGreaterThanOrEqual(43.5);
+        }
         await touch.close();
         const mouse = await browser.newContext({ viewport: { width: 390, height: 800 } });
         const fine = await mouse.newPage();
         await fine.goto('/site/components/tabs.html');
-        await fine.evaluate((name) => { document.documentElement.dataset.theme = name; }, theme);
-        const plain = await pressableOf(fine, '#doc-tab-0');
-        expect(plain.h).toBeLessThanOrEqual(plain.boxH + 1);
+        await lift(fine, theme, TABS_ROW);
+        for (const id of ['#shell-tab', '#doc-tab-0']) {
+            const plain = await pressableOf(fine, id);
+            expect(plain.h).toBeLessThanOrEqual(plain.boxH + 1);
+        }
         await mouse.close();
     });
 }

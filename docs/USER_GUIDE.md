@@ -485,10 +485,11 @@ keep the room their layout has. `--kp-touch-hit-paint` and
 `--kp-touch-hit-outline` draw the areas, for checking a layout by eye.
 
 The brand of a bar that folds (`data-kp-nav-fold` without a toggle: the
-chassis-rs shell) ellipsizes, so it clips; it keeps its 44 px area by a clip
-margin, `--kp-touch-brand-room` (0.6875rem, 11 px each way; `0px` turns it
-off). A tab (38-42 px high) takes an area centred on it, up to
-`--kp-touch-target` high.
+chassis-rs shell) ellipsizes, so it clips; its 44 px area is anchored to the brand
+from outside the clip (CSS anchor positioning; a browser without it keeps the
+clipped area), so the brand looks exactly as it did. A tab (38-42 px high)
+takes an area centred on it, up to `--kp-touch-target` high; cyberpunk widens
+the cut of its tabs for it, the diagonal unchanged.
 
 #### Known limit: dense parts stay under 44 px [touchdense-1102]
 
