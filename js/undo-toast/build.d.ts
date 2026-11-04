@@ -8,6 +8,7 @@ export declare function readSettings(options: import('../undo-toast.js').UndoToa
     mode: string;
     clock: string;
     key: string | false;
+    focusKey: string | false;
     leaves: string;
     max: number;
     seconds: number;

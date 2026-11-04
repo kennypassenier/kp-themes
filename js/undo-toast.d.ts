@@ -22,6 +22,10 @@ export type UndoToastOptions = {
      * `Mod+Z`
      */
     key?: string | false;
+    /**
+     * `Alt+Z`
+     */
+    focusKey?: string | false;
     leave?: 'carry' | 'commit' | 'cancel';
     max?: number;
     /**
@@ -61,6 +65,7 @@ export type UndoToast = {
  * @property {'defer' | 'revert'} [mode]
  * @property {'ring' | 'bar' | 'text' | 'none'} [clock]
  * @property {string | false} [key] `Mod+Z`
+ * @property {string | false} [focusKey] `Alt+Z`
  * @property {'carry' | 'commit' | 'cancel'} [leave]
  * @property {number} [max]
  * @property {string} [failed] the toast's line when the commit fails, instead of "Not done: why"

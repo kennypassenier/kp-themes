@@ -67,6 +67,7 @@ export const FACADE_FILES = [
     'dist/bundle/intent.js',
     'dist/bundle/job-line.js',
     'dist/bundle/json-field.js',
+    'dist/bundle/key-spec.js',
     'dist/bundle/keys.js',
     'dist/bundle/kpi.js',
     'dist/bundle/lazy-register.js',

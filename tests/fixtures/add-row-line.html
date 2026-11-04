@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Add row: one line in a form grid, name + unit + Add + refusal [js-1104]</title>
+        <link rel="stylesheet" href="/css/fonts.css" />
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+    </head>
+    <body>
+        <!-- Medicine Cabinet's inline add row (a name, a unit from a list, the Add button, a line that says why not): the
+             package's own `.kp-addrow--line`, a block of a form grid. -->
+        <main style="max-inline-size: 60rem">
+            <div class="kp-formgrid" id="grid">
+                <form class="kp-addrow kp-addrow--line" id="line" data-kp-addrow data-kp-form novalidate aria-label="New form">
+                    <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                    <div class="kp-formgrid__row">
+                        <span class="kp-formgrid__label" id="line-title">New form</span>
+                        <div class="kp-formgrid__control kp-addrow__fields">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="form-name">Name</label>
+                                <input class="kp-field__input" id="form-name" name="name" maxlength="80" autocomplete="off" required placeholder="Name, e.g. Tablet" />
+                                <span class="kp-field__error" data-kp-field-error hidden></span>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="form-unit">Unit</label>
+                                <input class="kp-field__input" id="form-unit" name="unit" list="units" autocomplete="off" placeholder="Unit" />
+                                <datalist id="units"><option value="pills"></option><option value="ml"></option></datalist>
+                                <span class="kp-field__error" data-kp-field-error hidden></span>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__actions"><button type="submit" class="kp-button kp-button--primary" data-kp-submit>Add</button></div>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <script type="module" src="/js/auto.js"></script>
+    </body>
+</html>

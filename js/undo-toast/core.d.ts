@@ -38,6 +38,7 @@ export declare class UndoCore extends Controller {
         mode: string;
         clock: string;
         key: string | false;
+        focusKey: string | false;
         leaves: string;
         max: number;
         seconds: number;

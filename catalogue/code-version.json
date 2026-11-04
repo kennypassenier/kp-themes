@@ -6,7 +6,7 @@
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
         "js/action-tiles.js": { "digest": "9979a93508a6cb63", "when": ".kp-action" },
         "js/actions.js": { "digest": "43da3bb8d1ca90f6", "when": ".kp-row-actions" },
-        "js/add-row.js": { "digest": "d7612fbba0b9fbba", "when": "[data-kp-addrow]" },
+        "js/add-row.js": { "digest": "03ef7bfcff085cb8", "when": "[data-kp-addrow]" },
         "js/alarm.js": { "digest": "f1234069084dbbb7", "when": "[data-kp-alarm]" },
         "js/anchors.js": { "digest": "dd9c035829d6a4b4", "when": "[data-kp-anchors]" },
         "js/art.js": { "digest": "58d3433781a042cc", "when": "[data-kp-art]" },
@@ -13073,7 +13073,7 @@
             ]
         },
         "feedback": {
-            "modules": "92229a0eeede9923",
+            "modules": "5009bcf2c477ef56",
             "families": [
                 "data-kp-accept-follows",
                 "data-kp-accept-verb",
@@ -13379,6 +13379,7 @@
                 "data-kp-undo-action",
                 "data-kp-undo-button",
                 "data-kp-undo-clock",
+                "data-kp-undo-focus-key",
                 "data-kp-undo-mode",
                 "data-kp-undo-ms",
                 "data-kp-undo-state",

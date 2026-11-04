@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Undo toast: the focus key [js-1104]</title>
+        <link rel="stylesheet" href="/css/fonts.css" />
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+    </head>
+    <body>
+        <main>
+            <label>Quantity <input id="qty" type="text" /></label>
+            <button type="button" id="other">Other</button>
+        </main>
+        <script type="module">
+            import '/js/auto.js';
+            import { undoToast } from '/js/undo-toast.js';
+            window.undoToast = undoToast;
+            window.__undone = 0;
+            window.__ready = true;
+        </script>
+    </body>
+</html>

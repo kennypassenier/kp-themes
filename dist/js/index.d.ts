@@ -65,6 +65,7 @@ export * as idmarkExports from '../../js/idmark.js';
 export * as intentExports from '../../js/intent.js';
 export * as jobLineExports from '../../js/job-line.js';
 export * as jsonFieldExports from '../../js/json-field.js';
+export * as keySpecExports from '../../js/key-spec.js';
 export * as keysExports from '../../js/keys.js';
 export * as kpiExports from '../../js/kpi.js';
 export * as lazyRegisterExports from '../../js/lazy-register.js';
@@ -223,6 +224,7 @@ export { IDMARK, IDMARK_GLYPHS, IDMARK_SLOTS, IDMARK_STATUSES, attachIdmarks, id
 export { INTENT_MAX_SHOWN, intentRanges, intentScore, intentTokens, intentWords, matchIntent, noMatchText, queryWords, rankCommands, startsWord } from '../../js/intent.js';
 export { JOBLINE, JOBLINE_EVENT, attachJobLines, buildJobLine, jobLineText, setJobLine, stepPosition } from '../../js/job-line.js';
 export { JSON_CHECK_MS, JSON_COPIED_MS, JSON_FIELD, JSON_MAX_ROWS, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, attachJsonFields, explainJson, jsonField } from '../../js/json-field.js';
+export { KEY_NONE, ariaFromEngineKeys, ariaKeyShortcut, engineKeys, isKeySpecText, keyCaps, keyLabel, keyName, matchesKeySpec, parseKeySpec, resolveEngineKeys, resolveKeySpec, withShift } from '../../js/key-spec.js';
 export { KEYS, MOD_CAP, attachKeys, isMacPlatform, setKeys } from '../../js/keys.js';
 export { KPI_STRIP, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, SPARK, attachKpiStrips, attachKpiToggles, attachSparklines, drawSparkline, fitKpiStrip, kpiColumns, meterParts, meterText, setMeter, sparkPaths } from '../../js/kpi.js';
 export { REGISTER_ATTRIBUTE, REGISTER_ERROR_EVENT, REGISTER_LOAD_EVENT, REGISTER_PATTERN, attachLazyRegisters, ensureRegister, registerHref, registerLink, registerLoaded, registersPresent } from '../../js/lazy-register.js';

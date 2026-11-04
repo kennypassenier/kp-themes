@@ -507,6 +507,10 @@
             "types": "./js/add-row.d.ts",
             "default": "./js/add-row.js"
         },
+        "./js/key-spec": {
+            "types": "./js/key-spec.d.ts",
+            "default": "./js/key-spec.js"
+        },
         "./js/segmented-menu": {
             "types": "./js/segmented-menu.d.ts",
             "default": "./js/segmented-menu.js"
@@ -990,6 +994,10 @@
         "./dist/js/json-field": {
             "types": "./dist/js/json-field.d.ts",
             "default": "./dist/js/json-field.js"
+        },
+        "./dist/js/key-spec": {
+            "types": "./dist/js/key-spec.d.ts",
+            "default": "./dist/js/key-spec.js"
         },
         "./dist/js/keys": {
             "types": "./dist/js/keys.d.ts",

@@ -423,7 +423,9 @@ is for what cannot come back. What can (a row moved to a bin, a setting
 that has an old value, anything your server can restore) is deleted at
 once with an Undo (the newest toast answers a key, `Mod+Z` by default; `key: 'Alt+Z'` or `data-kp-undo-key="Alt+Z"` changes it, `Mod`
 is Ctrl or Command, `false` turns it off, never while typing in a field; the toast's spoken line ends "press Ctrl+Z" and its
-Undo button's title names it): `undoToast(…)`, or `data-kp-row-delete` on a row's
+Undo button's title names it). There is also a way to reach the toast by keyboard from anywhere, a text field included: `Alt+Z` (option
+`focusKey`, `data-kp-undo-focus-key`; `none` or `false` turns it off) moves the focus to the newest toast's Undo button, Enter undoes, and
+the focus goes back to where it was [js-1104]: `undoToast(…)`, or `data-kp-row-delete` on a row's
 button (the row goes, the toast offers Undo, the server hears it after the
 window). To keep yourself to that, mark the button
 `data-kp-confirm-restorable` (or pass `restorable: true`): the confirmation
@@ -2353,7 +2355,15 @@ Two opt-in attributes on the row, both off by default:
   shows them. The Add button then stands on the fields' line.
 - `data-kp-addrow-name="dish"` names the field whose value the status says after an add ("Added Pasta pesto"). By default
   it says the first filled value, which is an id or a date when a hidden id or a date field comes first; an empty or
-  unknown name falls back to that default.
+  unknown name falls back to that default. A select field says the chosen option's visible text, never its value (an id)
+  [js-1104]. The name is also `detail.name` of `kp-addrow-add` and `kp-addrow-added`, for the page's own toast or log.
+
+**One line in a form grid, name + unit + Add + refusal** [js-1104]. Put the row in a `.kp-formgrid` as `.kp-addrow--line`: a
+label in the label track, the fields (`.kp-addrow__fields`, name 2fr and unit 1fr; a unit with a `<datalist>` is a plain
+input) in the control track, the Add button in the actions track (`.kp-formgrid__actions`) and the refusal under them. A
+field marked `required` that is empty, a page that answers `waitUntil(promise)` with words or `false`, or one that rejects,
+all say why in the refusal line (`role="alert"`) and keep what was typed; on a phone the fields stack, Add last. Plain Enter in
+a text field adds the line. The markup is in the header of `js/add-row.js` and in `tests/fixtures/add-row-line.html`.
 
 A date picker (`.kp-datepicker`) in a cell gives way to the column: its input has no minimum width there and the calendar
 button stays beside it, so a 159 px column holds a 139 px picker instead of one 252 px wide.
@@ -2388,7 +2398,8 @@ A key is written as a **key spec**, one format everywhere:
 ```
 
 In script, `configureAddRow({ submitKey: 'Alt+Enter' })` sets the add row's key for the page and the undo toast takes
-`key`; the parser is `parseKeySpec`, `resolveKeySpec` and `matchesKeySpec` in `js/key-spec.js`. The table is written from
+`key`; the parser is `parseKeySpec`, `resolveKeySpec` and `matchesKeySpec` in `js/key-spec.js`, which an app imports as
+`@kp-soft/themes/js/key-spec` (or `dist/js/key-spec.js`, and `dist/bundle/key-spec.js` for an import map) [js-1104]. The table is written from
 the constants by `node gates/key-table.mjs --write` and checked by the commit hook. The older keys (`data-kp-toolbar-key`, `data-kp-console-focus-key`, `data-kp-log-focus-key`, `data-kp-toggle-key`,
 `data-kp-entity-star-key`, `data-kp-follow-key`, `data-kp-submit-key`, `data-kp-hotkey`, `data-kp-undo-key`) read key specs too and
 are in the table; the values they took before still work: a plain key (`/`, `:`, `e`, `End`), the engine's spelling (`Mod K`),

@@ -3,9 +3,11 @@ export type UndoToast = import('../undo-toast.js').UndoToast;
 export type StackEntry = {
     handle: UndoToast;
     key: string | false;
+    focusKey: string | false;
+    returnTo?: Element | null;
 };
 /** @typedef {import('../undo-toast.js').UndoToast} UndoToast */
-/** @typedef {{ handle: UndoToast, key: string | false }} StackEntry */
+/** @typedef {{ handle: UndoToast, key: string | false, focusKey: string | false, returnTo?: Element | null }} StackEntry */
 /** The toasts still counting or committing, oldest first. @type {StackEntry[]} */
 export declare const live: StackEntry[];
 export { keyName };
