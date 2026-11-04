@@ -155,6 +155,17 @@ export type SequencerModel = {
     scrollTimer: number;
     frameTimer: number;
     drawn: boolean;
+    /**
+     * `data-kp-sequencer-paint="once"`: the paints of the opening are one
+     */
+    coalesce: boolean;
+    /**
+     * set while the opening's paints are being collected
+     */
+    opening: {
+        fit: boolean;
+        frame: number;
+    } | null;
     observer: ResizeObserver | null;
 };
 /** @typedef {import('./units.js').SequencerChangeItem} SequencerChangeItem */
@@ -241,6 +252,8 @@ export type SequencerModel = {
  * @property {number} scrollTimer
  * @property {number} frameTimer
  * @property {boolean} drawn
+ * @property {boolean} coalesce `data-kp-sequencer-paint="once"`: the paints of the opening are one
+ * @property {{ fit: boolean, frame: number } | null} opening set while the opening's paints are being collected
  * @property {ResizeObserver | null} observer
  */
 /** @type {WeakMap<Element, SequencerModel>} */

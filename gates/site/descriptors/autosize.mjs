@@ -80,6 +80,7 @@ setAutosizeState(document.getElementById('doc-autosize-fail'), 'error', 'The mes
             { name: 'data-kp-autosize-engine', what: '`auto` (default: the browser\'s own `field-sizing` where it has it), `css` or `js`.' },
             { name: 'data-kp-autosize-shrink', what: '`on` (default) gives the height back when text is deleted; `off` keeps the tallest.' },
             { name: 'data-kp-autosize-hidden', what: '`measure` (default) sizes a box at once, even one inside a closed `<details>`, which makes the browser lay that hidden content out; `skip` leaves a box whose content is not rendered alone and measures it the moment it shows (Kitchen\'s 41 closed step notes: 2.9 s of the editor\'s opening).' },
+            { name: 'data-kp-autosize-first', what: '`now` (default) sizes a box as it attaches, which makes the browser lay the page out if it has not; `frame` sizes it in the resize observer\'s first callback, right after the page\'s first layout, where reading costs nothing (a box has its height one frame later, before it is painted).' },
             { name: 'data-kp-resize', what: '`vertical` (default) or `none`: the drag handle.' },
             { name: 'data-kp-counter', what: '`off` (default), `chars`, `lines` or `both`: an exact count under the box; with `maxlength` it reads "1,204 of 4,000".' },
             { name: 'data-kp-submit-key', what: '`mod-enter`: Ctrl or Command with Enter sends the form, and the shortcut sheet lists it.' },

@@ -39,7 +39,7 @@ the selectors and their order are identical, which is what
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 46% |
 | `dist/kp-themes.css` | 4467.2 kB | 2366.5 kB | 47% |
 | `dist/kp-themes-base.css` | 1554.0 kB | 773.1 kB | 50% |
-| `dist/kp-themes.js` | 4052.7 kB | 2139.7 kB | 47% |
+| `dist/kp-themes.js` | 4054.4 kB | 2140.6 kB | 47% |
 
 The loose stylesheets together weigh **4520.4 kB** authored and
 **2397.5 kB** minified, 47% less. A page loading one theme's
@@ -63,7 +63,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/attention.js` | 8 | 126.1 kB |
 | `dist/js/auto.js` | 26 | 272.7 kB |
 | `dist/js/auto-refresh.js` | 27 | 194.5 kB |
-| `dist/js/autosize.js` | 8 | 102.3 kB |
+| `dist/js/autosize.js` | 8 | 102.6 kB |
 | `dist/js/availability.js` | 34 | 338.1 kB |
 | `dist/js/barcell.js` | 6 | 87.7 kB |
 | `dist/js/board.js` | 16 | 169.7 kB |
@@ -169,7 +169,7 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/segmented-menu.js` | 14 | 143.4 kB |
 | `dist/js/selection-bar.js` | 11 | 114.9 kB |
 | `dist/js/sentence.js` | 26 | 186.1 kB |
-| `dist/js/sequencer.js` | 9 | 123.8 kB |
+| `dist/js/sequencer.js` | 9 | 124.3 kB |
 | `dist/js/settled.js` | 6 | 81.4 kB |
 | `dist/js/shortcuts.js` | 7 | 94.3 kB |
 | `dist/js/sidenav.js` | 9 | 160.7 kB |
@@ -211,8 +211,8 @@ theme's `dist/css/<theme>-register.min.css` beside it. `dist/js/` is the same mo
 | `dist/js/weekdays.js` | 24 | 176.5 kB |
 | `dist/js/wheel.js` | 9 | 100.7 kB |
 | `dist/js/wizard.js` | 7 | 94.4 kB |
-| `dist/js/index.js` | 187 | 2062.7 kB |
-| the whole folder | 357 | 2193.8 kB |
+| `dist/js/index.js` | 187 | 2063.6 kB |
+| the whole folder | 357 | 2194.7 kB |
 
 `auto.js` fetches every other chunk by `import()`, only when the page carries what it serves.
 

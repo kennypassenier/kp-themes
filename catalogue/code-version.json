@@ -12,7 +12,7 @@
         "js/art.js": { "digest": "58d3433781a042cc", "when": "[data-kp-art]" },
         "js/attention.js": { "digest": "7f2c263f5049d046", "when": ".kp-attention" },
         "js/auto-refresh.js": { "digest": "9229f88d2b7b8b69", "when": "[data-kp-refresh]" },
-        "js/autosize.js": { "digest": "41090a43d1c9c5d9", "when": "textarea[data-kp-autosize]" },
+        "js/autosize.js": { "digest": "ca5c70d09b1b11a9", "when": "textarea[data-kp-autosize]" },
         "js/availability.js": { "digest": "a8ec80200fc07f6b", "when": "[data-kp-availability]" },
         "js/barcell.js": { "digest": "af9763b3c1d40147", "when": "[data-kp-bar]" },
         "js/board.js": { "digest": "056548fe9e66ae48", "when": "[data-kp-board]" },
@@ -111,7 +111,7 @@
         "js/segmented.js": { "digest": "d5b42bffb600593a", "when": "[data-kp-segmented]" },
         "js/selection-bar.js": { "digest": "ab9e221c7e152866", "when": "[data-kp-selection]" },
         "js/sentence.js": { "digest": "cced5762eb5f0053", "when": "[data-kp-sentence]" },
-        "js/sequencer.js": { "digest": "8351a6706902c4ce", "when": "[data-kp-sequencer]" },
+        "js/sequencer.js": { "digest": "002371828cca9665", "when": "[data-kp-sequencer]" },
         "js/settled.js": {
             "digest": "e02962f2a0689b61",
             "when": "[data-kp-settled], [data-kp-settled-list], [data-kp-reorder], .kp-checklist, .kp-task-list"
@@ -12490,6 +12490,7 @@
                 "data-kp-sequencer-lanes",
                 "data-kp-sequencer-link-key",
                 "data-kp-sequencer-overlap",
+                "data-kp-sequencer-paint",
                 "data-kp-sequencer-snap",
                 "data-kp-sequencer-snap-items",
                 "data-kp-sequencer-span",
@@ -13543,6 +13544,7 @@
                 "data-kp-autosize-capped",
                 "data-kp-autosize-engine",
                 "data-kp-autosize-engine-used",
+                "data-kp-autosize-first",
                 "data-kp-autosize-hidden",
                 "data-kp-autosize-max",
                 "data-kp-autosize-shrink",

@@ -96,8 +96,35 @@ function paintState(c) {
         arrive: c.drawn,
     });
 }
-/** Draw everything from the committed items. @param {SequencerModel} c @param {{ fit?: boolean }} [how] */
+/**
+ * Draw everything from the committed items. While the sequencer is opening with `data-kp-sequencer-paint="once"` the request is
+ * only noted: the attach, the page's items and its state then paint once, in the first resize callback, instead of four times.
+ * @param {SequencerModel} c @param {{ fit?: boolean }} [how]
+ */
 export function paint(c, { fit = true } = {}) {
+    if (c.opening) {
+        c.opening.fit ||= fit;
+        return;
+    }
+    paintNow(c, { fit });
+}
+/** Start collecting paints until the first layout has happened (see `paint`); a frame pair later is the fallback for a hidden host. @param {SequencerModel} c */
+export function beginOpening(c) {
+    if (!c.coalesce) return;
+    const opening = { fit: false, frame: 0 };
+    c.opening = opening;
+    opening.frame = window.requestAnimationFrame(() => (opening.frame = window.requestAnimationFrame(() => flushOpening(c))));
+}
+/** Paint what was collected, now. Safe to call when nothing waits. @param {SequencerModel} c */
+export function flushOpening(c) {
+    const opening = c.opening;
+    if (!opening) return;
+    c.opening = null;
+    window.cancelAnimationFrame(opening.frame);
+    paintNow(c, { fit: opening.fit });
+}
+/** Draw everything from the committed items, at once. @param {SequencerModel} c @param {{ fit?: boolean }} how */
+function paintNow(c, { fit = true }) {
     c.view = c.items;
     c.rows = sequencerRows(
         c.items,

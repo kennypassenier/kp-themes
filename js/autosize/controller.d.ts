@@ -40,6 +40,8 @@ export declare class AutosizeController extends Controller {
     shrinks(): boolean;
     /** What to do with a box whose content is not rendered: `measure` it now (default) or `skip` it until it shows. @returns {'measure' | 'skip'} */
     hiddenMode(): 'measure' | 'skip';
+    /** When a box is first sized: `now` (default) as it attaches; `frame` in the resize observer's first callback, after the page's first layout, where reading it costs nothing. @returns {'now' | 'frame'} */
+    firstMode(): 'now' | 'frame';
     counterMode(): "both" | "chars" | "lines" | "off";
     /** @returns {'css' | 'js'} */
     engineInUse(): 'css' | 'js';

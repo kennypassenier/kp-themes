@@ -167,6 +167,8 @@ export function build(el, strings) {
         scrollTimer: 0,
         frameTimer: 0,
         drawn: false,
+        coalesce: false,
+        opening: null,
         observer: null,
     };
 }

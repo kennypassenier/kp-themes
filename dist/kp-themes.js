@@ -64691,6 +64691,7 @@ function readOptions3(c) {
   c.editable = d.kpSequencerEditable !== "off";
   const span6 = Number(d.kpSequencerSpan);
   c.minSpan = Number.isFinite(span6) && span6 > 0 ? span6 : 0;
+  c.coalesce = d.kpSequencerPaint === "once";
   c.bar.hidden = d.kpSequencerToolbar === "off";
   c.hint.hidden = d.kpSequencerHint === "off";
   c.hint.textContent = c.editable ? c.strings.sequencerHint : c.strings.sequencerHintReadonly;
@@ -64882,6 +64883,8 @@ function build5(el16, strings) {
     scrollTimer: 0,
     frameTimer: 0,
     drawn: false,
+    coalesce: false,
+    opening: null,
     observer: null
   };
 }
@@ -65266,6 +65269,26 @@ function paintState2(c) {
   });
 }
 function paint8(c, { fit: fit2 = true } = {}) {
+  if (c.opening) {
+    c.opening.fit ||= fit2;
+    return;
+  }
+  paintNow(c, { fit: fit2 });
+}
+function beginOpening(c) {
+  if (!c.coalesce) return;
+  const opening = { fit: false, frame: 0 };
+  c.opening = opening;
+  opening.frame = window.requestAnimationFrame(() => opening.frame = window.requestAnimationFrame(() => flushOpening(c)));
+}
+function flushOpening(c) {
+  const opening = c.opening;
+  if (!opening) return;
+  c.opening = null;
+  window.cancelAnimationFrame(opening.frame);
+  paintNow(c, { fit: opening.fit });
+}
+function paintNow(c, { fit: fit2 = true }) {
   c.view = c.items;
   c.rows = sequencerRows(
     c.items,
@@ -65852,12 +65875,14 @@ var init_controller55 = __esm({
         const now = Number(el16.dataset.kpSequencerNow);
         c.nowAt = el16.dataset.kpSequencerNow !== void 0 && Number.isFinite(now) ? now : null;
         if (el16.dataset.kpState === "loading") c.state = "loading";
+        beginOpening(c);
         paint8(c);
         this.watchWidth();
         this.own(watchOptions(el16, LIVE_OPTIONS3, (names) => this.onOptions(names)));
         this.own(() => {
           window.clearTimeout(c.scrollTimer);
           window.cancelAnimationFrame(c.frameTimer);
+          if (c.opening) window.cancelAnimationFrame(c.opening.frame);
         });
         this.wire();
       }
@@ -65892,16 +65917,16 @@ var init_controller55 = __esm({
           /** @type {PointerEvent} */
           e
         ));
-        this.listen(el16, "pointerdown", (e) => onDown(
+        this.listen(el16, "pointerdown", (e) => (flushOpening(c), onDown(
           c,
           /** @type {PointerEvent} */
           e
-        ));
-        this.listen(el16, "keydown", (e) => onKey3(
+        )));
+        this.listen(el16, "keydown", (e) => (flushOpening(c), onKey3(
           c,
           /** @type {KeyboardEvent} */
           e
-        ));
+        )));
         this.listen(el16, "click", (e) => this.onClick(e));
       }
       /** Another plot width lays the bars out again on the next frame, unless a drag is moving them. */
@@ -65911,6 +65936,11 @@ var init_controller55 = __esm({
         c.observer = this.observe(
           new ResizeObserver(() => {
             const width = c.plot.clientWidth;
+            if (c.opening) {
+              this.lastWidth = width;
+              flushOpening(c);
+              return;
+            }
             if (width === this.lastWidth) return;
             this.lastWidth = width;
             window.cancelAnimationFrame(c.frameTimer);
@@ -84853,8 +84883,19 @@ var init_hooks = __esm({
 });
 
 // js/autosize/measure.js
+function inClosedDetails(area) {
+  for (let d = area.closest("details"); d; d = d.parentElement?.closest("details") ?? null) {
+    if (d.open) continue;
+    const summary2 = d.querySelector(":scope > summary");
+    if (!summary2?.contains(area)) return true;
+  }
+  return false;
+}
 function leftForLater(c) {
-  if (c.hiddenMode() !== "skip" || typeof c.area.checkVisibility !== "function" || c.area.checkVisibility()) return false;
+  if (c.hiddenMode() !== "skip") return false;
+  if (!inClosedDetails(c.area)) {
+    if (typeof c.area.checkVisibility !== "function" || c.area.checkVisibility()) return false;
+  }
   c.width = -1;
   return true;
 }
@@ -85210,6 +85251,10 @@ var init_controller80 = __esm({
       hiddenMode() {
         return (this.options.hidden ?? attr8(this.area, "data-kp-autosize-hidden", "measure")) === "skip" ? "skip" : "measure";
       }
+      /** When a box is first sized: `now` (default) as it attaches; `frame` in the resize observer's first callback, after the page's first layout, where reading it costs nothing. @returns {'now' | 'frame'} */
+      firstMode() {
+        return (this.options.first ?? attr8(this.area, "data-kp-autosize-first", "now")) === "frame" ? "frame" : "now";
+      }
       counterMode() {
         return this.options.counter ?? /** @type {'off' | 'chars' | 'lines' | 'both'} */
         attr8(this.area, "data-kp-counter", "off");
@@ -85249,7 +85294,7 @@ var init_controller80 = __esm({
           this.pasteAt = area.selectionStart;
         });
         this.listen(area, "change", () => this.onChange());
-        measureOrHold(this);
+        if (this.firstMode() === "now") measureOrHold(this);
         this.drawCounter();
         if (area.getAttribute("data-kp-state") === "loading") applyState(this, "loading");
       }
@@ -85264,7 +85309,10 @@ var init_controller80 = __esm({
       /** A change of width changes the wrapping; the viewport and a font arriving change the cap and the lines. All measure together. */
       watchSize() {
         this.own(watchBox(this));
-        this.afterFonts(() => this.measureTogether());
+        this.afterFonts(() => {
+          if (this.firstMode() === "frame" && this.width === -1) return;
+          this.measureTogether();
+        });
       }
       /** Undo what the box got: the card, frame, counter, twin, inline sizes, class and marks. */
       reset() {

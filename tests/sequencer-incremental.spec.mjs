@@ -100,3 +100,47 @@ test('the name probes are in a layout-contained box', { tag: ['@component:data']
     expect(style.contain).toMatch(/strict|layout/);
     expect(style.parent).toBe('kp-sequencer__items');
 });
+
+// The opening paints once with `data-kp-sequencer-paint="once"` [flush-1104, Kitchen K6]: the attach, the page's items and its
+// state used to paint four times (each paint reads the lanes and the plot), and the first layout read came before the page's layout.
+// A paint reads the probe's `offsetHeight` exactly once, so those reads count the paints.
+/** @param {import('@playwright/test').Page} page @param {string} mode `each` or `once` */
+const paintsAtOpen = (page, mode) =>
+    page.evaluate(async (paint) => {
+        const k = /** @type {any} */ (window).kit;
+        const { attachSequencers, setSequencerState } = await import('/js/sequencer.js');
+        const host = document.createElement('section');
+        host.className = 'kp-gantt kp-sequencer';
+        host.dataset.kpSequencer = '';
+        host.dataset.kpSequencerPaint = paint;
+        document.querySelector('main')?.append(host);
+        let paints = 0;
+        const d = /** @type {PropertyDescriptor} */ (Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight'));
+        const get = /** @type {() => number} */ (d.get);
+        Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+            ...d,
+            get() {
+                if (host.contains(this) && this.className === 'kp-sequencer__probe') paints += 1;
+                return get.call(this);
+            },
+        });
+        attachSequencers(host.parentElement ?? document);
+        k.setSequencerItems(host, k.items, k.lanes);
+        setSequencerState(host, 'ready');
+        const early = host.querySelectorAll('.kp-sequencer__item').length;
+        for (let i = 0; i < 4; i += 1) await new Promise((r) => requestAnimationFrame(r));
+        Object.defineProperty(HTMLElement.prototype, 'offsetHeight', d);
+        return { paints, early, bars: host.querySelectorAll('.kp-sequencer__item').length };
+    }, mode);
+
+test('paint="once" paints the opening once; the default paints at every call', { tag: ['@component:data'] }, async ({ page }) => {
+    const each = await paintsAtOpen(page, 'each');
+    expect(each.bars).toBe(40);
+    expect(each.early).toBe(40);
+    expect(each.paints).toBeGreaterThanOrEqual(3);
+    await page.reload();
+    await page.waitForFunction(() => /** @type {any} */ (window).kitReady === true);
+    const once = await paintsAtOpen(page, 'once');
+    expect(once.bars).toBe(40);
+    expect(once.paints).toBe(1);
+});
