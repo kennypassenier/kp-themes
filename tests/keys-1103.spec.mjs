@@ -93,4 +93,96 @@ test.describe('shortcuts are options [keys-1103]', () => {
         expect(await searchFocusedOn(page, '?bar=Alt%2BS', '/')).toBe(false);
         expect(await searchFocusedOn(page, '?bar=none', '/')).toBe(false);
     });
+
+    const COOK = '/tests/fixtures/focus-keys.html';
+
+    /** Open the cook fixture with `attrs` on the view and the focus on it. @param {import('@playwright/test').Page} page @param {Record<string, string>} attrs @param {string} [extra] */
+    async function openCook(page, attrs = {}, extra = '') {
+        const query = new URLSearchParams(attrs).toString();
+        await page.goto(`${COOK}?${query}${extra}`);
+        await page.waitForFunction(() => window.ready === true);
+        await page.locator('#cook').focus();
+    }
+
+    /** The log of step changes after pressing `keys`. @param {import('@playwright/test').Page} page @param {string[]} keys */
+    async function stepsAfter(page, keys) {
+        await page.evaluate(() => (window.log = []));
+        for (const key of keys) await page.keyboard.press(key);
+        return page.evaluate(() => window.log.filter((e) => e[0] === 'step').map((e) => e[1]));
+    }
+
+    [
+        ['ArrowRight', 'ArrowLeft'],
+        ['PageDown', 'PageUp'],
+        [' ', 'ArrowLeft'],
+    ].forEach(([forward, back]) =>
+        test(`the focus-steps flow goes on with ${JSON.stringify(forward)} and back with ${back} by default [keys3-1104]`, { tag: ['@component:feedback'] }, async ({ page }) => {
+            await openCook(page);
+            expect(await stepsAfter(page, [forward])).toEqual([1]);
+            expect(await stepsAfter(page, [back])).toEqual([0]);
+        }),
+    );
+
+    test('the focus-steps next and previous keys take a key spec and switch off with none [keys3-1104]', { tag: ['@component:feedback'] }, async ({ page }) => {
+        await openCook(page, { 'data-kp-focus-steps-next-key': 'j', 'data-kp-focus-steps-previous-key': 'k' });
+        expect(await stepsAfter(page, ['ArrowRight', 'PageDown', ' '])).toEqual([]);
+        expect(await stepsAfter(page, ['j'])).toEqual([1]);
+        expect(await stepsAfter(page, ['k'])).toEqual([0]);
+        await openCook(page, { 'data-kp-focus-steps-next-key': 'none' });
+        expect(await stepsAfter(page, ['ArrowRight', 'PageDown', ' '])).toEqual([]);
+        expect(await stepsAfter(page, ['PageUp'])).toEqual([]);
+    });
+
+    /** Go to the question (step 2) and press `key`; the answer sources logged. @param {import('@playwright/test').Page} page @param {string} key */
+    async function answerAfter(page, key) {
+        await page.evaluate(async () => {
+            const { goToStep } = await import('/js/focus-steps.js');
+            goToStep(document.querySelector('#cook'), 2);
+            window.log = [];
+        });
+        await page.locator('#cook').focus();
+        await page.keyboard.press(key);
+        return page.evaluate(() => window.log.filter((e) => e[0] === 'answer').map((e) => e[1]));
+    }
+
+    test('the question keys s, u and n default as before, take another key and switch off with none [keys3-1104]', { tag: ['@component:feedback'] }, async ({ page }) => {
+        await openCook(page);
+        expect(await answerAfter(page, 's')).toEqual(['same']);
+        await openCook(page);
+        expect(await answerAfter(page, 'n')).toEqual(['skip']);
+        await openCook(page, { 'data-kp-focus-steps-same-yesterday-key': 'y', 'data-kp-focus-steps-skip-key': 'none' });
+        expect(await answerAfter(page, 's')).toEqual([]);
+        expect(await answerAfter(page, 'n')).toEqual([]);
+        expect(await answerAfter(page, 'y')).toEqual(['same']);
+    });
+
+    /** The sheet's keys after the cook view registered them. @param {import('@playwright/test').Page} page */
+    const listed = (page) => page.evaluate(async () => (await import('/js/shortcuts.js')).listShortcuts().map((e) => e.keys));
+
+    test('the track keys are t and Shift T by default, take another key and switch off with none [keys3-1104]', { tag: ['@component:feedback'] }, async ({ page }) => {
+        await openCook(page);
+        expect(await listed(page)).toEqual(expect.arrayContaining(['t', 'Shift T', 's', 'u', 'n']));
+        await openCook(page, { 'data-kp-focus-steps-track-next-key': 'Alt+J', 'data-kp-focus-steps-track-previous-key': 'none' });
+        const keys = await listed(page);
+        expect(keys).toContain('Alt j');
+        expect(keys).not.toContain('t');
+        expect(keys).not.toContain('Shift T');
+    });
+
+    test('a shortcut with where: field is listed in its own group of the sheet and the engine never fires it [keys3-1104]', { tag: ['@component:page'] }, async ({ page }) => {
+        await openCook(page, {}, '&field=1');
+        await page.evaluate(() => window.renderSheet());
+        const groups = await page.locator('#sheet .kp-shortcuts__group-label').allTextContents();
+        expect(groups).toContain('In a text field');
+        const row = page.locator('#sheet section', { hasText: 'In a text field' }).locator('.kp-shortcuts__row');
+        await expect(row).toContainText('Move the step up');
+        await expect(row).not.toHaveClass(/--off/);
+        // The default group of an ordinary key is unchanged.
+        expect(await page.locator('#sheet .kp-shortcuts__group-label', { hasText: /^Shortcuts$/ }).count()).toBe(1);
+        // Alt+Up on the field does nothing by itself: the field's own handler fires it.
+        await page.locator('#field').focus();
+        await page.evaluate(() => (window.log = []));
+        await page.keyboard.press('Alt+ArrowUp');
+        expect(await page.evaluate(() => window.log.length)).toBe(0);
+    });
 });

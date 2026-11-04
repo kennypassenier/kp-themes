@@ -4,7 +4,7 @@ export declare class FocusStepsControl extends FocusStepsInput {
     connect(): void;
     /** The view lets go of the speech, the screen and its marks. */
     release(): void;
-    /** s, u and n take the same as yesterday, the usual answer and Not today; T and Shift T walk the tracks. */
+    /** s, u and n take the same as yesterday, the usual answer and Not today; T and Shift T walk the tracks; each key is an option [keys3-1104]. */
     registerKeys(): void;
     /** An option changed at run time: draw what it touches. @param {string[]} names */
     onOptions(names: string[]): void;

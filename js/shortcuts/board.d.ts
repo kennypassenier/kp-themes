@@ -32,7 +32,7 @@ export declare class ShortcutBoard {
     warn(message: string): void;
     /** @param {EventTarget | null} target */
     typing(target: EventTarget | null): boolean;
-    /** The entries whose scope is on screen. */
+    /** The entries whose scope is on screen and that the engine itself fires (a `where: 'field'` entry only stands in the sheet). */
     active(): import("../shortcuts.js").Entry[];
     /** The active entries whose first step this event presses. @param {KeyboardEvent} event */
     startedBy(event: KeyboardEvent): import("../shortcuts.js").Entry[];

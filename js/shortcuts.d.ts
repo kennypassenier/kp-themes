@@ -14,9 +14,9 @@ export type Shortcut = {
      */
     group?: string;
     /**
-     * called when the keys are pressed; returning `false` leaves the browser's own handling alone
+     * called when the keys are pressed; returning `false` leaves the browser's own handling alone. Required unless `where` is set
      */
-    run: (event: KeyboardEvent) => unknown;
+    run?: (event: KeyboardEvent) => unknown;
     /**
      * false: the key does nothing now and the sheet shows it dimmed
      */
@@ -30,6 +30,11 @@ export type Shortcut = {
      * is the typing's own and does nothing by default; for a key that means the same there ("Esc closes the change form") [wish-1120, homelab 122]
      */
     inFields?: boolean;
+    /**
+     * `'field'`: the key lives on one text field and that field's own handler fires it (Alt+Up moves a step in
+     * an editor), so the engine never listens for it and the sheet only lists it, in the group `group` or else "In a text field" [keys3-1104]
+     */
+    where?: 'field';
 };
 export type EngineOptions = {
     /**

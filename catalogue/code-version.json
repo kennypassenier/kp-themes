@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "f3834ad84979a4a7",
+    "base": "1d24b4d37edb9fda",
     "modules": {
         "js/accept-follows.js": { "digest": "be79ca77bfba5707", "when": "[data-kp-accept-follows]" },
         "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
@@ -50,7 +50,7 @@
         "js/facets.js": { "digest": "c6794ca99b3598e2", "when": "[data-kp-facets]" },
         "js/feed.js": { "digest": "06f7d10ab05ee41e", "when": "[data-kp-feed]" },
         "js/flash.js": { "digest": "07b895bbd6a06ba8", "when": "[data-kp-flash-button], [data-kp-post]" },
-        "js/focus-steps.js": { "digest": "aab4f36b6c010624", "when": "[data-kp-focus-steps]" },
+        "js/focus-steps.js": { "digest": "47960b3ab65107b2", "when": "[data-kp-focus-steps]" },
         "js/footprint.js": {
             "digest": "fef9666c44fdaddb",
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-sequencer], [data-kp-graph], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops"
@@ -116,7 +116,7 @@
             "digest": "e02962f2a0689b61",
             "when": "[data-kp-settled], [data-kp-settled-list], [data-kp-reorder], .kp-checklist, .kp-task-list"
         },
-        "js/shortcuts.js": { "digest": "a351532d50ffbcc3", "when": "[data-kp-shortcuts][data-kp-shortcuts-live]" },
+        "js/shortcuts.js": { "digest": "ea170aa304b0c44c", "when": "[data-kp-shortcuts][data-kp-shortcuts-live]" },
         "js/sidenav.js": { "digest": "4db983ea876a00f0", "when": ".kp-sidenav" },
         "js/slider.js": { "digest": "107b919ff1e5724c", "when": "[data-kp-slider]" },
         "js/snooze.js": { "digest": "6f5a71ed5a1bae94", "when": "[data-kp-snooze]" },
@@ -13196,8 +13196,15 @@
                 "data-kp-focus-steps-kind",
                 "data-kp-focus-steps-last",
                 "data-kp-focus-steps-locked",
+                "data-kp-focus-steps-next-key",
+                "data-kp-focus-steps-previous-key",
+                "data-kp-focus-steps-same-usual-key",
+                "data-kp-focus-steps-same-yesterday-key",
                 "data-kp-focus-steps-screen",
+                "data-kp-focus-steps-skip-key",
                 "data-kp-focus-steps-timers",
+                "data-kp-focus-steps-track-next-key",
+                "data-kp-focus-steps-track-previous-key",
                 "data-kp-focus-steps-wake",
                 "data-kp-focus-tracked",
                 "data-kp-fold-at",

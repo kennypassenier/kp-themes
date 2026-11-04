@@ -1750,6 +1750,7 @@ var init_uses_unsaved_compare = __esm({
       shortcutsPending: "Waiting for the next key",
       shortcutsUnknown: (keys) => `No shortcut on ${keys}`,
       shortcutsAltGr: (keys, suggestion2) => `The key "${keys}" needs AltGr on an AZERTY keyboard, which is awkward with one hand. Consider ${suggestion2}.`,
+      shortcutsInField: "In a text field",
       shortcutsUnavailable: "Not available right now",
       ledeMore: "More",
       ledeLess: "Less",
@@ -15553,7 +15554,8 @@ function collectGroups(board2, sheet, fixed, sorted) {
   fixedGroup.rows.push({ keys: "?", what: s2.shortcutsSheet, off: false, reason: "" });
   for (const entry of sorted) {
     if (!scopeActive(entry)) continue;
-    const group = groupFor(entry.shortcut.group ?? "Shortcuts", typeof entry.scope !== "string");
+    const own = entry.shortcut.where === "field" ? s2.shortcutsInField : "Shortcuts";
+    const group = groupFor(entry.shortcut.group ?? own, typeof entry.scope !== "string");
     group.rows.push({ keys: entry.shortcut.keys, what: entry.shortcut.what, off: !available(entry), reason: entry.shortcut.reason ?? s2.shortcutsUnavailable });
   }
   return [...groups.values()].filter((g) => g.rows.length > 0);
@@ -15684,9 +15686,9 @@ var init_board = __esm({
       typing(target) {
         return target instanceof HTMLElement && (target.isContentEditable || target.matches(this.config.typingSelector));
       }
-      /** The entries whose scope is on screen. */
+      /** The entries whose scope is on screen and that the engine itself fires (a `where: 'field'` entry only stands in the sheet). */
       active() {
-        return [...this.entries].filter(scopeActive);
+        return [...this.entries].filter((entry) => scopeActive(entry) && entry.shortcut.where === void 0);
       }
       /** The active entries whose first step this event presses. @param {KeyboardEvent} event */
       startedBy(event) {
@@ -15778,7 +15780,7 @@ var init_board = __esm({
       runFirst(done, event) {
         const first = done.find(available);
         if (!first) return;
-        const result = first.shortcut.run(event);
+        const result = first.shortcut.run?.(event);
         if (result !== false) event.preventDefault();
         document.dispatchEvent(new CustomEvent(SHORTCUT_EVENT, { bubbles: true, detail: { keys: first.shortcut.keys, what: first.shortcut.what } }));
       }
@@ -15794,7 +15796,7 @@ var init_board = __esm({
         }
         const first = pool.filter((entry) => entry.steps.length === 1).find(available);
         if (first) {
-          const result = first.shortcut.run(event);
+          const result = first.shortcut.run?.(event);
           if (result !== false) event.preventDefault();
         }
       }
@@ -15887,6 +15889,7 @@ function registerOn(board2, scope, list, options = {}) {
   };
 }
 function entryFor(board2, scope, shortcut, guard, options, added2, fault) {
+  if (!shortcut.run && shortcut.where === void 0) return void fault(`The keys "${shortcut.keys}" (${shortcut.what}) have no run function and are not marked where: 'field'.`);
   const steps2 = parseShortcutKeys(shortcut.keys);
   const id = normal(steps2);
   if (RESERVED.includes(id)) return void fault(`The keys "${shortcut.keys}" belong to the palette and the shortcut sheet.`);
@@ -44209,7 +44212,7 @@ var init_wheel = __esm({
 });
 
 // js/focus-steps/constants.js
-var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_EMPTY_ACTION_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED;
+var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_EMPTY_ACTION_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED, FOCUS_STEPS_NEXT_KEY_ATTRIBUTE, FOCUS_STEPS_NEXT_KEY, FOCUS_STEPS_PREVIOUS_KEY_ATTRIBUTE, FOCUS_STEPS_PREVIOUS_KEY, FOCUS_STEPS_SAME_YESTERDAY_KEY_ATTRIBUTE, FOCUS_STEPS_SAME_YESTERDAY_KEY, FOCUS_STEPS_SAME_USUAL_KEY_ATTRIBUTE, FOCUS_STEPS_SAME_USUAL_KEY, FOCUS_STEPS_SKIP_KEY_ATTRIBUTE, FOCUS_STEPS_SKIP_KEY, FOCUS_STEPS_TRACK_NEXT_KEY_ATTRIBUTE, FOCUS_STEPS_TRACK_NEXT_KEY, FOCUS_STEPS_TRACK_PREVIOUS_KEY_ATTRIBUTE, FOCUS_STEPS_TRACK_PREVIOUS_KEY;
 var init_constants29 = __esm({
   "js/focus-steps/constants.js"() {
     "use strict";
@@ -44228,6 +44231,20 @@ var init_constants29 = __esm({
     SWIPE_DISTANCE = 56;
     STATES2 = /* @__PURE__ */ new WeakMap();
     WIRED = /* @__PURE__ */ new WeakSet();
+    FOCUS_STEPS_NEXT_KEY_ATTRIBUTE = "data-kp-focus-steps-next-key";
+    FOCUS_STEPS_NEXT_KEY = "ArrowRight or PageDown or Space";
+    FOCUS_STEPS_PREVIOUS_KEY_ATTRIBUTE = "data-kp-focus-steps-previous-key";
+    FOCUS_STEPS_PREVIOUS_KEY = "ArrowLeft or PageUp";
+    FOCUS_STEPS_SAME_YESTERDAY_KEY_ATTRIBUTE = "data-kp-focus-steps-same-yesterday-key";
+    FOCUS_STEPS_SAME_YESTERDAY_KEY = "s";
+    FOCUS_STEPS_SAME_USUAL_KEY_ATTRIBUTE = "data-kp-focus-steps-same-usual-key";
+    FOCUS_STEPS_SAME_USUAL_KEY = "u";
+    FOCUS_STEPS_SKIP_KEY_ATTRIBUTE = "data-kp-focus-steps-skip-key";
+    FOCUS_STEPS_SKIP_KEY = "n";
+    FOCUS_STEPS_TRACK_NEXT_KEY_ATTRIBUTE = "data-kp-focus-steps-track-next-key";
+    FOCUS_STEPS_TRACK_NEXT_KEY = "t";
+    FOCUS_STEPS_TRACK_PREVIOUS_KEY_ATTRIBUTE = "data-kp-focus-steps-track-previous-key";
+    FOCUS_STEPS_TRACK_PREVIOUS_KEY = "Shift T";
   }
 });
 
@@ -47321,6 +47338,51 @@ var init_wake = __esm({
   }
 });
 
+// js/focus-steps/keys.js
+function flowKeys(root, options) {
+  return {
+    next: resolveKeySpec(root, FOCUS_STEPS_NEXT_KEY_ATTRIBUTE, optionOf(options, FOCUS_STEPS_NEXT_KEY_ATTRIBUTE), FOCUS_STEPS_NEXT_KEY),
+    previous: resolveKeySpec(root, FOCUS_STEPS_PREVIOUS_KEY_ATTRIBUTE, optionOf(options, FOCUS_STEPS_PREVIOUS_KEY_ATTRIBUTE), FOCUS_STEPS_PREVIOUS_KEY)
+  };
+}
+function pressesFlow(event, spec, rtl) {
+  const mirror = rtl ? { ArrowLeft: "ArrowRight", ArrowRight: "ArrowLeft" }[event.key] : void 0;
+  if (!mirror) return matchesKeySpec(event, spec);
+  return matchesKeySpec(new KeyboardEvent("keydown", { key: mirror, shiftKey: event.shiftKey }), spec);
+}
+var OPTION2, optionOf, engineKeysOf, KEY_DEFAULTS;
+var init_keys11 = __esm({
+  "js/focus-steps/keys.js"() {
+    "use strict";
+    init_key_spec();
+    init_constants29();
+    OPTION2 = {
+      [FOCUS_STEPS_NEXT_KEY_ATTRIBUTE]: "nextKey",
+      [FOCUS_STEPS_PREVIOUS_KEY_ATTRIBUTE]: "previousKey",
+      [FOCUS_STEPS_SAME_YESTERDAY_KEY_ATTRIBUTE]: "sameYesterdayKey",
+      [FOCUS_STEPS_SAME_USUAL_KEY_ATTRIBUTE]: "sameUsualKey",
+      [FOCUS_STEPS_SKIP_KEY_ATTRIBUTE]: "skipKey",
+      [FOCUS_STEPS_TRACK_NEXT_KEY_ATTRIBUTE]: "trackNextKey",
+      [FOCUS_STEPS_TRACK_PREVIOUS_KEY_ATTRIBUTE]: "trackPreviousKey"
+    };
+    optionOf = (options, attribute) => (
+      /** @type {string | false | undefined} */
+      options[
+        /** @type {Record<string, string>} */
+        OPTION2[attribute]
+      ]
+    );
+    engineKeysOf = (root, options, attribute, fallback2) => resolveEngineKeys(root, attribute, optionOf(options, attribute), fallback2);
+    KEY_DEFAULTS = {
+      sameYesterday: [FOCUS_STEPS_SAME_YESTERDAY_KEY_ATTRIBUTE, FOCUS_STEPS_SAME_YESTERDAY_KEY],
+      sameUsual: [FOCUS_STEPS_SAME_USUAL_KEY_ATTRIBUTE, FOCUS_STEPS_SAME_USUAL_KEY],
+      skip: [FOCUS_STEPS_SKIP_KEY_ATTRIBUTE, FOCUS_STEPS_SKIP_KEY],
+      trackNext: [FOCUS_STEPS_TRACK_NEXT_KEY_ATTRIBUTE, FOCUS_STEPS_TRACK_NEXT_KEY],
+      trackPrevious: [FOCUS_STEPS_TRACK_PREVIOUS_KEY_ATTRIBUTE, FOCUS_STEPS_TRACK_PREVIOUS_KEY]
+    };
+  }
+});
+
 // js/focus-steps/input.js
 var SWIPE_SLOPE, FocusStepsInput;
 var init_input = __esm({
@@ -47335,6 +47397,7 @@ var init_input = __esm({
     init_tracks();
     init_track_steps();
     init_api14();
+    init_keys11();
     SWIPE_SLOPE = 1.5;
     FocusStepsInput = class extends Controller {
       /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
@@ -47368,7 +47431,7 @@ var init_input = __esm({
         if (event.altKey || event.ctrlKey || event.metaKey || typing(event.target)) return;
         const onButton = event.target instanceof Element && event.target.closest('button, a, [role="button"]');
         if (onButton instanceof HTMLElement && (this.answerKey(event, onButton) || this.laneKey(event, onButton))) return;
-        const act = this.flowAct(event.key, Boolean(onButton));
+        const act = this.flowAct(event, Boolean(onButton));
         if (!act) return;
         event.preventDefault();
         act();
@@ -47414,16 +47477,20 @@ var init_input = __esm({
       }
       /**
        * What a key does to the flow: next, back, first or last step, or nothing.
-       * @param {string} key @param {boolean} onButton whether the focus is on a control, where Space is the control's
+       * The next and back keys are options (`data-kp-focus-steps-next-key`, `-previous-key`).
+       * @param {KeyboardEvent} event @param {boolean} onButton whether the focus is on a control, where Space is the control's
        * @returns {(() => void) | null}
        */
-      flowAct(key, onButton) {
+      flowAct(event, onButton) {
         const root = this.host;
         const state12 = this.state;
+        const key = event.key;
         const rtl = getComputedStyle(root).direction === "rtl";
-        if (key === "PageDown" || key === (rtl ? "ArrowLeft" : "ArrowRight")) return () => this.next();
-        if (key === "PageUp" || key === (rtl ? "ArrowRight" : "ArrowLeft")) return () => this.prev();
-        if (key === " " && !onButton) return () => this.next();
+        const keys = flowKeys(root, this.options);
+        if (!(key === " " && onButton)) {
+          if (pressesFlow(event, keys.next, rtl)) return () => this.next();
+          if (pressesFlow(event, keys.previous, rtl)) return () => this.prev();
+        }
         if (key === "Home") return () => goToStep(root, tracksOn(root) ? activeTrack(state12)?.order[0] ?? 0 : 0);
         if (key === "End") return () => goToStep(root, tracksOn(root) ? activeTrack(state12)?.order.at(-1) ?? 0 : lastIndex(root));
         return null;
@@ -47492,6 +47559,7 @@ var init_controller43 = __esm({
     init_memory();
     init_lanes();
     init_input();
+    init_keys11();
     LANE_TICK_MS = 1e3;
     TIMER_EVENTS = ["kp-timer-start", "kp-timer-change", "kp-timer-done", "kp-timer-stop"];
     LIVE_OPTIONS = [
@@ -47555,7 +47623,7 @@ var init_controller43 = __esm({
         letScreenGo(root);
         paintWake(root, "off");
       }
-      /** s, u and n take the same as yesterday, the usual answer and Not today; T and Shift T walk the tracks. */
+      /** s, u and n take the same as yesterday, the usual answer and Not today; T and Shift T walk the tracks; each key is an option [keys3-1104]. */
       registerKeys() {
         const root = this.host;
         const tap = (selector) => () => {
@@ -47566,22 +47634,25 @@ var init_controller43 = __esm({
           if (button6 && button6.getAttribute("aria-disabled") !== "true") pressAnswer(root, button6);
         };
         const inView = () => answering(root) && root.contains(document.activeElement) && this.state.steps[this.state.index]?.answer !== void 0;
-        const answerKey = (keys, what, selector) => ({ keys, what, group: "Question", when: () => inView() && root.querySelector(selector) !== null, run: tap(selector) });
+        const keyOf10 = ([attribute, fallback2]) => engineKeysOf(root, this.options, attribute, fallback2);
+        const entry = (spec, what, group, when, run) => {
+          const keys = keyOf10(spec);
+          return keys === null ? [] : [{ keys, what, group, when, run }];
+        };
+        const answerKey = (spec, what, selector) => entry(spec, what, "Question", () => inView() && root.querySelector(selector) !== null, tap(selector));
         const strings = getStrings();
-        this.own(
-          registerShortcuts(root, [
-            answerKey("s", strings.focusSameYesterday("\u2026"), '[data-kp-same="yesterday"]'),
-            answerKey("u", strings.focusSameUsual("\u2026"), '[data-kp-same="usual"]'),
-            answerKey("n", strings.focusSkip, ".kp-focus-steps__skip")
-          ])
-        );
+        const answers2 = [
+          ...answerKey(KEY_DEFAULTS.sameYesterday, strings.focusSameYesterday("\u2026"), '[data-kp-same="yesterday"]'),
+          ...answerKey(KEY_DEFAULTS.sameUsual, strings.focusSameUsual("\u2026"), '[data-kp-same="usual"]'),
+          ...answerKey(KEY_DEFAULTS.skip, strings.focusSkip, ".kp-focus-steps__skip")
+        ];
         const tracking2 = () => tracksOn(root) && (root.contains(document.activeElement) || document.activeElement === document.body);
-        this.own(
-          registerShortcuts(root, [
-            { keys: "t", what: strings.focusTrackKeyNext, group: "Tracks", when: tracking2, run: () => stepTrack(root, 1) },
-            { keys: "Shift T", what: strings.focusTrackKeyPrevious, group: "Tracks", when: tracking2, run: () => stepTrack(root, -1) }
-          ])
-        );
+        const tracks = [
+          ...entry(KEY_DEFAULTS.trackNext, strings.focusTrackKeyNext, "Tracks", tracking2, () => stepTrack(root, 1)),
+          ...entry(KEY_DEFAULTS.trackPrevious, strings.focusTrackKeyPrevious, "Tracks", tracking2, () => stepTrack(root, -1))
+        ];
+        this.own(registerShortcuts(root, answers2));
+        this.own(registerShortcuts(root, tracks));
       }
       /** An option changed at run time: draw what it touches. @param {string[]} names */
       onOptions(names) {
@@ -51979,7 +52050,7 @@ function isTyping(target, typingSelector) {
   return target.isContentEditable || target.matches(typingSelector);
 }
 var MATCHERS2, isHotkey;
-var init_keys11 = __esm({
+var init_keys12 = __esm({
   "js/palette/keys.js"() {
     "use strict";
     init_listbox();
@@ -52569,7 +52640,7 @@ var init_palette_control = __esm({
     init_api16();
     init_constants33();
     init_intent_filter();
-    init_keys11();
+    init_keys12();
     init_key_spec();
     init_outside();
     init_plain_filter();
@@ -52785,7 +52856,7 @@ var init_sheet2 = __esm({
     init_controller();
     init_api16();
     init_constants33();
-    init_keys11();
+    init_keys12();
     init_outside();
     SheetControl = class extends Controller {
       /** @param {HTMLElement} host @param {{ sheetKey?: string | null, typingSelector?: string }} [options] */
@@ -52891,7 +52962,7 @@ var init_palette = __esm({
   "js/palette.js"() {
     "use strict";
     init_constants33();
-    init_keys11();
+    init_keys12();
     init_outside();
     init_api16();
     init_attach11();
@@ -54453,7 +54524,7 @@ function onPanelClick(ctl, event) {
   ctl.choose(/* @__PURE__ */ new Date(`${day2.dataset.kpDay}T00:00:00`));
 }
 var jumpCellOf, dayCellOf, isChoose;
-var init_keys12 = __esm({
+var init_keys13 = __esm({
   "js/datepicker/keys.js"() {
     "use strict";
     init_constants34();
@@ -54701,7 +54772,7 @@ var init_controller49 = __esm({
     init_constants34();
     init_dates3();
     init_grid2();
-    init_keys12();
+    init_keys13();
     init_opening();
     init_settings();
     init_views();
@@ -62792,7 +62863,7 @@ function keyTarget(m, root, card, key, kind, pressed2) {
   return void 0;
 }
 var cardsOf;
-var init_keys13 = __esm({
+var init_keys14 = __esm({
   "js/uses-map/keys.js"() {
     "use strict";
     cardsOf = (root, kind) => [...root.querySelectorAll(`.kp-uses__node[data-side="${kind}"] .kp-uses__card`)].filter((n) => n instanceof HTMLElement);
@@ -62959,7 +63030,7 @@ var init_wire3 = __esm({
     "use strict";
     init_controller();
     init_constants36();
-    init_keys13();
+    init_keys14();
     init_lines();
     init_memory2();
     UsesWire = class extends Controller {
@@ -71381,7 +71452,7 @@ function compareKey(key, at, big) {
   if (key === "End") return ALL_BEFORE;
   return null;
 }
-var init_keys14 = __esm({
+var init_keys15 = __esm({
   "js/compare/keys.js"() {
     "use strict";
     init_values34();
@@ -71394,7 +71465,7 @@ var init_controller62 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
-    init_keys14();
+    init_keys15();
     init_values34();
     Compare = class extends CompareLoad {
       /**
@@ -71522,7 +71593,7 @@ var init_compare = __esm({
     init_controller62();
     init_values34();
     init_values34();
-    init_keys14();
+    init_keys15();
   }
 });
 
@@ -78446,7 +78517,7 @@ function onKey4(m, event) {
   window.setTimeout(() => focusStar(m), 0);
 }
 var starNumber;
-var init_keys15 = __esm({
+var init_keys16 = __esm({
   "js/rating/keys.js"() {
     "use strict";
     init_math4();
@@ -78466,7 +78537,7 @@ var init_controller72 = __esm({
     init_constants42();
     init_build14();
     init_commit();
-    init_keys15();
+    init_keys16();
     init_math4();
     init_paint10();
     init_read8();
@@ -85827,7 +85898,7 @@ function previewKeys(strings, grouped, runOf) {
     ] : []
   ];
 }
-var init_keys16 = __esm({
+var init_keys17 = __esm({
   "js/docpreview/keys.js"() {
     "use strict";
   }
@@ -86130,7 +86201,7 @@ var init_open3 = __esm({
     init_viewer();
     init_values47();
     init_kinds();
-    init_keys16();
+    init_keys17();
     init_run5();
   }
 });
@@ -93954,7 +94025,7 @@ function registerAvailabilityKeys(el16) {
   );
 }
 var focused;
-var init_keys17 = __esm({
+var init_keys18 = __esm({
   "js/availability/keys.js"() {
     "use strict";
     init_strings();
@@ -93983,7 +94054,7 @@ var init_controller89 = __esm({
     init_menu2();
     init_paint12();
     init_request3();
-    init_keys17();
+    init_keys18();
     CELL3 = ".kp-availability__grid .kp-heat__cell[data-col-key]";
     LIVE_OPTIONS7 = [
       "data-kp-heat-edit",
@@ -100692,6 +100763,7 @@ var init_uses_unsaved_compare2 = __esm({
       shortcutsPending: "Wacht op de volgende toets",
       shortcutsUnknown: (keys) => `Geen sneltoets op ${keys}`,
       shortcutsAltGr: (keys, suggestion2) => `De toets "${keys}" vraagt AltGr op een AZERTY-toetsenbord, en dat is lastig met \xE9\xE9n hand. Overweeg ${suggestion2}.`,
+      shortcutsInField: "In een tekstveld",
       shortcutsUnavailable: "Nu niet beschikbaar",
       ledeMore: "Meer",
       ledeLess: "Minder",

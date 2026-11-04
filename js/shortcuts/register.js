@@ -68,6 +68,7 @@ export function registerOn(board, scope, list, options = {}) {
  * @returns {Entry | undefined}
  */
 function entryFor(board, scope, shortcut, guard, options, added, fault) {
+    if (!shortcut.run && shortcut.where === undefined) return void fault(`The keys "${shortcut.keys}" (${shortcut.what}) have no run function and are not marked where: 'field'.`);
     const steps = parseShortcutKeys(shortcut.keys);
     const id = normal(steps);
     if (RESERVED.includes(id)) return void fault(`The keys "${shortcut.keys}" belong to the palette and the shortcut sheet.`);

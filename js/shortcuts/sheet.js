@@ -48,7 +48,8 @@ function collectGroups(board, sheet, fixed, sorted) {
     fixedGroup.rows.push({ keys: '?', what: s.shortcutsSheet, off: false, reason: '' });
     for (const entry of sorted) {
         if (!scopeActive(entry)) continue;
-        const group = groupFor(entry.shortcut.group ?? 'Shortcuts', typeof entry.scope !== 'string');
+        const own = entry.shortcut.where === 'field' ? s.shortcutsInField : 'Shortcuts';
+        const group = groupFor(entry.shortcut.group ?? own, typeof entry.scope !== 'string');
         group.rows.push({ keys: entry.shortcut.keys, what: entry.shortcut.what, off: !available(entry), reason: entry.shortcut.reason ?? s.shortcutsUnavailable });
     }
     return [...groups.values()].filter((g) => g.rows.length > 0);

@@ -57,6 +57,23 @@ export function findings(text) {
     return out.concat(tableFindings(text));
 }
 
+/**
+ * A shortcut registered with a key typed into the call (`registerShortcuts(root, [{ keys: 's', … }])`) is a literal in a handler as much as
+ * `event.key === 's'`: the key must come from an option (resolveEngineKeys). The standard widget keys stay exempt.
+ * Reported as a warning until the components that still register a literal key have an option (the list below is printed, not kept). @param {string} text
+ */
+export function registeredFindings(text) {
+    /** @type {{ line: number, key: string }[]} */
+    const out = [];
+    text.split('\n').forEach((line, index) => {
+        if (/^\s*(\*|\/\/|\/\*)/.test(line)) return;
+        for (const [, , keys] of line.matchAll(/\bkeys:\s*(['"])(.*?)\1/g)) {
+            if (keys.split(/\s+/).some((k) => k !== '' && !STANDARD_KEYS.has(k === 'Space' ? ' ' : k) && !/^(mod|alt|shift)$/i.test(k))) out.push({ line: index + 1, key: keys });
+        }
+    });
+    return out;
+}
+
 /** A table read by the event's key (`TABLE[event.key]`): its non-standard keys are shortcuts too. @param {string} text */
 function tableFindings(text) {
     /** @type {{ line: number, key: string }[]} */
@@ -77,6 +94,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             ({ line, key }) => `[key-literals] ${file}:${line} compares the key ${JSON.stringify(key)} in a handler — make it an option: a default in the component's constants file, read with resolveKeySpec (js/key-spec.js).`,
         ),
     );
+    // Registered keys (`keys: 's'`): the hole that let the focus-steps keys through [keys3-1104]; a warning while others remain.
+    const registered = files.flatMap((file) => registeredFindings(readFileSync(join(ROOT, file), 'utf8')).map(({ line, key }) => `${file}:${line} registers the key ${JSON.stringify(key)}`));
+    for (const w of registered) console.warn(`[key-literals] WARN ${w}: make it an option (resolveEngineKeys).`);
     const table = stale();
     if (table) failures.push(`[key-literals] ${table}`);
     if (failures.length > 0) {
@@ -84,5 +104,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error(`\n${failures.length} key literal(s) over ${files.length} files.`);
         process.exit(1);
     }
-    console.log(`key literals: ${files.length} files under js/ compare only the standard widget keys; every other key is an option.`);
+    console.log(`key literals: ${files.length} files under js/ compare only the standard widget keys; every other key is an option (${registered.length} registered literal(s) warned about above).`);
 }

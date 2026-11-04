@@ -152,6 +152,7 @@ export const CONTROLLER_PART_FILES_2 = [
     'js/focus-steps/dom.js',
     'js/focus-steps/flow.js',
     'js/focus-steps/input.js',
+    'js/focus-steps/keys.js',
     'js/focus-steps/lanes.js',
     'js/focus-steps/memory.js',
     'js/focus-steps/paint-extras.js',

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Focus-steps keys and the shortcut sheet [keys3-1104]</title>
+        <link rel="stylesheet" href="/css/fonts.css" />
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+    </head>
+    <body>
+        <main>
+            <div class="kp-focus-steps" id="cook" data-kp-focus-steps data-kp-focus-steps-wake="false" aria-label="Cook"></div>
+            <textarea id="field" aria-label="Step text">one step</textarea>
+            <dialog class="kp-shortcuts" id="sheet" data-kp-shortcuts aria-label="Shortcuts"></dialog>
+        </main>
+        <script type="module">
+            import { attachFocusSteps, setFocusSteps } from '/js/focus-steps.js';
+            import { registerShortcuts, renderShortcutSheet } from '/js/shortcuts.js';
+            const params = new URLSearchParams(location.search);
+            const cook = document.querySelector('#cook');
+            // The test names the key attributes first (`?data-kp-focus-steps-next-key=j`), then the view attaches.
+            for (const [name, value] of params) if (name.startsWith('data-kp-')) cook.setAttribute(name, value);
+            window.log = [];
+            cook.addEventListener('kp-focus-steps-change', (e) => window.log.push(['step', e.detail.index]));
+            cook.addEventListener('kp-focus-steps-answer', (e) => window.log.push(['answer', e.detail.source]));
+            attachFocusSteps(document);
+            const question = { id: 'mood', kind: 'choice', previous: 'ok', usual: 'good', choices: [{ value: 'low', label: 'Low' }, { value: 'ok', label: 'Matig' }, { value: 'good', label: 'Good' }] };
+            setFocusSteps(cook, [{ text: 'Chop' }, { text: 'Fry' }, { text: 'Serve', answer: question }, { text: 'Eat' }]);
+            if (params.has('field')) {
+                registerShortcuts(document.querySelector('#field'), [{ keys: 'Alt ArrowUp', what: 'Move the step up', where: 'field' }]);
+                registerShortcuts('page', [{ keys: 'g s', what: 'Go to Stacks', run: () => window.log.push(['go']) }]);
+            }
+            window.renderSheet = () => renderShortcutSheet(document.querySelector('#sheet'));
+            window.ready = true;
+        </script>
+    </body>
+</html>

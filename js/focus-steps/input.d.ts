@@ -31,10 +31,11 @@ export declare class FocusStepsInput extends Controller {
     laneKey(event: KeyboardEvent, onButton: HTMLElement): boolean;
     /**
      * What a key does to the flow: next, back, first or last step, or nothing.
-     * @param {string} key @param {boolean} onButton whether the focus is on a control, where Space is the control's
+     * The next and back keys are options (`data-kp-focus-steps-next-key`, `-previous-key`).
+     * @param {KeyboardEvent} event @param {boolean} onButton whether the focus is on a control, where Space is the control's
      * @returns {(() => void) | null}
      */
-    flowAct(key: string, onButton: boolean): (() => void) | null;
+    flowAct(event: KeyboardEvent, onButton: boolean): (() => void) | null;
     /** A touch on the body may start a swipe. @param {PointerEvent} event */
     onDown(event: PointerEvent): void;
     /** A swipe far enough across goes on or back, mirrored right to left. @param {PointerEvent} event */

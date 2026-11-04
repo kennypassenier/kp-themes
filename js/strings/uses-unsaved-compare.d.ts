@@ -292,6 +292,10 @@ export type UsesUnsavedCompareStrings = {
      */
     shortcutsAltGr: (keys: string, suggestion: string) => string;
     /**
+     * The sheet's group for a key that lives on one text field (`where: 'field'`) [keys3-1104]
+     */
+    shortcutsInField: string;
+    /**
      * The sheet's note on a shortcut that is not available right now [kpadopt5]
      */
     shortcutsUnavailable: string;
@@ -383,6 +387,7 @@ export type UsesUnsavedCompareStrings = {
  * @property {string} shortcutsPending  What a screen reader hears while a chord waits for its second key [kpadopt5]
  * @property {(keys: string) => string} shortcutsUnknown  The short line after a chord that does nothing, "No shortcut on g x" [kpadopt5]
  * @property {(keys: string, suggestion: string) => string} shortcutsAltGr  The warning for a key that needs AltGr on an AZERTY keyboard [kpadopt5]
+ * @property {string} shortcutsInField  The sheet's group for a key that lives on one text field (`where: 'field'`) [keys3-1104]
  * @property {string} shortcutsUnavailable  The sheet's note on a shortcut that is not available right now [kpadopt5]
  * @property {string} ledeMore  The button that opens a collapsed lede (js/lede.js) [kpadopt5]
  * @property {string} ledeLess  The button that folds it again [kpadopt5]
