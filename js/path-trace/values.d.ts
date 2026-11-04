@@ -10,3 +10,7 @@ export declare const TRACE_RETRY_EVENT = "kp-trace-retry";
 export declare const GHOST_HOPS = 3;
 /** The options the trace watches, which draw it again when they change. */
 export declare const WATCHED_ATTRIBUTES: string[];
+/** On the trace (or the `swapKey` option): the key that asks for a swap of source and target (a key spec, js/key-spec.js; `none` or `false` for no key). */
+export declare const TRACE_SWAP_KEY_ATTRIBUTE = "data-kp-trace-swap-key";
+/** The key that asks for a swap when the trace names none. */
+export declare const TRACE_SWAP_KEY = "s";

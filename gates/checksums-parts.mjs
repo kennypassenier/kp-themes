@@ -54,6 +54,7 @@ export const PART_FILES = [
     'js/gallery/gallery.js',
     'js/gallery/lightbox-info.js',
     'js/gallery/lightbox-input.js',
+    'js/gallery/lightbox-keys.js',
     'js/gallery/lightbox.js',
     'js/gallery/render.js',
     'js/notices/controller.js',

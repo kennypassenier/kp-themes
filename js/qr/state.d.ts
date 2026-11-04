@@ -38,3 +38,7 @@ export declare function stateOf(root: HTMLElement): QrState;
 export declare const valueOf: (root: HTMLElement) => string;
 /** @param {HTMLElement} root @param {string} message */
 export declare function say(root: HTMLElement, message: string): void;
+/** On the code (or the `copyKey` option): the key that copies the link while the focus is in the code (a key spec, js/key-spec.js; `none` or `false` for no key). */
+export declare const QR_COPY_KEY_ATTRIBUTE = "data-kp-qr-copy-key";
+/** The key that copies the link when the code names none. */
+export declare const QR_COPY_KEY = "Shift C";

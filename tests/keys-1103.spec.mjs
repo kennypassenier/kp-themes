@@ -185,4 +185,70 @@ test.describe('shortcuts are options [keys-1103]', () => {
         await page.keyboard.press('Alt+ArrowUp');
         expect(await page.evaluate(() => window.log.length)).toBe(0);
     });
+
+    const FIXED = '/tests/fixtures/keys-fixed.html';
+
+    /** Open the keys-fixed fixture; `attrs` are `target=name:value` query pairs. @param {import('@playwright/test').Page} page @param {string} query */
+    async function openFixed(page, query = '') {
+        await page.goto(`${FIXED}${query}`);
+        await page.waitForFunction(() => window.ready === true);
+    }
+
+    /** Whether the quote card was hidden by pressing `key` with the focus in it. @param {import('@playwright/test').Page} page @param {string} key */
+    async function quoteHiddenBy(page, key) {
+        await page.locator('#quote').evaluate((el) => {
+            el.tabIndex = 0;
+            el.focus();
+        });
+        await page.keyboard.press(key);
+        return page.locator('#quote').evaluate((el) => el.hidden);
+    }
+
+    test('the quote hide key is h by default, takes another key and switches off with none [keys4-1104]', { tag: ['@component:feedback'] }, async ({ page }) => {
+        await openFixed(page);
+        expect(await quoteHiddenBy(page, 'h')).toBe(true);
+        await openFixed(page, '?quote=data-kp-quote-hide-key:x');
+        expect(await quoteHiddenBy(page, 'h')).toBe(false);
+        expect(await quoteHiddenBy(page, 'x')).toBe(true);
+        await openFixed(page, '?quote=data-kp-quote-hide-key:none');
+        expect(await quoteHiddenBy(page, 'h')).toBe(false);
+    });
+
+    /** How many times the trace asked for a swap after `key` pressed with the focus in the trace. @param {import('@playwright/test').Page} page @param {string} key */
+    async function swapsAfter(page, key) {
+        await page.locator('#trace button').first().focus();
+        await page.keyboard.press(key);
+        return page.evaluate(() => window.log.length);
+    }
+
+    test('the trace swap key is s by default, takes another key and switches off with none [keys4-1104]', { tag: ['@component:data'] }, async ({ page }) => {
+        await openFixed(page);
+        expect(await swapsAfter(page, 's')).toBe(1);
+        await openFixed(page, '?trace=data-kp-trace-swap-key:Alt%2BW');
+        expect(await swapsAfter(page, 's')).toBe(0);
+        expect(await swapsAfter(page, 'Alt+w')).toBe(1);
+        await openFixed(page, '?trace=data-kp-trace-swap-key:none');
+        expect(await swapsAfter(page, 's')).toBe(0);
+    });
+
+    /** Whether the sheet is open after `key` pressed away from any field, and the key caps of its first group. @param {import('@playwright/test').Page} page @param {string} key */
+    async function sheetAfter(page, key) {
+        await page.locator('#elsewhere').focus();
+        await page.keyboard.press(key);
+        const open = await page.locator('#sheet').evaluate((d) => d.open);
+        if (open) await page.keyboard.press('Escape');
+        await page.evaluate(() => window.renderSheet());
+        const caps = await page.locator('#sheet section', { hasText: 'Anywhere' }).locator('.kp-palette__keys').allTextContents();
+        return { open, caps };
+    }
+
+    test('the sheet opens on ? by default, on the key it names, on none never, and its first group lists that key [keys4-1104]', { tag: ['@component:page'] }, async ({ page }) => {
+        await openFixed(page);
+        expect(await sheetAfter(page, '?')).toEqual({ open: true, caps: ['?'] });
+        await openFixed(page, '?sheet=data-kp-hotkey:F1');
+        expect(await sheetAfter(page, '?')).toEqual({ open: false, caps: ['F1'] });
+        expect((await sheetAfter(page, 'F1')).open).toBe(true);
+        await openFixed(page, '?sheet=data-kp-hotkey:none');
+        expect(await sheetAfter(page, '?')).toEqual({ open: false, caps: [] });
+    });
 });

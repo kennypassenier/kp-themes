@@ -2419,9 +2419,11 @@ camel case (`nextKey`, `previousKey`, `sameYesterdayKey`, `sameUsualKey`, `skipK
 | Attribute | Default | What it does |
 | --- | --- | --- |
 | `data-kp-addrow-submit-key` | `Mod+Enter` | On the row: the key that adds the line from any field |
+| `data-kp-anchors-copy-key` | `y l` | On an anchored container (or the `copyKey` option; the first container of a page names the page's one key): the keys that copy the focused anchor's link |
 | `data-kp-claim-gaps-key` | `Shift+C` | On the list: the key that filters to the rows nobody has taken |
 | `data-kp-claim-take-key` | `c` | On the list: the key that takes or lets go of the focused row |
 | `data-kp-combobox-tag-key` | `,` | On a tag input: the key that adds the typed text as a tag, besides Enter |
+| `data-kp-console-clear-key` | `Mod L` | On the console (or the `clearKey` option): the key that clears the console |
 | `data-kp-console-focus-key` | `:` | On the console: the key that jumps to the prompt from anywhere |
 | `data-kp-entity-star-key` | `s` | On a card or its grid: the key that stars the card while the focus is inside it |
 | `data-kp-focus-steps-next-key` | `ArrowRight or PageDown or Space` | On the root: the keys that go on to the next step |
@@ -2432,7 +2434,12 @@ camel case (`nextKey`, `previousKey`, `sameYesterdayKey`, `sameUsualKey`, `skipK
 | `data-kp-focus-steps-track-next-key` | `t` | On the root, with tracks: the key that goes to the next track |
 | `data-kp-focus-steps-track-previous-key` | `Shift T` | On the root, with tracks: the key that goes to the previous track |
 | `data-kp-follow-key` | `End` | On the scroller: the key that jumps back and follows again |
+| `data-kp-gallery-full-key` | `f` | On the gallery (or the `fullKey` option): the key that toggles full screen |
+| `data-kp-gallery-zoom-in-key` | `+` | On the gallery (or the `zoomInKey` option): the key that zooms in |
+| `data-kp-gallery-zoom-key` | `z` | On the gallery (or the `zoomKey` option): the key that toggles the zoom of the open picture |
+| `data-kp-gallery-zoom-out-key` | `-` | On the gallery (or the `zoomOutKey` option): the key that zooms out |
 | `data-kp-hotkey` | `Mod+K` | On the palette: the key that opens it, `Mod` for Ctrl or Command |
+| `data-kp-hotkey` | `?` | On the shortcut sheet: the key that opens it |
 | `data-kp-json-format-key` | `Mod+Shift+F` | On the textarea: the key that formats the JSON |
 | `data-kp-log-focus-key` | `/` | On the log viewer: the key that jumps to the search from anywhere |
 | `data-kp-md-bold-key` | `Mod+B` | On the editor: the key that makes the selection bold |
@@ -2441,6 +2448,12 @@ camel case (`nextKey`, `previousKey`, `sameYesterdayKey`, `sameUsualKey`, `skipK
 | `data-kp-notices-go-key` | `g` | On the centre: the first key of the Inbox chord |
 | `data-kp-notices-inbox-key` | `i` | On the centre: the second key of the Inbox chord, pressed within a moment of the first |
 | `data-kp-notices-read-key` | `m` | On the centre: the key that marks the focused notice read |
+| `data-kp-preview-download-key` | `d` | On the opener (or the `downloadKey` option): the key that presses Download while a preview is up |
+| `data-kp-preview-open-key` | `o` | On the opener (or the `openKey` option): the key that presses Open while a preview is up |
+| `data-kp-preview-print-key` | `p` | On the opener (or the `printKey` option): the key that prints the preview |
+| `data-kp-qr-copy-key` | `Shift C` | On the code (or the `copyKey` option): the key that copies the link while the focus is in the code |
+| `data-kp-quote-copy-key` | `Mod C` | On the card (or the `copyKey` option): the key that copies the quote when nothing is selected |
+| `data-kp-quote-hide-key` | `h` | On the card (or the `hideKey` option): the key that hides a focused card |
 | `data-kp-refresh-key` | `R` | On the control: the key that refreshes now |
 | `data-kp-row-next-key` | `j` | On the actions host: the key that moves to the next row |
 | `data-kp-row-prev-key` | `k` | On the actions host: the key that moves to the previous row (the Up arrow always works) |
@@ -2452,9 +2465,11 @@ camel case (`nextKey`, `previousKey`, `sameYesterdayKey`, `sameUsualKey`, `skipK
 | `data-kp-select-tick-key` | `x` | On the host: the key that ticks the cursor row (with Shift it ticks the range) |
 | `data-kp-sequencer-link-key` | `L` | On the sequencer: the key that starts a link from the focused bar |
 | `data-kp-sequencer-unlink-key` | `U` | On the sequencer: the key that removes the focused bar's links |
+| `data-kp-status-resume-key` | `r` | On a calm list (or the `resumeKey` option): the key that resumes the focused paused row |
 | `data-kp-submit-key` | `none` | On the box: the key that submits its form, listed in the `?` sheet |
 | `data-kp-toggle-key` | `none` | On a toggle: the key that presses it, listed in the `?` sheet |
 | `data-kp-toolbar-key` | `none` | On the toolbar: the key that focuses its search from anywhere that is not a field |
+| `data-kp-trace-swap-key` | `s` | On the trace (or the `swapKey` option): the key that asks for a swap of source and target |
 | `data-kp-unsaved-save-key` | `Mod+S` | On the bar: the key that saves the changes |
 | `data-kp-usual-key` | `Alt+U` | On the picker's box: the key that jumps to the first usual choice |
 | `data-kp-zoom-in-key` | `+ or =` | On the graph: the key that zooms in |

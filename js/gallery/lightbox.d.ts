@@ -41,20 +41,6 @@ export declare class Lightbox extends Controller {
     constructor(gallery: Gallery, id: string);
     /** The address of a picture. @param {string} itemId */
     hashOf(itemId: string): string;
-    /** The keys the lightbox answers, listed in the `?` sheet. */
-    keyBindings(): ({
-        keys: string;
-        what: string;
-        group: string;
-        run: () => void;
-        when: () => boolean;
-    } | {
-        when?: undefined;
-        keys: string;
-        what: string;
-        group: string;
-        run: () => void;
-    })[];
     /** Open the viewer on the picture and wire it. @returns {import('../viewer.js').ViewerHandle} */
     open(): import('../viewer.js').ViewerHandle;
     /** The viewer closed: undo the wiring, give the address back, say so, and put the focus on the tile. */

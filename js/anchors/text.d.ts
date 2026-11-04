@@ -38,3 +38,7 @@ export declare function plainText(el: Element): string;
 export declare function nameOf(el: HTMLElement): string;
 /** Copy text, with the old way when the clipboard is not offered. @param {Document} doc @param {string} text */
 export declare function copyText(doc: Document, text: string): Promise<boolean>;
+/** On an anchored container (or the `copyKey` option; the first container of a page names the page's one key): the keys that copy the focused anchor's link (a key spec, js/key-spec.js; `none` or `false` for no key). */
+export declare const ANCHOR_COPY_KEY_ATTRIBUTE = "data-kp-anchors-copy-key";
+/** The keys that copy the focused anchor's link when no container names any. */
+export declare const ANCHOR_COPY_KEY = "y l";

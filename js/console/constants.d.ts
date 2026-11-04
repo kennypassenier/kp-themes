@@ -16,3 +16,7 @@ export declare const CONSOLE_MAX_BYTES = 262144;
 export declare const CONSOLE_FOCUS_KEY_ATTRIBUTE = "data-kp-console-focus-key";
 /** The key that jumps to the prompt when the console names none. */
 export declare const CONSOLE_FOCUS_KEY = ":";
+/** On the console (or the `clearKey` option): the key that clears the console (a key spec, js/key-spec.js; `none` or `false` for no key). */
+export declare const CONSOLE_CLEAR_KEY_ATTRIBUTE = "data-kp-console-clear-key";
+/** The key that clears the console when it names none. */
+export declare const CONSOLE_CLEAR_KEY = "Mod L";

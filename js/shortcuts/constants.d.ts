@@ -12,7 +12,5 @@ export declare const SHORTCUT_PENDING_EVENT = "kp-shortcut-pending";
 export declare const SHORTCUT_HINT_PLACES: readonly ['centre', 'bottom-centre'];
 /** Keys that need AltGr on an AZERTY keyboard. */
 export declare const ALTGR_KEYS: readonly string[];
-/** The keys the palette and the sheet own. */
-export declare const RESERVED: string[];
 /** The engine's defaults, before a page configures them. */
 export declare const DEFAULT_TYPING_SELECTOR = "input, textarea, select, [role=\"textbox\"]";

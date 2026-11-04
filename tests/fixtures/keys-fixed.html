@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Keys that were typed into a registration [keys4-1104]</title>
+        <link rel="stylesheet" href="/css/fonts.css" />
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+    </head>
+    <body>
+        <main>
+            <figure class="kp-quote" id="quote" data-kp-quote data-kp-undo-ms="60000"><blockquote><p>One thing at a time.</p></blockquote></figure>
+            <div class="kp-trace" id="trace" data-kp-trace data-kp-trace-swap></div>
+            <button type="button" id="elsewhere">Elsewhere</button>
+            <dialog class="kp-shortcuts" id="sheet" data-kp-shortcuts aria-label="Shortcuts"></dialog>
+        </main>
+        <script type="module">
+            import { attachQuotes } from '/js/quote.js';
+            import { attachTraces, setTrace } from '/js/path-trace.js';
+            import { attachPalettes } from '/js/palette.js';
+            import { renderShortcutSheet } from '/js/shortcuts.js';
+            // The test names the key attributes first (`?quote=data-kp-quote-hide-key:x`, also `trace=` and `sheet=`), then the parts attach.
+            const targets = { quote: '#quote', trace: '#trace', sheet: '#sheet' };
+            for (const [target, selector] of Object.entries(targets)) {
+                for (const pair of new URLSearchParams(location.search).getAll(target)) {
+                    const [name, value] = pair.split(':');
+                    document.querySelector(selector).setAttribute(name, value);
+                }
+            }
+            window.log = [];
+            document.querySelector('#trace').addEventListener('kp-trace-swap', () => window.log.push('swap'));
+            attachQuotes(document);
+            attachTraces(document);
+            setTrace(document.querySelector('#trace'), [{ title: 'Phone', verdict: 'allowed' }]);
+            attachPalettes(document);
+            window.renderSheet = () => renderShortcutSheet(document.querySelector('#sheet'));
+            window.ready = true;
+        </script>
+    </body>
+</html>

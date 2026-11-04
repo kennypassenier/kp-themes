@@ -19,3 +19,15 @@ export declare const DEFAULT_ACTIONS: readonly ['open', 'download'];
 export declare const GLYPH_HOSTS = ".kp-docglyph[data-kp-doc-kind], .kp-docglyph[data-kp-state]";
 /** What each file extension is drawn as. */
 export declare const EXTENSIONS: Record<string, 'pdf' | 'image' | 'text'>;
+/** On the opener (or the `openKey` option): the key that presses Open while a preview is up (a key spec, js/key-spec.js; `none` or `false` for no key). */
+export declare const PREVIEW_OPEN_KEY_ATTRIBUTE = "data-kp-preview-open-key";
+/** The key that opens the document in its own tab when nothing else is named. */
+export declare const PREVIEW_OPEN_KEY = "o";
+/** On the opener (or the `downloadKey` option): the key that presses Download while a preview is up (a key spec, js/key-spec.js; `none` or `false` for no key). */
+export declare const PREVIEW_DOWNLOAD_KEY_ATTRIBUTE = "data-kp-preview-download-key";
+/** The key that downloads the document when nothing else is named. */
+export declare const PREVIEW_DOWNLOAD_KEY = "d";
+/** On the opener (or the `printKey` option): the key that prints the preview (a key spec, js/key-spec.js; `none` or `false` for no key). */
+export declare const PREVIEW_PRINT_KEY_ATTRIBUTE = "data-kp-preview-print-key";
+/** The key that prints the preview when nothing else is named. */
+export declare const PREVIEW_PRINT_KEY = "p";

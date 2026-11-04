@@ -2,7 +2,7 @@
 //
 // Kenny, 2026-11-03: a keyboard shortcut is an option with a default in one named constant, never a literal in a
 // handler. This gate reads every key comparison (`event.key === 'r'`, `event.code === 'KeyU'`, `case 'g':` in a key
-// switch) and refuses one that names a key outside the standard widget keys (Escape, Enter, Space, the arrows, Home,
+// switch) and a `keys: '…'` literal in a registerShortcuts entry, and refuses one that names a key outside the standard widget keys (Escape, Enter, Space, the arrows, Home,
 // End, Page Up/Down, Tab, Backspace, Delete, the context-menu keys): those are the WAI-ARIA keyboard semantics and stay
 // as they are. Every other key is a default in the component's constants file (a string such as `'Mod+Enter'`) and is read
 // through `resolveKeySpec` / `matchesKeySpec` (js/key-spec.js, the one parser and the only exempt file). There is no
@@ -60,7 +60,8 @@ export function findings(text) {
 /**
  * A shortcut registered with a key typed into the call (`registerShortcuts(root, [{ keys: 's', … }])`) is a literal in a handler as much as
  * `event.key === 's'`: the key must come from an option (resolveEngineKeys). The standard widget keys stay exempt.
- * Reported as a warning until the components that still register a literal key have an option (the list below is printed, not kept). @param {string} text
+ * A failure like every other literal, with no list of exceptions: the sheet's own rows are read from the keys the palette and the sheet
+ * resolved (js/shortcuts/fixed-keys.js), so no row documents a key by typing it. @param {string} text
  */
 export function registeredFindings(text) {
     /** @type {{ line: number, key: string }[]} */
@@ -94,9 +95,14 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             ({ line, key }) => `[key-literals] ${file}:${line} compares the key ${JSON.stringify(key)} in a handler — make it an option: a default in the component's constants file, read with resolveKeySpec (js/key-spec.js).`,
         ),
     );
-    // Registered keys (`keys: 's'`): the hole that let the focus-steps keys through [keys3-1104]; a warning while others remain.
-    const registered = files.flatMap((file) => registeredFindings(readFileSync(join(ROOT, file), 'utf8')).map(({ line, key }) => `${file}:${line} registers the key ${JSON.stringify(key)}`));
-    for (const w of registered) console.warn(`[key-literals] WARN ${w}: make it an option (resolveEngineKeys).`);
+    // Registered keys (`keys: 's'`): the hole that let the focus-steps keys through [keys3-1104], a failure since [keys4-1104].
+    failures.push(
+        ...files.flatMap((file) =>
+            registeredFindings(readFileSync(join(ROOT, file), 'utf8')).map(
+                ({ line, key }) => `[key-literals] ${file}:${line} registers the key ${JSON.stringify(key)} — make it an option: a default in the component's constants file, read with resolveEngineKeys (js/key-spec.js).`,
+            ),
+        ),
+    );
     const table = stale();
     if (table) failures.push(`[key-literals] ${table}`);
     if (failures.length > 0) {
@@ -104,5 +110,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error(`\n${failures.length} key literal(s) over ${files.length} files.`);
         process.exit(1);
     }
-    console.log(`key literals: ${files.length} files under js/ compare only the standard widget keys; every other key is an option (${registered.length} registered literal(s) warned about above).`);
+    console.log(`key literals: ${files.length} files under js/ compare only the standard widget keys; every other key, compared or registered, is an option.`);
 }

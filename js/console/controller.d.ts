@@ -17,10 +17,12 @@ export declare class ConsoleControl extends Controller {
         select: HTMLSelectElement;
         complete: HTMLElement;
     };
-    /** @param {HTMLElement} host @param {{ run?: ConsoleRun, complete?: (prefix: string) => string[] | Promise<string[]> }} [options] */
+    /** @param {HTMLElement} host @param {{ run?: ConsoleRun, complete?: (prefix: string) => string[] | Promise<string[]>, clearKey?: string | false, focusKey?: string | false }} [options] */
     constructor(host: HTMLElement, options?: {
         run?: ConsoleRun;
         complete?: (prefix: string) => string[] | Promise<string[]>;
+        clearKey?: string | false;
+        focusKey?: string | false;
     });
     connect(): void;
     /** The keys, through the engine: the clear key, and the one that jumps to the prompt from anywhere. */

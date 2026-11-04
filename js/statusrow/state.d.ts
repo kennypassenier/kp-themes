@@ -72,3 +72,7 @@ export declare function known(state: unknown, calm?: boolean): StatusState;
 export declare const stateWord: (state: StatusState) => string;
 /** @param {string} className @param {string} [tag] */
 export declare const el: (className: string, tag?: string) => HTMLElement;
+/** On a calm list (or the `resumeKey` option): the key that resumes the focused paused row (a key spec, js/key-spec.js; `none` or `false` for no key). */
+export declare const STATUS_RESUME_KEY_ATTRIBUTE = "data-kp-status-resume-key";
+/** The key that resumes a paused row when the list names none. */
+export declare const STATUS_RESUME_KEY = "r";

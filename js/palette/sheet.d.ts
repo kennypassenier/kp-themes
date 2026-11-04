@@ -4,7 +4,8 @@ export type PaletteHandle = import('./types.js').PaletteHandle;
 /** One sheet: its key and the handle a page gets for it. */
 export declare class SheetControl extends Controller {
     sheet: HTMLDialogElement;
-    key: string | null;
+    /** The key that opens the sheet, as a key spec: the attribute, else the page's `sheetKey`, else the default; empty when it is off. */
+    key: import("../key-spec.js").KeySpec;
     typingSelector: string;
     /** @type {PaletteHandle} */
     handle: PaletteHandle;
@@ -15,6 +16,6 @@ export declare class SheetControl extends Controller {
     });
     connect(): void;
     open(): void;
-    /** `?` only when nobody is typing one into a field, and never with a modifier — Ctrl+? belongs to the browser. @param {KeyboardEvent} event */
+    /** The sheet's key (`?` by default) only when nobody is typing into a field, and never with a modifier the key does not name — Ctrl+? belongs to the browser. @param {KeyboardEvent} event */
     onKey(event: KeyboardEvent): void;
 }

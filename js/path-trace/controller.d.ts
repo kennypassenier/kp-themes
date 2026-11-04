@@ -8,6 +8,6 @@ export declare class Trace extends TraceDraw {
      */
     constructor(host: HTMLElement, options?: Record<string, unknown>);
     connect(): void;
-    /** The S key asks for a swap, for a form that swaps source and target. */
+    /** The swap key (S by default; an option) asks for a swap, for a form that swaps source and target. */
     registerSwapKey(): () => void;
 }

@@ -22,14 +22,8 @@ export declare class QuoteController extends Controller {
      */
     constructor(host: HTMLElement, options?: import('./constants.js').QuoteOptions);
     connect(): void;
-    /** The keys of a card: `h` hides, Mod C copies when copy is on and nothing is selected; both are on the `?` sheet. */
-    shortcuts(): {
-        keys: string;
-        what: string;
-        group: string;
-        when: () => boolean;
-        run: () => void;
-    }[];
+    /** The keys of a card: Hide and Copy (Copy only when copy is on and nothing is selected); both are on the `?` sheet and both are options. */
+    shortcuts(): import("../shortcuts.js").Shortcut[];
     /** Put back what the card held, and take the line count away. */
     undoDom(): void;
     /** Fold or unfold, hide or copy. @param {MouseEvent} event */

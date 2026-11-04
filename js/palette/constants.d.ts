@@ -18,3 +18,7 @@ export declare const RESULTS_TEXT: (n: number) => string;
 export declare const PALETTE_KEY_ATTRIBUTE = "data-kp-hotkey";
 /** The key that opens a palette when it names none. */
 export declare const PALETTE_KEY = "Mod+K";
+/** On the shortcut sheet: the key that opens it (a key spec, js/key-spec.js; `none` for no key). */
+export declare const SHEET_KEY_ATTRIBUTE = "data-kp-hotkey";
+/** The key that opens a shortcut sheet when it names none. */
+export declare const SHEET_KEY = "?";

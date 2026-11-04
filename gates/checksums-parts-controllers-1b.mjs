@@ -118,6 +118,7 @@ export const CONTROLLER_PART_FILES_1B = [
     'js/shortcuts/board.js',
     'js/shortcuts/constants.js',
     'js/shortcuts/entries.js',
+    'js/shortcuts/fixed-keys.js',
     'js/shortcuts/hint.js',
     'js/shortcuts/keys.js',
     'js/shortcuts/live.js',
