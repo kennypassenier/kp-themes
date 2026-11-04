@@ -1,4 +1,4 @@
-import{a as l,b as p,c as s}from"./chunk-SNBA6GAL.js";import{a as I}from"./chunk-4C666HHU.js";var k={};I(k,{EFFECTS_ATTRIBUTE:()=>m,EFFECTS_REPEAT_ATTRIBUTE:()=>d,NO_FLASH_SNIPPET:()=>F,REGISTER_PATTERN_DEFAULT:()=>g,THEME_ATTRIBUTE:()=>u,applyStoredTheme:()=>b,noFlashSnippet:()=>T});var u="data-theme",m="data-kp-effects",d="data-kp-effects-repeat",R="kp-effects:";function f(t){return`
+import{a as l,b as p,c as s}from"./chunk-TSZDXQCM.js";import{a as I}from"./chunk-4C666HHU.js";var k={};I(k,{EFFECTS_ATTRIBUTE:()=>m,EFFECTS_REPEAT_ATTRIBUTE:()=>d,NO_FLASH_SNIPPET:()=>F,REGISTER_PATTERN_DEFAULT:()=>g,THEME_ATTRIBUTE:()=>u,applyStoredTheme:()=>b,noFlashSnippet:()=>T});var u="data-theme",m="data-kp-effects",d="data-kp-effects-repeat",R="kp-effects:";function f(t){return`
     try {
         var p = ${e(R)} + location.pathname + ':headline:';
         for (var i = 0; i < sessionStorage.length; i++) {

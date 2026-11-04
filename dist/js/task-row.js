@@ -1,2 +1,2 @@
-/* @kp-soft/themes v12.6.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
+/* @kp-soft/themes v12.7.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
 import{a,b,c,d}from"./chunk-6V453FHT.js";import"./chunk-ZSURVZM5.js";import"./chunk-2IBNYEPM.js";import"./chunk-ZJH662N6.js";import"./chunk-3MVXI2ZT.js";import"./chunk-JLSCZPHN.js";import"./chunk-M2GA4MAE.js";import"./chunk-RVVND54F.js";import"./chunk-RMUSFKWU.js";import"./chunk-5FWNQS4J.js";import"./chunk-VRK4EA2H.js";import"./chunk-667U7AA2.js";import"./chunk-4C666HHU.js";export{c as TASK_OPEN_EVENT,b as TASK_TOGGLE_EVENT,d as buildTaskRow,a as factNode};
