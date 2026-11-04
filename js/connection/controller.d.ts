@@ -49,6 +49,8 @@ export declare class ConnectionBanner extends Controller {
     hide(): void;
     /** The app reports what it sees. @param {ConnectionState} state @param {ConnectionDetail} [detail] */
     set(state: ConnectionState, detail?: ConnectionDetail): void;
+    /** The connection is back and the waiting changes are being sent: shown now, no automatic try runs. */
+    setSyncing(): void;
     /** Offline, refused or reconnecting: shown now, or after the grace for a short drop. @param {ConnectionState} state */
     setTrouble(state: ConnectionState): void;
     /** Back online: "Connected again" for a moment, when anything was shown. */

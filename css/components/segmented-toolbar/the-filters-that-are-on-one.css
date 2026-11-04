@@ -90,6 +90,14 @@
             box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
         }
 
+        /* Chips that wrap [ui-1104; Medicine Cabinet gap 32]: `data-kp-toolbar-chips="wrap"` on the toolbar. Opt-in; the scrolling line above is
+         * the approved phone layout [fix-1031]. With it the chips of a group wrap onto more lines at whole chips, nothing scrolls sideways
+         * and no chip is cut at the edge. */
+        .kp-toolbar[data-kp-toolbar-chips='wrap'] .kp-segmented--chips {
+            flex-wrap: wrap;
+            overflow: visible;
+        }
+
         .kp-toolbar__state {
             justify-self: stretch;
             justify-content: space-between;
@@ -135,6 +143,11 @@
     .kp-toolbar--stacked .kp-segmented--chips > .kp-segmented__item:focus-visible {
         outline-offset: calc(-1 * var(--focus-ring-width, 2px));
         box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
+    }
+
+    .kp-toolbar--stacked[data-kp-toolbar-chips='wrap'] .kp-segmented--chips {
+        flex-wrap: wrap;
+        overflow: visible;
     }
 
     .kp-toolbar--stacked > .kp-toolbar__state {

@@ -98,6 +98,32 @@
         }
     }
 
+    /* The steady layout [ui-1104; chassis-rs gap 26a]: `data-kp-connection-layout="steady"` on the banner. Opt-in; the default
+     * above is the approved one, whose words sit in the middle of the band, so the title stands at a different height per state
+     * (a count, a reason or neither) and Retry only keeps its place by hiding. Steady is a grid of three columns (mark, words,
+     * Retry slot): the words start at the band's top whatever the state, the third line (the count) keeps its row when it is empty,
+     * and Retry holds a slot of --kp-connection-retry-slot (6.5rem, today's Retry width) whether it is idle or shown. Knobs: --kp-connection-retry-slot. */
+    .kp-connection[data-kp-connection-layout='steady'] .kp-connection__band {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) minmax(var(--kp-connection-retry-slot, 6.5rem), max-content);
+        align-items: start;
+    }
+
+    .kp-connection[data-kp-connection-layout='steady'] .kp-connection__body {
+        grid-auto-rows: min-content;
+    }
+
+    .kp-connection[data-kp-connection-layout='steady'] .kp-connection__meta:empty {
+        display: block;
+        min-block-size: 1lh;
+    }
+
+    .kp-connection[data-kp-connection-layout='steady'] .kp-connection__retry {
+        align-self: center;
+        justify-self: end;
+        inline-size: 100%;
+    }
+
     /* kpadopt5-ops:connection:end */
 }
 

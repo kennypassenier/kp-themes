@@ -794,6 +794,8 @@ var init_question_transfer_conn = __esm({
       connAttempt: (n) => `Attempt ${n}`,
       connNextTry: (duration2) => `next try in ${duration2}`,
       connPending: (n) => `${n} ${n === 1 ? "change" : "changes"} waiting`,
+      connSyncing: (n) => n > 0 ? `Syncing ${n} ${n === 1 ? "change" : "changes"}` : "Syncing changes",
+      connSyncingWhy: "Sending what you changed while you were offline.",
       connBack: "Connected again",
       connBackWhy: "Everything is up to date.",
       connBackSending: (n) => `Sending ${n} ${n === 1 ? "change" : "changes"}.`,
@@ -73118,7 +73120,7 @@ var init_values37 = __esm({
     CONNECTION_STATE_EVENT = "kp-connection-state";
     CONNECTION_RETRY_EVENT = "kp-connection-retry";
     CONNECTION_STATES = /** @type {const} */
-    ["online", "offline", "reconnecting", "back", "refused"];
+    ["online", "offline", "reconnecting", "syncing", "back", "refused"];
     DEFAULT_GRACE_MS = 3e3;
     DEFAULT_BACK_MS = 3e3;
     DEFAULT_DELAYS = [3, 10, 30, 60];
@@ -73186,6 +73188,7 @@ var init_parts9 = __esm({
 function textFor(t, state12, { attempt, pending: pending2, refusedWhy }) {
   if (state12 === "offline") return [t.connOffline, t.connOfflineWhy];
   if (state12 === "reconnecting") return [t.connReconnecting, attempt > 1 ? t.connAttempt(attempt) : t.connReconnectingWhy];
+  if (state12 === "syncing") return [t.connSyncing(pending2), t.connSyncingWhy];
   if (state12 === "back") return [t.connBack, pending2 > 0 ? t.connBackSending(pending2) : t.connBackWhy];
   return [t.connRefused, refusedWhy || t.connRefusedWhy];
 }
@@ -73293,10 +73296,11 @@ var init_controller65 = __esm({
       paintBand(state12) {
         const { band, mark: mark2 } = this.parts;
         band.classList.toggle("kp-alert--warning", state12 === "offline" || state12 === "reconnecting");
+        band.classList.toggle("kp-alert--info", state12 === "syncing");
         band.classList.toggle("kp-alert--success", state12 === "back");
         band.classList.toggle("kp-alert--destructive", state12 === "refused");
         mark2.replaceChildren();
-        if (state12 === "reconnecting") mark2.append(make23(this.doc, "span", "kp-spinner"));
+        if (state12 === "reconnecting" || state12 === "syncing") mark2.append(make23(this.doc, "span", "kp-spinner"));
         else mark2.textContent = state12 === "back" ? "\u2713" : "!";
       }
       /** @param {ConnectionState} state */
@@ -73311,11 +73315,12 @@ var init_controller65 = __esm({
         const text = textFor(t, state12, this);
         title.textContent = text[0] ?? "";
         why.textContent = text[1] ?? "";
-        meta.textContent = state12 === "back" ? "" : this.pendingText();
+        meta.textContent = state12 === "back" || state12 === "syncing" ? "" : this.pendingText();
         retry.textContent = t.connRetry;
         retry.hidden = el16.getAttribute("data-kp-retry") === "off";
-        retry.toggleAttribute("data-kp-idle", state12 === "back" || state12 === "reconnecting");
-        retry.tabIndex = state12 === "back" || state12 === "reconnecting" ? -1 : 0;
+        const idle = state12 === "back" || state12 === "reconnecting" || state12 === "syncing";
+        retry.toggleAttribute("data-kp-idle", idle);
+        retry.tabIndex = idle ? -1 : 0;
         retry.disabled = false;
         if (state12 === "offline") this.scheduleTry();
         if (el16.getAttribute("data-kp-announce") !== "off") {
@@ -73362,7 +73367,15 @@ var init_controller65 = __esm({
         this.view.clearTimeout(this.graceTimer);
         this.graceTimer = 0;
         if (state12 === "offline" || state12 === "refused" || state12 === "reconnecting") this.setTrouble(state12);
+        else if (state12 === "syncing") this.setSyncing();
         else if (state12 === "online") this.setOnline();
+      }
+      /** The connection is back and the waiting changes are being sent: shown now, no automatic try runs. */
+      setSyncing() {
+        this.stopTick();
+        this.nextAt = 0;
+        this.show();
+        this.draw("syncing");
       }
       /** Offline, refused or reconnecting: shown now, or after the grace for a short drop. @param {ConnectionState} state */
       setTrouble(state12) {
@@ -99624,6 +99637,8 @@ var init_question_transfer_conn2 = __esm({
       connAttempt: (n) => `Poging ${n}`,
       connNextTry: (duration2) => `volgende poging over ${duration2}`,
       connPending: (n) => `${changes(n)} ${n === 1 ? "wacht" : "wachten"}`,
+      connSyncing: (n) => n > 0 ? `${changes(n)} synchroniseren` : "Wijzigingen synchroniseren",
+      connSyncingWhy: "Wat je offline wijzigde, wordt nu verstuurd.",
       connBack: "Weer verbonden",
       connBackWhy: "Alles is bijgewerkt.",
       connBackSending: (n) => `${changes(n)} ${n === 1 ? "wordt" : "worden"} verstuurd.`,

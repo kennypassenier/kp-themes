@@ -17,6 +17,15 @@
         white-space: nowrap;
     }
 
+    /* A column that takes the spare room [ui-1104; chassis-rs gap 26c]: `data-kp-col="grow"` on its header. The auto table layout shares the
+     * width by each column's content, so a long description can end up narrower than a meter beside it; this column asks for the whole
+     * row (--kp-col-grow-size, 100%), so every other column keeps its own content width and the description gets what is left, never
+     * under --kp-col-grow-min (8rem). Opt-in per header; one column per table is meant (two split the room). Not applied in a card. */
+    .kp-table th[data-kp-col='grow'] {
+        inline-size: var(--kp-col-grow-size, 100%);
+        min-inline-size: var(--kp-col-grow-min, 8rem);
+    }
+
     .kp-table__actions {
         display: grid;
         grid-auto-flow: column;

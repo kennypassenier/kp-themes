@@ -19,6 +19,23 @@
         font-size: var(--kp-tabbar-small-size, 0.6875rem);
     }
 
+    /* Labels that wrap [ui-1104; chassis-rs gap 26b]: `data-kp-tabbar-labels="wrap"` on the bar. Opt-in; the default above is the
+ * approved one-line label with an ellipsis ("TRY A TRANSLA…" on a phone). Wrapped, a label takes up to --kp-tabbar-label-lines (2) lines at
+ * its word breaks, and every tab keeps its icon at the top (`align-content: start`) so the icons line up when one label wraps. A single
+ * word too long for its tab still ends in the ellipsis, after the bar has tightened it (js/tabbar/fit.js). */
+    .kp-tabbar[data-kp-tabbar-labels='wrap'] .kp-tabbar__tab {
+        align-content: start;
+    }
+
+    .kp-tabbar[data-kp-tabbar-labels='wrap'] .kp-tabbar__label {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--kp-tabbar-label-lines, 2);
+        line-clamp: var(--kp-tabbar-label-lines, 2);
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
     /* The mark: a line along the bar's top edge over the current tab. It grows
  * from the middle when a tab becomes current; a register gives it the
  * theme's own shape. */

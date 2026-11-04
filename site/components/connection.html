@@ -384,6 +384,7 @@ setConnection(banner, <span class="kp-code__string">'refused'</span>, { why: <sp
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-connection-min</code></td><td><code>6.25rem</code></td></tr>
+                            <tr><td><code>--kp-connection-retry-slot</code></td><td><code>6.5rem</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
@@ -405,6 +406,7 @@ setConnection(banner, <span class="kp-code__string">'refused'</span>, { why: <sp
                             <tr><td><code>online</code></td><td>Nothing is drawn and no room is taken.</td></tr>
                             <tr><td><code>offline</code></td><td>The warning plate: what, why, what now, the time to the next try and Retry now.</td></tr>
                             <tr><td><code>reconnecting</code></td><td>A try is under way, with its attempt number.</td></tr>
+                            <tr><td><code>syncing</code></td><td>The connection is back and the waiting changes are being sent [ui-1104]: the info plate, the spinner and the exact count in the title (`setConnection(el, 'syncing', { pending: 3 })`), no Retry. It ends with `online`, which shows “Connected again”.</td></tr>
                             <tr><td><code>back</code></td><td>Success: “Connected again” stays for a moment, then leaves.</td></tr>
                             <tr><td><code>refused</code></td><td>The destructive plate: the browser is online and the server refuses; the app’s own sentence is the reason.</td></tr>
                             <tr><td><code>data-kp-connection-source</code></td><td>`browser`, `app` or `both` (default): which reports count.</td></tr>
@@ -414,6 +416,7 @@ setConnection(banner, <span class="kp-code__string">'refused'</span>, { why: <sp
                             <tr><td><code>data-kp-back-ms</code></td><td>Milliseconds (3000) “Connected again” stays.</td></tr>
                             <tr><td><code>data-kp-retry</code></td><td>`off` leaves the Retry now button out.</td></tr>
                             <tr><td><code>data-kp-retry-delays</code></td><td>Seconds between automatic tries, `3,10,30,60` by default (the last repeats); `off` for none.</td></tr>
+                            <tr><td><code>data-kp-connection-layout=&quot;steady&quot;</code></td><td>Opt-in [ui-1104; chassis-rs gap 26a]: the words start at the top of the band in every state (the title never changes height) and Retry holds a slot of its own width (a knob sets it) whether it is idle or shown. The default keeps the words in the middle of the band.</td></tr>
                             <tr><td><code>data-kp-announce</code></td><td>`state` (default) says each change once, politely and going offline assertively; `off`.</td></tr>
                     </tbody></table></div>
                     <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>

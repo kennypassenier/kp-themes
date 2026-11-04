@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <title>Connection band, tab labels, a growing column, toolbar chips [ui-1104]</title>
+        <link rel="stylesheet" href="/css/fonts.css" />
+        <link rel="stylesheet" href="/css/themes.css" />
+        <link rel="stylesheet" href="/css/components.css" />
+        <link rel="stylesheet" href="/css/formal-register.css" />
+        <style>
+            .fx-stack { display: grid; gap: 1.5rem; padding: 1rem; }
+            .fx-meter { display: block; inline-size: 9.625rem; block-size: 0.5rem; background: var(--muted); }
+        </style>
+    </head>
+    <body>
+        <main class="fx-stack">
+            <!-- Two banners in the flow: today's layout and the steady one. -->
+            <div class="kp-connection" id="conn-default" data-kp-connection data-kp-placement="top" data-kp-connection-source="app" data-kp-connection-grace="0" data-kp-retry-delays="off"></div>
+            <div class="kp-connection" id="conn-steady" data-kp-connection data-kp-placement="top" data-kp-connection-source="app" data-kp-connection-grace="0" data-kp-retry-delays="off" data-kp-connection-layout="steady"></div>
+
+            <!-- Two tab bars: today's one-line labels and wrapping labels. -->
+            <nav class="kp-tabbar kp-tabbar--static kp-tabbar--always" id="tabs-default" aria-label="Areas">
+                <a class="kp-tabbar__tab" href="#a" aria-current="page"><span class="kp-tabbar__icon">●</span><span class="kp-tabbar__label">Home</span></a>
+                <a class="kp-tabbar__tab" href="#b"><span class="kp-tabbar__icon">●</span><span class="kp-tabbar__label">Try a translation</span></a>
+                <a class="kp-tabbar__tab" href="#c"><span class="kp-tabbar__icon">●</span><span class="kp-tabbar__label">History</span></a>
+                <a class="kp-tabbar__tab" href="#d"><span class="kp-tabbar__icon">●</span><span class="kp-tabbar__label">Storage kinds</span></a>
+            </nav>
+            <nav class="kp-tabbar kp-tabbar--static kp-tabbar--always" id="tabs-wrap" data-kp-tabbar-labels="wrap" aria-label="Areas wrapped">
+                <a class="kp-tabbar__tab" href="#a" aria-current="page"><span class="kp-tabbar__icon">●</span><span class="kp-tabbar__label">Home</span></a>
+                <a class="kp-tabbar__tab" href="#b"><span class="kp-tabbar__icon">●</span><span class="kp-tabbar__label">Try a translation</span></a>
+                <a class="kp-tabbar__tab" href="#c"><span class="kp-tabbar__icon">●</span><span class="kp-tabbar__label">History</span></a>
+                <a class="kp-tabbar__tab" href="#d"><span class="kp-tabbar__icon">●</span><span class="kp-tabbar__label">Storage kinds</span></a>
+            </nav>
+
+            <!-- Two tables: the second names its description column. -->
+            <div class="kp-table-wrap"><table class="kp-table" id="table-default">
+                <thead><tr><th scope="col">Kind</th><th scope="col">Description</th><th scope="col">Use</th></tr></thead>
+                <tbody><tr><td>Preferences</td><td>The choices this device keeps for you: theme, language, the density of lists and every setting that is yours alone.</td><td><span class="fx-meter"></span></td></tr></tbody>
+            </table></div>
+            <div class="kp-table-wrap"><table class="kp-table" id="table-grow">
+                <thead><tr><th scope="col">Kind</th><th scope="col" data-kp-col="grow">Description</th><th scope="col">Use</th></tr></thead>
+                <tbody><tr><td>Preferences</td><td>The choices this device keeps for you: theme, language, the density of lists and every setting that is yours alone.</td><td><span class="fx-meter"></span></td></tr></tbody>
+            </table></div>
+
+            <!-- Two toolbars: today's scrolling chip line and the wrapping one. -->
+            <div class="kp-toolbar" id="toolbar-default" data-kp-toolbar role="group" aria-label="Medicines">
+                <div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-label="State"><b class="kp-toolbar__label">State</b>
+                    <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="State"><button type="button" class="kp-segmented__item" data-value="all" aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="on" aria-pressed="false"><span class="kp-segmented__label">Switched on</span></button><button type="button" class="kp-segmented__item" data-value="off" aria-pressed="false"><span class="kp-segmented__label">Switched off</span></button><button type="button" class="kp-segmented__item" data-value="tab" aria-pressed="false"><span class="kp-segmented__label">Tablet 4</span></button></div>
+                </div></div>
+            </div>
+            <div class="kp-toolbar" id="toolbar-wrap" data-kp-toolbar data-kp-toolbar-chips="wrap" role="group" aria-label="Medicines wrapped">
+                <div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-label="State"><b class="kp-toolbar__label">State</b>
+                    <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="State"><button type="button" class="kp-segmented__item" data-value="all" aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="on" aria-pressed="false"><span class="kp-segmented__label">Switched on</span></button><button type="button" class="kp-segmented__item" data-value="off" aria-pressed="false"><span class="kp-segmented__label">Switched off</span></button><button type="button" class="kp-segmented__item" data-value="tab" aria-pressed="false"><span class="kp-segmented__label">Tablet 4</span></button></div>
+                </div></div>
+            </div>
+        </main>
+        <script type="module">
+            import { attachConnection, setConnection } from '/js/connection.js';
+            import { attachSegmented } from '/js/segmented.js';
+            import { attachToolbars } from '/js/toolbar.js';
+            import { attachTabbars } from '/js/tabbar.js';
+            attachConnection(document);
+            attachSegmented(document);
+            attachToolbars(document);
+            attachTabbars(document);
+            window.setConnection = setConnection;
+            document.documentElement.setAttribute('data-fixture-ready', '');
+        </script>
+    </body>
+</html>

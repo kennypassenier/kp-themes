@@ -3489,6 +3489,11 @@ get before it starts clipping.
 header and on its cells — both, always: a column of values with no header
 is worse than no column. Below 40rem of table width it disappears.
 
+**A column that takes the spare room.** `data-kp-col="grow"` on one header
+asks for the room the other columns leave: a long description is no longer
+narrower than a meter beside it, and the others keep their own content
+width. `--kp-col-grow-min` (8rem) is its floor. Opt-in, one column per table.
+
 **Narrow means the table's own container, not the window.** The card
 layout and `.kp-col-low` are container queries as of 3.2.0, so a table in
 a 400px column of a 1280px page gets the narrow form it needs. The
@@ -5377,3 +5382,12 @@ flash threshold is measured rather than assumed.
 The gates will tell you what is wrong in plain sentences: which pair is
 under contrast, which boundary is under 3:1, which state you cannot see.
 Fix the token, not the gate.
+
+### Steady connection band, wrapping tab labels, wrapping toolbar chips, a syncing state
+
+Four small options for what a phone or an offline queue shows. Each is opt-in; the default is the approved look.
+
+- `setConnection(banner, 'syncing', { pending: 3 })`: the connection is back and the waiting changes are being sent. Info plate, spinner, "Syncing 3 changes" as the title, no Retry; `online` then shows "Connected again". The words are `connSyncing` and `connSyncingWhy` in `js/strings` (English and Dutch).
+- `data-kp-connection-layout="steady"` on the banner: the words start at the top of the band in every state and Retry holds a slot of `--kp-connection-retry-slot` (6.5rem).
+- `data-kp-tabbar-labels="wrap"` on a `.kp-tabbar`: a label wraps to up to `--kp-tabbar-label-lines` (2) lines, icons stay on one line at the top.
+- `data-kp-toolbar-chips="wrap"` on a `.kp-toolbar`: under 48rem (and in `.kp-toolbar--stacked`) the chips wrap by whole chips instead of scrolling on one line.

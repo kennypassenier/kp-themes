@@ -1,2 +1,2 @@
 /* @kp-soft/themes v12.6.0, dist/js/ (gates/bundle-split.mjs). Generated; do not edit. */
-import{a,b,c,d}from"./chunk-ISLNICIX.js";import"./chunk-XTEUHQDW.js";import"./chunk-5BH5XVMZ.js";import"./chunk-RMUSFKWU.js";import"./chunk-LRS657MR.js";import"./chunk-FUGZUXRR.js";import"./chunk-Q3EW47IZ.js";import"./chunk-4C666HHU.js";export{a as HOVERCARD_ATTRIBUTE,c as HOVERCARD_CARD,b as HOVERCARD_EVENT,d as attachHoverCards};
+import{a,b,c,d}from"./chunk-4H55PLCI.js";import"./chunk-XTEUHQDW.js";import"./chunk-BD5H52NK.js";import"./chunk-RMUSFKWU.js";import"./chunk-L4R3NX7U.js";import"./chunk-NM7M6N36.js";import"./chunk-Q3EW47IZ.js";import"./chunk-4C666HHU.js";export{a as HOVERCARD_ATTRIBUTE,c as HOVERCARD_CARD,b as HOVERCARD_EVENT,d as attachHoverCards};

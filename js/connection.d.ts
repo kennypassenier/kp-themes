@@ -1,5 +1,5 @@
 export { CONNECTION, CONNECTION_STATE_EVENT, CONNECTION_RETRY_EVENT, CONNECTION_STATES } from './connection/values.js';
-export type ConnectionState = 'online' | 'offline' | 'reconnecting' | 'back' | 'refused';
+export type ConnectionState = 'online' | 'offline' | 'reconnecting' | 'syncing' | 'back' | 'refused';
 export type ConnectionDetail = {
     /**
      * changes waiting to be sent
@@ -20,7 +20,7 @@ export type ConnectionHandle = {
     set: (state: ConnectionState, detail?: ConnectionDetail) => void;
 };
 /**
- * @typedef {'online' | 'offline' | 'reconnecting' | 'back' | 'refused'} ConnectionState
+ * @typedef {'online' | 'offline' | 'reconnecting' | 'syncing' | 'back' | 'refused'} ConnectionState
  * @typedef {object} ConnectionDetail
  * @property {number} [pending] changes waiting to be sent
  * @property {string} [why] a sentence from the app, for `refused`

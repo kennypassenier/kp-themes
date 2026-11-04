@@ -172,6 +172,14 @@ export type QuestionTransferConnStrings = {
      */
     connPending: (n: number) => string;
     /**
+     * The first line while waiting changes are being sent, "Syncing 3 changes" [ui-1104]
+     */
+    connSyncing: (n: number) => string;
+    /**
+     * Its second line [ui-1104]
+     */
+    connSyncingWhy: string;
+    /**
      * The first line when the connection is back [kpadopt5-connection]
      */
     connBack: string;
@@ -373,6 +381,8 @@ export type QuestionTransferConnStrings = {
  * @property {(n: number) => string} connAttempt  Its second line from the second try, "Attempt 2" [kpadopt5-connection]
  * @property {(duration: string) => string} connNextTry  The time to the next automatic try, "next try in 8 s" [kpadopt5-connection]
  * @property {(n: number) => string} connPending  The exact count of changes waiting, "3 changes waiting" [kpadopt5-connection]
+ * @property {(n: number) => string} connSyncing  The first line while waiting changes are being sent, "Syncing 3 changes" [ui-1104]
+ * @property {string} connSyncingWhy  Its second line [ui-1104]
  * @property {string} connBack  The first line when the connection is back [kpadopt5-connection]
  * @property {string} connBackWhy  Its second line with nothing waiting [kpadopt5-connection]
  * @property {(n: number) => string} connBackSending  Its second line with changes waiting, "Sending 3 changes" [kpadopt5-connection]

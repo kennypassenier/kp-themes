@@ -59,6 +59,7 @@ setConnection(banner, 'refused', { why: 'The server did not accept the change.' 
             { name: 'online', what: 'Nothing is drawn and no room is taken.' },
             { name: 'offline', what: 'The warning plate: what, why, what now, the time to the next try and Retry now.' },
             { name: 'reconnecting', what: 'A try is under way, with its attempt number.' },
+            { name: 'syncing', what: 'The connection is back and the waiting changes are being sent [ui-1104]: the info plate, the spinner and the exact count in the title (`setConnection(el, \'syncing\', { pending: 3 })`), no Retry. It ends with `online`, which shows “Connected again”.' },
             { name: 'back', what: 'Success: “Connected again” stays for a moment, then leaves.' },
             { name: 'refused', what: 'The destructive plate: the browser is online and the server refuses; the app’s own sentence is the reason.' },
             { name: 'data-kp-connection-source', what: '`browser`, `app` or `both` (default): which reports count.' },
@@ -68,6 +69,7 @@ setConnection(banner, 'refused', { why: 'The server did not accept the change.' 
             { name: 'data-kp-back-ms', what: 'Milliseconds (3000) “Connected again” stays.' },
             { name: 'data-kp-retry', what: '`off` leaves the Retry now button out.' },
             { name: 'data-kp-retry-delays', what: 'Seconds between automatic tries, `3,10,30,60` by default (the last repeats); `off` for none.' },
+            { name: 'data-kp-connection-layout="steady"', what: 'Opt-in [ui-1104; chassis-rs gap 26a]: the words start at the top of the band in every state (the title never changes height) and Retry holds a slot of its own width (a knob sets it) whether it is idle or shown. The default keeps the words in the middle of the band.' },
             { name: 'data-kp-announce', what: '`state` (default) says each change once, politely and going offline assertively; `off`.' },
         ],
         accessibility: [
